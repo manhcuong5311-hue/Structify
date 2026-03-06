@@ -23,6 +23,7 @@ struct TimelineViewUI: View {
         )!
     }
     
+    
     var body: some View {
         
         ZStack(alignment: .top) {
@@ -44,32 +45,11 @@ struct TimelineViewUI: View {
                     .padding(.top, 8)
                 
                 ScrollView {
-                    
-                    ZStack(alignment: .topLeading) {
-                        
-                        // VERTICAL SPINE
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(width: 2)
-                            .padding(.leading, 110)
-                        
-                        VStack(spacing: 30) {
 
-                            ForEach(Array(engine.events.enumerated()), id: \.element.id) { index, event in
-                                
-                                TimelineItem(event: event)
-                                
-                                if index == 0 {
-                                    TimelineGap(text: "Nhiệm vụ sắp tới. Có 8g 34ph để lên kế hoạch.")
-                                }
-                                
-                                if index == 1 {
-                                    TimelineGap(text: "Nghỉ nhanh 50ph để thêm sáng tạo.")
-                                }
-                            }
-                        }
-                        .padding(.leading, 10)
-                    }
+                    TimelineContainer(
+                        engine: engine,
+                        startOfDay: Calendar.current.startOfDay(for: Date())
+                    )
                     .padding()
                 }
                 

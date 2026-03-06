@@ -2,12 +2,11 @@
 //  TimelineEvent.swift
 //  Structify
 //
-//  Created by Sam Manh Cuong on 6/3/26.
-//
 
 import SwiftUI
-import Foundation
 import Combine
+
+// MARK: - MODEL
 
 struct TimelineEvent: Identifiable, Equatable {
 
@@ -26,6 +25,12 @@ struct TimelineEvent: Identifiable, Equatable {
 
 
 
+
+
+
+
+// MARK: - ENGINE
+
 final class TimelineEngine: ObservableObject {
 
     @Published var events: [TimelineEvent] = []
@@ -35,13 +40,20 @@ final class TimelineEngine: ObservableObject {
     // UI scale
     let pixelPerMinute: CGFloat = 1.2
     let snapMinutes: Int = 5
-    
+
     let minMinute = 0
     let maxMinute = 1440
-    
-  
-    
-    
+
+    // MARK: - Timeline Range
+
+    func timelineStartMinute(startOfDay: Date) -> Int {
+        max(minEventMinute(startOfDay: startOfDay) - 60, minMinute)
+    }
+
+    func timelineEndMinute(startOfDay: Date) -> Int {
+        min(maxEventMinute(startOfDay: startOfDay) + 60, maxMinute)
+    }
+
     func timelineHeight(startOfDay: Date) -> CGFloat {
 
         CGFloat(
@@ -50,20 +62,14 @@ final class TimelineEngine: ObservableObject {
             timelineStartMinute(startOfDay: startOfDay)
         ) * pixelPerMinute
     }
-    
-    func timelineStartMinute(startOfDay: Date) -> Int {
-        max(minEventMinute(startOfDay: startOfDay) - 60, 0)
-    }
 
-    func timelineEndMinute(startOfDay: Date) -> Int {
-        min(maxEventMinute(startOfDay: startOfDay) + 60, 1440)
-    }
-    
-    
-    
+    // MARK: - Event Bounds
+
     func minEventMinute(startOfDay: Date) -> Int {
 
-        guard let first = events.min(by: { $0.start < $1.start }) else { return 0 }
+        guard let first = events.min(by: { $0.start < $1.start }) else {
+            return 0
+        }
 
         return calendar.dateComponents(
             [.minute],
@@ -74,7 +80,9 @@ final class TimelineEngine: ObservableObject {
 
     func maxEventMinute(startOfDay: Date) -> Int {
 
-        guard let last = events.max(by: { $0.end < $1.end }) else { return 1440 }
+        guard let last = events.max(by: { $0.end < $1.end }) else {
+            return 1440
+        }
 
         return calendar.dateComponents(
             [.minute],
@@ -82,35 +90,19 @@ final class TimelineEngine: ObservableObject {
             to: last.end
         ).minute ?? 1440
     }
-    
-    func timeString(from offset: CGFloat, startOfDay: Date) -> String {
 
-        let minutes = Int(offset / pixelPerMinute)
 
-        let date = calendar.date(
-            byAdding: .minute,
-            value: minutes,
-            to: startOfDay
-        )!
 
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
 
-        return formatter.string(from: date)
-    }
-    
-    
-    
-    func snap(_ minutes: Int) -> Int {
-          
-          let step = Double(snapMinutes)
-          
-          return Int((Double(minutes) / step).rounded() * step)
-      }
 
-    // MARK: - Position
 
-    func yPosition(for event: TimelineEvent, startOfDay: Date) -> CGFloat {
+
+    // MARK: - Layout
+
+    func yPosition(
+        for event: TimelineEvent,
+        startOfDay: Date
+    ) -> CGFloat {
 
         let minutes = calendar.dateComponents(
             [.minute],
@@ -127,13 +119,28 @@ final class TimelineEngine: ObservableObject {
         CGFloat(event.durationMinutes) * pixelPerMinute
     }
 
+
+
+
+
+
+
     // MARK: - Snap
 
     func snapMinutesValue(_ minutes: Int) -> Int {
-        Int((Double(minutes) / Double(snapMinutes)).rounded()) * snapMinutes
+
+        Int(
+            (Double(minutes) / Double(snapMinutes)).rounded()
+        ) * snapMinutes
     }
 
-    // MARK: - Update Event
+
+
+
+
+
+
+    // MARK: - Move Event
 
     func moveEvent(
         _ event: TimelineEvent,
@@ -176,7 +183,15 @@ final class TimelineEngine: ObservableObject {
         events[index].start = newStart
         events[index].end = newEnd
     }
-    
+
+
+
+
+
+
+
+    // MARK: - Gap
+
     func gapMinutes(
         between first: TimelineEvent,
         and second: TimelineEvent
@@ -190,15 +205,15 @@ final class TimelineEngine: ObservableObject {
 
         return max(minutes, 0)
     }
-    
-    
-    
-    
-    
-    
 }
 
 
+
+
+
+
+
+// MARK: - EVENT VIEW
 
 struct TimelineEventView: View {
 
@@ -222,7 +237,10 @@ struct TimelineEventView: View {
             )
             .frame(height: engine.height(for: event))
             .offset(
-                y: engine.yPosition(for: event, startOfDay: startOfDay) + dragOffset
+                y: engine.yPosition(
+                    for: event,
+                    startOfDay: startOfDay
+                ) + dragOffset
             )
             .allowsHitTesting(!isLocked)
             .gesture(
@@ -232,6 +250,7 @@ struct TimelineEventView: View {
                         dragOffset = value.translation.height
                     }
                     .onEnded { value in
+
                         guard !isLocked else { return }
 
                         engine.moveEvent(
@@ -247,6 +266,14 @@ struct TimelineEventView: View {
     }
 }
 
+
+
+
+
+
+
+// MARK: - TIMELINE SPINE
+
 struct TimelineSpine: View {
 
     var body: some View {
@@ -258,74 +285,147 @@ struct TimelineSpine: View {
     }
 }
 
+
+
+
+
+
+
+// MARK: - CONTAINER
+
 struct TimelineContainer: View {
 
     @ObservedObject var engine: TimelineEngine
-
     let startOfDay: Date
 
-    var eventsLayer: some View {
-
-        ZStack(alignment: .topLeading) {
-
-            ForEach(Array(engine.events.enumerated()), id: \.element.id) { index, event in
-
-                let event = engine.events[index]
-
-                TimelineEventView(
-                    event: event,
-                    isLocked: index == 0 || index == engine.events.count - 1,
-                    engine: engine,
-                    startOfDay: startOfDay
-                )
-                .padding(.leading, 40)
-
-                if index < engine.events.count - 1 {
-
-                    let next = engine.events[index + 1]
-
-                    let gap = engine.gapMinutes(
-                        between: event,
-                        and: next
-                    )
-
-                    if gap > 15 {
-
-                        Text("Trống \(gap) phút")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .padding(.leading, 50)
-                            .offset(
-                                y: engine.yPosition(for: event, startOfDay: startOfDay)
-                                + engine.height(for: event)
-                                + 8
-                            )
-                    }
-                }
-            }
-        }
-    }
-    
-    
     var body: some View {
 
         HStack(alignment: .top, spacing: 0) {
 
-            TimeColumn(
-                engine: engine,
-                startOfDay: startOfDay
-            )
+            TimeColumn(engine: engine, startOfDay: startOfDay)
+
             ZStack(alignment: .topLeading) {
 
                 TimelineSpine()
-                    .padding(.leading, 20)
+                    .padding(.leading, 24)
 
-                eventsLayer
+                VStack(alignment: .leading, spacing: 0) {
+
+                    ForEach(Array(engine.events.enumerated()), id: \.element.id) { index, event in
+
+                        TimelineRow(
+                            event: event,
+                            engine: engine,
+                            startOfDay: startOfDay
+                        )
+
+                        if index < engine.events.count - 1 {
+
+                            let next = engine.events[index + 1]
+
+                            let gap = engine.gapMinutes(
+                                between: event,
+                                and: next
+                            )
+
+                            if gap > 10 {
+
+                                TimelineGapRow(
+                                    gapMinutes: gap
+                                )
+                            }
+                        }
+                    }
+                }
+                .padding(.leading, 40)
             }
         }
-        .frame(height: engine.timelineHeight(startOfDay: startOfDay))
     }
 }
+
+struct TimelineRow: View {
+
+    let event: TimelineEvent
+    let engine: TimelineEngine
+    let startOfDay: Date
+
+    var timeString: String {
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: event.start)
+    }
+
+    var eventColor: Color {
+        event.color == "orange" ? .orange : .blue
+    }
+
+    var body: some View {
+
+        HStack(alignment: .top, spacing: 16) {
+
+            Text(timeString)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .frame(width: 60, alignment: .leading)
+
+            ZStack {
+
+                Circle()
+                    .fill(eventColor.opacity(0.3))
+                    .frame(width: 44, height: 44)
+
+                Image(systemName: "alarm.fill")
+                    .foregroundColor(.white)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+
+                Text(event.title)
+                    .font(.headline)
+
+                Text(timeString)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            Circle()
+                .stroke(lineWidth: 2)
+                .frame(width: 28, height: 28)
+        }
+        .padding(.vertical, 12)
+    }
+}
+
+struct TimelineGapRow: View {
+
+    let gapMinutes: Int
+
+    var body: some View {
+
+        HStack(spacing: 16) {
+
+            Text("")
+                .frame(width: 60)
+
+            Image(systemName: "clock")
+                .foregroundStyle(.gray)
+
+            Text("Nghỉ nhanh \(gapMinutes)ph để thêm sáng tạo.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+        }
+        .padding(.vertical, 18)
+    }
+}
+
+
+
+// MARK: - TIME COLUMN
 
 struct TimeColumn: View {
 
@@ -350,8 +450,11 @@ struct TimeColumn: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .offset(
-                        y: CGFloat(hour * 60 - engine.timelineStartMinute(startOfDay: startOfDay))
-                        * engine.pixelPerMinute
+                        y: CGFloat(
+                            hour * 60
+                            -
+                            engine.timelineStartMinute(startOfDay: startOfDay)
+                        ) * engine.pixelPerMinute
                     )
             }
         }
@@ -362,5 +465,3 @@ struct TimeColumn: View {
         )
     }
 }
-
-
