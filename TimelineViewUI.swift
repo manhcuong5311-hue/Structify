@@ -1,15 +1,76 @@
+
+
+
+
 import SwiftUI
 
+struct EventItem: Identifiable, Codable, Equatable {
+
+    var id = UUID()
+
+    var minutes: Int
+    var duration: Int? = nil
+
+    var title: String
+    var icon: String
+
+    var colorHex: String
+
+    // MARK: - Computed
+
+    var time: String {
+        Self.format(minutes)
+    }
+
+    var endTime: String? {
+        guard let duration else { return nil }
+        return Self.format(minutes + duration)
+    }
+
+    // MARK: - Helpers
+
+    static func format(_ minutes: Int) -> String {
+
+        let h = minutes / 60
+        let m = minutes % 60
+
+        return String(format: "%02d:%02d", h, m)
+    }
+
+    mutating func update(minutes: Int) {
+        self.minutes = minutes
+    }
+
+    // Color convert
+
+    var color: Color {
+        Color(hex: colorHex)
+    }
+}
+
+extension Color {
+
+    init(hex: String) {
+
+        let hex = hex.replacingOccurrences(of: "#", with: "")
+        let scanner = Scanner(string: hex)
+
+        var rgb: UInt64 = 0
+        scanner.scanHexInt64(&rgb)
+
+        let r = Double((rgb >> 16) & 0xFF) / 255
+        let g = Double((rgb >> 8) & 0xFF) / 255
+        let b = Double(rgb & 0xFF) / 255
+
+        self.init(red: r, green: g, blue: b)
+    }
+}
 
 
 
 struct TimelineView: View {
 
-    @State var events: [EventItem] = [
-        EventItem(time:"06:00", title:"Rise and Shine", icon:"alarm.fill", color:.orange),
-        EventItem(time:"12:30", title:"Lunch", icon:"fork.knife", color:.green),
-        EventItem(time:"23:30", title:"Wind Down", icon:"moon.fill", color:.blue)
-    ]
+    @StateObject private var store = TimelineStore()
 
     var body: some View {
 
@@ -19,27 +80,51 @@ struct TimelineView: View {
 
             VStack(alignment: .leading) {
 
-                ForEach($events.indices, id: \.self) { i in
+                ForEach(Array(store.events.indices), id: \.self) { i in
+                    
+                    DraggableEventRow(
+                        event: $store.events[i],
+                        index: i,
+                        events: $store.events
+                    )
 
-                    DraggableEventRow(event: $events[i])
+                    if i < store.events.count - 1 {
 
-                    if i < events.count - 1 {
+                        let diff = store.events[i + 1].minutes - store.events[i].minutes
 
-                        let diff =
-                        events[i + 1].minutes - events[i].minutes
+                        let spacing = max(
+                            4,
+                            min(
+                                60,
+                                diff < 15
+                                ? CGFloat(diff) * 0.8
+                                : CGFloat(diff) * 0.25
+                            )
+                        )
+                        
+                        VStack(spacing: 0) {
 
-                        let spacing = min(max(CGFloat(diff) * 0.05, 16), 60)
+                            Spacer()
+                                .frame(height: spacing / 2)
 
-                        Spacer()
-                            .frame(height: spacing)
+                            AddEventButton()
+                                .opacity(spacing > 40 ? 1 : 0)
+                                .animation(.easeInOut(duration: 0.15), value: spacing)
+                                .transaction { t in
+                                    t.animation = nil
+                                }
+
+                            Spacer()
+                                .frame(height: spacing / 2)
+                        }
                     }
                 }
 
-                AddEventButton()
+
 
                 Spacer(minLength: 120)
             }
-            .animation(.spring(response: 0.35), value: events)
+            .animation(.interactiveSpring(), value: store.events.map(\.minutes))
             .padding(.horizontal)
             .padding(.top, 30)
         }
@@ -55,13 +140,16 @@ struct TimelineView: View {
 struct DraggableEventRow: View {
 
     @Binding var event: EventItem
+      let index: Int
+      @Binding var events: [EventItem]
 
-    @State private var dragOffset: CGFloat = 0
+      @State private var dragOffset: CGFloat = 0
 
     var body: some View {
 
         TimelineEventRow(
             time: event.time,
+            endTime: event.endTime,
             title: event.title,
             icon: event.icon,
             color: event.color
@@ -77,8 +165,23 @@ struct DraggableEventRow: View {
                     let snapStep = 5
 
                     var newMinutes = event.minutes + minuteChange
+
+                    // timeline clamp
                     newMinutes = max(0, min(1439, newMinutes))
 
+                    // tránh đè event trước
+                    if index > 0 {
+                        let previousLimit = events[index - 1].minutes + 5
+                        newMinutes = max(newMinutes, previousLimit)
+                    }
+
+                    // tránh đè event sau
+                    if index < events.count - 1 {
+                        let nextLimit = events[index + 1].minutes - 5
+                        newMinutes = min(newMinutes, nextLimit)
+                    }
+
+                    // snap 5 phút
                     newMinutes = (newMinutes / snapStep) * snapStep
 
                     event.update(minutes: newMinutes)
@@ -95,18 +198,29 @@ struct DraggableEventRow: View {
 struct TimelineEventRow: View {
 
     let time: String
+    let endTime: String?   // 👈 thêm
     let title: String
     let icon: String
     let color: Color
 
     var body: some View {
 
-        HStack(alignment: .center, spacing: 16) {
+        HStack(alignment: .center, spacing: 8) {
 
-            Text(time)
-                .font(.subheadline)
-                .foregroundStyle(.gray)
-                .frame(width:60, alignment: .leading)
+            // TIME COLUMN
+            VStack(alignment: .leading, spacing: 2) {
+
+                Text(time)
+                    .font(.subheadline)
+
+                if let endTime {
+                    Text(endTime)
+                        .font(.caption2)
+                            .foregroundStyle(.secondary)
+                }
+            }
+            .foregroundStyle(.gray)
+            .frame(width:60, alignment: .leading)
 
             Circle()
                 .fill(Color.gray.opacity(0.2))
@@ -115,6 +229,7 @@ struct TimelineEventRow: View {
                     Image(systemName: icon)
                         .foregroundStyle(color)
                 )
+                .offset(x: -4)
 
             VStack(alignment: .leading, spacing: 4) {
 
