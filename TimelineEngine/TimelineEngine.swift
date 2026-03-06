@@ -15,6 +15,8 @@ struct TimelineEngine {
         translation: CGFloat
     ) -> Int {
 
+     
+        
         let minuteChange = Int(translation / 2)
 
         var newMinutes = event.minutes + minuteChange

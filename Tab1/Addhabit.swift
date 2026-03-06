@@ -8,28 +8,68 @@ import SwiftUI
 
 struct AddHabitButton: View {
 
+    var action: () -> Void = {}
+
     var body: some View {
 
-        HStack {
+        Button(action: action) {
 
-            Spacer()
+            HStack(spacing:6) {
 
-            HStack(spacing:8){
+                Image(systemName: "repeat")
 
-                Image(systemName:"repeat.circle.fill")
-
-                Text("Thêm thói quen")
-                    .fontWeight(.semibold)
+                Text("Add Habit")
             }
-            .foregroundStyle(.green)
-            .padding(.horizontal,18)
-            .padding(.vertical,10)
-            .background(
-                Capsule()
-                    .fill(Color.green.opacity(0.15))
-            )
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal,12)
+            .padding(.vertical,6)
+            .background(.thinMaterial)
+            .clipShape(Capsule())
+        }
+    }
+}
 
-            Spacer()
+struct CreateHabitDetailSheet: View {
+
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var title = ""
+    @State private var icon = "repeat"
+
+    var body: some View {
+
+        NavigationStack {
+
+            VStack(spacing:20) {
+
+                HStack(spacing:16) {
+
+                    Circle()
+                        .fill(Color.gray.opacity(0.15))
+                        .frame(width:56,height:56)
+                        .overlay(Image(systemName: icon))
+
+                    TextField("Habit name", text:$title)
+                        .font(.title3)
+                }
+
+                Spacer()
+            }
+            .padding(24)
+            .navigationTitle("New Habit")
+
+            .toolbar {
+
+                ToolbarItem(placement:.topBarTrailing) {
+
+                    Button("Create") {
+
+                        print("create habit")
+
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }

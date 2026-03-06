@@ -24,7 +24,7 @@ struct ScheduleView: View {
 
                 // TIMELINE CARD
                 TimelineView()
-                                    .padding(.top, 20)
+                            .padding(.top, 20)
                 
                 
                 
