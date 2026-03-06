@@ -65,7 +65,10 @@ extension Color {
 struct TimelineView: View {
 
     @StateObject private var store = TimelineStore()
-
+    @State private var addButtonsIndex: Int?
+    @State private var isDragging = false
+    
+    
     var body: some View {
 
     
@@ -79,29 +82,48 @@ struct TimelineView: View {
                     DraggableEventRow(
                         event: $store.events[i],
                         index: i,
-                        events: $store.events
+                        events: $store.events,
+                        isDragging: $isDragging,
+                        onDragEnded: {
+                            addButtonsIndex =
+                                TimelineEngine.largestGapIndex(
+                                    events: store.events
+                                )
+                        }
                     )
 
                     if i < store.events.count - 1 {
 
-                        
+        
 
-                        let spacing = TimelineEngine.spacing(
+                        let spacing = TimelineLayoutEngine.spacing(
                             current: store.events[i],
                             next: store.events[i + 1]
                         )
+                        
+                        let gapMinutes =
+                            store.events[i + 1].minutes -
+                            TimelineEngine.endMinute(store.events[i])
                         
                         VStack(spacing: 0) {
 
                             Spacer()
                                 .frame(height: spacing / 2)
 
-                            AddEventButton()
-                                .opacity(spacing > 40 ? 1 : 0)
-                                .animation(.easeInOut(duration: 0.15), value: spacing)
+                            if addButtonsIndex == i {
+
+                                VStack(spacing: 8) {
+
+                                    AddEventButton()
+                                    AddHabitButton()
+
+                                }
+                                .transition(.opacity)
+                                .animation(isDragging ? nil : .easeInOut(duration: 0.15), value: spacing)
                                 .transaction { t in
                                     t.animation = nil
-                                }
+                                                        }
+                            }
 
                             Spacer()
                                 .frame(height: spacing / 2)
@@ -113,16 +135,29 @@ struct TimelineView: View {
 
                 Spacer(minLength: 120)
             }
+            .transaction { t in
+                if isDragging {
+                    t.animation = nil
+                }
+            }
             .animation(.interactiveSpring(), value: store.events.map(\.minutes))
             .padding(.horizontal)
             .padding(.top, 30)
         }
+        
         .background(
             RoundedRectangle(cornerRadius: 30)
                 .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.05), radius: 10)
         )
         .padding(.top, 10)
+        .onAppear {
+            addButtonsIndex =
+                TimelineEngine.largestGapIndex(
+                    events: store.events
+                )
+        }
+        
     }
 }
 
@@ -131,7 +166,8 @@ struct DraggableEventRow: View {
     @Binding var event: EventItem
       let index: Int
       @Binding var events: [EventItem]
-
+    @Binding var isDragging: Bool
+    var onDragEnded: () -> Void
       @State private var dragOffset: CGFloat = 0
 
     var body: some View {
@@ -143,11 +179,15 @@ struct DraggableEventRow: View {
             icon: event.icon,
             color: event.color
         )
+        .frame(
+            height: TimelineLayoutEngine.eventHeight(event)
+        )
         .offset(y: dragOffset)
         .gesture(
             DragGesture()
                 .onChanged { value in
 
+                    isDragging = true
                     dragOffset = value.translation.height
 
                     let newMinutes = TimelineEngine.move(
@@ -160,7 +200,11 @@ struct DraggableEventRow: View {
                     event.update(minutes: newMinutes)
                 }
                 .onEnded { _ in
+
                     dragOffset = 0
+                    isDragging = false
+
+                    onDragEnded()
                 }
         )
         .animation(.spring(), value: dragOffset)
@@ -228,63 +272,7 @@ struct TimelineEventRow: View {
     }
 }
 
-struct AddEventButton: View {
 
-    var body: some View {
-
-        HStack {
-
-            Spacer()
-
-            HStack(spacing:8){
-
-                Image(systemName:"plus.circle.fill")
-
-                Text("Thêm việc")
-                    .fontWeight(.semibold)
-            }
-            .foregroundStyle(.orange)
-            .padding(.horizontal,18)
-            .padding(.vertical,10)
-            .background(
-                Capsule()
-                    .fill(Color.orange.opacity(0.15))
-            )
-
-            Spacer()
-        }
-    }
-}
-
-struct BottomBar: View {
-
-    var body: some View {
-
-        HStack {
-
-            TabItem(icon:"tray",title:"Hộp thư")
-
-            TabItem(icon:"list.bullet",title:"Lịch trình",active:true)
-
-            TabItem(icon:"sparkles",title:"AI")
-
-            TabItem(icon:"gearshape",title:"Cài đặt")
-
-            Circle()
-                .fill(Color.orange)
-                .frame(width:56,height:56)
-                .overlay(
-                    Image(systemName:"plus")
-                        .font(.title2.bold())
-                        .foregroundStyle(.white)
-                )
-        }
-        .padding(.horizontal)
-        .padding(.top,12)
-        .padding(.bottom,20)
-        .background(.ultraThinMaterial)
-    }
-}
 
 struct TabItem: View {
 

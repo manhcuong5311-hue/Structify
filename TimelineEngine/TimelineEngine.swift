@@ -19,39 +19,56 @@ struct TimelineEngine {
 
         var newMinutes = event.minutes + minuteChange
 
-        // clamp timeline
+        // 1️⃣ snap trước
+        newMinutes = snap(newMinutes)
+
+        // 2️⃣ clamp timeline
         newMinutes = max(minMinute, min(maxMinute, newMinutes))
 
-        // clamp với event trước
-        newMinutes = max(
-            newMinutes,
-            previousLimit(index: index, events: events)
+        // 3️⃣ clamp event trước
+        let previousLimit = previousLimit(
+            index: index,
+            events: events
         )
 
-        // clamp với event sau
+        newMinutes = max(newMinutes, previousLimit)
+
+        // 4️⃣ clamp event sau
         if index < events.count - 1 {
 
-            let eventEnd =
-                newMinutes +
-                (event.duration ?? 0)
+            let nextLimit = nextLimit(
+                index: index,
+                events: events
+            )
 
-            let nextLimit =
-                nextLimit(index: index, events: events)
+            let duration = event.duration ?? 0
 
-            if eventEnd > nextLimit {
-
-                newMinutes =
-                    nextLimit -
-                    (event.duration ?? 0)
+            if newMinutes + duration > nextLimit {
+                newMinutes = nextLimit - duration
             }
         }
 
-        // snap
-        newMinutes =
-            (newMinutes / snapStep) * snapStep
-
         return newMinutes
     }
+    
+    static func snap(_ minutes: Int) -> Int {
+
+        (minutes / snapStep) * snapStep
+
+    }
+    
+    static func clampDuration(
+        start: Int,
+        duration: Int
+    ) -> Int {
+
+        min(duration, maxMinute - start)
+
+    }
+    
+    
+    
+    
 }
 
 extension TimelineEngine {
@@ -61,17 +78,18 @@ extension TimelineEngine {
         next: EventItem
     ) -> CGFloat {
 
-        let currentEnd = endMinute(current)
+        let diff =
+            next.minutes - endMinute(current)
 
-        let diff = next.minutes - currentEnd
+        let safeDiff = max(diff, 0)
 
         return max(
             4,
             min(
                 60,
-                diff < 15
-                ? CGFloat(diff) * 0.8
-                : CGFloat(diff) * 0.25
+                safeDiff < 15
+                ? CGFloat(safeDiff) * 0.8
+                : CGFloat(safeDiff) * 0.25
             )
         )
     }
@@ -118,9 +136,39 @@ extension TimelineEngine {
         events: [EventItem]
     ) -> Int {
 
-        guard index < events.count - 1 else { return maxMinute }
+        guard index < events.count - 1 else {
+            return maxMinute
+        }
 
         return events[index + 1].minutes - spacing
     }
 
+}
+
+
+extension TimelineEngine {
+
+    static func largestGapIndex(
+        events: [EventItem]
+    ) -> Int? {
+
+        guard events.count > 1 else { return nil }
+
+        var largestGap = 0
+        var index: Int?
+
+        for i in 0..<(events.count - 1) {
+
+            let gap =
+                events[i + 1].minutes -
+                endMinute(events[i])
+
+            if gap > largestGap {
+                largestGap = gap
+                index = i
+            }
+        }
+
+        return index
+    }
 }

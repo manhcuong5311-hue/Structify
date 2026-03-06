@@ -17,8 +17,6 @@ class TimelineStore: ObservableObject {
     
     init() {
 
-        UserDefaults.standard.removeObject(forKey: key) // reset test
-
         load()
     }
     

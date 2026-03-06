@@ -29,8 +29,6 @@ struct ScheduleView: View {
                 
                 
             }
-
-            BottomBar()
         }
     }
 }
