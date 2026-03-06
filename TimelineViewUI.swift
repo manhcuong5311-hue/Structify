@@ -19,23 +19,17 @@ struct EventItem: Identifiable, Codable, Equatable {
     // MARK: - Computed
 
     var time: String {
-        Self.format(minutes)
+        TimelineEngine.formatTime(minutes)
     }
 
     var endTime: String? {
         guard let duration else { return nil }
-        return Self.format(minutes + duration)
+        return TimelineEngine.formatTime(minutes + duration)
     }
 
     // MARK: - Helpers
 
-    static func format(_ minutes: Int) -> String {
-
-        let h = minutes / 60
-        let m = minutes % 60
-
-        return String(format: "%02d:%02d", h, m)
-    }
+   
 
     mutating func update(minutes: Int) {
         self.minutes = minutes
@@ -80,7 +74,7 @@ struct TimelineView: View {
 
             VStack(alignment: .leading) {
 
-                ForEach(Array(store.events.indices), id: \.self) { i in
+                ForEach($store.events.indices, id: \.self) { i in
                     
                     DraggableEventRow(
                         event: $store.events[i],
@@ -90,16 +84,11 @@ struct TimelineView: View {
 
                     if i < store.events.count - 1 {
 
-                        let diff = store.events[i + 1].minutes - store.events[i].minutes
+                        
 
-                        let spacing = max(
-                            4,
-                            min(
-                                60,
-                                diff < 15
-                                ? CGFloat(diff) * 0.8
-                                : CGFloat(diff) * 0.25
-                            )
+                        let spacing = TimelineEngine.spacing(
+                            current: store.events[i],
+                            next: store.events[i + 1]
                         )
                         
                         VStack(spacing: 0) {
@@ -161,28 +150,12 @@ struct DraggableEventRow: View {
 
                     dragOffset = value.translation.height
 
-                    let minuteChange = Int(value.translation.height / 2)
-                    let snapStep = 5
-
-                    var newMinutes = event.minutes + minuteChange
-
-                    // timeline clamp
-                    newMinutes = max(0, min(1439, newMinutes))
-
-                    // tránh đè event trước
-                    if index > 0 {
-                        let previousLimit = events[index - 1].minutes + 5
-                        newMinutes = max(newMinutes, previousLimit)
-                    }
-
-                    // tránh đè event sau
-                    if index < events.count - 1 {
-                        let nextLimit = events[index + 1].minutes - 5
-                        newMinutes = min(newMinutes, nextLimit)
-                    }
-
-                    // snap 5 phút
-                    newMinutes = (newMinutes / snapStep) * snapStep
+                    let newMinutes = TimelineEngine.move(
+                        event: event,
+                        index: index,
+                        events: events,
+                        translation: value.translation.height
+                    )
 
                     event.update(minutes: newMinutes)
                 }
@@ -332,3 +305,4 @@ struct TabItem: View {
         .frame(maxWidth:.infinity)
     }
 }
+
