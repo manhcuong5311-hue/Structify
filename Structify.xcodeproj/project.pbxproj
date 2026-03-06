@@ -6,14 +6,52 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0D73442A2F5A9E4900AA4159 /* TimelineViewUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7344292F5A9E4700AA4159 /* TimelineViewUI.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		0D73441B2F5A9E3100AA4159 /* Structify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Structify.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D7344292F5A9E4700AA4159 /* TimelineViewUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewUI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0D7344302F5A9E7B00AA4159 /* Exceptions for "Tab2" folder in "Structify" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				2.swift,
+			);
+			target = 0D73441A2F5A9E3100AA4159 /* Structify */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0D73441D2F5A9E3100AA4159 /* Structify */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Structify;
+			sourceTree = "<group>";
+		};
+		0D73442B2F5A9E4E00AA4159 /* Tab1 */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Tab1;
+			sourceTree = "<group>";
+		};
+		0D73442C2F5A9E5600AA4159 /* Tab2 */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0D7344302F5A9E7B00AA4159 /* Exceptions for "Tab2" folder in "Structify" target */,
+			);
+			path = Tab2;
+			sourceTree = "<group>";
+		};
+		0D73442D2F5A9E5E00AA4159 /* Setting */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		0D73442E2F5A9E6600AA4159 /* Premium */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Premium;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +70,11 @@
 		0D7344122F5A9E3100AA4159 = {
 			isa = PBXGroup;
 			children = (
+				0D73442E2F5A9E6600AA4159 /* Premium */,
+				0D73442D2F5A9E5E00AA4159 /* Setting */,
+				0D73442C2F5A9E5600AA4159 /* Tab2 */,
+				0D73442B2F5A9E4E00AA4159 /* Tab1 */,
+				0D7344292F5A9E4700AA4159 /* TimelineViewUI.swift */,
 				0D73441D2F5A9E3100AA4159 /* Structify */,
 				0D73441C2F5A9E3100AA4159 /* Products */,
 			);
@@ -62,6 +105,10 @@
 			);
 			fileSystemSynchronizedGroups = (
 				0D73441D2F5A9E3100AA4159 /* Structify */,
+				0D73442B2F5A9E4E00AA4159 /* Tab1 */,
+				0D73442C2F5A9E5600AA4159 /* Tab2 */,
+				0D73442D2F5A9E5E00AA4159 /* Setting */,
+				0D73442E2F5A9E6600AA4159 /* Premium */,
 			);
 			name = Structify;
 			packageProductDependencies = (
@@ -119,6 +166,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D73442A2F5A9E4900AA4159 /* TimelineViewUI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
