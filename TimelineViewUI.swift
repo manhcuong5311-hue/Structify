@@ -5,30 +5,41 @@ import SwiftUI
 
 struct TimelineView: View {
 
+    @State var events: [EventItem] = [
+        EventItem(time:"06:00", title:"Rise and Shine", icon:"alarm.fill", color:.orange),
+        EventItem(time:"12:30", title:"Lunch", icon:"fork.knife", color:.green),
+        EventItem(time:"23:30", title:"Wind Down", icon:"moon.fill", color:.blue)
+    ]
+
     var body: some View {
+
+    
 
         ScrollView {
 
-            VStack(spacing: 40) {
+            VStack(alignment: .leading) {
 
-                TimelineEventRow(
-                    time: "06:00",
-                    title: "Rise and Shine",
-                    icon: "alarm.fill",
-                    color: .orange
-                )
+                ForEach($events.indices, id: \.self) { i in
+
+                    DraggableEventRow(event: $events[i])
+
+                    if i < events.count - 1 {
+
+                        let diff =
+                        events[i + 1].minutes - events[i].minutes
+
+                        let spacing = min(max(CGFloat(diff) * 0.05, 16), 60)
+
+                        Spacer()
+                            .frame(height: spacing)
+                    }
+                }
 
                 AddEventButton()
 
-                TimelineEventRow(
-                    time: "23:30",
-                    title: "Wind Down",
-                    icon: "moon.fill",
-                    color: .blue
-                )
-
-                Spacer(minLength: 200)
+                Spacer(minLength: 120)
             }
+            .animation(.spring(response: 0.35), value: events)
             .padding(.horizontal)
             .padding(.top, 30)
         }
@@ -38,6 +49,45 @@ struct TimelineView: View {
                 .shadow(color: .black.opacity(0.05), radius: 10)
         )
         .padding(.top, 10)
+    }
+}
+
+struct DraggableEventRow: View {
+
+    @Binding var event: EventItem
+
+    @State private var dragOffset: CGFloat = 0
+
+    var body: some View {
+
+        TimelineEventRow(
+            time: event.time,
+            title: event.title,
+            icon: event.icon,
+            color: event.color
+        )
+        .offset(y: dragOffset)
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+
+                    dragOffset = value.translation.height
+
+                    let minuteChange = Int(value.translation.height / 2)
+                    let snapStep = 5
+
+                    var newMinutes = event.minutes + minuteChange
+                    newMinutes = max(0, min(1439, newMinutes))
+
+                    newMinutes = (newMinutes / snapStep) * snapStep
+
+                    event.update(minutes: newMinutes)
+                }
+                .onEnded { _ in
+                    dragOffset = 0
+                }
+        )
+        .animation(.spring(), value: dragOffset)
     }
 }
 
