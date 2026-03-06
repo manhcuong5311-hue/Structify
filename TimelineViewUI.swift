@@ -6,8 +6,22 @@
 //
 
 import SwiftUI
+import Combine
 
 struct TimelineViewUI: View {
+    
+    @State private var previewTime: String = ""
+    @StateObject private var engine = TimelineEngine()
+    
+    
+    func todayAt(_ hour: Int, _ minute: Int) -> Date {
+        Calendar.current.date(
+            bySettingHour: hour,
+            minute: minute,
+            second: 0,
+            of: Date()
+        )!
+    }
     
     var body: some View {
         
@@ -31,41 +45,37 @@ struct TimelineViewUI: View {
                 
                 ScrollView {
                     
-                    VStack(spacing: 30) {
+                    ZStack(alignment: .topLeading) {
                         
-                        TimelineItem(
-                            time: "06:00",
-                            title: "Rise and Shine",
-                            icon: "alarm.fill",
-                            color: .orange,
-                            done: true
-                        )
+                        // VERTICAL SPINE
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(width: 2)
+                            .padding(.leading, 110)
                         
-                        TimelineGap(text: "Nhiệm vụ sắp tới. Có 8g 34ph để lên kế hoạch.")
-                        
-                        TimelineItem(
-                            time: "21:10–22:40",
-                            title: "Xem phim",
-                            icon: "tv.fill",
-                            color: .blue,
-                            done: false
-                        )
-                        
-                        TimelineGap(text: "Nghỉ nhanh 50ph để thêm sáng tạo.")
-                        
-                        TimelineItem(
-                            time: "23:30",
-                            title: "Wind Down",
-                            icon: "moon.fill",
-                            color: .blue,
-                            done: false
-                        )
+                        VStack(spacing: 30) {
+
+                            ForEach(Array(engine.events.enumerated()), id: \.element.id) { index, event in
+                                
+                                TimelineItem(event: event)
+                                
+                                if index == 0 {
+                                    TimelineGap(text: "Nhiệm vụ sắp tới. Có 8g 34ph để lên kế hoạch.")
+                                }
+                                
+                                if index == 1 {
+                                    TimelineGap(text: "Nghỉ nhanh 50ph để thêm sáng tạo.")
+                                }
+                            }
+                        }
+                        .padding(.leading, 10)
                     }
                     .padding()
                 }
                 
                 BottomBar()
             }
+            
             .background(
                 RoundedRectangle(cornerRadius: 30)
                     .fill(Color.white)
@@ -73,7 +83,37 @@ struct TimelineViewUI: View {
             )
             .offset(y: 180)   // đẩy card xuống để header lộ phía sau
         }
+        
         .ignoresSafeArea(edges: .top)
+        .onAppear {
+
+            engine.events = [
+
+                TimelineEvent(
+                    id: UUID(),
+                    title: "Rise and Shine",
+                    start: todayAt(6,0),
+                    end: todayAt(7,0),
+                    color: "orange"
+                ),
+
+                TimelineEvent(
+                    id: UUID(),
+                    title: "Xem phim",
+                    start: todayAt(21,10),
+                    end: todayAt(22,40),
+                    color: "blue"
+                ),
+
+                TimelineEvent(
+                    id: UUID(),
+                    title: "Wind Down",
+                    start: todayAt(23,30),
+                    end: todayAt(23,50),
+                    color: "blue"
+                )
+            ]
+        }
     }
 }
 
@@ -83,40 +123,60 @@ struct TimelineViewUI: View {
 
 
 struct TimelineItem: View {
+
+    let event: TimelineEvent
     
-    var time: String
-    var title: String
-    var icon: String
-    var color: Color
-    var done: Bool
+    
+    @State private var dragOffset: CGFloat = 0
+    private let engine = TimelineEngine()
+    @State private var previewTime: String = ""
+    
+    
+    var eventColor: Color {
+        event.color == "orange" ? .orange : .blue
+    }
+    
+    func timeFromString(_ time: String) -> Int {
+        let parts = time.split(separator: ":")
+        guard parts.count == 2 else { return 0 }
+        
+        let hour = Int(parts[0]) ?? 0
+        let minute = Int(parts[1]) ?? 0
+        
+        return hour * 60 + minute
+    }
+    
+    var timeString: String {
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+
+        return formatter.string(from: event.start)
+    }
     
     var body: some View {
         
         HStack(alignment: .top, spacing: 16) {
             
-            Text(time)
+            Text(timeString)
                 .font(.caption)
+                .foregroundStyle(.secondary)
                 .frame(width: 70, alignment: .leading)
             
-            ZStack {
-                
-                RoundedRectangle(cornerRadius: 30)
-                    .fill(Color.gray.opacity(0.15))
-                    .frame(width: 60, height: 120)
-                
-                Image(systemName: icon)
-                    .font(.title2)
-                    .foregroundColor(color)
-            }
+            Image(systemName: "alarm.fill")
+                .foregroundStyle(.white)
+                .frame(width: 40, height: 40)
+                .background(eventColor)
+                .clipShape(Circle())
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 4) {
                 
-                Text(title)
+                Text(event.title)
                     .font(.headline)
                 
-                Text(time)
+                Text(timeString)
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.secondary)
             }
             
             Spacer()
@@ -124,13 +184,47 @@ struct TimelineItem: View {
             Circle()
                 .stroke(lineWidth: 2)
                 .frame(width: 28, height: 28)
-                .overlay(
-                    done ?
-                    Image(systemName: "checkmark")
-                        .foregroundColor(.orange)
-                    : nil
-                )
         }
+        .offset(y: dragOffset)
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    
+                    dragOffset = value.translation.height
+                    
+                    let baseMinutes = Calendar.current.dateComponents(
+                        [.minute],
+                        from: Calendar.current.startOfDay(for: event.start),
+                        to: event.start
+                    ).minute ?? 0
+
+                    let deltaMinutes = Int(dragOffset / engine.pixelPerMinute)
+
+                    let newMinutes = baseMinutes + deltaMinutes
+
+                    let hour = newMinutes / 60
+                    let minute = newMinutes % 60
+
+                    previewTime = String(format: "%02d:%02d", hour, minute)
+                }
+                .onEnded { value in
+                    
+                    dragOffset = 0
+                    previewTime = ""
+                }
+        )
+        .overlay(
+            Group {
+                if !previewTime.isEmpty {
+                    Text(previewTime)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .offset(x: -90)
+                }
+            },
+            alignment: .leading
+        )
+        .animation(.spring(), value: dragOffset)
     }
 }
 

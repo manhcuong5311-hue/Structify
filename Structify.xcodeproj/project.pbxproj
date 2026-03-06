@@ -54,6 +54,11 @@
 			path = Premium;
 			sourceTree = "<group>";
 		};
+		0D73443D2F5AA67700AA4159 /* TimelineEngine */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TimelineEngine;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +80,7 @@
 				0D73442C2F5A9E5600AA4159 /* Tab2 */,
 				0D73442B2F5A9E4E00AA4159 /* Tab1 */,
 				0D7344292F5A9E4700AA4159 /* TimelineViewUI.swift */,
+				0D73443D2F5AA67700AA4159 /* TimelineEngine */,
 				0D73441D2F5A9E3100AA4159 /* Structify */,
 				0D73441C2F5A9E3100AA4159 /* Products */,
 			);
@@ -109,6 +115,7 @@
 				0D73442C2F5A9E5600AA4159 /* Tab2 */,
 				0D73442D2F5A9E5E00AA4159 /* Setting */,
 				0D73442E2F5A9E6600AA4159 /* Premium */,
+				0D73443D2F5AA67700AA4159 /* TimelineEngine */,
 			);
 			name = Structify;
 			packageProductDependencies = (
