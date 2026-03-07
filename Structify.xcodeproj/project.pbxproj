@@ -15,16 +15,6 @@
 		0D7344292F5A9E4700AA4159 /* TimelineViewUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewUI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0D7344302F5A9E7B00AA4159 /* Exceptions for "Tab2" folder in "Structify" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				2.swift,
-			);
-			target = 0D73441A2F5A9E3100AA4159 /* Structify */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0D73441D2F5A9E3100AA4159 /* Structify */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -38,9 +28,6 @@
 		};
 		0D73442C2F5A9E5600AA4159 /* Tab2 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				0D7344302F5A9E7B00AA4159 /* Exceptions for "Tab2" folder in "Structify" target */,
-			);
 			path = Tab2;
 			sourceTree = "<group>";
 		};

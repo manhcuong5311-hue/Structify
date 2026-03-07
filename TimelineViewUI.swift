@@ -250,7 +250,6 @@ struct DraggableEventRow: View {
 
             onDragChanged: { value in
 
-                guard !event.isSystemEvent else { return }
 
                 isDragging = true
                 dragOffset = value.translation.height

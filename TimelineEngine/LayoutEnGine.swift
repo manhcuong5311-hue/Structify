@@ -44,19 +44,19 @@ struct TimelineLayoutEngine {
         // Event cực gần (<15 phút)
         if safeDiff < 15 {
             return max(
-                CGFloat(safeDiff) * 0.25,
+                CGFloat(safeDiff) * 0.35,
                 1
             )
         }
 
         // Event gần (<60 phút)
         if safeDiff < 60 {
-            return CGFloat(safeDiff) * 0.15
+            return CGFloat(safeDiff) * 0.25
         }
 
         // Event xa
         return min(
-            CGFloat(safeDiff) * 0.1,
+            CGFloat(safeDiff) * 0.18,
             32
         )
     }
