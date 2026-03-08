@@ -11,6 +11,7 @@ import SwiftUI
 struct EventDetailSheet: View {
 
     let event: EventItem
+    
     var onDelete: () -> Void
 
     @Environment(\.dismiss) private var dismiss

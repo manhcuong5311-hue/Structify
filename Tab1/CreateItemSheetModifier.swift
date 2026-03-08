@@ -10,7 +10,7 @@ import SwiftUI
 struct CreateItemSheetModifier: ViewModifier {
 
     @Binding var isPresented: Bool
-    var onCreate: ((EventKind, String, String) -> Void)?
+    var onCreate: ((EventKind, String, String, Date, Int) -> Void)?
 
     func body(content: Content) -> some View {
 
@@ -29,7 +29,7 @@ extension View {
 
     func createItemSheet(
         isPresented: Binding<Bool>,
-        onCreate: ((EventKind, String, String) -> Void)? = nil
+        onCreate: ((EventKind, String, String, Date, Int) -> Void)? = nil
     ) -> some View {
 
         modifier(CreateItemSheetModifier(

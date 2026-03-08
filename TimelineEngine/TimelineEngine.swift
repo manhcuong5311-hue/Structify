@@ -5,7 +5,7 @@ struct TimelineEngine {
 
     static let snapStep = 5
     static let minMinute = 0
-    static let maxMinute = 1439
+    static let maxMinute = 2880
     static let spacing = 5
 
     static func move(
@@ -15,40 +15,51 @@ struct TimelineEngine {
         translation: CGFloat
     ) -> Int {
 
-     
-        
         let minuteChange = Int(translation / 2)
-
         var newMinutes = event.minutes + minuteChange
 
-        // 1️⃣ snap trước
+        // 1️⃣ snap
         newMinutes = snap(newMinutes)
 
-        // 2️⃣ clamp timeline
-        newMinutes = max(minMinute, min(maxMinute, newMinutes))
+        // system event zones
+        if event.title == "Rise and Shine" {
 
-        // 3️⃣ clamp event trước
-        let previousLimit = previousLimit(
-            index: index,
-            events: events
+            // 00:00 → 12:00
+            newMinutes = max(0, min(newMinutes, 720))
+
+        }
+
+        if event.title == "Wind Down" {
+
+            // 12:00 → 24:00
+            newMinutes = max(720, min(newMinutes, 1440))
+        }
+
+        // 3️⃣ clamp timeline
+        let range = timelineRange(events: events)
+
+        newMinutes = max(
+            range.lowerBound,
+            min(range.upperBound - (event.duration ?? 0), newMinutes)
         )
 
-        newMinutes = max(newMinutes, previousLimit)
+        // 4️⃣ clamp event trước
+        let duration = event.duration ?? 0
 
-        // 4️⃣ clamp event sau
-        if index < events.count - 1 {
+        let prevLimit = event.title == "Wind Down"
+            ? minMinute
+            : previousLimit(index: index, events: events)
 
-            let nextLimit = nextLimit(
-                index: index,
-                events: events
-            )
+        let nextLimit = index < events.count - 1
+            ? nextLimit(index: index, events: events)
+            : maxMinute
 
-            let duration = event.duration ?? 0
-
-            if newMinutes + duration > nextLimit {
-                newMinutes = nextLimit - duration
-            }
+        // nếu không còn khoảng trống → giữ nguyên
+        if prevLimit > nextLimit - duration {
+            return event.minutes
         }
+
+        newMinutes = max(prevLimit, min(newMinutes, nextLimit - duration))
 
         return newMinutes
     }
@@ -64,9 +75,61 @@ struct TimelineEngine {
         duration: Int
     ) -> Int {
 
-        min(duration, maxMinute - start)
-
+        min(duration, maxMinute - start - spacing)
     }
+    
+    static func timelineRange(events: [EventItem]) -> ClosedRange<Int> {
+        minMinute...maxMinute
+    }
+    
+    
+    static func minutes(from date: Date) -> Int {
+
+        let comp = Calendar.current.dateComponents(
+            [.hour,.minute],
+            from: date
+        )
+
+        return (comp.hour ?? 0) * 60 + (comp.minute ?? 0)
+    }
+    
+  
+    
+    static func dateFrom(minutes: Int, base: Date) -> Date {
+
+        let calendar = Calendar.current
+
+        let start = calendar.startOfDay(for: base)
+
+        return start.addingTimeInterval(Double(minutes) * 60)
+    }
+    
+    static func suggestedStartMinutes(events: [EventItem]) -> Int {
+
+        guard events.count > 1 else { return 540 } // fallback 9:00
+
+        var largestGap = 0
+        var suggested = 540
+
+        for i in 0..<(events.count - 1) {
+
+            let current = events[i]
+            let next = events[i + 1]
+
+            let currentEnd = current.minutes + (current.duration ?? 0)
+
+            let gap = next.minutes - currentEnd
+
+            if gap > largestGap {
+
+                largestGap = gap
+                suggested = currentEnd + gap / 2
+            }
+        }
+
+        return suggested
+    }
+    
     
     
     
@@ -101,8 +164,10 @@ extension TimelineEngine {
 
     static func formatTime(_ minutes: Int) -> String {
 
-        let h = minutes / 60
-        let m = minutes % 60
+        let normalized = minutes % 1440
+
+        let h = normalized / 60
+        let m = normalized % 60
 
         return String(format: "%02d:%02d", h, m)
     }
@@ -139,7 +204,7 @@ extension TimelineEngine {
     ) -> Int {
 
         guard index < events.count - 1 else {
-            return maxMinute
+            return maxMinute - spacing
         }
 
         return events[index + 1].minutes - spacing

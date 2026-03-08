@@ -14,7 +14,8 @@ class CalendarState: ObservableObject {
     var weekDates: [Date] {
 
         let calendar = Calendar.current
-        let startOfWeek = calendar.dateInterval(of: .weekOfYear, for: selectedDate)!.start
+        let startOfWeek =
+        calendar.dateInterval(of: .weekOfYear, for: selectedDate)!.start
 
         return (0..<7).compactMap {
             calendar.date(byAdding: .day, value: $0, to: startOfWeek)
@@ -22,17 +23,36 @@ class CalendarState: ObservableObject {
     }
 
     func nextWeek() {
-        selectedDate = Calendar.current.date(byAdding: .day, value: 7, to: selectedDate)!
+        selectedDate =
+        Calendar.current.date(byAdding: .day, value: 7, to: selectedDate)!
     }
 
     func previousWeek() {
-        selectedDate = Calendar.current.date(byAdding: .day, value: -7, to: selectedDate)!
+        selectedDate =
+        Calendar.current.date(byAdding: .day, value: -7, to: selectedDate)!
     }
-    
+
     func select(_ date: Date) {
         selectedDate = date
     }
+    
+    var dateKey: String {
 
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+
+        return formatter.string(from: selectedDate)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 struct HeaderDateView: View {

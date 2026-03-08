@@ -6,17 +6,19 @@ import SwiftUI
 
 struct EventItem: Identifiable, Codable, Equatable {
 
-    var id = UUID()
+    // ID phải là templateID
+    let id: UUID
 
     var minutes: Int
     var duration: Int? = nil
 
     var title: String
     var icon: String
-
     var colorHex: String
-    var isSystemEvent: Bool = false 
-    // MARK: - Computed
+
+    var isSystemEvent: Bool = false
+
+    // MARK: Computed
 
     var time: String {
         TimelineEngine.formatTime(minutes)
@@ -27,15 +29,13 @@ struct EventItem: Identifiable, Codable, Equatable {
         return TimelineEngine.formatTime(minutes + duration)
     }
 
-    // MARK: - Helpers
-
-   
+    // MARK: Update
 
     mutating func update(minutes: Int) {
         self.minutes = minutes
     }
 
-    // Color convert
+    // MARK: Color
 
     var color: Color {
         Color(hex: colorHex)
@@ -54,56 +54,46 @@ enum HabitCompletionType: String, Codable {
 
 
 
-extension Color {
-
-    init(hex: String) {
-
-        let hex = hex.replacingOccurrences(of: "#", with: "")
-        let scanner = Scanner(string: hex)
-
-        var rgb: UInt64 = 0
-        scanner.scanHexInt64(&rgb)
-
-        let r = Double((rgb >> 16) & 0xFF) / 255
-        let g = Double((rgb >> 8) & 0xFF) / 255
-        let b = Double(rgb & 0xFF) / 255
-
-        self.init(red: r, green: g, blue: b)
-    }
-}
-
-
-
-
 
 struct TimelineView: View {
 
-    @StateObject private var store = TimelineStore()
+    @EnvironmentObject var store: TimelineStore
 
     @State private var addButtonsIndex: Int?
     @State private var isDragging = false
 
     @State private var activeSheet: AppSheet?
     @State private var activeAlert: AppAlert?
+    @State private var events: [EventItem] = []
 
+    @EnvironmentObject var calendar: CalendarState
+    
     var body: some View {
 
         ScrollView {
 
             VStack(alignment: .leading) {
 
-                ForEach($store.events.indices, id: \.self) { i in
+                ForEach(events.indices, id: \.self)  { i in
 
                     DraggableEventRow(
-                        event: $store.events[i],
+                        event: $events[i],
                         index: i,
-                        events: $store.events,
+                        events: $events,
                         isDragging: $isDragging,
                         onDragEnded: {
 
+                            let event = events[i]
+
+                            store.overrideEventTime(
+                                templateID: event.id,
+                                date: calendar.selectedDate,
+                                minutes: event.minutes
+                            )
+                            
                             addButtonsIndex =
                             TimelineEngine.largestGapIndex(
-                                events: store.events
+                                events: events
                             )
                         },
                         onTapEvent: { event in
@@ -112,12 +102,13 @@ struct TimelineView: View {
                         }
                     )
 
-                    if i < store.events.count - 1 {
+                    if i < events.count - 1 {
 
                         let spacing = TimelineLayoutEngine.spacing(
-                            current: store.events[i],
-                            next: store.events[i + 1]
+                            current: events[i],
+                            next: events[i + 1]
                         )
+                    
 
                         VStack(spacing: 0) {
 
@@ -151,7 +142,7 @@ struct TimelineView: View {
             }
             .animation(
                 .interactiveSpring(),
-                value: store.events.map(\.minutes)
+                value: events.map(\.minutes)
             )
             .padding(.horizontal)
             .padding(.top, 30)
@@ -167,12 +158,20 @@ struct TimelineView: View {
 
         .onAppear {
 
+            events = store.events(for: calendar.selectedDate)
+
             addButtonsIndex =
             TimelineEngine.largestGapIndex(
-                events: store.events
+                events: events
             )
         }
+        .onChange(of: calendar.selectedDate) { _, newDate in
 
+            events = store.events(for: newDate)
+
+            addButtonsIndex =
+            TimelineEngine.largestGapIndex(events: events)
+        }
         // MARK: Sheet
 
         .sheet(item: $activeSheet) { sheet in
@@ -180,9 +179,26 @@ struct TimelineView: View {
             switch sheet {
 
             case .createItem:
+                
+                let suggested = TimelineEngine.suggestedStartMinutes(events: events)
 
-                CreateItemSheet { kind, title, icon in
-                    print(kind, title, icon)
+                  CreateEventDetailSheet(
+                      suggestedStart: suggested
+                  ) { title, icon, date, duration in
+
+                    let minutes = TimelineEngine.minutes(from: date)
+
+                    store.addEvent(
+                        title: title,
+                        icon: icon,
+                        minutes: minutes,
+                        duration: duration
+                    )
+
+                    events = store.events(for: calendar.selectedDate)
+
+                    addButtonsIndex =
+                    TimelineEngine.largestGapIndex(events: events)
                 }
 
             case .eventDetail(let event):
@@ -211,9 +227,12 @@ struct TimelineView: View {
 
                         guard !event.isSystemEvent else { return }
                         
-                        store.events.removeAll {
-                            $0.id == event.id
-                        }
+                        store.deleteEvent(
+                            templateID: event.id,
+                            date: calendar.selectedDate
+                        )
+
+                        events.removeAll { $0.id == event.id }
 
                     },
                     secondaryButton: .cancel()
@@ -245,8 +264,11 @@ struct DraggableEventRow: View {
             color: event.color,
 
             onTap: {
-                onTapEvent(event)
+                if !event.isSystemEvent {
+                    onTapEvent(event)
+                }
             },
+            
 
             onDragChanged: { value in
 
@@ -261,15 +283,16 @@ struct DraggableEventRow: View {
                     translation: value.translation.height
                 )
 
-                event.update(minutes: newMinutes)
+                event.update(minutes: max(0, min(newMinutes, 1440)))
             },
 
             onDragEnded: {
 
-              
-                
                 dragOffset = 0
                 isDragging = false
+
+                events.sort { $0.minutes < $1.minutes }
+
                 onDragEnded()
             }
         )

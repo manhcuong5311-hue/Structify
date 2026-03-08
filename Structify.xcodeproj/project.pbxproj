@@ -7,15 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D5D998D2F5D467A00C60A69 /* ColorToolkit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5D998C2F5D467600C60A69 /* ColorToolkit.swift */; };
 		0D73442A2F5A9E4900AA4159 /* TimelineViewUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7344292F5A9E4700AA4159 /* TimelineViewUI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0D5D998C2F5D467600C60A69 /* ColorToolkit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorToolkit.swift; sourceTree = "<group>"; };
 		0D73441B2F5A9E3100AA4159 /* Structify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Structify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D7344292F5A9E4700AA4159 /* TimelineViewUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewUI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		0D5EE7E02F5BF22C001EC44B /* Onboarding */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		0D73441D2F5A9E3100AA4159 /* Structify */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Structify;
@@ -62,6 +69,8 @@
 		0D7344122F5A9E3100AA4159 = {
 			isa = PBXGroup;
 			children = (
+				0D5D998C2F5D467600C60A69 /* ColorToolkit.swift */,
+				0D5EE7E02F5BF22C001EC44B /* Onboarding */,
 				0D73442E2F5A9E6600AA4159 /* Premium */,
 				0D73442D2F5A9E5E00AA4159 /* Setting */,
 				0D73442C2F5A9E5600AA4159 /* Tab2 */,
@@ -97,6 +106,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				0D5EE7E02F5BF22C001EC44B /* Onboarding */,
 				0D73441D2F5A9E3100AA4159 /* Structify */,
 				0D73442B2F5A9E4E00AA4159 /* Tab1 */,
 				0D73442C2F5A9E5600AA4159 /* Tab2 */,
@@ -160,6 +170,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D5D998D2F5D467A00C60A69 /* ColorToolkit.swift in Sources */,
 				0D73442A2F5A9E4900AA4159 /* TimelineViewUI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

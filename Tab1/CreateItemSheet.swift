@@ -8,7 +8,7 @@ struct CreateItemSheet: View {
 
     @State private var kind: EventKind = .event
     @State private var showNext = false
-    var onCreate: ((EventKind, String, String) -> Void)? = nil
+    var onCreate: ((EventKind, String, String, Date, Int) -> Void)?
     
     
     var body: some View {
@@ -65,11 +65,22 @@ struct CreateItemSheet: View {
         }
 
         // STEP 2 sheet
-        .sheet(isPresented:$showNext) {
+        .sheet(isPresented: $showNext) {
 
             if kind == .event {
 
-                CreateEventDetailSheet()
+                CreateEventDetailSheet(
+                    suggestedStart: 540
+                ) { title, icon, date, duration in
+
+                    onCreate?(
+                        .event,
+                        title,
+                        icon,
+                        date,
+                        duration
+                    )
+                }
 
             } else {
 
