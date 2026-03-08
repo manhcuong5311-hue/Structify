@@ -60,11 +60,29 @@ struct CreateEventDetailSheet: View {
     @State private var showIconPicker = false
     
     
+    @State private var startMinutes: Int = 20 * 60
+    @State private var endMinutes: Int = 21 * 60 + 30
     
     
     
-    
-    
+    var timeRangeText: String {
+
+        let sh = startMinutes / 60
+        let sm = startMinutes % 60
+
+        let eh = endMinutes / 60
+        let em = endMinutes % 60
+
+        let duration = endMinutes - startMinutes
+
+        let dh = duration / 60
+        let dm = duration % 60
+
+        return String(
+            format: "%02d:%02d–%02d:%02d (%d giờ, %d phút)",
+            sh, sm, eh, em, dh, dm
+        )
+    }
     
     
     
@@ -98,20 +116,34 @@ struct CreateEventDetailSheet: View {
 
         NavigationStack {
 
-            VStack(spacing: 22) {
+            VStack(spacing: 26) {
 
                 header
+                    .clipShape(
+                        RoundedRectangle(
+                            cornerRadius: 28,
+                            style: .continuous
+                        )
+                    )
+                    .padding(.horizontal, -24)
+                
+                CardSection {
+                    datePickerSection
+                }
 
-                datePickerSection
+                CardSection {
+                    timeSection
+                }
 
-                timeSection
-
-                durationSection
+                CardSection {
+                    durationSection
+                }
 
                 continueButton
 
             }
-            .padding(.horizontal)
+            .padding(.horizontal,16)
+            .edgesIgnoringSafeArea(.horizontal)
             .navigationBarHidden(true)
         }
     }
@@ -123,28 +155,80 @@ extension CreateEventDetailSheet {
 
     var header: some View {
 
-        HStack(alignment: .center, spacing: 16) {
+        ZStack(alignment: .topLeading) {
 
-            Button {
-                showIconPicker = true
-            } label: {
+            // background
+            LinearGradient(
+                colors: [
+                    color.opacity(0.9),
+                    color.opacity(0.65)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea(edges: .horizontal)
 
-                ZStack {
+            VStack(spacing: 20) {
+
+                // close button
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+
+                        Image(systemName: "xmark")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundStyle(.black)
+                            .frame(width: 40, height: 40)
+                            .background(Color.white.opacity(0.6))
+                            .clipShape(Circle())
+                    }
+
+                    Spacer()
+                }
+
+                // main content
+                HStack(spacing: 16) {
+
+                    // icon preview
+                    Button {
+                        showIconPicker = true
+                    } label: {
+
+                        Circle()
+                            .fill(Color.white.opacity(0.35))
+                            .frame(width: 70, height: 70)
+                            .overlay(
+                                Image(systemName: icon)
+                                    .font(.system(size: 30, weight: .bold))
+                                    .foregroundStyle(.white)
+                            )
+                    }
+                    .buttonStyle(.plain)
+
+                    VStack(alignment: .leading, spacing: 4) {
+
+                        Text(timeRangeText)
+                            .font(.subheadline)
+                            .foregroundStyle(.white.opacity(0.8))
+
+                        TextField("Tên sự kiện", text: $title)
+                            .font(.system(size: 32, weight: .bold))
+                            .foregroundStyle(.white)
+                    }
+
+                    Spacer()
 
                     Circle()
-                        .fill(color.opacity(0.25))
-                        .frame(width: 70, height: 70)
-
-                    Image(systemName: icon)
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundStyle(color)
+                        .stroke(Color.white.opacity(0.8), lineWidth: 3)
+                        .frame(width: 28, height: 28)
                 }
-            }
 
-            TextField("Tên sự kiện", text: $title)
-                .font(.system(size: 28, weight: .bold))
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 50)
+            .padding(.bottom, 30)
         }
-        .padding(.top,10)
         .sheet(isPresented: $showIconPicker) {
 
             IconPicker(
@@ -319,5 +403,66 @@ extension CreateEventDetailSheet {
                 .clipShape(Capsule())
         }
         .padding(.top,10)
+    }
+}
+
+
+struct CardSection<Content: View>: View {
+
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+
+        content
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 18)
+                    .fill(.thinMaterial)
+            )
+    }
+}
+
+struct TimeSlider: View {
+
+    let title: String
+    @Binding var minutes: Int
+
+    var body: some View {
+
+        VStack(alignment: .leading, spacing: 8) {
+
+            HStack {
+
+                Text(title)
+                    .font(.subheadline.weight(.medium))
+
+                Spacer()
+
+                Text(timeString)
+                    .font(.system(.headline, design: .rounded))
+                    .monospacedDigit()
+            }
+
+            Slider(
+                value: Binding(
+                    get: { Double(minutes) },
+                    set: { minutes = Int($0) }
+                ),
+                in: 0...1439,
+                step: 5
+            )
+        }
+    }
+
+    var timeString: String {
+
+        let h = minutes / 60
+        let m = minutes % 60
+
+        return String(format: "%02d:%02d", h, m)
     }
 }

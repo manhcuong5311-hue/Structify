@@ -16,13 +16,17 @@ struct IconPicker: View {
     @State private var search = ""
     
     @State private var iconScale: CGFloat = 1
-    @State private var favoriteIcons: [String] = UserDefaults.standard.stringArray(forKey: "favoriteIcons") ?? []
+    @State private var recentIcons: [String] =
+    UserDefaults.standard.stringArray(forKey: "recentIcons") ?? []
     
     @State private var hexInput = ""
     @State private var showHexEditor = false
     
     @State private var hue: Double = 0
     @State private var brightness: Double = 1
+    
+    @State private var selectedIcon: String?
+    
     
     var scrollContent: some View {
         
@@ -34,19 +38,19 @@ struct IconPicker: View {
         .frame(maxHeight: .infinity)
     }
     
-    func updateFavorite(_ symbol: String) {
+    func updateRecent(_ symbol: String) {
 
-        if let index = favoriteIcons.firstIndex(of: symbol) {
-            favoriteIcons.remove(at: index)
+        if let index = recentIcons.firstIndex(of: symbol) {
+            recentIcons.remove(at: index)
         }
 
-        favoriteIcons.insert(symbol, at: 0)
+        recentIcons.insert(symbol, at: 0)
 
-        if favoriteIcons.count > 8 {
-            favoriteIcons.removeLast()
+        if recentIcons.count > 15 {
+            recentIcons.removeLast()
         }
 
-        UserDefaults.standard.set(favoriteIcons, forKey: "favoriteIcons")
+        UserDefaults.standard.set(recentIcons, forKey: "recentIcons")
     }
     
     
@@ -70,10 +74,18 @@ struct IconPicker: View {
                 ToolbarItem(placement: .topBarTrailing) {
 
                     Button("Done") {
+
+                        if let selectedIcon {
+                            updateRecent(selectedIcon)
+                        }
+
                         dismiss()
                     }
                 }
             }
+        }
+        .onAppear {
+            selectedIcon = icon
         }
         .sheet(isPresented: $showHexEditor) {
 
@@ -91,22 +103,28 @@ extension IconPicker {
 
         VStack(spacing: 28) {
             
-            if !favoriteIcons.isEmpty {
+            if !recentIcons.isEmpty {
 
                 VStack(alignment: .leading, spacing: 12) {
 
-                    Text("Favorites")
+                    Text("Recent")
                         .font(.headline)
 
-                    LazyVGrid(columns: gridColumns, spacing: 18) {
+                    ScrollView(.horizontal, showsIndicators: false) {
 
-                        ForEach(favoriteIcons, id:\.self) { symbol in
+                        HStack(spacing: 14) {
 
-                            iconCell(
-                                EventIcon(symbol: symbol, name: symbol)
-                            )
+                            ForEach(recentIcons, id: \.self) { symbol in
+
+                                iconCell(
+                                    EventIcon(symbol: symbol, name: symbol)
+                                )
+                            }
                         }
+                        .scrollTargetLayout()
+                        .padding(.vertical, 4)
                     }
+                    .scrollIndicators(.hidden)
                 }
             }
 
@@ -157,10 +175,9 @@ extension IconPicker {
 
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                 icon = item.symbol
+                selectedIcon = item.symbol
                 iconScale = 1.2
             }
-
-            updateFavorite(item.symbol)
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 iconScale = 1

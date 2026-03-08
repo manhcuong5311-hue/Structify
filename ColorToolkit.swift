@@ -183,6 +183,7 @@ struct ColorPickerSheet: View {
     @State private var brightness: Double = 1
     @State private var editingPresets = false
     
+    @State private var presets: [Color] = EventColorPalette.colors
     
     var hex: String {
         color.toHex().replacingOccurrences(of: "#", with: "")
@@ -197,35 +198,46 @@ struct ColorPickerSheet: View {
     }
     
     func addPreset(_ color: Color) {
-
-        var presets = EventColorPalette.colors
+        
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+            presets.append(color)
+        }
 
         if presets.contains(where: { $0.toHex() == color.toHex() }) {
             return
         }
 
         presets.append(color)
-
         EventColorPalette.colors = presets
     }
 
     var body: some View {
 
-        VStack(spacing: 24) {
+        VStack(spacing: 0) {
 
             header
+                .padding(.horizontal,24)
+                .padding(.top,20)
 
-            hueSlider
+            ScrollView {
 
-            brightnessSlider
+                VStack(spacing: 24) {
 
-            presetSection
+                    hueSlider
 
-            Spacer()
+                    brightnessSlider
+
+                    presetSection
+
+                    Spacer(minLength: 20)
+                }
+                .padding(24)
+            }
         }
-        .padding(24)
         .background(.ultraThinMaterial)
         .onAppear {
+
+            presets = EventColorPalette.colors
 
             let ui = UIColor(color)
 
@@ -332,8 +344,10 @@ extension ColorPickerSheet {
 extension ColorPickerSheet {
 
     func removePreset(_ color: Color) {
-
-        var presets = EventColorPalette.colors
+        
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+            presets.removeAll { $0.toHex() == color.toHex() }
+        }
 
         presets.removeAll {
             $0.toHex() == color.toHex()
@@ -371,11 +385,11 @@ extension ColorPickerSheet {
             }
 
             LazyVGrid(
-                columns: Array(repeating: GridItem(.flexible()), count: 4),
+                columns: [GridItem(.adaptive(minimum: 44))],
                 spacing: 18
             ) {
 
-                ForEach(EventColorPalette.colors, id:\.self) { c in
+                ForEach(presets, id:\.self) { c in
 
                     ZStack {
 
