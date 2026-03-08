@@ -26,7 +26,7 @@ struct IconPicker: View {
     @State private var brightness: Double = 1
     
     @State private var selectedIcon: String?
-    
+    @Environment(\.colorScheme) var colorScheme
     
     var scrollContent: some View {
         
@@ -57,16 +57,23 @@ struct IconPicker: View {
     var body: some View {
 
         NavigationStack {
-
+            
+            ZStack {
+                
+                Color.paper
+                          .ignoresSafeArea()
+                
             VStack(spacing:20) {
-
+                
                 iconHeader
-
+                
                 ScrollView {
                     categoryGrid
                 }
             }
             .padding()
+        }
+            
             .navigationTitle("Icon")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -109,6 +116,7 @@ extension IconPicker {
 
                     Text("Recent")
                         .font(.headline)
+                        .foregroundStyle(.primary)
 
                     ScrollView(.horizontal, showsIndicators: false) {
 
@@ -194,8 +202,15 @@ extension IconPicker {
                     RoundedRectangle(cornerRadius: 14)
                         .fill(
                             icon == item.symbol
-                            ? color.opacity(0.2)
-                            : Color(.systemGray6)
+                            ? color.opacity(0.18)
+                            : Color(.secondarySystemBackground)
+                        )
+                        .shadow(
+                            color: .black.opacity(
+                                colorScheme == .dark ? 0.35 : 0.08
+                            ),
+                            radius: 6,
+                            y: 2
                         )
                 )
                 .shadow(
@@ -548,9 +563,24 @@ extension IconPicker {
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .fill(.thinMaterial)
+                .fill(Color(.systemBackground))
         )
+        .shadow(color:.black.opacity(0.05),radius:10,y:4)
     }
 }
 
 
+extension Color {
+
+    static let paper = Color(
+        UIColor { trait in
+
+            if trait.userInterfaceStyle == .dark {
+                return UIColor(red: 28/255, green: 28/255, blue: 30/255, alpha: 1)
+            } else {
+                return UIColor(red: 248/255, green: 247/255, blue: 244/255, alpha: 1)
+            }
+
+        }
+    )
+}
