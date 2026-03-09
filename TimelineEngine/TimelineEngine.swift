@@ -206,20 +206,33 @@ extension TimelineEngine {
         next: EventItem
     ) -> CGFloat {
 
-        let diff =
-            next.minutes - endMinute(current)
-
+        let diff = next.minutes - endMinute(current)
         let safeDiff = max(diff, 0)
 
-        return max(
-            4,
-            min(
-                60,
-                safeDiff < 15
-                ? CGFloat(safeDiff) * 0.8
-                : CGFloat(safeDiff) * 0.25
-            )
-        )
+        var base: CGFloat = 40
+
+        // boost spacing cho system events
+        if current.isSystemEvent {
+            base += 22
+        }
+
+        if next.isSystemEvent {
+            base += 22
+        }
+
+        if safeDiff <= 5 {
+            return base
+        }
+
+        if safeDiff <= 15 {
+            return base + CGFloat(safeDiff) * 2
+        }
+
+        if safeDiff <= 60 {
+            return base + CGFloat(safeDiff) * 0.7
+        }
+
+        return min(160, base + CGFloat(safeDiff) * 0.35)
     }
 }
 

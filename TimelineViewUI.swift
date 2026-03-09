@@ -81,8 +81,11 @@ struct TimelineView: View {
         
         
         ScrollView {
-
+            
+           
             VStack(alignment: .leading) {
+                
+
 
                 ForEach(events.indices, id: \.self)  { i in
 
@@ -171,6 +174,8 @@ struct TimelineView: View {
                 .fill(Color(.systemBackground))
                 .shadow(color: .black.opacity(0.05), radius: 10)
         )
+       
+        
         .padding(.bottom, -20)
         .ignoresSafeArea(edges: .bottom)
 
@@ -329,6 +334,8 @@ struct TimelineView: View {
         
     }
 }
+
+
 struct DraggableEventRow: View {
 
     @Binding var event: EventItem
@@ -463,9 +470,17 @@ struct TimelineEventRow: View {
                 
             }
             .frame(width:50,height:50)
+            .background(
+                Circle()
+                    .fill(.ultraThinMaterial)
+                    .frame(width:60,height:60)
+            )
+            .overlay(
+                Circle()
+                    .stroke(Color.primary.opacity(0.05), lineWidth:1)
+            )
             .shadow(color: color.opacity(0.35), radius:6, y:3)
-            
-                .offset(x: -4)
+            .offset(x: -4)
                 .gesture(
                     DragGesture()
                         .onChanged { value in

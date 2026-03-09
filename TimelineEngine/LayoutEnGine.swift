@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TimelineLayoutEngine {
     
-    static let pixelsPerMinute: CGFloat = 1
+    static let pixelsPerMinute: CGFloat = 0.7
     static let minHeight: CGFloat = 44
     static let maxHeight: CGFloat = 90
     
@@ -41,23 +41,31 @@ struct TimelineLayoutEngine {
 
         let safeDiff = max(diff, 0)
 
-        // Event cực gần (<15 phút)
-        if safeDiff < 15 {
-            return max(
-                CGFloat(safeDiff) * 0.35,
-                1
-            )
+        // spacing tối thiểu cho icon lớn
+        var base: CGFloat = 20
+
+        // nếu là system event → thêm khoảng cách
+        if current.isSystemEvent || next.isSystemEvent {
+            base += 12
         }
 
-        // Event gần (<60 phút)
-        if safeDiff < 60 {
-            return CGFloat(safeDiff) * 0.25
+        if safeDiff <= 5 {
+            return base
         }
 
-        // Event xa
+        if safeDiff <= 15 {
+            return base + CGFloat(safeDiff) * 1.2
+        }
+
+        if safeDiff <= 60 {
+            return base + CGFloat(safeDiff) * 0.45
+        }
+
         return min(
-            CGFloat(safeDiff) * 0.18,
-            32
+            base + CGFloat(safeDiff) * 0.25,
+            100
         )
     }
+    
+    
 }

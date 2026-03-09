@@ -22,6 +22,7 @@ struct EventTemplate: Identifiable, Codable {
     
     
     var isSystemEvent: Bool = false
+    var systemType: SystemEventType? = nil
 }
 
 extension Recurrence {
@@ -85,6 +86,10 @@ extension Recurrence: Codable {
     }
 }
 
+enum SystemEventType: String, Codable {
+    case wake
+    case sleep
+}
 
 enum Recurrence {
 
@@ -150,20 +155,22 @@ class TimelineStore: ObservableObject {
 
                 EventTemplate(
                     minutes: wakeMinutes,
-                    title: "Rise and Shine",
+                    title: "Morning Start",
                     icon: "alarm.fill",
                     colorHex: "#FF9500",
                     recurrence: .daily,
-                    isSystemEvent: true
+                    isSystemEvent: true,
+                    systemType: .wake
                 ),
 
                 EventTemplate(
                     minutes: sleepMinutes,
-                    title: "Wind Down",
+                    title: "Night Reset",
                     icon: "moon.fill",
                     colorHex: "#007AFF",
                     recurrence: .daily,
-                    isSystemEvent: true
+                    isSystemEvent: true,
+                    systemType: .sleep
                 )
             ]
 
@@ -265,11 +272,11 @@ class TimelineStore: ObservableObject {
 
         for i in templates.indices {
 
-            if templates[i].title == "Rise and Shine" {
+            if templates[i].systemType == .wake {
                 templates[i].minutes = wakeMinutes
             }
 
-            if templates[i].title == "Wind Down" {
+            if templates[i].systemType == .sleep {
                 templates[i].minutes = sleepMinutes
             }
         }
