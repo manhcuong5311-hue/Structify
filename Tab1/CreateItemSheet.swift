@@ -89,17 +89,30 @@ struct CreateItemSheet: View {
 
             } else {
 
-                CreateHabitDetailSheet { title, icon, date in
+                CreateHabitDetailSheet(
 
-                    onCreate?(
-                        .habit,
-                        title,
-                        icon,
-                        date,
-                        0
-                    )
+                    onCreate: { title, icon, date, type, target, unit, minutes, increment in
 
-                }
+                        onCreate?(
+                            .habit,
+                            title,
+                            icon,
+                            date,
+                            0
+                        )
+
+                    },
+
+                    onOpenEvent: {
+
+                        showNext = false
+                        kind = .event
+
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                            showNext = true
+                        }
+                    }
+                )
             }
         }
     }

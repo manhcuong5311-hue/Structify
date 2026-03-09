@@ -15,15 +15,82 @@ struct EventTemplate: Identifiable, Codable {
     var colorHex: String
 
     var recurrence: Recurrence
+    
+    var habitType: HabitType? = nil
+       var targetValue: Double? = nil
+       var unit: String? = nil
+    
+    
     var isSystemEvent: Bool = false
 }
 
+extension Recurrence {
 
-enum Recurrence: Codable {
+    enum CodingKeys: String, CodingKey {
+        case type
+        case days
+        case date
+    }
+}
+
+extension Recurrence: Codable {
+
+    func encode(to encoder: Encoder) throws {
+
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+
+        case .daily:
+            try container.encode("daily", forKey: .type)
+
+        case .weekdays:
+            try container.encode("weekdays", forKey: .type)
+
+        case .specific(let days):
+            try container.encode("specific", forKey: .type)
+            try container.encode(days, forKey: .days)
+
+        case .once(let date):
+            try container.encode("once", forKey: .type)
+            try container.encode(date, forKey: .date)
+        }
+    }
+
+    init(from decoder: Decoder) throws {
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        let type = try container.decode(String.self, forKey: .type)
+
+        switch type {
+
+        case "daily":
+            self = .daily
+
+        case "weekdays":
+            self = .weekdays
+
+        case "specific":
+            let days = try container.decode([Int].self, forKey: .days)
+            self = .specific(days)
+
+        case "once":
+            let date = try container.decode(Date.self, forKey: .date)
+            self = .once(date)
+
+        default:
+            self = .daily
+        }
+    }
+}
+
+
+enum Recurrence {
 
     case daily
     case weekdays
-    case specific([Int]) // weekday numbers
+    case specific([Int])
     case once(Date)
 }
 
@@ -342,7 +409,11 @@ class TimelineStore: ObservableObject {
     func addHabit(
         title: String,
         icon: String,
-        minutes: Int
+        minutes: Int,
+        habitType: HabitType,
+        targetValue: Double?,
+        unit: String?,
+        increment: Double?
     ) {
 
         let new = EventTemplate(
@@ -352,7 +423,10 @@ class TimelineStore: ObservableObject {
             title: title,
             icon: icon,
             colorHex: "#34C759",
-            recurrence: .daily
+            recurrence: .daily,
+            habitType: habitType,
+            targetValue: targetValue,
+            unit: unit
         )
 
         templates.append(new)

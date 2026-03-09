@@ -16,6 +16,7 @@ struct StructifyApp: App {
             Group {
                 if hasSeenOnboarding {
                     ContentView()
+                        
                 } else {
                     OnboardingView()
                 }
@@ -23,5 +24,8 @@ struct StructifyApp: App {
             .environmentObject(timeline)
             .environmentObject(calendar)
         }
+        
     }
 }
+
+

@@ -48,6 +48,9 @@ struct ContentView: View {
             )
         }
         .ignoresSafeArea(edges: .bottom)
+        .onTapGesture {
+            hideKeyboard()
+        }
     }
 }
 
@@ -136,5 +139,18 @@ struct FloatingTabBar: View {
                     : Color.white.opacity(0.45)
                 )
         }
+    }
+}
+
+extension View {
+
+    func hideKeyboard() {
+
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil,
+            from: nil,
+            for: nil
+        )
     }
 }

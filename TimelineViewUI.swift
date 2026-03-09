@@ -66,7 +66,7 @@ struct TimelineView: View {
 
     @State private var activeSheet: AppSheet?
     @State private var showHabitSheet = false
-    
+    @State private var showEventSheet = false
     
     @State private var activeAlert: AppAlert?
     
@@ -259,22 +259,35 @@ struct TimelineView: View {
         
         .sheet(isPresented: $showHabitSheet) {
 
-            CreateHabitDetailSheet { title, icon, date in
+            CreateHabitDetailSheet(
 
-                let minutes = TimelineEngine.minutes(from: date)
+                onCreate: { title, icon, date, type, target, unit, minutes, increment in
 
-                store.addEvent(
-                    title: title,
-                    icon: icon,
-                    minutes: minutes,
-                    duration: nil
-                )
 
-                events = store.events(for: calendar.selectedDate)
+                    let minutes = TimelineEngine.minutes(from: date)
 
-                addButtonsIndex =
-                TimelineEngine.largestGapIndex(events: events)
-            }
+                    store.addEvent(
+                        title: title,
+                        icon: icon,
+                        minutes: minutes,
+                        duration: nil
+                    )
+
+                    events = store.events(for: calendar.selectedDate)
+
+                    addButtonsIndex =
+                    TimelineEngine.largestGapIndex(events: events)
+                },
+
+                onOpenEvent: {
+
+                    showHabitSheet = false
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                        activeSheet = .createItem
+                    }
+                }
+            )
         }
         
         

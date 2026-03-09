@@ -26,6 +26,7 @@ struct AddEventButton: View {
 
 struct CreateEventDetailSheet: View {
     
+    @EnvironmentObject var store: TimelineStore
     // MARK: - Event Data
     
     @State private var title: String = ""
@@ -389,11 +390,30 @@ extension CreateEventDetailSheet {
         }
         .sheet(isPresented: $showHabitSheet) {
 
-            CreateHabitDetailSheet { title, icon, date in
-                
-                print("Habit created:", title)
-                
-            }
+            CreateHabitDetailSheet(
+
+                onCreate: { title, icon, date, type, target, unit, minutes, increment in
+
+                    store.addHabit(
+                        title: title,
+                        icon: icon,
+                        minutes: minutes ?? 540,
+                        habitType: type,
+                        targetValue: target,
+                        unit: unit,
+                        increment: increment
+                    )
+                },
+
+                onOpenEvent: {
+
+                    showHabitSheet = false
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                        onOpenHabit?()
+                    }
+                }
+            )
         }
     }
 }
@@ -685,14 +705,14 @@ extension CreateEventDetailSheet {
                 title,
                 icon,
                 date,
-                startMinutes
+                endMinutes - startMinutes
             )
 
             dismiss()
 
         } label: {
 
-            Text("Continue")
+            Text("Create event")
                 .font(.title3.bold())
                 .frame(maxWidth:.infinity)
                 .padding()
@@ -799,23 +819,29 @@ struct TimeSlider: View {
 struct AmbientBackground: View {
     
     var isCompleted: Bool
-       var color: Color
-
+    var color: Color
+    
     var body: some View {
 
         ZStack {
 
-           
-
             Circle()
-                .fill(.blue.opacity(0.25))
+                .fill(color.opacity(0.28))
                 .blur(radius:120)
                 .offset(x:-140,y:-220)
 
             Circle()
-                .fill(.purple.opacity(0.25))
-                .blur(radius:120)
+                .fill(color.opacity(0.18))
+                .blur(radius:140)
                 .offset(x:160,y:260)
+
+            if isCompleted {
+                Circle()
+                    .fill(.white.opacity(0.12))
+                    .blur(radius:160)
+                    .scaleEffect(1.1)
+                    .animation(.easeOut(duration:0.4), value:isCompleted)
+            }
         }
         .ignoresSafeArea()
     }
@@ -835,3 +861,4 @@ struct AnimatedCheckmark: View {
             .animation(.spring(response: 0.35, dampingFraction: 0.6), value: progress)
     }
 }
+
