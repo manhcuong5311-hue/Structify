@@ -78,6 +78,8 @@ struct TimelineView: View {
     
     var body: some View {
 
+        
+        
         ScrollView {
 
             VStack(alignment: .leading) {
@@ -144,6 +146,14 @@ struct TimelineView: View {
                 }
 
                 Spacer(minLength: 120)
+            }
+            .background(alignment: .leading) {
+
+                TimelineLineView(
+                    events: events,
+                    isDragging: isDragging
+                )
+                .padding(.leading, 100)
             }
             .transaction { t in
                 if isDragging { t.animation = nil }
@@ -251,14 +261,16 @@ struct TimelineView: View {
                     primaryButton: .destructive(Text("Delete")) {
 
                         guard !event.isSystemEvent else { return }
-                        
+
                         store.deleteEvent(
                             templateID: event.id,
                             date: calendar.selectedDate
                         )
 
-                        events.removeAll { $0.id == event.id }
+                        events = store.events(for: calendar.selectedDate)
 
+                        addButtonsIndex =
+                            TimelineEngine.largestGapIndex(events: events)
                     },
                     secondaryButton: .cancel()
                 )
@@ -271,12 +283,17 @@ struct TimelineView: View {
 
                 onCreate: { title, icon, date, type, target, unit, minutes, increment in
 
-                    let minutes = TimelineEngine.minutes(from: date)
+                    let startMinutes =
+                        minutes ??
+                        TimelineEngine.smartSlotMinutes(
+                            events: events,
+                            duration: 0
+                        )
 
                     store.addEvent(
                         title: title,
                         icon: icon,
-                        minutes: minutes,
+                        minutes: startMinutes,
                         duration: nil
                     )
 
@@ -333,7 +350,8 @@ struct DraggableEventRow: View {
             title: event.title,
             icon: event.icon,
             color: event.color,
-
+            kind: event.kind,
+            
             onTap: {
                 if !event.isSystemEvent {
                     onTapEvent(event)
@@ -380,6 +398,8 @@ struct TimelineEventRow: View {
     let title: String
     let icon: String
     let color: Color
+    let kind: EventKind
+    
     var onTap: (() -> Void)? = nil
     var onDragChanged: ((DragGesture.Value) -> Void)? = nil
     var onDragEnded: (() -> Void)? = nil
@@ -391,25 +411,60 @@ struct TimelineEventRow: View {
             VStack(alignment: .leading, spacing: 2) {
 
                 Text(time)
-                    .font(.subheadline)
+                    .font(.system(size:15, weight:.semibold, design:.rounded))
+                    .monospacedDigit()
 
                 if let endTime {
                     Text(endTime)
-                        .font(.caption2)
+                        .font(.system(size:12, weight:.medium, design:.rounded))
+                        .monospacedDigit()
                         .foregroundStyle(.secondary)
                 }
             }
             .foregroundStyle(.gray)
-            .frame(width:60, alignment: .leading)
+            .frame(width:70, alignment:.leading)
 
             // 👇 DRAG HANDLE
-            Circle()
-                .fill(Color.gray.opacity(0.2))
-                .frame(width:50,height:50)
-                .overlay(
-                    Image(systemName: icon)
-                        .foregroundStyle(color)
-                )
+            ZStack {
+
+                // base glow
+                Circle()
+                    .fill(color.opacity(0.18))
+
+                // gradient layer
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                color.opacity(0.9),
+                                color.opacity(0.6)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .padding(6)
+
+                // icon
+                Image(systemName: icon)
+                    .font(.system(size:18, weight:.bold))
+                    .foregroundStyle(.white)
+                    .symbolRenderingMode(.hierarchical)
+                
+                if kind == .habit {
+
+                     Image(systemName: "repeat")
+                         .font(.system(size:8, weight:.bold))
+                         .padding(4)
+                         .background(.ultraThinMaterial)
+                         .clipShape(Circle())
+                         .offset(x:14,y:14)
+                 }
+                
+            }
+            .frame(width:50,height:50)
+            .shadow(color: color.opacity(0.35), radius:6, y:3)
+            
                 .offset(x: -4)
                 .gesture(
                     DragGesture()
@@ -427,8 +482,13 @@ struct TimelineEventRow: View {
                     .font(.headline)
 
                 HStack(spacing:6){
-                    Image(systemName:"repeat")
-                    Text(time)
+
+                    if kind == .habit {
+                        Image(systemName:"repeat")
+                        Text("Habit")
+                    } else {
+                        Text(time)
+                    }
                 }
                 .font(.caption)
                 .foregroundStyle(.gray)

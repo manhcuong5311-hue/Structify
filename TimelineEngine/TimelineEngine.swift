@@ -5,7 +5,7 @@ struct TimelineEngine {
 
     static let snapStep = 5
     static let minMinute = 0
-    static let maxMinute = 2880
+    static let maxMinute = 1440
     static let spacing = 5
 
     static func move(
@@ -130,7 +130,70 @@ struct TimelineEngine {
         return suggested
     }
     
-    
+     static func smartSlotMinutes(
+        events: [EventItem],
+        duration: Int = 0
+    ) -> Int {
+
+        let dayStart = minMinute
+        let dayEnd = 1440
+
+        let sorted = events.sorted { $0.minutes < $1.minutes }
+
+        var bestStart = dayStart
+        var largestGap = 0
+
+        var previousEnd = dayStart
+
+        for event in sorted {
+
+            let gapStart = previousEnd
+            let gapEnd = event.minutes
+
+            let gap = gapEnd - gapStart
+
+            if gap > largestGap {
+
+                largestGap = gap
+
+                let start: Int
+
+                if gap < 60 {
+                    start = gapStart + spacing
+                } else if gap < 180 {
+                    start = gapStart + gap / 2
+                } else {
+                    start = gapStart + gap / 3
+                }
+
+                bestStart = start
+            }
+
+            previousEnd = max(previousEnd, event.minutes + (event.duration ?? 0))
+        }
+
+        let finalGap = dayEnd - previousEnd
+
+        if finalGap > largestGap {
+
+            let start: Int
+
+            if finalGap < 60 {
+                start = previousEnd + spacing
+            } else if finalGap < 180 {
+                start = previousEnd + finalGap / 2
+            } else {
+                start = previousEnd + finalGap / 3
+            }
+
+            bestStart = start
+        }
+
+        // đảm bảo không vượt timeline
+        bestStart = max(dayStart, min(bestStart, dayEnd - duration))
+
+        return snap(bestStart)
+    }
     
     
     

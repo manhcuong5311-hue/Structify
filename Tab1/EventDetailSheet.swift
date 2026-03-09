@@ -15,53 +15,115 @@ struct EventDetailSheet: View {
     var onDelete: () -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @State private var showDeleteAlert = false
+    
+    
+    
+    
+    
+    
+    var dateText: String {
 
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE, d MMM yyyy"
+        formatter.locale = Locale(identifier: "vi")
+
+        return formatter.string(from: Date())
+    }
+    
     var body: some View {
 
         NavigationStack {
 
             VStack(spacing:24) {
 
-                Circle()
-                    .fill(event.color.opacity(0.2))
-                    .frame(width:80,height:80)
-                    .overlay(
-                        Image(systemName:event.icon)
-                            .font(.largeTitle)
-                            .foregroundStyle(event.color)
-                    )
+                ZStack {
+
+                    Circle()
+                        .fill(event.color.opacity(0.18))
+
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    event.color.opacity(0.9),
+                                    event.color.opacity(0.6)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .padding(8)
+
+                    Image(systemName:event.icon)
+                        .font(.system(size:32, weight:.bold))
+                        .foregroundStyle(.white)
+                        .symbolRenderingMode(.hierarchical)
+
+                }
+                .frame(width:90,height:90)
+                .shadow(color:event.color.opacity(0.35), radius:8, y:4)
+                  
 
                 Text(event.title)
                     .font(.title2.bold())
 
-                Text("\(event.time) - \(event.endTime ?? "")")
-                    .foregroundStyle(.secondary)
+                VStack(spacing:6) {
+
+                    Label(dateText, systemImage: "calendar")
+
+                    if let end = event.endTime {
+                        Label("\(event.time) – \(end)", systemImage: "clock")
+                    } else {
+                        Label(event.time, systemImage: "clock")
+                    }
+
+                }
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
 
                 Spacer()
 
                 // DELETE BUTTON
                
 
-                    Button(role: .destructive) {
+                Button(role: .destructive) {
+                    showDeleteAlert = true
+                } label: {
 
-                        onDelete()
-                        dismiss()
-
-                    } label: {
-
-                        Label("Delete Event", systemImage: "trash")
-                            .frame(maxWidth:.infinity)
-                            .padding()
-                            .background(Color.red.opacity(0.15))
-                            .clipShape(RoundedRectangle(cornerRadius:12))
-                    
+                    Label("Delete Event", systemImage: "trash")
+                        .frame(maxWidth:.infinity)
+                        .padding()
+                        .background(Color.red.opacity(0.15))
+                        .clipShape(RoundedRectangle(cornerRadius:12))
                 }
 
             }
             .padding(30)
             .navigationTitle("Event")
             .navigationBarTitleDisplayMode(.inline)
+          
+            
+            .alert(
+                event.kind == .habit ? "Delete this habit?" : "Delete this event?",
+                isPresented: $showDeleteAlert
+            ) {
 
+                Button("Delete", role: .destructive) {
+                    onDelete()
+                    dismiss()
+                }
+
+                Button("Cancel", role: .cancel) {}
+
+            } message: {
+
+                Text(
+                    event.kind == .habit
+                    ? "This will permanently remove the habit \"\(event.title)\"."
+                    : "This will permanently remove \"\(event.title)\" from your schedule."
+                )
+            }
             .toolbar {
 
                 ToolbarItem(placement:.topBarTrailing) {

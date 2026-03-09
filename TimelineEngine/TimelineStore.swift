@@ -135,7 +135,9 @@ class TimelineStore: ObservableObject {
     }
     
     init() {
+        
 
+        
         load()
         rebuildIndex()
         rebuildHabitIndex()
