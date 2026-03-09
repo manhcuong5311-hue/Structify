@@ -159,9 +159,9 @@ struct CreateHabitDetailSheet: View {
                             }
                         }
                         
-                        continueButton
                         
-                        Spacer(minLength: 0)
+                        
+                     
                     }
                     
                     .padding(.horizontal,16)
@@ -173,6 +173,19 @@ struct CreateHabitDetailSheet: View {
                         hideKeyboard()
                     }
                 }
+            }
+            .safeAreaInset(edge: .bottom) {
+                
+                continueButton
+                    .padding(.horizontal,16)
+                    .padding(.top,8)
+                    .padding(.bottom,10)
+                    .background(
+                        Rectangle()
+                            .fill(.ultraThinMaterial)
+                            .ignoresSafeArea()
+                    )
+                    .shadow(color:.black.opacity(0.08), radius:10, y:-2)
             }
         }
     }

@@ -217,7 +217,14 @@ struct TimelineView: View {
                     addButtonsIndex =
                     TimelineEngine.largestGapIndex(events: events)
                 }
-
+                .presentationSizing(.page)          // 👈 mở rộng modal trên iPad
+                  .presentationDetents([
+                      .fraction(0.85),                // 👈 cao ~85% màn hình
+                      .large
+                  ])
+                  .presentationDragIndicator(.visible)
+                  .presentationCornerRadius(32)
+                
             case .eventDetail(let event):
 
                 EventDetailSheet(
@@ -226,6 +233,7 @@ struct TimelineView: View {
                         activeAlert = .deleteEvent(event)
                     }
                 )
+               
             }
         }
 
@@ -263,7 +271,6 @@ struct TimelineView: View {
 
                 onCreate: { title, icon, date, type, target, unit, minutes, increment in
 
-
                     let minutes = TimelineEngine.minutes(from: date)
 
                     store.addEvent(
@@ -288,6 +295,14 @@ struct TimelineView: View {
                     }
                 }
             )
+            .presentationSizing(.page)          // 👈 mở rộng modal trên iPad
+              .presentationDetents([
+                  .fraction(0.85),                // 👈 cao ~85% màn hình
+                  .large
+              ])
+              .presentationDragIndicator(.visible)
+              .presentationCornerRadius(32)
+           
         }
         
         

@@ -162,55 +162,67 @@ struct CreateEventDetailSheet: View {
     // MARK: - Body
     
     var body: some View {
-        
+
         NavigationStack {
-            
+
             ZStack {
-                
+
                 AmbientBackground(
                     isCompleted: isCompleted,
                     color: color
                 )
-                
-                
-            VStack(spacing: 14) {
-                
-                header
-                    .clipShape(
-                        RoundedRectangle(
-                            cornerRadius: 28,
-                            style: .continuous
-                        )
-                    )
-                    .padding(.horizontal, -24)
-                
-                CardSection {
-                    datePickerSection
+
+                ScrollView {
+
+                    VStack(spacing: 14) {
+
+                        header
+                            .clipShape(
+                                RoundedRectangle(
+                                    cornerRadius: 28,
+                                    style: .continuous
+                                )
+                            )
+                            .padding(.horizontal, -24)
+
+                        CardSection {
+                            datePickerSection
+                        }
+
+                        CardSection {
+                            timeSection
+                        }
+
+                        CardSection {
+                            durationSection
+                        }
+
+                        Spacer(minLength: 120)
+                    }
+                    .padding(.horizontal,16)
+                    .navigationBarHidden(true)
+                    .onAppear {
+                        updateEndTimeFromDuration()
+                    }
                 }
-                
-                CardSection {
-                    timeSection
-                }
-                
-                CardSection {
-                    durationSection
-                }
-                
-                continueButton
-                Spacer(minLength: 0)
             }
-            .padding(.horizontal,16)
-            .edgesIgnoringSafeArea(.horizontal)
-            .navigationBarHidden(true)
-            .onAppear {
-                updateEndTimeFromDuration()
-            }
-                
-                
-                
+        }
+
+        // 👇 FIX giống Habit sheet
+        .safeAreaInset(edge: .bottom) {
+
+            continueButton
+                .padding(.horizontal,16)
+                .padding(.top,8)
+                .padding(.bottom,10)
+                .background(
+                    Rectangle()
+                        .fill(.ultraThinMaterial)
+                        .ignoresSafeArea()
+                )
+                .shadow(color:.black.opacity(0.08), radius:10, y:-2)
         }
     }
-}
 }
 
 
@@ -548,69 +560,73 @@ extension CreateEventDetailSheet {
 
     var durationSection: some View {
 
-        VStack(alignment: .leading, spacing: 16) {
+        GeometryReader { geo in
             
-            Text("Thời lượng")
-                .font(.title3.bold())
+            let isWide = geo.size.width > 500
             
-            HStack(spacing: 20) {
-                
-                // PRESET GRID
-                VStack(spacing: 12) {
-                    
-                    HStack(spacing: 10) {
-                        
-                        durationPreset(15)
-                        durationPreset(45)
-                        
-                    }
-                    
-                    HStack(spacing: 10) {
-                        
-                        durationPreset(30)
-                        durationPreset(60)
-                        
-                    }
-                    
-                }
-                .frame(width: 150)
-                
-                // WHEEL PICKER
-                HStack(spacing: 8) {
-                    
-                    Picker("", selection: $durationHours) {
-                        
-                        ForEach(0..<6) { hour in
-                            Text("\(hour)h")
+            VStack(alignment: .leading, spacing: 16) {
+
+                Text("Thời lượng")
+                    .font(.title3.bold())
+
+                HStack(spacing: isWide ? 40 : 20) {
+
+                    // PRESET GRID
+                    VStack(spacing: 12) {
+
+                        HStack(spacing: 10) {
+                            durationPreset(15)
+                            durationPreset(45)
                         }
-                        
-                    }
-                    .pickerStyle(.wheel)
-                    .frame(width: 70)
-                    
-                    Picker("", selection: $durationMinutesOnly) {
-                        
-                        ForEach([0,5,10,15,20,25,30,35,40,45,50,55], id:\.self) {
-                            Text("\($0)p")
+
+                        HStack(spacing: 10) {
+                            durationPreset(30)
+                            durationPreset(60)
                         }
-                        
                     }
-                    .pickerStyle(.wheel)
-                    .frame(width: 70)
-                    
+                    .frame(width: isWide ? 220 : 150)
+
+                    Spacer(minLength: isWide ? 40 : 10)
+
+                    // WHEEL PICKER
+                    HStack(spacing: 10) {
+
+                        Picker("", selection: $durationHours) {
+
+                            ForEach(0..<6) { hour in
+                                Text("\(hour)h")
+                                    .tag(hour)
+                            }
+
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(width: isWide ? 110 : 70)
+
+                        Picker("", selection: $durationMinutesOnly) {
+
+                            ForEach([0,5,10,15,20,25,30,35,40,45,50,55], id:\.self) {
+                                Text("\($0)p")
+                                    .tag($0)
+                            }
+
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(width: isWide ? 110 : 70)
+
+                    }
+                    .frame(height: isWide ? 120 : 95)
+                    .onChange(of: durationHours) { _ in
+                        updateDurationFromPicker()
+                    }
+                    .onChange(of: durationMinutesOnly) { _ in
+                        updateDurationFromPicker()
+                    }
                 }
-                .frame(height: 95)
-                .onChange(of: durationHours) { _ in
-                    updateDurationFromPicker()
-                }
-                .onChange(of: durationMinutesOnly) { _ in
-                    updateDurationFromPicker()
-                }
-                
+                .disabled(isAllDay)
+                .opacity(isAllDay ? 0.4 : 1)
             }
-            .disabled(isAllDay)
-            .opacity(isAllDay ? 0.4 : 1)
         }
+        .frame(height: 140)
     }
     
     
