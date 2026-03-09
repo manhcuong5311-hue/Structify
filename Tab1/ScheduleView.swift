@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct ScheduleView: View {
+    @Environment(\.horizontalSizeClass) private var hSize
+    
 
     var body: some View {
 
@@ -28,6 +30,7 @@ struct ScheduleView: View {
                 TimelineView()
 
             }
+            .padding(.top, hSize == .regular ? 40 : 0)
         }
     }
 }
@@ -40,7 +43,11 @@ struct FloatingCard<Content: View>: View {
 
     @State private var dragOffset: CGFloat = 0
     @State private var lastOffset: CGFloat = 0
-
+    
+    @Environment(\.horizontalSizeClass) private var hSize
+    
+    
+    @Environment(\.colorScheme) private var scheme
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
@@ -52,7 +59,20 @@ struct FloatingCard<Content: View>: View {
             let maxDrag = geo.size.height * 0.65
 
             content
-                .background(.white)
+                .background(
+                    RoundedRectangle(cornerRadius: 30)
+                        .fill(
+                            scheme == .dark
+                            ? Color(.systemBackground)
+                            : Color(red: 0.992, green: 0.991, blue: 0.985)
+                        )
+                        .shadow(
+                            color: scheme == .dark
+                            ? .clear
+                            : .black.opacity(0.05),
+                            radius: 10
+                        )
+                )
                 .clipShape(
                     RoundedRectangle(
                         cornerRadius: 28,

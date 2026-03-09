@@ -156,8 +156,8 @@ class TimelineStore: ObservableObject {
                 EventTemplate(
                     minutes: wakeMinutes,
                     title: "Morning Start",
-                    icon: "alarm.fill",
-                    colorHex: "#FF9500",
+                    icon: "sunrise.fill",
+                    colorHex: "#F4A261",
                     recurrence: .daily,
                     isSystemEvent: true,
                     systemType: .wake
@@ -166,8 +166,8 @@ class TimelineStore: ObservableObject {
                 EventTemplate(
                     minutes: sleepMinutes,
                     title: "Night Reset",
-                    icon: "moon.fill",
-                    colorHex: "#007AFF",
+                    icon: "moon.stars.fill",
+                    colorHex: "#6C7AA6",
                     recurrence: .daily,
                     isSystemEvent: true,
                     systemType: .sleep

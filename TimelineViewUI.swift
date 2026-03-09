@@ -74,7 +74,7 @@ struct TimelineView: View {
 
     @EnvironmentObject var calendar: CalendarState
     
-    
+    @Environment(\.colorScheme) private var scheme
     
     var body: some View {
 
@@ -171,8 +171,17 @@ struct TimelineView: View {
 
         .background(
             RoundedRectangle(cornerRadius: 30)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.05), radius: 10)
+                .fill(
+                    scheme == .dark
+                    ? Color(.systemBackground)
+                    : Color(red: 0.992, green: 0.991, blue: 0.985)
+                )
+                .shadow(
+                    color: scheme == .dark
+                    ? .clear
+                    : .black.opacity(0.05),
+                    radius: 10
+                )
         )
        
         

@@ -102,7 +102,13 @@ struct WeekStripView: View {
     @Namespace private var dayAnim
     
     @State private var pulse = false
+    @EnvironmentObject var store: TimelineStore
+    @Environment(\.horizontalSizeClass) private var hSize
     
+    
+    var uiScale: CGFloat {
+        hSize == .regular ? 1.35 : 1.0
+    }
     
     var body: some View {
 
@@ -133,7 +139,141 @@ struct WeekStripView: View {
             }
         }
     }
+    
+    
+    func iconsForDate(_ date: Date) -> [String] {
 
+        let events = store.events(for: date)
+
+        let icons = events.map { $0.icon }
+
+        if icons.isEmpty {
+            return ["sunrise.fill", "sun.max.fill", "moon.stars.fill"]
+        }
+
+        return Array(icons.prefix(3))
+    }
+    
+    func eventsForDate(_ date: Date) -> [EventItem] {
+        store.events(for: date)
+    }
+    
+    func iconRow(for date: Date) -> some View {
+
+        let event = nextOrActiveEvent(for: date)
+
+        let sideSize: CGFloat = 17 * uiScale
+        let middleSize: CGFloat = 22 * uiScale
+
+        return HStack(spacing: -7 * uiScale) {
+
+            // Morning
+            EventMiniIcon(
+                icon: "sunrise.fill",
+                color: .orange.opacity(0.75),
+                size: sideSize
+            )
+            .zIndex(1)
+
+            // Upcoming / active event
+            if let event {
+                
+                let state = eventState(for: event)
+
+                EventMiniIcon(
+                    icon: event.icon,
+                    color: Color(hex: event.colorHex),
+                    size: middleSize
+                )
+                .zIndex(3)                 // 👈 cao nhất
+                .scaleEffect(state == .active ? 1.2 : 1.15)
+                .shadow(
+                    color: state == .active ? Color(hex: event.colorHex).opacity(0.4) : .clear,
+                    radius: 6
+                )
+            }
+
+            // Night
+            EventMiniIcon(
+                icon: "moon.stars.fill",
+                color: .indigo.opacity(0.75),
+                size: sideSize
+            )
+            .zIndex(2)
+        }
+        .frame(height: middleSize)
+    }
+    
+    func eventState(for event: EventItem) -> EventState {
+
+        let cal = Calendar.current
+        let now = Date()
+
+        let nowMinutes =
+            cal.component(.hour, from: now) * 60 +
+            cal.component(.minute, from: now)
+
+        let start = event.minutes
+        let end = event.minutes + (event.duration ?? 0)
+
+        if nowMinutes >= start && nowMinutes <= end {
+            return .active
+        }
+
+        if nowMinutes < start {
+            return .upcoming
+        }
+
+        return .past
+    }
+
+    enum EventState {
+        case past
+        case active
+        case upcoming
+    }
+    
+    
+    func nextOrActiveEvent(for date: Date) -> EventItem? {
+
+        let events = eventsForDate(date)
+            .filter { !$0.isSystemEvent }
+
+        let cal = Calendar.current
+        let now = Date()
+
+        let nowMinutes =
+            cal.component(.hour, from: now) * 60 +
+            cal.component(.minute, from: now)
+
+        return events
+            .sorted { $0.minutes < $1.minutes }
+            .first {
+                $0.minutes + ($0.duration ?? 0) >= nowMinutes
+            }
+    }
+    
+    
+    
+    func nextEvent(for date: Date) -> EventItem? {
+
+        let events = eventsForDate(date)
+            .filter { !$0.isSystemEvent }
+
+        let now = Date()
+        let cal = Calendar.current
+
+        let nowMinutes =
+            cal.component(.hour, from: now) * 60 +
+            cal.component(.minute, from: now)
+
+        return events
+            .filter { $0.minutes >= nowMinutes }
+            .sorted { $0.minutes < $1.minutes }
+            .first
+    }
+    
+    
     private func weekView(offset: Int) -> some View {
 
         let baseDate =
@@ -161,8 +301,7 @@ struct WeekStripView: View {
 
                 VStack(spacing: 6) {
 
-                    Text(date,
-                         format: .dateTime.weekday(.abbreviated))
+                    Text(date, format: .dateTime.weekday(.abbreviated))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
 
@@ -171,36 +310,33 @@ struct WeekStripView: View {
                         if isSelected {
 
                             Circle()
-                                .fill(Color(red: 0.45, green: 0.30, blue: 0.18)) // nâu cafe
-                                .matchedGeometryEffect(
-                                    id: "DAY",
-                                    in: dayAnim
+                                .fill(Color(red: 0.45, green: 0.30, blue: 0.18))
+                                .matchedGeometryEffect(id: "DAY", in: dayAnim)
+                                .frame(width: 38 * uiScale, height: 38 * uiScale)
+                                .shadow(
+                                    color: isToday
+                                    ? .orange.opacity(0.25)
+                                    : .brown.opacity(0.3),
+                                    radius: isToday ? 10 : 6,
+                                    y: 3
                                 )
-                                .frame(width: 38, height: 38)
-                                .shadow(color: .brown.opacity(0.3),
-                                        radius: 6,
-                                        y: 3)
                         }
 
-                        Text(date,
-                             format: .dateTime.day())
+                        Text(date, format: .dateTime.day())
                             .fontWeight(.semibold)
                             .foregroundStyle(
-                                isSelected ? .white :
-                                (isToday ? Color(red: 0.45, green: 0.30, blue: 0.18) : .primary)
+                                isSelected
+                                ? .white
+                                : (isToday
+                                   ? Color(red: 0.45, green: 0.30, blue: 0.18)
+                                   : .primary)
                             )
                     }
-                    .frame(width: 38, height: 38)
-                    
-                    
-                    if isToday && !isSelected {
+                    .frame(width: 38 * uiScale, height: 38 * uiScale)
 
-                        Circle()
-                            .fill(.orange)
-                            .frame(width: 4, height: 4)
-                            .transition(.scale)
-                    }
+                    iconRow(for: date)
                 }
+                .frame(width: 44 * uiScale, height: 90 * uiScale)
                 .frame(maxWidth: .infinity)
                 .contentShape(Rectangle())
                 .scaleEffect(isSelected ? 1.1 : 1)
@@ -226,3 +362,40 @@ struct WeekStripView: View {
 }
 
 
+struct EventMiniIcon: View {
+
+    let icon: String
+    let color: Color
+    var size: CGFloat
+
+    @Environment(\.colorScheme) private var scheme
+
+    var body: some View {
+
+        ZStack {
+
+            Circle()
+                .fill(backgroundColor)
+                .frame(width: size, height: size)
+               
+
+            Image(systemName: icon)
+                .symbolRenderingMode(.hierarchical)
+                .font(.system(size: size * 0.55, weight: .semibold))
+                .foregroundStyle(color)   // 👈 không opacity
+        }
+        .frame(width: size, height: size)
+    }
+
+    private var backgroundColor: Color {
+        scheme == .dark
+        ? color.opacity(0.25)
+        : color.opacity(0.12)
+    }
+
+    private var borderColor: Color {
+        scheme == .dark
+        ? .black.opacity(0.35)
+        : .white.opacity(0.9)
+    }
+}
