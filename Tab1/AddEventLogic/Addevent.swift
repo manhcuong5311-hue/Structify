@@ -30,16 +30,16 @@ struct CreateEventDetailSheet: View {
     
     @State private var title: String = ""
     
-    @State private var icon: String = "@"
-    @State private var color: Color = .blue
+    @State private var icon: String = "calendar.badge.plus"
+    @State private var color: Color = Color(
+        red: 108/255,
+        green: 74/255,
+        blue: 47/255
+    )
     
     @State private var date: Date = Date()
     
-    @State private var startHour: Int = 20
-    @State private var startMinute: Int = 0
-    
-    @State private var endHour: Int = 21
-    @State private var endMinute: Int = 30
+  
     
     @State private var duration: Double = 1.5
     
@@ -66,6 +66,23 @@ struct CreateEventDetailSheet: View {
     @State private var durationHours: Int = 1
     @State private var durationMinutesOnly: Int = 30
     
+    @State private var startHour: Int = 20
+    @State private var startMinute: Int = 0
+    
+    @State private var isCompleted = false
+    
+    @State private var isAllDay = false
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     var timeRangeText: String {
         
@@ -84,6 +101,12 @@ struct CreateEventDetailSheet: View {
             format: "%02d:%02d–%02d:%02d (%d giờ, %d phút)",
             sh, sm, eh, em, dh, dm
         )
+    }
+    
+    func updateStartMinutes() {
+        
+        startMinutes = startHour * 60 + startMinute
+        updateEndTimeFromDuration()
     }
     
     func updateEndTimeFromDuration() {
@@ -111,10 +134,16 @@ struct CreateEventDetailSheet: View {
         suggestedStart: Int,
         onCreate: @escaping (String,String,Date,Int) -> Void
     ) {
-        
+
         self.suggestedStart = suggestedStart
         self.onCreate = onCreate
-        
+
+        _startMinutes = State(initialValue: suggestedStart)
+        _endMinutes = State(initialValue: suggestedStart + 90)
+
+        _startHour = State(initialValue: suggestedStart / 60)
+        _startMinute = State(initialValue: suggestedStart % 60)
+
         _startTime = State(
             initialValue:
                 TimelineEngine.dateFrom(
@@ -134,7 +163,10 @@ struct CreateEventDetailSheet: View {
             
             ZStack {
                 
-                AmbientBackground()
+                AmbientBackground(
+                    isCompleted: isCompleted,
+                    color: color
+                )
                 
                 
             VStack(spacing: 14) {
@@ -166,6 +198,12 @@ struct CreateEventDetailSheet: View {
             .padding(.horizontal,16)
             .edgesIgnoringSafeArea(.horizontal)
             .navigationBarHidden(true)
+            .onAppear {
+                updateEndTimeFromDuration()
+            }
+                
+                
+                
         }
     }
 }
@@ -182,12 +220,21 @@ extension CreateEventDetailSheet {
             // background
             LinearGradient(
                 colors: [
-                    color.opacity(0.9),
-                    color.opacity(0.65)
+                    color.opacity(0.95),
+                    color.opacity(0.75)
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
+            .overlay(
+                Color.white
+                    .opacity(isCompleted ? 0.06 : 0)
+                    .blendMode(.overlay)
+                    .animation(.easeOut(duration: 0.25), value: isCompleted)
+            )
+            .scaleEffect(isCompleted ? 1.02 : 1)
+            .brightness(isCompleted ? 0.04 : 0)
+            .animation(.easeInOut(duration: 0.35), value: isCompleted)
             .ignoresSafeArea(edges: .horizontal)
 
             VStack(spacing: 20) {
@@ -217,14 +264,31 @@ extension CreateEventDetailSheet {
                         showIconPicker = true
                     } label: {
 
-                        Circle()
-                            .fill(Color.white.opacity(0.35))
-                            .frame(width: 70, height: 70)
-                            .overlay(
-                                Image(systemName: icon)
-                                    .font(.system(size: 30, weight: .bold))
-                                    .foregroundStyle(.white)
-                            )
+                        ZStack {
+
+                            Circle()
+                                .fill(.ultraThinMaterial)
+
+                            Circle()
+                                .fill(Color.white.opacity(0.18))
+
+                            Circle()
+                                .stroke(
+                                    Color.white.opacity(0.35),
+                                    lineWidth: 1
+                                )
+
+                            Image(systemName: icon)
+                                .font(.system(size: 30, weight: .bold))
+                                .foregroundStyle(.white)
+                                .opacity(icon == "calendar.badge.plus" ? 0.9 : 1)
+                        }
+                        .frame(width: 72, height: 72)
+                        .shadow(
+                            color: .black.opacity(0.25),
+                            radius: 8,
+                            y: 4
+                        )
                     }
                     .buttonStyle(.plain)
 
@@ -234,16 +298,57 @@ extension CreateEventDetailSheet {
                             .font(.subheadline)
                             .foregroundStyle(.white.opacity(0.8))
 
-                        TextField("Tên sự kiện", text: $title)
-                            .font(.system(size: 32, weight: .bold))
-                            .foregroundStyle(.white)
+                        ZStack(alignment: .leading) {
+
+                            TextField("Tên sự kiện", text: $title)
+                                .font(.title3.weight(.semibold))
+                                .foregroundStyle(.white)
+                                .padding(.vertical,8)
+                                .padding(.horizontal,12)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color.white.opacity(0.18))
+                                )
+                                .textInputAutocapitalization(.sentences)
+                                .disableAutocorrection(true)
+
+                            GeometryReader { geo in
+
+                                Rectangle()
+                                    .fill(Color.white)
+                                    .frame(height: 2)
+                                    .scaleEffect(x: isCompleted ? 1 : 0, anchor: .leading)
+                                    .animation(.easeOut(duration: 0.35), value: isCompleted)
+                                    .offset(y: geo.size.height / 2)
+                            }
+                        }
                     }
 
                     Spacer()
 
-                    Circle()
-                        .stroke(Color.white.opacity(0.8), lineWidth: 3)
-                        .frame(width: 28, height: 28)
+                    Button {
+
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                            isCompleted.toggle()
+                        }
+
+                    } label: {
+
+                        ZStack {
+
+                            Circle()
+                                .fill(isCompleted ? Color.white.opacity(0.25) : Color.clear)
+                                .frame(width: 30, height: 30)
+                                .animation(.easeInOut(duration: 0.25), value: isCompleted)
+
+                            Circle()
+                                .stroke(Color.white.opacity(0.9), lineWidth: 2)
+
+                            AnimatedCheckmark(progress: isCompleted ? 1 : 0)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .frame(width: 30, height: 30)
                 }
 
             }
@@ -271,7 +376,7 @@ extension CreateEventDetailSheet {
         HStack {
 
             Image(systemName: "calendar")
-                .foregroundStyle(.orange)
+                .foregroundStyle(.primary)
 
             Text(dateText)
 
@@ -280,10 +385,14 @@ extension CreateEventDetailSheet {
             DatePicker(
                 "",
                 selection: $date,
-                in: Date()...,
+                in: Calendar.current.startOfDay(for: Date())...,
                 displayedComponents: [.date]
             )
             .labelsHidden()
+            .onChange(of: date) { newDate in
+                
+                selectedDate = newDate
+            }
         }
         .padding()
         .background(.gray.opacity(0.1))
@@ -308,47 +417,76 @@ extension CreateEventDetailSheet {
 
         VStack(alignment: .leading, spacing: 16) {
 
-            Text("Thời gian")
+            Text("Thời gian bắt đầu")
                 .font(.title3.bold())
 
-            HStack {
+            HStack(alignment: .center, spacing: 12) {
 
-                Picker("", selection: $startHour) {
-                    ForEach(0..<24) { hour in
-                        Text("\(hour)")
+                if !isAllDay {
+
+                    HStack {
+
+                        Picker("", selection: $startHour) {
+
+                            ForEach(0..<24) { hour in
+                                Text(String(format: "%02d", hour))
+                                    .tag(hour)
+                            }
+
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(width: 80, height:120)
+                        .clipped()
+
+                        Text(":")
+                            .font(.title2.bold())
+
+                        Picker("", selection: $startMinute) {
+
+                            ForEach(Array(stride(from: 0, to: 60, by: 5)), id:\.self) { minute in
+
+                                Text(String(format: "%02d", minute))
+                                    .tag(minute)
+                            }
+
+                        }
+                        .pickerStyle(.wheel)
+                        .frame(width: 80, height:120)
+                        .clipped()
+                    }
+                    .onChange(of: startHour) { _ in
+                        updateStartMinutes()
+                    }
+                    .onChange(of: startMinute) { _ in
+                        updateStartMinutes()
                     }
                 }
-                .pickerStyle(.wheel)
-                .frame(width: 60)
 
-                Picker("", selection: $startMinute) {
-                    ForEach([0,5,10,15,20,25,30,35,40,45,50,55], id:\.self) {
-                        Text(String(format: "%02d",$0))
+                Spacer()
+
+                Button {
+
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                        isAllDay.toggle()
                     }
+
+                } label: {
+
+                    Text("All Day")
+                        .font(.subheadline.weight(.semibold))
+                        .padding(.horizontal,14)
+                        .padding(.vertical,8)
+                        .background(
+                            isAllDay
+                            ? Color.primary
+                            : Color.gray.opacity(0.15)
+                        )
+                        .foregroundStyle(
+                            isAllDay ? Color(.systemBackground) : .primary
+                        )
+                        .clipShape(Capsule())
                 }
-                .pickerStyle(.wheel)
-                .frame(width: 60)
-
-                Image(systemName: "arrow.right")
-
-                Picker("", selection: $endHour) {
-                    ForEach(0..<24) { hour in
-                        Text("\(hour)")
-                    }
-                }
-                .pickerStyle(.wheel)
-                .frame(width: 60)
-
-                Picker("", selection: $endMinute) {
-                    ForEach([0,5,10,15,20,25,30,35,40,45,50,55], id:\.self) {
-                        Text(String(format: "%02d",$0))
-                    }
-                }
-                .pickerStyle(.wheel)
-                .frame(width: 60)
-
             }
-            .frame(height: 110)
         }
     }
 }
@@ -360,55 +498,55 @@ extension CreateEventDetailSheet {
     var durationSection: some View {
 
         VStack(alignment: .leading, spacing: 16) {
-
+            
             Text("Thời lượng")
                 .font(.title3.bold())
-
+            
             HStack(spacing: 20) {
-
+                
                 // PRESET GRID
                 VStack(spacing: 12) {
-
+                    
                     HStack(spacing: 10) {
-
+                        
                         durationPreset(15)
                         durationPreset(45)
-
+                        
                     }
-
+                    
                     HStack(spacing: 10) {
-
+                        
                         durationPreset(30)
                         durationPreset(60)
-
+                        
                     }
-
+                    
                 }
                 .frame(width: 150)
-
+                
                 // WHEEL PICKER
                 HStack(spacing: 8) {
-
+                    
                     Picker("", selection: $durationHours) {
-
+                        
                         ForEach(0..<6) { hour in
                             Text("\(hour)h")
                         }
-
+                        
                     }
                     .pickerStyle(.wheel)
                     .frame(width: 70)
-
+                    
                     Picker("", selection: $durationMinutesOnly) {
-
+                        
                         ForEach([0,5,10,15,20,25,30,35,40,45,50,55], id:\.self) {
                             Text("\($0)p")
                         }
-
+                        
                     }
                     .pickerStyle(.wheel)
                     .frame(width: 70)
-
+                    
                 }
                 .frame(height: 95)
                 .onChange(of: durationHours) { _ in
@@ -417,8 +555,10 @@ extension CreateEventDetailSheet {
                 .onChange(of: durationMinutesOnly) { _ in
                     updateDurationFromPicker()
                 }
-
+                
             }
+            .disabled(isAllDay)
+            .opacity(isAllDay ? 0.4 : 1)
         }
     }
     
@@ -510,14 +650,23 @@ extension CreateEventDetailSheet {
 
         Button {
 
+            onCreate(
+                title,
+                icon,
+                date,
+                startMinutes
+            )
+
+            dismiss()
+
         } label: {
 
-            Text("Tiếp tục")
+            Text("Continue")
                 .font(.title3.bold())
                 .frame(maxWidth:.infinity)
                 .padding()
-                .background(.orange)
-                .foregroundStyle(.white)
+                .background(Color(.label))
+                .foregroundStyle(Color(.systemBackground))
                 .clipShape(Capsule())
         }
         .padding(.top,10)
@@ -552,7 +701,6 @@ struct CardSection<Content: View>: View {
                     RoundedRectangle(cornerRadius:22)
                         .fill(.ultraThinMaterial)
 
-                    // tint theo màu event
                     RoundedRectangle(cornerRadius:22)
                         .fill(tint.opacity(0.08))
 
@@ -570,19 +718,10 @@ struct CardSection<Content: View>: View {
                 y:10
             )
 
-            .scaleEffect(pressed ? 0.97 : 1)
 
-            .animation(
-                .spring(response:0.28),
-                value: pressed
-            )
-
-            .simultaneousGesture(
-                DragGesture(minimumDistance:0)
-                    .onChanged { _ in pressed = true }
-                    .onEnded { _ in pressed = false }
-            )
+            .allowsHitTesting(true)
     }
+    
 }
 
 struct TimeSlider: View {
@@ -627,19 +766,15 @@ struct TimeSlider: View {
 }
 
 struct AmbientBackground: View {
+    
+    var isCompleted: Bool
+       var color: Color
 
     var body: some View {
 
         ZStack {
 
-            LinearGradient(
-                colors: [
-                    Color(.systemBackground),
-                    Color(.systemBackground)
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
+           
 
             Circle()
                 .fill(.blue.opacity(0.25))
@@ -652,5 +787,20 @@ struct AmbientBackground: View {
                 .offset(x:160,y:260)
         }
         .ignoresSafeArea()
+    }
+}
+
+struct AnimatedCheckmark: View {
+
+    var progress: CGFloat
+
+    var body: some View {
+
+        Image(systemName: "checkmark")
+            .font(.system(size: 14, weight: .bold))
+            .foregroundStyle(.white)
+            .scaleEffect(progress)
+            .opacity(progress)
+            .animation(.spring(response: 0.35, dampingFraction: 0.6), value: progress)
     }
 }
