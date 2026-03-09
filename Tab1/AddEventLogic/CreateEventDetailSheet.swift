@@ -47,6 +47,7 @@ struct CreateEventDetailSheet: View {
     @Environment(\.dismiss) private var dismiss
     
     let onCreate: (String,String,Date,Int) -> Void
+    var onOpenHabit: (() -> Void)?
     let suggestedStart: Int
     
     
@@ -58,7 +59,7 @@ struct CreateEventDetailSheet: View {
     let presets = [30,60,90,120]
     
     @State private var showIconPicker = false
-    
+    @State private var showHabitSheet = false
     
     @State private var startMinutes: Int = 20 * 60
     @State private var endMinutes: Int = 21 * 60 + 30
@@ -73,7 +74,7 @@ struct CreateEventDetailSheet: View {
     
     @State private var isAllDay = false
     
-    
+  
     
     
     
@@ -132,11 +133,13 @@ struct CreateEventDetailSheet: View {
     
     init(
         suggestedStart: Int,
+        onOpenHabit: (() -> Void)? = nil,
         onCreate: @escaping (String,String,Date,Int) -> Void
     ) {
 
         self.suggestedStart = suggestedStart
         self.onCreate = onCreate
+        self.onOpenHabit = onOpenHabit
 
         _startMinutes = State(initialValue: suggestedStart)
         _endMinutes = State(initialValue: suggestedStart + 90)
@@ -241,6 +244,7 @@ extension CreateEventDetailSheet {
 
                 // close button
                 HStack {
+
                     Button {
                         dismiss()
                     } label: {
@@ -254,6 +258,25 @@ extension CreateEventDetailSheet {
                     }
 
                     Spacer()
+
+                    Button {
+
+                        dismiss()
+
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                            onOpenHabit?()
+                        }
+
+                    } label: {
+
+                        Text("Add Habit")
+                            .font(.subheadline.weight(.semibold))
+                            .padding(.horizontal,14)
+                            .padding(.vertical,8)
+                            .background(Color.white.opacity(0.6))
+                            .foregroundStyle(.black)
+                            .clipShape(Capsule())
+                    }
                 }
 
                 // main content
@@ -363,6 +386,14 @@ extension CreateEventDetailSheet {
                 color: $color
             )
             .presentationBackground(Color.paper)
+        }
+        .sheet(isPresented: $showHabitSheet) {
+
+            CreateHabitDetailSheet { title, icon, date in
+                
+                print("Habit created:", title)
+                
+            }
         }
     }
 }

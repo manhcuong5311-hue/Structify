@@ -8,6 +8,8 @@ struct EventItem: Identifiable, Codable, Equatable {
 
     // ID phải là templateID
     let id: UUID
+    
+    var kind: EventKind
 
     var minutes: Int
     var duration: Int? = nil
@@ -63,10 +65,16 @@ struct TimelineView: View {
     @State private var isDragging = false
 
     @State private var activeSheet: AppSheet?
+    @State private var showHabitSheet = false
+    
+    
     @State private var activeAlert: AppAlert?
+    
     @State private var events: [EventItem] = []
 
     @EnvironmentObject var calendar: CalendarState
+    
+    
     
     var body: some View {
 
@@ -179,12 +187,21 @@ struct TimelineView: View {
             switch sheet {
 
             case .createItem:
-                
-                let suggested = TimelineEngine.suggestedStartMinutes(events: events)
 
-                  CreateEventDetailSheet(
-                      suggestedStart: suggested
-                  ) { title, icon, date, duration in
+                let suggested =
+                TimelineEngine.suggestedStartMinutes(events: events)
+
+                CreateEventDetailSheet(
+                    suggestedStart: suggested,
+                    onOpenHabit: {
+
+                        activeSheet = nil
+
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                            showHabitSheet = true
+                        }
+                    }
+                ) { title, icon, date, duration in
 
                     let minutes = TimelineEngine.minutes(from: date)
 
@@ -239,6 +256,32 @@ struct TimelineView: View {
                 )
             }
         }
+        
+        .sheet(isPresented: $showHabitSheet) {
+
+            CreateHabitDetailSheet { title, icon, date in
+
+                let minutes = TimelineEngine.minutes(from: date)
+
+                store.addEvent(
+                    title: title,
+                    icon: icon,
+                    minutes: minutes,
+                    duration: nil
+                )
+
+                events = store.events(for: calendar.selectedDate)
+
+                addButtonsIndex =
+                TimelineEngine.largestGapIndex(events: events)
+            }
+        }
+        
+        
+        
+        
+        
+        
     }
 }
 struct DraggableEventRow: View {

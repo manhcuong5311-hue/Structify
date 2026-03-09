@@ -70,7 +70,12 @@ struct CreateItemSheet: View {
             if kind == .event {
 
                 CreateEventDetailSheet(
-                    suggestedStart: 540
+                    suggestedStart: 540,
+                    onOpenHabit: {
+                        showNext = false
+                        kind = .habit
+                        showNext = true
+                    }
                 ) { title, icon, date, duration in
 
                     onCreate?(
@@ -84,7 +89,17 @@ struct CreateItemSheet: View {
 
             } else {
 
-                CreateHabitDetailSheet()
+                CreateHabitDetailSheet { title, icon, date in
+
+                    onCreate?(
+                        .habit,
+                        title,
+                        icon,
+                        date,
+                        0
+                    )
+
+                }
             }
         }
     }

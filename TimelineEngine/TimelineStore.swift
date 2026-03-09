@@ -4,7 +4,9 @@ import Combine
 struct EventTemplate: Identifiable, Codable {
 
     var id = UUID()
-
+    
+    var kind: EventKind = .event
+    
     var minutes: Int
     var duration: Int?
 
@@ -45,15 +47,33 @@ class TimelineStore: ObservableObject {
     private var overrideIndex: [Int: [EventOverride]] = [:]
     private var cache: [Int: [EventItem]] = [:]
     
+    
+    
+    
+    @Published var habitLogs: [HabitLog] = []
+    private var habitIndex: [Int: [HabitLog]] = [:]
+    
+    
+    
+    
+    
+    
+    
     func invalidateCache() {
         cache.removeAll()
     }
     
+    func rebuildHabitIndex() {
+        habitIndex = Dictionary(grouping: habitLogs) { $0.dateKey }
+    }
     
     init() {
 
         load()
         rebuildIndex()
+        rebuildHabitIndex()
+        cleanupOverrides()
+        cleanupHabitLogs()
         
         if templates.isEmpty {
 
@@ -107,6 +127,13 @@ class TimelineStore: ObservableObject {
 
             overrides = decoded
         }
+        
+        if let data = UserDefaults.standard.data(forKey: "habitLogs"),
+           let decoded = try? decoder.decode([HabitLog].self, from: data) {
+
+            habitLogs = decoded
+        }
+        
     }
     
     func rebuildIndex() {
@@ -128,6 +155,11 @@ class TimelineStore: ObservableObject {
         if let overrideData = try? encoder.encode(overrides) {
             UserDefaults.standard.set(overrideData, forKey: "overrides")
         }
+        
+        if let habitData = try? encoder.encode(habitLogs) {
+            UserDefaults.standard.set(habitData, forKey: "habitLogs")
+        }
+        
     }
     
     func deleteEvent(templateID: UUID, date: Date) {
@@ -287,7 +319,7 @@ class TimelineStore: ObservableObject {
         title: String,
         icon: String,
         minutes: Int,
-        duration: Int
+        duration: Int? = nil
     ) {
 
         let new = EventTemplate(
@@ -305,9 +337,93 @@ class TimelineStore: ObservableObject {
         save()
     }
     
+//HABIT logic
     
+    func addHabit(
+        title: String,
+        icon: String,
+        minutes: Int
+    ) {
+
+        let new = EventTemplate(
+            kind: .habit,
+            minutes: minutes,
+            duration: nil,
+            title: title,
+            icon: icon,
+            colorHex: "#34C759",
+            recurrence: .daily
+        )
+
+        templates.append(new)
+
+        invalidateCache()
+        save()
+    }
     
+    func toggleHabit(templateID: UUID, date: Date) {
+        
+        guard let template = templates.first(where: {$0.id == templateID}),
+                 template.matches(date: date)
+           else { return }
+
+        let k = key(for: date)
+
+        if let index = habitLogs.firstIndex(where: {
+            $0.templateID == templateID && $0.dateKey == k
+        }) {
+
+            habitLogs[index].completed.toggle()
+
+        } else {
+
+            habitLogs.append(
+                HabitLog(
+                    templateID: templateID,
+                    dateKey: k,
+                    completed: true
+                )
+            )
+        }
+
+        rebuildHabitIndex()
+        invalidateCache()
+        save()
+    }
     
+    func habitCompleted(templateID: UUID, date: Date) -> Bool {
+
+        let k = key(for: date)
+
+        return habitIndex[k]?.contains {
+            $0.templateID == templateID && $0.completed
+        } ?? false
+    }
+    
+    func deleteTemplate(_ id: UUID) {
+
+        templates.removeAll { $0.id == id }
+
+        habitLogs.removeAll { $0.templateID == id }
+
+        rebuildHabitIndex()
+        invalidateCache()
+        save()
+    }
+    
+    func cleanupHabitLogs() {
+
+        let cutoff = key(for: Calendar.current.date(byAdding: .year, value: -1, to: Date())!)
+
+        habitLogs.removeAll {
+            $0.dateKey < cutoff
+        }
+
+        rebuildHabitIndex()
+        save()
+    }
+    
+   
     
     
     
@@ -320,6 +436,7 @@ extension EventTemplate {
 
         EventItem(
             id: id,
+            kind: kind,
             minutes: minutes,
             duration: duration,
             title: title,
@@ -350,5 +467,24 @@ extension EventTemplate {
         case .once(let d):
             return Calendar.current.isDate(d, inSameDayAs: date)
         }
+    }
+}
+
+
+struct HabitLog: Codable {
+
+    var templateID: UUID
+    var dateKey: Int
+    var completed: Bool
+}
+
+extension EventItem {
+
+    var isEvent: Bool {
+        kind == .event
+    }
+
+    var isHabit: Bool {
+        kind == .habit
     }
 }
