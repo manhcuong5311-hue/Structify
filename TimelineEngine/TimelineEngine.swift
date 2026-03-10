@@ -315,5 +315,30 @@ extension TimelineEngine {
         return index
     }
     
+    static func reorderIndex(
+        currentIndex: Int,
+        translation: CGFloat,
+        events: [EventItem]
+    ) -> Int {
+
+        let step: CGFloat = 70
+
+        let offset = Int((translation / step).rounded())
+
+        let newIndex = max(
+            0,
+            min(events.count - 1, currentIndex + offset)
+        )
+
+        return newIndex
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
 }

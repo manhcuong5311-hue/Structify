@@ -39,7 +39,7 @@ struct TimelineView: View {
                 
 
 
-                ForEach(events.indices, id: \.self)  { i in
+                ForEach(Array(events.enumerated()), id: \.element.id) { i, _ in
 
                     DraggableEventRow(
                         event: $events[i],
@@ -112,7 +112,9 @@ struct TimelineView: View {
             }
             .transaction { t in
                 if isDragging { t.animation = nil }
+                
             }
+            .animation(nil, value: isDragging)
             .animation(
                 .interactiveSpring(),
                 value: events.map(\.minutes)
@@ -302,14 +304,29 @@ struct DraggableEventRow: View {
     @Binding var event: EventItem
 
     let index: Int
+    
     @Binding var events: [EventItem]
     @Binding var isDragging: Bool
 
     var onDragEnded: () -> Void
     var onTapEvent: (EventItem) -> Void
 
-    @State private var dragOffset: CGFloat = 0
+    @State private var dragOffsetY: CGFloat = 0
+    @State private var dragOffsetX: CGFloat = 0
+    @State private var isHolding = false
+    @State private var isReordering = false
+    @State private var lastSwapIndex: Int = -1
+    @State private var lastSwapTime: Date = .distantPast
+    private let swapHaptic = UIImpactFeedbackGenerator(style: .rigid)
+    
+    @State private var morningTriggered = false
+    @State private var nightTriggered = false
 
+    @State private var didSnapMorning = false
+    @State private var didSnapNight = false
+    @State private var lastHapticMinute: Int = -1
+    
+    
     var body: some View {
 
         TimelineEventRow(
@@ -319,6 +336,7 @@ struct DraggableEventRow: View {
             icon: event.icon,
             color: event.color,
             kind: event.kind,
+            isHolding: isHolding && !event.isSystemEvent,
             
             onTap: {
                 if !event.isSystemEvent {
@@ -331,7 +349,7 @@ struct DraggableEventRow: View {
 
 
                 isDragging = true
-                dragOffset = value.translation.height
+                dragOffsetY = value.translation.height
 
                 let newMinutes = TimelineEngine.move(
                     event: event,
@@ -339,23 +357,202 @@ struct DraggableEventRow: View {
                     events: events,
                     translation: value.translation.height
                 )
+                
+                
 
                 event.update(minutes: max(0, min(newMinutes, 1440)))
+                
+                let minutes = event.minutes
+                let morningStart = 6 * 60
+                let nightStart = 22 * 60
+                let snapRange = 12
+
+                // MORNING SNAP
+                if abs(minutes - morningStart) < snapRange && !didSnapMorning {
+                    event.update(minutes: morningStart)
+                    UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                    didSnapMorning = true
+                }
+
+                if abs(minutes - morningStart) > snapRange {
+                    didSnapMorning = false
+                }
+
+                // NIGHT SNAP
+                if abs(minutes - nightStart) < snapRange && !didSnapNight {
+                    event.update(minutes: nightStart)
+                    UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                    didSnapNight = true
+                }
+
+                if abs(minutes - nightStart) > snapRange {
+                    didSnapNight = false
+                }
+                
             },
 
             onDragEnded: {
 
-                dragOffset = 0
+                dragOffsetY = 0
                 isDragging = false
 
-                events.sort { $0.minutes < $1.minutes }
+                morningTriggered = false
+                nightTriggered = false
+                
+                didSnapMorning = false
+                didSnapNight = false
 
                 onDragEnded()
             }
         )
         .frame(height: TimelineLayoutEngine.eventHeight(event))
-        .offset(y: dragOffset)
-        .animation(.spring(), value: dragOffset)
+        .offset(x: dragOffsetX, y: dragOffsetY)
+        .scaleEffect(isHolding ? 1.05 : 1)
+        .shadow(
+            color: isHolding ? .black.opacity(0.25) : .clear,
+            radius: 8
+        )
+        .animation(.interactiveSpring(response:0.22,dampingFraction:0.92), value: dragOffsetX)
+        .simultaneousGesture(
+            LongPressGesture(minimumDuration: 0.25)
+                .onEnded { _ in
+
+                    guard !event.isSystemEvent else { return }
+
+                    swapHaptic.prepare()
+
+                    withAnimation(.spring()) {
+                        isHolding = true
+                    }
+
+                    UIImpactFeedbackGenerator(style:.medium).impactOccurred()
+                }
+        )
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    
+                    // system events vẫn drag bình thường
+                    if event.isSystemEvent {
+
+                        isDragging = true
+
+                        let newMinutes = TimelineEngine.move(
+                            event: event,
+                            index: index,
+                            events: events,
+                            translation: value.translation.height
+                        )
+
+                        let clamped = max(0, min(newMinutes, 1440))
+                        event.update(minutes: clamped)
+
+                        let step = clamped / 5
+
+                        if step != lastHapticMinute {
+                            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                            lastHapticMinute = step
+                        }
+
+                        return
+                    }
+
+                    // các event khác phải hold trước
+                    guard isHolding else { return }
+                    
+                    isDragging = true
+                    
+                    dragOffsetX = max(0, value.translation.width)
+                    dragOffsetY = value.translation.height
+                    
+                    // khi kéo ngang đủ xa → bật reorder
+                    if dragOffsetX > 40 {
+                        isReordering = true
+                    }
+                    
+                    if isReordering {
+
+                        let swapThreshold: CGFloat = 60
+                        let resetThreshold: CGFloat = 25
+                        let cooldown: TimeInterval = 0.12
+                        let dragY = dragOffsetY
+                        let now = Date()
+
+                        // không cho swap quá nhanh
+                        guard now.timeIntervalSince(lastSwapTime) > cooldown else { return }
+
+                        // swap xuống
+                        if dragY > swapThreshold, index < events.count - 1 {
+
+                            let next = index + 1
+
+                            if !events[next].isSystemEvent && lastSwapIndex != next {
+
+                                lastSwapIndex = next
+                                lastSwapTime = now
+
+                                withAnimation(.interactiveSpring(response: 0.28, dampingFraction: 0.9)) {
+                                    let temp = events[index].minutes
+                                    events[index].update(minutes: events[next].minutes)
+                                    events[next].update(minutes: temp)
+
+                                    events.swapAt(index, next)
+                                }
+
+                                swapHaptic.impactOccurred()
+                            }
+                        }
+
+                        // swap lên
+                        if dragY < -swapThreshold, index > 0 {
+
+                            let prev = index - 1
+
+                            if !events[prev].isSystemEvent && lastSwapIndex != prev {
+
+                                lastSwapIndex = prev
+                                lastSwapTime = now
+
+                                withAnimation(.interactiveSpring(response: 0.28, dampingFraction: 0.9)) {
+                                    let temp = events[index].minutes
+                                    events[index].update(minutes: events[prev].minutes)
+                                    events[prev].update(minutes: temp)
+
+                                    events.swapAt(index, prev)
+                                }
+                                swapHaptic.impactOccurred()
+                            }
+                        }
+
+                        // reset lock khi kéo gần lại trung tâm
+                        if abs(dragY) < resetThreshold {
+                            lastSwapIndex = -1
+                        }
+                    } else {
+                        
+                        let newMinutes = TimelineEngine.move(
+                            event: event,
+                            index: index,
+                            events: events,
+                            translation: value.translation.height
+                        )
+                        
+                        event.update(minutes: max(0, min(newMinutes, 1440)))
+                    }
+                }
+                .onEnded { _ in
+                    
+                    dragOffsetX = 0
+                    dragOffsetY = 0
+                    isHolding = false
+                    isReordering = false
+                    isDragging = false
+                    
+                    lastSwapIndex = -1
+                    
+                    onDragEnded()
+                }
+        )
     }
 }
 
@@ -367,6 +564,7 @@ struct TimelineEventRow: View {
     let icon: String
     let color: Color
     let kind: EventKind
+    let isHolding: Bool
     
     var onTap: (() -> Void)? = nil
     var onDragChanged: ((DragGesture.Value) -> Void)? = nil
@@ -414,10 +612,19 @@ struct TimelineEventRow: View {
                     .padding(6)
 
                 // icon
-                Image(systemName: icon)
-                    .font(.system(size:18, weight:.bold))
-                    .foregroundStyle(.white)
-                    .symbolRenderingMode(.hierarchical)
+                ZStack {
+                    Image(systemName: icon)
+                        .font(.system(size:18, weight:.bold))
+                        .foregroundStyle(.white)
+                    
+                    if isHolding {
+                        Image(systemName:"arrow.right")
+                            .font(.caption.bold())
+                            .foregroundStyle(.white.opacity(0.9))
+                            .offset(x:28)
+                            .transition(.move(edge:.leading).combined(with:.opacity))
+                    }
+                }
                 
                 if kind == .habit {
 
@@ -442,15 +649,7 @@ struct TimelineEventRow: View {
             )
             .shadow(color: color.opacity(0.35), radius:6, y:3)
             .offset(x: -4)
-                .gesture(
-                    DragGesture()
-                        .onChanged { value in
-                            onDragChanged?(value)
-                        }
-                        .onEnded { _ in
-                            onDragEnded?()
-                        }
-                )
+               
 
             VStack(alignment: .leading, spacing: 4) {
 
@@ -473,6 +672,15 @@ struct TimelineEventRow: View {
             .onTapGesture {
                 onTap?()
             }
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        onDragChanged?(value)
+                    }
+                    .onEnded { _ in
+                        onDragEnded?()
+                    }
+            )
 
             Spacer()
 
