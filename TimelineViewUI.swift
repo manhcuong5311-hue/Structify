@@ -4,54 +4,6 @@
 
 import SwiftUI
 
-struct EventItem: Identifiable, Codable, Equatable {
-
-    // ID phải là templateID
-    let id: UUID
-    
-    var kind: EventKind
-
-    var minutes: Int
-    var duration: Int? = nil
-
-    var title: String
-    var icon: String
-    var colorHex: String
-
-    var isSystemEvent: Bool = false
-
-    // MARK: Computed
-
-    var time: String {
-        TimelineEngine.formatTime(minutes)
-    }
-
-    var endTime: String? {
-        guard let duration else { return nil }
-        return TimelineEngine.formatTime(minutes + duration)
-    }
-
-    // MARK: Update
-
-    mutating func update(minutes: Int) {
-        self.minutes = minutes
-    }
-
-    // MARK: Color
-
-    var color: Color {
-        Color(hex: colorHex)
-    }
-}
-
-enum EventKind: String, Codable {
-    case event
-    case habit
-}
-enum HabitCompletionType: String, Codable {
-    case binary
-    case accumulate
-}
 
 
 

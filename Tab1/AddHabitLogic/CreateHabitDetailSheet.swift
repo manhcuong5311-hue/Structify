@@ -6,29 +6,6 @@
 //
 import SwiftUI
 
-struct AddHabitButton: View {
-
-    var action: () -> Void = {}
-
-    var body: some View {
-
-        Button(action: action) {
-
-            HStack(spacing:6) {
-
-                Image(systemName: "repeat")
-
-                Text("Add Habit")
-            }
-            .font(.caption.weight(.semibold))
-            .padding(.horizontal,12)
-            .padding(.vertical,6)
-            .background(.thinMaterial)
-            .clipShape(Capsule())
-        }
-    }
-}
-
 enum HabitRepeat: String, CaseIterable {
     
     case oneDay = "1 Day"
@@ -110,82 +87,64 @@ struct CreateHabitDetailSheet: View {
     // MARK: Body
     
     var body: some View {
-        
+
         NavigationStack {
-            
+
             ZStack {
-                
+
                 AmbientBackground(
                     isCompleted: isCompleted,
                     color: color
                 )
-                
-                ScrollView {
-                    VStack(spacing: 14) {
-                        
-                        header
-                            .clipShape(
-                                RoundedRectangle(
-                                    cornerRadius: 28,
-                                    style: .continuous
-                                )
+
+                VStack(spacing: 14) {
+
+                    header
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 210)
+                        .clipShape(
+                            RoundedRectangle(
+                                cornerRadius: 28,
+                                style: .continuous
                             )
-                            .padding(.horizontal,-24)
-                        
-                        CardSection {
-                            datePickerSection
-                        }
-                        
-                        CardSection {
-                            repeatSection
-                        }
-                        
-                        CardSection {
-                            habitTimeSection
-                        }
-                        
-                        CardSection {
-                            habitTypeSection
-                        }
-                        
-                        if habitType == .accumulative {
-                            
-                            CardSection {
-                                accumulativeTargetSection
+                        )
+                        .ignoresSafeArea(edges: .horizontal)
+
+                    ScrollView {
+
+                        VStack(spacing: 14) {
+
+                            CardSection { datePickerSection }
+                            CardSection { repeatSection }
+                            CardSection { habitTimeSection }
+                            CardSection { habitTypeSection }
+
+                            if habitType == .accumulative {
+
+                                CardSection { accumulativeTargetSection }
+
+                                CardSection { incrementSection }
                             }
-                            
-                            CardSection {
-                                incrementSection
-                            }
+
+                            Spacer(minLength: 120)
                         }
-                        
-                        
-                        
-                     
+                        .padding(.horizontal,16)
                     }
-                    
-                    .padding(.horizontal,16)
-                    .navigationBarHidden(true)
-                    .onAppear {
-                        updateDateForRepeatMode()
-                    }
-                    .onTapGesture {
-                        hideKeyboard()
-                    }
+                    .frame(maxHeight: .infinity)
+                    .padding(.top,-12)
                 }
-            }
-            .safeAreaInset(edge: .bottom) {
-                
-                continueButton
-                    .padding(.horizontal,16)
-                    .padding(.top,8)
-                    .padding(.bottom,10)
-                    .background(
-                        Rectangle()
-                            .fill(.ultraThinMaterial)
-                            .ignoresSafeArea()
-                    )
-                    .shadow(color:.black.opacity(0.08), radius:10, y:-2)
+
+                .safeAreaInset(edge: .bottom) {
+
+                    continueButton
+                        .padding(.horizontal,20)
+                        .padding(.bottom,
+                            UIDevice.current.userInterfaceIdiom == .pad
+                            ? 20
+                            : -20
+                        )
+                        .ignoresSafeArea(.container, edges: .bottom)
+                }
             }
         }
     }

@@ -24,6 +24,8 @@ struct AddEventButton: View {
     }
 }
 
+
+
 struct CreateEventDetailSheet: View {
     
     @EnvironmentObject var store: TimelineStore
@@ -75,14 +77,32 @@ struct CreateEventDetailSheet: View {
     
     @State private var isAllDay = false
     
-  
+    enum RepeatRule: String, CaseIterable {
+        case none = "None"
+        case weekly = "Week"
+    }
+
+    @State private var repeatRule: RepeatRule = .none
+
+    @State private var selectedWeekdays: Set<Int> = []
     
     
     
     
     
     
+    var isPastTime: Bool {
+        isToday && startMinutes < currentMinutes
+    }
     
+    func isPastWeekday(_ weekday: Int) -> Bool {
+
+        if !isToday { return false }
+
+        let today = Calendar.current.component(.weekday, from: Date())
+
+        return weekday < today
+    }
     
     
     
@@ -157,8 +177,49 @@ struct CreateEventDetailSheet: View {
         )
     }
     
+    var repeatSummaryText: String {
+
+        if repeatRule == .none {
+            return "Does not repeat"
+        }
+
+        let symbols = Calendar.current.shortWeekdaySymbols
+
+        let sorted = selectedWeekdays.sorted()
+
+        let names = sorted.map { symbols[$0 - 1] }
+
+        return "Every " + names.joined(separator: ", ")
+    }
     
+    var weekdayChips: some View {
+
+        let symbols = Calendar.current.shortWeekdaySymbols
+
+        return HStack(spacing:6) {
+
+            ForEach(selectedWeekdays.sorted(), id:\.self) { day in
+
+                Text(symbols[day-1])
+                    .font(.caption.bold())
+                    .padding(.horizontal,8)
+                    .padding(.vertical,4)
+                    .background(Color.white.opacity(0.25))
+                    .clipShape(Capsule())
+            }
+        }
+    }
     
+    var isToday: Bool {
+        Calendar.current.isDateInToday(date)
+    }
+    
+    var currentMinutes: Int {
+
+        let c = Calendar.current.dateComponents([.hour,.minute], from: Date())
+
+        return (c.hour ?? 0) * 60 + (c.minute ?? 0)
+    }
     // MARK: - Body
     
     var body: some View {
@@ -172,56 +233,53 @@ struct CreateEventDetailSheet: View {
                     color: color
                 )
 
-                ScrollView {
+               
 
-                    VStack(spacing: 14) {
+                VStack(spacing: 14) {
 
-                        header
-                            .clipShape(
-                                RoundedRectangle(
-                                    cornerRadius: 28,
-                                    style: .continuous
-                                )
+                    header
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 210)   // 👈 thêm dòng này
+                        .clipShape(
+                            RoundedRectangle(
+                                cornerRadius: 28,
+                                style: .continuous
                             )
-                            .padding(.horizontal, -24)
+                        )
+                        .ignoresSafeArea(edges: .horizontal)
 
-                        CardSection {
-                            datePickerSection
+                    ScrollView {
+
+                        VStack(spacing: 14) {
+
+                            CardSection { datePickerSection }
+                            CardSection { timeSection }
+                            CardSection { repeatSection }
+                            CardSection { durationSection }
+
+                            Spacer(minLength: 120)
+
                         }
-
-                        CardSection {
-                            timeSection
-                        }
-
-                        CardSection {
-                            durationSection
-                        }
-
-                        Spacer(minLength: 120)
+                        .padding(.horizontal,16)
                     }
-                    .padding(.horizontal,16)
-                    .navigationBarHidden(true)
-                    .onAppear {
-                        updateEndTimeFromDuration()
-                    }
+                    .frame(maxHeight: .infinity)
+                    .padding(.top, -12)
                 }
+                
+                .safeAreaInset(edge: .bottom) {
+
+                    continueButton
+                        .padding(.horizontal,20)
+                        .padding(.bottom, UIDevice.current.userInterfaceIdiom == .pad ? 20 : -20)
+                        .ignoresSafeArea(.container, edges: .bottom)
+                }
+                
+                
             }
         }
 
-        // 👇 FIX giống Habit sheet
-        .safeAreaInset(edge: .bottom) {
-
-            continueButton
-                .padding(.horizontal,16)
-                .padding(.top,8)
-                .padding(.bottom,10)
-                .background(
-                    Rectangle()
-                        .fill(.ultraThinMaterial)
-                        .ignoresSafeArea()
-                )
-                .shadow(color:.black.opacity(0.08), radius:10, y:-2)
-        }
+       
+       
     }
 }
 
@@ -329,10 +387,15 @@ extension CreateEventDetailSheet {
                     .buttonStyle(.plain)
 
                     VStack(alignment: .leading, spacing: 4) {
+                        
 
                         Text(timeRangeText)
                             .font(.subheadline)
                             .foregroundStyle(.white.opacity(0.8))
+                        
+                        if repeatRule == .weekly {
+                              weekdayChips
+                          }
 
                         ZStack(alignment: .leading) {
 
@@ -391,6 +454,22 @@ extension CreateEventDetailSheet {
             .padding(.horizontal, 20)
             .padding(.top, 50)
             .padding(.bottom, 30)
+        }
+        .onChange(of: date) { newDate in
+
+            let weekday = Calendar.current.component(.weekday, from: newDate)
+
+            if repeatRule == .weekly {
+                selectedWeekdays.insert(weekday)
+            }
+        }
+        .onAppear {
+
+            let weekday = Calendar.current.component(.weekday, from: date)
+
+            if !isPastWeekday(weekday) {
+                selectedWeekdays.insert(weekday)
+            }
         }
         .sheet(isPresented: $showIconPicker) {
 
@@ -470,13 +549,30 @@ extension CreateEventDetailSheet {
 
         return formatter.string(from: date)
     }
+    
+    
 }
 
 
 
 extension CreateEventDetailSheet {
+    
+    func clampPastTime() {
+
+        if isToday && startMinutes < currentMinutes {
+
+            let snapped = ((currentMinutes + 4) / 5) * 5
+
+            startMinutes = snapped
+
+            startHour = snapped / 60
+            startMinute = snapped % 60
+        }
+    }
 
     var timeSection: some View {
+        
+        
 
         VStack(alignment: .leading, spacing: 16) {
 
@@ -492,8 +588,16 @@ extension CreateEventDetailSheet {
                         Picker("", selection: $startHour) {
 
                             ForEach(0..<24) { hour in
+
+                                let minutes = hour * 60
+
                                 Text(String(format: "%02d", hour))
                                     .tag(hour)
+                                    .foregroundStyle(
+                                        isToday && minutes < currentMinutes
+                                        ? Color.gray.opacity(0.35)
+                                        : Color.primary
+                                    )
                             }
 
                         }
@@ -508,10 +612,16 @@ extension CreateEventDetailSheet {
 
                             ForEach(Array(stride(from: 0, to: 60, by: 5)), id:\.self) { minute in
 
+                                let total = startHour * 60 + minute
+
                                 Text(String(format: "%02d", minute))
                                     .tag(minute)
+                                    .foregroundStyle(
+                                        isToday && total < currentMinutes
+                                        ? Color.gray.opacity(0.35)
+                                        : Color.primary
+                                    )
                             }
-
                         }
                         .pickerStyle(.wheel)
                         .frame(width: 80, height:120)
@@ -519,9 +629,12 @@ extension CreateEventDetailSheet {
                     }
                     .onChange(of: startHour) { _ in
                         updateStartMinutes()
+                        clampPastTime()
                     }
+
                     .onChange(of: startMinute) { _ in
                         updateStartMinutes()
+                        clampPastTime()
                     }
                 }
 
@@ -532,6 +645,12 @@ extension CreateEventDetailSheet {
                     withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
                         isAllDay.toggle()
                     }
+                    
+                    if isAllDay {
+                           startHour = 0
+                           startMinute = 0
+                           startMinutes = 0
+                       }
 
                 } label: {
 
@@ -552,6 +671,84 @@ extension CreateEventDetailSheet {
             }
         }
     }
+    
+    var repeatSection: some View {
+
+        VStack(alignment: .leading, spacing: 16) {
+
+            Text("Repeat")
+                .font(.title3.bold())
+
+            Picker("", selection: $repeatRule) {
+
+                ForEach(RepeatRule.allCases, id:\.self) {
+                    Text($0.rawValue).tag($0)
+                }
+
+            }
+            .pickerStyle(.segmented)
+
+            if repeatRule == .weekly {
+
+                weekdayPicker
+            }
+        }
+    }
+    
+    var weekdayPicker: some View {
+
+        let days = [
+            (1,"S"),
+            (2,"M"),
+            (3,"T"),
+            (4,"W"),
+            (5,"T"),
+            (6,"F"),
+            (7,"S")
+        ]
+
+        return HStack(spacing:10) {
+
+            ForEach(days, id:\.0) { day in
+
+                let isSelected = selectedWeekdays.contains(day.0)
+                let isPast = isPastWeekday(day.0)
+
+                Button {
+
+                    if isPast { return }
+
+                    if isSelected {
+                        selectedWeekdays.remove(day.0)
+                    } else {
+                        selectedWeekdays.insert(day.0)
+                    }
+
+                } label: {
+
+                    Text(day.1)
+                        .font(.subheadline.bold())
+                        .frame(width:36,height:36)
+                        .background(
+                            isSelected
+                            ? Color.orange
+                            : Color.gray.opacity(0.15)
+                        )
+                        .opacity(isPast ? 0.35 : 1)
+                        .foregroundStyle(
+                            isSelected ? .white : .primary
+                        )
+                        .clipShape(Circle())
+                }
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
 }
 
 
@@ -622,8 +819,8 @@ extension CreateEventDetailSheet {
                         updateDurationFromPicker()
                     }
                 }
-                .disabled(isAllDay)
-                .opacity(isAllDay ? 0.4 : 1)
+                .disabled(isAllDay || isPastTime)
+                .opacity(isAllDay || isPastTime ? 0.4 : 1)
             }
         }
         .frame(height: 140)
@@ -716,6 +913,10 @@ extension CreateEventDetailSheet {
     var continueButton: some View {
 
         Button {
+            
+            if isToday && startMinutes < currentMinutes {
+                  return
+              }
 
             onCreate(
                 title,
@@ -733,6 +934,11 @@ extension CreateEventDetailSheet {
                 .frame(maxWidth:.infinity)
                 .padding()
                 .background(Color(.label))
+                .shadow(
+                    color: .black.opacity(0.25),
+                    radius: 20,
+                    y: 10
+                )
                 .foregroundStyle(Color(.systemBackground))
                 .clipShape(Capsule())
         }
