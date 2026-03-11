@@ -449,18 +449,27 @@ class TimelineStore: ObservableObject {
         title: String,
         icon: String,
         minutes: Int,
-        duration: Int? = nil
+        duration: Int?,
+        colorHex: String,
+        recurrence: Recurrence
     ) {
 
-        if minutes < currentMinutesToday() { return }
+        // Chỉ chặn quá khứ nếu là event hôm nay
+        if case .once(let date) = recurrence {
+
+            if Calendar.current.isDateInToday(date) &&
+               minutes < currentMinutesToday() {
+                return
+            }
+        }
 
         let new = EventTemplate(
             minutes: minutes,
             duration: duration,
             title: title,
             icon: icon,
-            colorHex: "#34C759",
-            recurrence: .daily
+            colorHex: colorHex,
+            recurrence: recurrence
         )
 
         templates.append(new)
@@ -475,6 +484,93 @@ class TimelineStore: ObservableObject {
 
         return (c.hour ?? 0) * 60 + (c.minute ?? 0)
     }
+    
+    
+    func hasOverlap(
+        minutes: Int,
+        duration: Int,
+        date: Date
+    ) -> Bool {
+
+        let newStart = minutes
+        let newEnd = minutes + duration
+
+        let dayEvents = events(for: date)
+
+        for e in dayEvents {
+
+            guard let d = e.duration else { continue }
+
+            let start = e.minutes
+            let end = e.minutes + d
+
+            if newStart < end && start < newEnd {
+                return true
+            }
+        }
+
+        return false
+    }
+    
+    
+    func suggestFreeSlot(
+        date: Date,
+        duration: Int
+    ) -> Int {
+
+        let dayEvents = events(for: date)
+            .sorted { $0.minutes < $1.minutes }
+
+        if dayEvents.isEmpty {
+            return currentMinutesToday()
+        }
+
+        for i in 0..<dayEvents.count {
+
+            guard let d = dayEvents[i].duration else { continue }
+
+            let end = dayEvents[i].minutes + d
+
+            let nextStart =
+            i < dayEvents.count - 1
+            ? dayEvents[i + 1].minutes
+            : 1440
+
+            if nextStart - end >= duration {
+                return end
+            }
+        }
+
+        return dayEvents.last!.minutes + (dayEvents.last!.duration ?? 0)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

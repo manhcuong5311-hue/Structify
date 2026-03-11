@@ -76,13 +76,13 @@ struct CreateItemSheet: View {
                         kind = .habit
                         showNext = true
                     }
-                ) { title, icon, date, duration in
+                ) { title, icon, minutes, duration, colorHex, recurrence in
 
                     onCreate?(
                         .event,
                         title,
                         icon,
-                        date,
+                        Date(),
                         duration
                     )
                 }

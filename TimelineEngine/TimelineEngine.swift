@@ -15,11 +15,14 @@ struct TimelineEngine {
         translation: CGFloat
     ) -> Int {
 
-        let minuteChange = Int(translation / 2)
+        let resistance = translation * 0.7
+        let minuteChange = Int(resistance / 8)
         var newMinutes = event.minutes + minuteChange
 
         // snap
-        newMinutes = snap(newMinutes)
+        if abs(minuteChange) > 2 {
+            newMinutes = snap(newMinutes)
+        }
 
         // system zones
         if event.systemType == .wake {
@@ -33,12 +36,16 @@ struct TimelineEngine {
         // timeline clamp
         let range = timelineRange(events: events)
 
-        newMinutes = max(
-            range.lowerBound,
-            min(range.upperBound - (event.duration ?? 0), newMinutes)
-        )
-
         let duration = event.duration ?? 0
+
+        // system events không bị clamp
+        if !event.isSystemEvent {
+
+            newMinutes = max(
+                range.lowerBound,
+                min(range.upperBound - duration, newMinutes)
+            )
+        }
 
         let prevLimit = event.systemType == .sleep
             ? minMinute
@@ -72,7 +79,14 @@ struct TimelineEngine {
     }
     
     static func timelineRange(events: [EventItem]) -> ClosedRange<Int> {
-        minMinute...maxMinute
+
+        let wake =
+            events.first { $0.systemType == .wake }?.minutes ?? minMinute
+
+        let sleep =
+            events.first { $0.systemType == .sleep }?.minutes ?? maxMinute
+
+        return wake...sleep
     }
     
     
@@ -357,6 +371,11 @@ extension TimelineEngine {
 
         let previous = events[index - 1]
 
+        // không cho vượt wake
+        if previous.systemType == .wake {
+            return previous.minutes + spacing
+        }
+
         return endMinute(previous) + spacing
     }
 
@@ -369,7 +388,14 @@ extension TimelineEngine {
             return maxMinute - spacing
         }
 
-        return events[index + 1].minutes - spacing
+        let next = events[index + 1]
+
+        // không cho vượt sleep
+        if next.systemType == .sleep {
+            return next.minutes - spacing
+        }
+
+        return next.minutes - spacing
     }
 
 }

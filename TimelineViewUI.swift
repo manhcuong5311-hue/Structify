@@ -34,8 +34,9 @@ struct TimelineView: View {
     
     @State private var timer =
     Timer.publish(every: 30, on: .main, in: .common).autoconnect()
+    @State private var now = TimelineEngine.currentMinutes()
     
-    
+  
     
     
     
@@ -45,10 +46,7 @@ struct TimelineView: View {
    
     
     func nowTimeString() -> String {
-
-        TimelineEngine.formatTime(
-            TimelineEngine.currentMinutes()
-        )
+        TimelineEngine.formatTime(now)
     }
     
     func eventCenterY(_ index: Int) -> CGFloat {
@@ -73,14 +71,14 @@ struct TimelineView: View {
     
     func indicatorTouchesEvent(_ index: Int) -> Bool {
 
-        let now = TimelineEngine.currentMinutes()
+        let now = self.now
 
         guard let nearest = events.enumerated()
             .min(by: { abs($0.element.minutes - now) < abs($1.element.minutes - now) })
             else { return false }
 
         return nearest.offset == index &&
-               abs(nearest.element.minutes - now) <= 15
+               abs(nearest.element.minutes - now) <= 5
     }
     
     
@@ -185,15 +183,20 @@ struct TimelineView: View {
                     )
                     .padding(.leading, 100)
 
-                    if events.count > 1 {
+                    if events.count > 1 &&
+                       Calendar.current.isDateInToday(calendar.selectedDate) &&
+                       TimelineLayoutEngine.isNowInsideTimeline(events: events) {
 
                         TimeNowIndicator(
-                            time: TimelineEngine.formatTime(
-                                TimelineEngine.currentMinutes()
-                            )
+                            time: TimelineEngine.formatTime(now)
                         )
                         .frame(width: 70, alignment: .leading)
                         .offset(y: TimelineLayoutEngine.nowY(events: events))
+                        .opacity(
+                            TimelineLayoutEngine.isNowInsideTimeline(events: events)
+                            ? 1 : 0
+                        )
+                        .animation(.easeOut(duration: 0.2), value: events)
                     }
                 }
             }
@@ -228,7 +231,9 @@ struct TimelineView: View {
         
         .padding(.bottom, -20)
         .ignoresSafeArea(edges: .bottom)
-        .onReceive(timer) { _ in }
+        .onReceive(timer) { _ in
+            now = TimelineEngine.currentMinutes()
+        }
         .onAppear {
 
             events = store.events(for: calendar.selectedDate)
@@ -254,7 +259,10 @@ struct TimelineView: View {
             case .createItem:
 
                 let suggested =
-                TimelineEngine.suggestedStartMinutes(events: events)
+                store.suggestFreeSlot(
+                    date: calendar.selectedDate,
+                    duration: 60
+                )
 
                 CreateEventDetailSheet(
                     suggestedStart: suggested,
@@ -266,15 +274,15 @@ struct TimelineView: View {
                             showHabitSheet = true
                         }
                     }
-                ) { title, icon, date, duration in
-
-                    let minutes = TimelineEngine.minutes(from: date)
+                ) { title, icon, minutes, duration, colorHex, recurrence in
 
                     store.addEvent(
                         title: title,
                         icon: icon,
                         minutes: minutes,
-                        duration: duration
+                        duration: duration,
+                        colorHex: colorHex,
+                        recurrence: recurrence
                     )
 
                     events = store.events(for: calendar.selectedDate)
@@ -407,11 +415,14 @@ struct TimelineView: View {
                             duration: 0
                         )
 
-                    store.addEvent(
+                    store.addHabit(
                         title: title,
                         icon: icon,
                         minutes: startMinutes,
-                        duration: nil
+                        habitType: type,
+                        targetValue: target,
+                        unit: unit,
+                        increment: increment
                     )
 
                     events = store.events(for: calendar.selectedDate)
@@ -583,7 +594,6 @@ struct DraggableEventRow: View {
             LongPressGesture(minimumDuration: 0.25)
                 .onEnded { _ in
 
-                    guard !event.isSystemEvent else { return }
 
                     swapHaptic.prepare()
 
@@ -595,14 +605,23 @@ struct DraggableEventRow: View {
                 }
         )
         .gesture(
-            DragGesture()
+            event.isSystemEvent && !isHolding
+            ? nil
+            : DragGesture()
+                
                 .onChanged { value in
+                    
+                    if event.isSystemEvent && !isHolding {
+                        return
+                    }
                     
                     if event.originalMinutes == nil {
                            event.originalMinutes = event.minutes
                        }
-                    // system events vẫn drag bình thường
+                 
+                    // system event cũng phải hold mới drag
                     if event.isSystemEvent {
+
 
                         isDragging = true
 
@@ -615,7 +634,7 @@ struct DraggableEventRow: View {
 
                         let clamped = max(0, min(newMinutes, 1440))
                         event.update(minutes: clamped)
-                        
+
                         TimelineEngine.autoPush(
                             events: &events,
                             movedIndex: index
@@ -630,7 +649,6 @@ struct DraggableEventRow: View {
 
                         return
                     }
-
                     // các event khác phải hold trước
                     guard isHolding else { return }
                     
@@ -772,7 +790,8 @@ struct TimelineEventRow: View {
     var onTap: (() -> Void)? = nil
     var onDragChanged: ((DragGesture.Value) -> Void)? = nil
     var onDragEnded: (() -> Void)? = nil
-
+    var onIconHold: (() -> Void)? = nil
+    
     private var timeScale: CGFloat {
 
         guard let durationMinutes else { return 1 }
@@ -799,28 +818,24 @@ struct TimelineEventRow: View {
             VStack(spacing: 0) {
 
                 Text(time)
-                    .font(.system(size:12, weight:.semibold, design:.rounded))
+                    .font(.system(size:15, weight:.semibold, design:.rounded))
                     .monospacedDigit()
                     .opacity(isNearNowIndicator ? 0.08 : 0.5)
                     .animation(.easeOut(duration: 0.15), value: isNearNowIndicator)
                 if let endTime {
 
-                    Rectangle()
-                        .fill(Color.gray.opacity(0.3))
-                        .frame(width: 1, height: timeSpacing * 1.8)
-
+                    Spacer()
+                        .frame(height: timeSpacing * 1)
+                    
                     Text(endTime)
-                        .font(.system(size:10, weight:.medium, design:.rounded))
+                        .font(.system(size:12, weight:.medium, design:.rounded))
                         .monospacedDigit()
                         .foregroundStyle(.secondary)
                 }
             }
             .opacity(isNearNowIndicator ? 0.1 : 1)
             .frame(width:70, alignment:.leading)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.primary.opacity(0.03))
-            )
+           
 
             // 👇 DRAG HANDLE
             ZStack {
@@ -925,7 +940,7 @@ struct TimeNowIndicator: View {
 
             // giờ bên trái
             Text(time)
-                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .font(.system(size: 16, weight: .bold, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(.primary)
 

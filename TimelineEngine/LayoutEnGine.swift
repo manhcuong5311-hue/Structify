@@ -133,6 +133,14 @@ extension TimelineLayoutEngine {
 
         let now = nowMinutes()
 
+        guard
+            let wake = events.first(where: {$0.systemType == .wake}),
+            let sleep = events.first(where: {$0.systemType == .sleep})
+        else { return 0 }
+
+        // clamp theo timeline
+        let clamped = min(max(now, wake.minutes), sleep.minutes)
+
         var y: CGFloat = 0
 
         for i in 0..<events.count - 1 {
@@ -140,32 +148,30 @@ extension TimelineLayoutEngine {
             let start = events[i]
             let end = events[i + 1]
 
-            let startCenter =
-                y + eventHeight(start) / 2
+            let startCenter = y + eventHeight(start)/2
 
             let endCenter =
                 startCenter
                 + spacing(current: start, next: end)
-                + eventHeight(end) / 2
+                + eventHeight(end)/2
 
-            if now >= start.minutes && now <= end.minutes {
+            if clamped >= start.minutes && clamped <= end.minutes {
 
                 let progress =
-                    CGFloat(now - start.minutes) /
-                    CGFloat(max(end.minutes - start.minutes, 1))
+                CGFloat(clamped - start.minutes) /
+                CGFloat(max(end.minutes - start.minutes,1))
 
                 return startCenter + (endCenter - startCenter) * progress
             }
 
             y += eventHeight(start)
-
-            if i < events.count - 1 {
-                y += spacing(current: start, next: end)
-            }
+            y += spacing(current: start, next: end)
         }
 
         return y
     }
+    
+    
 }
 
 extension TimelineLayoutEngine {
@@ -189,5 +195,22 @@ extension TimelineLayoutEngine {
         total += eventHeight(events[lastIndex])
 
         return min(max(y, 0), total)
+    }
+}
+
+extension TimelineLayoutEngine {
+
+    static func isNowInsideTimeline(
+        events: [EventItem]
+    ) -> Bool {
+
+        guard
+            let wake = events.first(where: { $0.systemType == .wake }),
+            let sleep = events.first(where: { $0.systemType == .sleep })
+        else { return false }
+
+        let now = TimelineEngine.currentMinutes()
+
+        return now >= wake.minutes && now <= sleep.minutes
     }
 }

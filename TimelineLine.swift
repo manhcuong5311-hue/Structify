@@ -22,7 +22,7 @@ struct TimelineLineView: View {
                         let endY   = yPosition(for: i + 1)
 
                         let minutesGap =
-                        events[i + 1].minutes - events[i].minutes
+                        events[i + 1].minutes - TimelineEngine.endMinute(events[i])
 
                         let segmentHeight = endY - startY
 
@@ -67,11 +67,11 @@ struct TimelineLineView: View {
     // MARK: Rise / Window
 
     func riseIndex() -> Int {
-        events.firstIndex { $0.title.lowercased().contains("rise") } ?? 0
+        events.firstIndex { $0.systemType == .wake } ?? 0
     }
 
     func windowIndex() -> Int {
-        events.firstIndex { $0.title.lowercased().contains("window") } ?? events.count - 1
+        events.firstIndex { $0.systemType == .sleep } ?? events.count - 1
     }
 
     // MARK: Y Position

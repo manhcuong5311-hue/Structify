@@ -49,7 +49,7 @@ struct CreateEventDetailSheet: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    let onCreate: (String,String,Date,Int) -> Void
+    let onCreate: (String,String,Int,Int,String,Recurrence) -> Void
     var onOpenHabit: (() -> Void)?
     let suggestedStart: Int
     
@@ -151,11 +151,26 @@ struct CreateEventDetailSheet: View {
         updateEndTimeFromDuration()
     }
     
+    func buildRecurrence() -> Recurrence {
+
+        switch repeatRule {
+
+        case .none:
+            return .once(date)
+
+        case .weekly:
+            return .specific(Array(selectedWeekdays))
+        }
+    }
+    
+    
+    
+    
     
     init(
         suggestedStart: Int,
         onOpenHabit: (() -> Void)? = nil,
-        onCreate: @escaping (String,String,Date,Int) -> Void
+        onCreate: @escaping (String,String,Int,Int,String,Recurrence) -> Void
     ) {
 
         self.suggestedStart = suggestedStart
@@ -913,16 +928,47 @@ extension CreateEventDetailSheet {
     var continueButton: some View {
 
         Button {
-            
+
+            let cleanTitle =
+            title.trimmingCharacters(in: .whitespacesAndNewlines)
+
+            guard !cleanTitle.isEmpty else { return }
+
+            if repeatRule == .weekly && selectedWeekdays.isEmpty {
+                return
+            }
+
+            guard endMinutes > startMinutes else {
+                return
+            }
+
             if isToday && startMinutes < currentMinutes {
-                  return
-              }
+                return
+            }
+
+            var duration = endMinutes - startMinutes
+
+            if isAllDay {
+                duration = 1440
+            }
+
+            guard endMinutes <= 1440 else { return }
+
+            guard !store.hasOverlap(
+                minutes: startMinutes,
+                duration: duration,
+                date: date
+            ) else { return }
+
+            let recurrence = buildRecurrence()
 
             onCreate(
-                title,
+                cleanTitle,
                 icon,
-                date,
-                endMinutes - startMinutes
+                startMinutes,
+                duration,
+                color.toHex(),
+                recurrence
             )
 
             dismiss()
