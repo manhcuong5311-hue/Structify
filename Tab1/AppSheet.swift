@@ -25,17 +25,22 @@ enum AppSheet: Identifiable {
     }
 }
 
-import SwiftUI
+
 
 enum AppAlert: Identifiable {
 
     case deleteEvent(EventItem)
+    case systemEventChange(EventItem, Int)
 
     var id: String {
 
         switch self {
+
         case .deleteEvent(let event):
-            return event.id.uuidString
+            return "delete-\(event.id)"
+
+        case .systemEventChange(let event, _):
+            return "system-\(event.id)"
         }
     }
 }

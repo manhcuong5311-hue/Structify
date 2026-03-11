@@ -16,7 +16,9 @@ struct EventItem: Identifiable, Codable, Equatable {
     var colorHex: String
 
     var isSystemEvent: Bool = false
-
+    var systemType: SystemEventType? = nil
+    
+    var originalMinutes: Int? = nil
     // MARK: Computed
 
     var time: String {
@@ -479,6 +481,22 @@ class TimelineStore: ObservableObject {
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 //HABIT logic
     
     func addHabit(
@@ -591,7 +609,8 @@ extension EventTemplate {
             title: title,
             icon: icon,
             colorHex: colorHex,
-            isSystemEvent: isSystemEvent
+            isSystemEvent: isSystemEvent,
+            systemType: systemType
         )
     }
 }

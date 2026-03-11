@@ -18,24 +18,19 @@ struct TimelineEngine {
         let minuteChange = Int(translation / 2)
         var newMinutes = event.minutes + minuteChange
 
-        // 1️⃣ snap
+        // snap
         newMinutes = snap(newMinutes)
 
-        // system event zones
-        if event.title == "Rise and Shine" {
-
-            // 00:00 → 12:00
+        // system zones
+        if event.systemType == .wake {
             newMinutes = max(0, min(newMinutes, 720))
-
         }
 
-        if event.title == "Wind Down" {
-
-            // 12:00 → 24:00
+        if event.systemType == .sleep {
             newMinutes = max(720, min(newMinutes, 1440))
         }
 
-        // 3️⃣ clamp timeline
+        // timeline clamp
         let range = timelineRange(events: events)
 
         newMinutes = max(
@@ -43,10 +38,9 @@ struct TimelineEngine {
             min(range.upperBound - (event.duration ?? 0), newMinutes)
         )
 
-        // 4️⃣ clamp event trước
         let duration = event.duration ?? 0
 
-        let prevLimit = event.title == "Wind Down"
+        let prevLimit = event.systemType == .sleep
             ? minMinute
             : previousLimit(index: index, events: events)
 
@@ -54,7 +48,6 @@ struct TimelineEngine {
             ? nextLimit(index: index, events: events)
             : maxMinute
 
-        // nếu không còn khoảng trống → giữ nguyên
         if prevLimit > nextLimit - duration {
             return event.minutes
         }
@@ -194,6 +187,99 @@ struct TimelineEngine {
 
         return snap(bestStart)
     }
+    
+    static func autoPush(
+        events: inout [EventItem],
+        movedIndex: Int,
+        minSpacing: Int = 5
+    ) {
+
+        guard movedIndex < events.count else { return }
+
+        // push xuống
+        for i in (movedIndex + 1)..<events.count {
+
+            let prev = events[i - 1]
+            let current = events[i]
+
+            let required = prev.minutes + minSpacing
+
+            if current.minutes < required {
+
+                events[i].update(minutes: required)
+
+            } else {
+                break
+            }
+        }
+
+        // push lên (trường hợp kéo lên)
+        if movedIndex > 0 {
+
+            for i in stride(from: movedIndex - 1, through: 0, by: -1) {
+
+                let next = events[i + 1]
+                let current = events[i]
+
+                let required = next.minutes - minSpacing
+
+                if current.minutes > required {
+
+                    events[i].update(minutes: required)
+
+                } else {
+                    break
+                }
+            }
+        }
+    }
+    
+    
+    static func currentMinutes() -> Int {
+
+        let c = Calendar.current.dateComponents([.hour, .minute], from: Date())
+
+        let hour = c.hour ?? 0
+        let minute = c.minute ?? 0
+
+        return hour * 60 + minute
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

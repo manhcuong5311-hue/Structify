@@ -41,31 +41,153 @@ struct TimelineLayoutEngine {
 
         let safeDiff = max(diff, 0)
 
-        // spacing tối thiểu cho icon lớn
-        var base: CGFloat = 20
+        var base: CGFloat = 16
 
-        // nếu là system event → thêm khoảng cách
         if current.isSystemEvent || next.isSystemEvent {
-            base += 12
+            base += 8
         }
 
-        if safeDiff <= 5 {
-            return base
-        }
+        let normalized =
+            min(CGFloat(safeDiff) / 120, 1)
 
-        if safeDiff <= 15 {
-            return base + CGFloat(safeDiff) * 1.2
-        }
+        let curve =
+            1 - pow(1 - normalized, 2)
 
-        if safeDiff <= 60 {
-            return base + CGFloat(safeDiff) * 0.45
-        }
+        let dynamic =
+            curve * 55
 
-        return min(
-            base + CGFloat(safeDiff) * 0.25,
-            100
-        )
+        let heightFactor =
+            (eventHeight(current) +
+             eventHeight(next)) * 0.1
+
+        let result =
+            base + dynamic + heightFactor
+
+        return (result / 2).rounded() * 2
     }
     
     
+}
+
+extension TimelineLayoutEngine {
+
+    static func wakeEvent(from events: [EventItem]) -> EventItem? {
+        events.first { $0.systemType == .wake }
+    }
+
+    static func sleepEvent(from events: [EventItem]) -> EventItem? {
+        events.first { $0.systemType == .sleep }
+    }
+}
+
+extension TimelineLayoutEngine {
+
+    static func timelineHeight(
+        wake: Int,
+        sleep: Int
+    ) -> CGFloat {
+
+        CGFloat(sleep - wake) * pixelsPerMinute
+    }
+}
+
+extension TimelineLayoutEngine {
+
+    static func yPosition(
+        minutes: Int,
+        wake: Int
+    ) -> CGFloat {
+
+        CGFloat(minutes - wake) * pixelsPerMinute
+    }
+}
+
+extension TimelineLayoutEngine {
+
+    static func eventY(
+        event: EventItem,
+        wake: Int
+    ) -> CGFloat {
+
+        yPosition(
+            minutes: event.minutes,
+            wake: wake
+        )
+    }
+}
+
+extension TimelineLayoutEngine {
+
+    static func nowMinutes() -> Int {
+
+        let c = Calendar.current
+            .dateComponents([.hour,.minute], from: Date())
+
+        return (c.hour ?? 0) * 60 +
+               (c.minute ?? 0)
+    }
+
+    static func nowY(events: [EventItem]) -> CGFloat {
+
+        guard events.count > 1 else { return 0 }
+
+        let now = nowMinutes()
+
+        var y: CGFloat = 0
+
+        for i in 0..<events.count - 1 {
+
+            let start = events[i]
+            let end = events[i + 1]
+
+            let startCenter =
+                y + eventHeight(start) / 2
+
+            let endCenter =
+                startCenter
+                + spacing(current: start, next: end)
+                + eventHeight(end) / 2
+
+            if now >= start.minutes && now <= end.minutes {
+
+                let progress =
+                    CGFloat(now - start.minutes) /
+                    CGFloat(max(end.minutes - start.minutes, 1))
+
+                return startCenter + (endCenter - startCenter) * progress
+            }
+
+            y += eventHeight(start)
+
+            if i < events.count - 1 {
+                y += spacing(current: start, next: end)
+            }
+        }
+
+        return y
+    }
+}
+
+extension TimelineLayoutEngine {
+
+    static func clampedNowY(
+        events: [EventItem]
+    ) -> CGFloat {
+
+        let y = nowY(events: events)
+
+        let lastIndex = events.count - 1
+
+        var total: CGFloat = 0
+
+        for i in 0..<lastIndex {
+
+            total += eventHeight(events[i])
+            total += spacing(current: events[i], next: events[i + 1])
+        }
+
+        total += eventHeight(events[lastIndex])
+
+        return min(max(y, 0), total)
+    }
 }

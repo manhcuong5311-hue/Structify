@@ -3,6 +3,7 @@
 
 
 import SwiftUI
+import Combine
 
 
 
@@ -28,6 +29,64 @@ struct TimelineView: View {
     
     @Environment(\.colorScheme) private var scheme
     
+    @State private var pendingSystemChange: EventItem?
+    @State private var pendingMinutes: Int = 0
+    
+    @State private var timer =
+    Timer.publish(every: 30, on: .main, in: .common).autoconnect()
+    
+    
+    
+    
+    
+    
+    
+    
+   
+    
+    func nowTimeString() -> String {
+
+        TimelineEngine.formatTime(
+            TimelineEngine.currentMinutes()
+        )
+    }
+    
+    func eventCenterY(_ index: Int) -> CGFloat {
+
+        var y: CGFloat = 0
+
+        for i in 0..<index {
+
+            y += TimelineLayoutEngine.eventHeight(events[i])
+
+            if i < events.count - 1 {
+
+                y += TimelineLayoutEngine.spacing(
+                    current: events[i],
+                    next: events[i + 1]
+                )
+            }
+        }
+
+        return y + TimelineLayoutEngine.eventHeight(events[index]) / 2
+    }
+    
+    func indicatorTouchesEvent(_ index: Int) -> Bool {
+
+        let now = TimelineEngine.currentMinutes()
+
+        guard let nearest = events.enumerated()
+            .min(by: { abs($0.element.minutes - now) < abs($1.element.minutes - now) })
+            else { return false }
+
+        return nearest.offset == index &&
+               abs(nearest.element.minutes - now) <= 15
+    }
+    
+    
+    
+    
+    
     var body: some View {
 
         
@@ -46,9 +105,21 @@ struct TimelineView: View {
                         index: i,
                         events: $events,
                         isDragging: $isDragging,
+                        isNearNowIndicator: indicatorTouchesEvent(i),
+                        
                         onDragEnded: {
 
                             let event = events[i]
+                            
+                            if event.isSystemEvent {
+
+                                pendingSystemChange = event
+                                pendingMinutes = event.minutes
+
+                                activeAlert = .systemEventChange(event, event.minutes)
+
+                                return
+                            }
 
                             store.overrideEventTime(
                                 templateID: event.id,
@@ -100,15 +171,31 @@ struct TimelineView: View {
                     }
                 }
 
+               
+                
                 Spacer(minLength: 120)
             }
-            .background(alignment: .leading) {
+            .background(alignment: .topLeading) {
 
-                TimelineLineView(
-                    events: events,
-                    isDragging: isDragging
-                )
-                .padding(.leading, 100)
+                ZStack(alignment: .topLeading) {
+
+                    TimelineLineView(
+                        events: events,
+                        isDragging: isDragging
+                    )
+                    .padding(.leading, 100)
+
+                    if events.count > 1 {
+
+                        TimeNowIndicator(
+                            time: TimelineEngine.formatTime(
+                                TimelineEngine.currentMinutes()
+                            )
+                        )
+                        .frame(width: 70, alignment: .leading)
+                        .offset(y: TimelineLayoutEngine.nowY(events: events))
+                    }
+                }
             }
             .transaction { t in
                 if isDragging { t.animation = nil }
@@ -116,7 +203,7 @@ struct TimelineView: View {
             }
             .animation(nil, value: isDragging)
             .animation(
-                .interactiveSpring(),
+                isDragging ? nil : .interactiveSpring(),
                 value: events.map(\.minutes)
             )
             .padding(.horizontal)
@@ -141,7 +228,7 @@ struct TimelineView: View {
         
         .padding(.bottom, -20)
         .ignoresSafeArea(edges: .bottom)
-
+        .onReceive(timer) { _ in }
         .onAppear {
 
             events = store.events(for: calendar.selectedDate)
@@ -242,6 +329,68 @@ struct TimelineView: View {
                     },
                     secondaryButton: .cancel()
                 )
+                
+            case .systemEventChange(let event, let minutes):
+
+                return Alert(
+                    title: Text("Change System Event"),
+                    message: Text("Apply this change to all days or only today?"),
+
+                    primaryButton: .default(Text("All Days")) {
+
+                        if event.systemType == .wake {
+
+                            store.updateSystemEvents(
+                                wakeMinutes: minutes,
+                                sleepMinutes: store.sleepMinutes
+                            )
+
+                            // xoá override hôm nay
+                            store.overrides.removeAll {
+                                $0.templateID == event.id &&
+                                $0.dateKey == store.key(for: calendar.selectedDate)
+                            }
+
+                            store.rebuildIndex()
+                            store.invalidateCache()
+                            store.save()
+
+                            events = store.events(for: calendar.selectedDate)
+
+                        } else if event.systemType == .sleep {
+
+                            store.updateSystemEvents(
+                                wakeMinutes: store.wakeMinutes,
+                                sleepMinutes: minutes
+                            )
+
+                            store.overrides.removeAll {
+                                $0.templateID == event.id &&
+                                $0.dateKey == store.key(for: calendar.selectedDate)
+                            }
+
+                            store.rebuildIndex()
+                            store.invalidateCache()
+                            store.save()
+
+                            events = store.events(for: calendar.selectedDate)
+                        }
+
+                        events = store.events(for: calendar.selectedDate)
+                    },
+
+                    secondaryButton: .default(Text("Only Today")) {
+
+                        store.overrideEventTime(
+                            templateID: event.id,
+                            date: calendar.selectedDate,
+                            minutes: minutes
+                        )
+
+                        events = store.events(for: calendar.selectedDate)
+                    }
+                )
+                
             }
         }
         
@@ -307,10 +456,12 @@ struct DraggableEventRow: View {
     
     @Binding var events: [EventItem]
     @Binding var isDragging: Bool
-
+    var isNearNowIndicator: Bool = false
+    
     var onDragEnded: () -> Void
     var onTapEvent: (EventItem) -> Void
-
+  
+    
     @State private var dragOffsetY: CGFloat = 0
     @State private var dragOffsetX: CGFloat = 0
     @State private var isHolding = false
@@ -337,6 +488,15 @@ struct DraggableEventRow: View {
             color: event.color,
             kind: event.kind,
             isHolding: isHolding && !event.isSystemEvent,
+            hasDuration: event.duration != nil,
+            durationMinutes: event.duration,
+            isNearNowIndicator: isNearNowIndicator,
+            
+            
+            
+            
+            
+            
             
             onTap: {
                 if !event.isSystemEvent {
@@ -358,9 +518,12 @@ struct DraggableEventRow: View {
                     translation: value.translation.height
                 )
                 
-                
+                let clamped = min(max(newMinutes, 0), 1440)
 
-                event.update(minutes: max(0, min(newMinutes, 1440)))
+                if clamped != event.minutes {
+                    event.update(minutes: clamped)
+                }
+
                 
                 let minutes = event.minutes
                 let morningStart = 6 * 60
@@ -405,9 +568,12 @@ struct DraggableEventRow: View {
                 onDragEnded()
             }
         )
+        .opacity(isDragging && !isHolding ? 0.6 : 1)
         .frame(height: TimelineLayoutEngine.eventHeight(event))
+        .fixedSize(horizontal: false, vertical: true)
         .offset(x: dragOffsetX, y: dragOffsetY)
-        .scaleEffect(isHolding ? 1.05 : 1)
+        .scaleEffect(isHolding ? 1.15 : 1)
+        .animation(.spring(response:0.25,dampingFraction:0.8), value:isHolding)
         .shadow(
             color: isHolding ? .black.opacity(0.25) : .clear,
             radius: 8
@@ -432,6 +598,9 @@ struct DraggableEventRow: View {
             DragGesture()
                 .onChanged { value in
                     
+                    if event.originalMinutes == nil {
+                           event.originalMinutes = event.minutes
+                       }
                     // system events vẫn drag bình thường
                     if event.isSystemEvent {
 
@@ -446,6 +615,11 @@ struct DraggableEventRow: View {
 
                         let clamped = max(0, min(newMinutes, 1440))
                         event.update(minutes: clamped)
+                        
+                        TimelineEngine.autoPush(
+                            events: &events,
+                            movedIndex: index
+                        )
 
                         let step = clamped / 5
 
@@ -540,21 +714,45 @@ struct DraggableEventRow: View {
                         event.update(minutes: max(0, min(newMinutes, 1440)))
                     }
                 }
-                .onEnded { _ in
+                .onEnded { value in
                     
+                    event.originalMinutes = nil
+
+                    let predicted = value.predictedEndTranslation.height
+
+                    let newMinutes = TimelineEngine.move(
+                        event: event,
+                        index: index,
+                        events: events,
+                        translation: predicted
+                    )
+
+                    event.update(minutes: min(max(newMinutes,0),1440))
+
                     dragOffsetX = 0
                     dragOffsetY = 0
                     isHolding = false
                     isReordering = false
                     isDragging = false
-                    
                     lastSwapIndex = -1
-                    
+
                     onDragEnded()
                 }
         )
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 struct TimelineEventRow: View {
 
@@ -565,30 +763,64 @@ struct TimelineEventRow: View {
     let color: Color
     let kind: EventKind
     let isHolding: Bool
+    let hasDuration: Bool
+    let durationMinutes: Int?
+    let isNearNowIndicator: Bool
+    
+    
     
     var onTap: (() -> Void)? = nil
     var onDragChanged: ((DragGesture.Value) -> Void)? = nil
     var onDragEnded: (() -> Void)? = nil
 
+    private var timeScale: CGFloat {
+
+        guard let durationMinutes else { return 1 }
+
+        let scale = 1 + CGFloat(durationMinutes) / 240
+        return min(scale, 1.35) // cap để không giãn quá
+    }
+    
+    private var timeSpacing: CGFloat {
+
+        guard let durationMinutes else { return 2 }
+
+        let spacing = CGFloat(durationMinutes) / 6
+        return min(max(spacing, 2), 18) // clamp
+    }
+    
+    
+    
+    
     var body: some View {
 
         HStack(alignment: .center, spacing: 8) {
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(spacing: 0) {
 
                 Text(time)
-                    .font(.system(size:15, weight:.semibold, design:.rounded))
+                    .font(.system(size:12, weight:.semibold, design:.rounded))
                     .monospacedDigit()
-
+                    .opacity(isNearNowIndicator ? 0.08 : 0.5)
+                    .animation(.easeOut(duration: 0.15), value: isNearNowIndicator)
                 if let endTime {
+
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(width: 1, height: timeSpacing * 1.8)
+
                     Text(endTime)
-                        .font(.system(size:12, weight:.medium, design:.rounded))
+                        .font(.system(size:10, weight:.medium, design:.rounded))
                         .monospacedDigit()
                         .foregroundStyle(.secondary)
                 }
             }
-            .foregroundStyle(.gray)
+            .opacity(isNearNowIndicator ? 0.1 : 1)
             .frame(width:70, alignment:.leading)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.primary.opacity(0.03))
+            )
 
             // 👇 DRAG HANDLE
             ZStack {
@@ -672,21 +904,34 @@ struct TimelineEventRow: View {
             .onTapGesture {
                 onTap?()
             }
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        onDragChanged?(value)
-                    }
-                    .onEnded { _ in
-                        onDragEnded?()
-                    }
-            )
+           
 
             Spacer()
 
             Circle()
                 .stroke(color,lineWidth:3)
                 .frame(width:28,height:28)
+        }
+    }
+}
+
+struct TimeNowIndicator: View {
+
+    let time: String
+
+    var body: some View {
+
+        HStack(spacing: 8) {
+
+            // giờ bên trái
+            Text(time)
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .monospacedDigit()
+                .foregroundStyle(.primary)
+
+            // dot đỏ
+           
+
         }
     }
 }
