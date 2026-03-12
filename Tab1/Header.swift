@@ -59,7 +59,9 @@ class CalendarState: ObservableObject {
 struct HeaderDateView: View {
 
     @EnvironmentObject var calendar: CalendarState
-
+    let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
+    
+    
     var body: some View {
 
         HStack {
@@ -77,12 +79,12 @@ struct HeaderDateView: View {
                 Text(calendar.selectedDate,
                      format: .dateTime.year())
                     .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(Color.brown) // nâu cafe
+                    .foregroundStyle(brand) 
             }
 
             Image(systemName: "chevron.right")
                 .font(.system(size: 18, weight: .bold)) // to hơn
-                .foregroundStyle(Color.brown) // nâu cafe
+                .foregroundStyle(brand)
 
             Spacer()
         }
@@ -104,6 +106,7 @@ struct WeekStripView: View {
     @State private var pulse = false
     @EnvironmentObject var store: TimelineStore
     @Environment(\.horizontalSizeClass) private var hSize
+    let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
     
     
     var uiScale: CGFloat {
@@ -162,46 +165,49 @@ struct WeekStripView: View {
 
         let event = nextOrActiveEvent(for: date)
 
+        let size: CGFloat = 22 * uiScale
         let sideSize: CGFloat = 17 * uiScale
-        let middleSize: CGFloat = 22 * uiScale
 
         return HStack(spacing: -7 * uiScale) {
 
-            // Morning
-            EventMiniIcon(
-                icon: "sunrise.fill",
-                color: .orange.opacity(0.75),
-                size: sideSize
-            )
-            .zIndex(1)
-
-            // Upcoming / active event
+            // Nếu có event → chỉ hiện event
             if let event {
-                
+
                 let state = eventState(for: event)
 
                 EventMiniIcon(
                     icon: event.icon,
                     color: Color(hex: event.colorHex),
-                    size: middleSize
+                    size: size
                 )
-                .zIndex(3)                 // 👈 cao nhất
                 .scaleEffect(state == .active ? 1.2 : 1.15)
                 .shadow(
-                    color: state == .active ? Color(hex: event.colorHex).opacity(0.4) : .clear,
+                    color: state == .active
+                    ? Color(hex: event.colorHex).opacity(0.4)
+                    : .clear,
                     radius: 6
                 )
-            }
+                .animation(.easeInOut(duration: 1).repeatForever(autoreverses: true),
+                           value: state == .active)
 
-            // Night
-            EventMiniIcon(
-                icon: "moon.stars.fill",
-                color: .indigo.opacity(0.75),
-                size: sideSize
-            )
-            .zIndex(2)
+            } else {
+
+                // Không có event → hiện system icons
+
+                EventMiniIcon(
+                    icon: "sunrise.fill",
+                    color: .orange.opacity(0.75),
+                    size: sideSize
+                )
+
+                EventMiniIcon(
+                    icon: "moon.stars.fill",
+                    color: .indigo.opacity(0.75),
+                    size: sideSize
+                )
+            }
         }
-        .frame(height: middleSize)
+        .frame(height: size)
     }
     
     func eventState(for event: EventItem) -> EventState {
@@ -310,7 +316,7 @@ struct WeekStripView: View {
                         if isSelected {
 
                             Circle()
-                                .fill(Color(red: 0.45, green: 0.30, blue: 0.18))
+                                .fill(brand)
                                 .matchedGeometryEffect(id: "DAY", in: dayAnim)
                                 .frame(width: 38 * uiScale, height: 38 * uiScale)
                                 .shadow(

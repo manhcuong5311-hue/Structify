@@ -124,7 +124,7 @@ struct TimelineView: View {
                                 return
                             }
 
-                            store.overrideEventTime(
+                            store.overrideEvent(
                                 templateID: event.id,
                                 date: calendar.selectedDate,
                                 minutes: event.minutes
@@ -141,9 +141,9 @@ struct TimelineView: View {
                         },
                         onResizeCommit: { templateID, newDuration in
 
-                            let event = events[i]
+                         
 
-                            store.overrideEventDuration(
+                            store.overrideEvent(
                                 templateID: templateID,
                                 date: calendar.selectedDate,
                                 duration: newDuration
@@ -197,7 +197,8 @@ struct TimelineView: View {
 
                     TimelineLineView(
                         events: events,
-                        isDragging: isDragging
+                        isDragging: isDragging,
+                        date: calendar.selectedDate
                     )
                     .padding(.leading, 100)
 
@@ -418,7 +419,7 @@ struct TimelineView: View {
 
                     secondaryButton: .default(Text("Only Today")) {
 
-                        store.overrideEventTime(
+                        store.overrideEvent(
                             templateID: event.id,
                             date: calendar.selectedDate,
                             minutes: minutes
@@ -639,16 +640,18 @@ struct DraggableEventRow: View {
             },
             
             onResizeEnd: { translation in
-                
+
                 guard let duration = event.duration else { return }
-                
+
                 let minuteDelta = Int(translation / 4)
-                
+
                 let newDuration = max(5, ((duration + minuteDelta) / 5) * 5)
-                
+
                 event.duration = newDuration
-                
                 durationPreview = formatDuration(newDuration)
+
+                // 🔴 COMMIT NGAY
+                onResizeCommit?(event.id, newDuration)
             }
             
         )
@@ -839,11 +842,9 @@ struct DraggableEventRow: View {
                     isDragging = false
                     lastSwapIndex = -1
                     
-                    if let duration = event.duration {
-                        onResizeCommit?(event.id, duration)
-                    }
+                   
                     
-                    
+    
                     onDragEnded()
                 }
         )
@@ -914,7 +915,25 @@ struct TimelineEventRow: View {
         return min(max(spacing, 2), 18) // clamp
     }
     
-   
+    private var durationText: String? {
+
+        if let durationPreview {
+            return durationPreview
+        }
+
+        guard let durationMinutes else { return nil }
+
+        let h = durationMinutes / 60
+        let m = durationMinutes % 60
+
+        if h > 0 && m > 0 {
+            return "\(h)h \(m)m"
+        } else if h > 0 {
+            return "\(h)h"
+        } else {
+            return "\(m)m"
+        }
+    }
     
     
     var body: some View {
@@ -947,6 +966,9 @@ struct TimelineEventRow: View {
                                 .onChanged { value in
                                     onResizeEnd?(value.translation.height)
                                 }
+                                .onEnded { value in
+                                    onResizeEnd?(value.translation.height)
+                                }
                             : nil
                         )
                 }
@@ -977,7 +999,7 @@ struct TimelineEventRow: View {
             .frame(width:50,height:50)
             .scaleEffect(isHolding ? 1.15 : 1)   // 👈 scale ở đây
             .animation(.spring(response:0.25,dampingFraction:0.8), value:isHolding)
-            .offset(x:-1)
+            .offset(x:-0.5)
             .shadow(
                 color: isHolding ? .black.opacity(0.25) : .clear,
                 radius: isHolding ? 12 : 0,
@@ -996,41 +1018,57 @@ struct TimelineEventRow: View {
            
                
 
-            HStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: 2) {
 
                 Text(title)
                     .font(.headline)
+                    .opacity(durationPreview != nil ? 0.7 : 1)
 
-                if let durationPreview {
-
-                    Text(durationPreview)
-                        .font(.caption.bold())
-                        .monospacedDigit()
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 3)
-                        .background(
-                            Capsule()
-                                .fill(color.opacity(0.15))
-                        )
-                        .foregroundStyle(color)
-                        .transition(.opacity.combined(with: .scale))
-                        .animation(
-                            .spring(response:0.22,dampingFraction:0.8),
-                            value: durationPreview
-                        )
-                }
-
-                HStack(spacing:6){
-
-                    if kind == .habit {
-                        Image(systemName:"repeat")
-                        Text("Habit")
-                    } else {
+                if kind == .event {
+                    
+                    HStack(spacing: 6) {
+                        
                         Text(time)
+                            .font(.caption)
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                        
+                        if let durationText {
+
+                            if durationPreview != nil {
+
+                                Text(durationText)
+                                    .font(.caption.bold())
+                                    .monospacedDigit()
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 3)
+                                    .background(
+                                        Capsule()
+                                            .fill(color.opacity(0.18))
+                                    )
+                                    .foregroundStyle(color)
+                                    .transition(.scale.combined(with: .opacity))
+                                    .animation(.spring(response:0.25,dampingFraction:0.8), value: durationPreview)
+
+                            } else {
+
+                                Text("• \(durationText)")
+                                    .font(.caption)
+                                    .monospacedDigit()
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                     }
                 }
-                .font(.caption)
-                .foregroundStyle(.gray)
+
+                if kind == .habit {
+                    HStack(spacing:4){
+                        Image(systemName:"repeat")
+                        Text("Habit")
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
             }
             .contentShape(Rectangle())
             .onTapGesture {

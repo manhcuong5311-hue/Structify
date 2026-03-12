@@ -403,27 +403,7 @@ class TimelineStore: ObservableObject {
         return y * 10000 + m * 100 + d
     }
     
-    func overrideEventTime(templateID: UUID, date: Date, minutes: Int) {
-
-        let k = key(for: date)
-
-        overrides.removeAll {
-            $0.templateID == templateID &&
-            $0.dateKey == k
-        }
-
-        overrides.append(
-            EventOverride(
-                templateID: templateID,
-                dateKey: k,
-                minutes: minutes
-            )
-        )
-
-        rebuildIndex()
-        invalidateCache()
-        save()
-    }
+  
     
     func moveEvent(templateID: UUID, date: Date, deltaMinutes: Int) {
 
@@ -434,7 +414,7 @@ class TimelineStore: ObservableObject {
         let newMinutes = max(0, event.minutes + deltaMinutes)
         let snapped = (newMinutes / 5) * 5
         
-        overrideEventTime(
+        overrideEvent(
             templateID: templateID,
             date: date,
             minutes: snapped
@@ -555,20 +535,117 @@ class TimelineStore: ObservableObject {
         return dayEvents.last!.minutes + (dayEvents.last!.duration ?? 0)
     }
     
-    func overrideEventDuration(
+   
+    
+    func overrideEvent(
         templateID: UUID,
         date: Date,
-        duration: Int
+        minutes: Int? = nil,
+        duration: Int? = nil
     ) {
 
         let k = key(for: date)
+
+        guard let template = templates.first(where: { $0.id == templateID }) else { return }
+
+        // Base values
+        var newMinutes = minutes ?? template.minutes
+        var newDuration = duration ?? template.duration
+
+        // MARK: 1️⃣ Prevent past time if today
+
+        if Calendar.current.isDateInToday(date) {
+            let now = currentMinutesToday()
+            if newMinutes < now {
+                newMinutes = now
+            }
+        }
+
+        // MARK: 2️⃣ Clamp wake / sleep bounds
+
+        let wake = wakeMinutes
+        let sleep = sleepMinutes
+
+        if newMinutes < wake {
+            newMinutes = wake
+        }
+
+        // MARK: 3️⃣ Clamp duration min / max
+
+        if var d = newDuration {
+
+            let minDuration = 5
+            let maxDuration = 720
+
+            d = max(minDuration, d)
+            d = min(maxDuration, d)
+
+            newDuration = d
+        }
+
+        // MARK: 4️⃣ Clamp midnight
+
+        if let d = newDuration {
+            if newMinutes + d > 1440 {
+                newDuration = 1440 - newMinutes
+            }
+        }
+
+        // MARK: 5️⃣ Clamp sleep boundary
+
+        if let d = newDuration {
+            if newMinutes + d > sleep {
+                newDuration = max(0, sleep - newMinutes)
+            }
+        }
+
+        // MARK: 6️⃣ Prevent overlap
+
+        if let d = newDuration {
+
+            let newStart = newMinutes
+            let newEnd = newMinutes + d
+
+            let dayEvents = events(for: date)
+
+            for e in dayEvents where e.id != templateID {
+
+                guard let ed = e.duration else { continue }
+
+                let start = e.minutes
+                let end = e.minutes + ed
+
+                if newStart < end && start < newEnd {
+                    return
+                }
+            }
+        }
+
+        // MARK: 7️⃣ Remove redundant override
+
+        if newMinutes == template.minutes &&
+           newDuration == template.duration {
+
+            overrides.removeAll {
+                $0.templateID == templateID &&
+                $0.dateKey == k
+            }
+
+            rebuildIndex()
+            invalidateCache()
+            save()
+            return
+        }
+
+        // MARK: 8️⃣ Apply override
 
         if let index = overrides.firstIndex(where: {
             $0.templateID == templateID &&
             $0.dateKey == k
         }) {
 
-            overrides[index].duration = duration
+            overrides[index].minutes = newMinutes
+            overrides[index].duration = newDuration
 
         } else {
 
@@ -576,18 +653,17 @@ class TimelineStore: ObservableObject {
                 EventOverride(
                     templateID: templateID,
                     dateKey: k,
-                    minutes: nil,
-                    duration: duration
+                    minutes: newMinutes,
+                    duration: newDuration
                 )
             )
         }
 
         rebuildIndex()
         invalidateCache()
+        objectWillChange.send()
         save()
     }
-    
-    
     
     
     

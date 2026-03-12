@@ -4,6 +4,67 @@ struct TimelineLineView: View {
 
     let events: [EventItem]
     let isDragging: Bool
+    let date: Date
+    
+    
+    
+    func isPastOrCurrentSegment(_ index: Int) -> Bool {
+
+        let now = nowMinute()
+        let start = events[index].minutes
+        let sleep = events[windowIndex()].minutes
+
+        return now >= start && start < sleep
+    }
+    
+    func isCurrentSegment(_ index: Int) -> Bool {
+        let now = nowMinute()
+        let start = events[index].minutes
+        let end   = events[index + 1].minutes
+        return now >= start && now <= end
+    }
+    
+    func nowMinute() -> Int {
+
+        let cal = Calendar.current
+        let now = Date()
+
+        return cal.component(.hour, from: now) * 60 +
+               cal.component(.minute, from: now)
+    }
+    
+    func nowY() -> CGFloat? {
+
+        let now = nowMinute()
+
+        for i in 0..<events.count-1 {
+
+            let start = events[i].minutes
+            let end   = events[i+1].minutes
+
+            if now >= start && now <= end {
+
+                let startY = yPosition(for: i)
+                let endY   = yPosition(for: i+1)
+
+                let progress =
+                CGFloat(now - start) / CGFloat(max(end - start,1))
+
+                return startY + (endY - startY) * progress
+            }
+        }
+
+        return nil
+    }
+    
+    func isToday() -> Bool {
+        Calendar.current.isDateInToday(date)
+    }
+    
+    
+    
+    
+    
 
     var body: some View {
 
@@ -50,7 +111,36 @@ struct TimelineLineView: View {
                                 dash: [dashLength, gapLength]
                             )
                         )
+                        if isToday() && isPastOrCurrentSegment(i) {
+
+                            let end = isCurrentSegment(i) ? (nowY() ?? endY) : endY
+                            let sleepMinute = events[windowIndex()].minutes
+                            let now = nowMinute()
+
+                            let progressColor: Color =
+                                now < sleepMinute
+                                ? Color.orange.opacity(0.6)
+                                : events[windowIndex()].color.opacity(0.7)
+
+                            Path { path in
+                                path.move(to: CGPoint(x: 0, y: startY))
+                                path.addLine(to: CGPoint(x: 0, y: end))
+                            }
+                            .stroke(
+                                progressColor,
+                                style: StrokeStyle(
+                                    lineWidth: isDragging ? 4 : 3,
+                                    lineCap: .round,
+                                    dash: [dashLength, gapLength]
+                                )
+                            )
+                        }
+                        
                     }
+                    
+                    
+                    
+                    
                 }
                 .shadow(
                     color: isDragging
