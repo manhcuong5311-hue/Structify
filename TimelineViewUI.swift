@@ -5,7 +5,9 @@
 import SwiftUI
 import Combine
 
-
+extension Notification.Name {
+    static let cancelTimelineHold = Notification.Name("cancelTimelineHold")
+}
 
 
 
@@ -42,7 +44,10 @@ struct TimelineView: View {
     
     
     
-    
+    func reloadTimeline() {
+        events = store.events(for: calendar.selectedDate)
+        addButtonsIndex = TimelineEngine.largestGapIndex(events: events)
+    }
    
     
     func nowTimeString() -> String {
@@ -133,7 +138,20 @@ struct TimelineView: View {
                         onTapEvent: { event in
                             guard !event.isSystemEvent else { return }
                             activeSheet = .eventDetail(event)
+                        },
+                        onResizeCommit: { templateID, newDuration in
+
+                            let event = events[i]
+
+                            store.overrideEventDuration(
+                                templateID: templateID,
+                                date: calendar.selectedDate,
+                                duration: newDuration
+                            )
+
+                            reloadTimeline()
                         }
+                        
                     )
 
                     if i < events.count - 1 {
@@ -212,7 +230,14 @@ struct TimelineView: View {
             .padding(.horizontal)
             .padding(.top, 30)
         }
+        .contentShape(Rectangle())
+        .onTapGesture {
 
+            NotificationCenter.default.post(
+                name: .cancelTimelineHold,
+                object: nil
+            )
+        }
         .background(
             RoundedRectangle(cornerRadius: 30)
                 .fill(
@@ -236,7 +261,7 @@ struct TimelineView: View {
         }
         .onAppear {
 
-            events = store.events(for: calendar.selectedDate)
+            reloadTimeline()
 
             addButtonsIndex =
             TimelineEngine.largestGapIndex(
@@ -285,7 +310,7 @@ struct TimelineView: View {
                         recurrence: recurrence
                     )
 
-                    events = store.events(for: calendar.selectedDate)
+                    reloadTimeline()
 
                     addButtonsIndex =
                     TimelineEngine.largestGapIndex(events: events)
@@ -330,7 +355,7 @@ struct TimelineView: View {
                             date: calendar.selectedDate
                         )
 
-                        events = store.events(for: calendar.selectedDate)
+                        reloadTimeline()
 
                         addButtonsIndex =
                             TimelineEngine.largestGapIndex(events: events)
@@ -353,17 +378,21 @@ struct TimelineView: View {
                                 sleepMinutes: store.sleepMinutes
                             )
 
-                            // xoá override hôm nay
-                            store.overrides.removeAll {
+                           
+                            let k = store.key(for: calendar.selectedDate)
+
+                            if let index = store.overrides.firstIndex(where: {
                                 $0.templateID == event.id &&
-                                $0.dateKey == store.key(for: calendar.selectedDate)
+                                $0.dateKey == k
+                            }) {
+                                store.overrides[index].minutes = nil
                             }
 
                             store.rebuildIndex()
                             store.invalidateCache()
                             store.save()
 
-                            events = store.events(for: calendar.selectedDate)
+                            reloadTimeline()
 
                         } else if event.systemType == .sleep {
 
@@ -381,10 +410,10 @@ struct TimelineView: View {
                             store.invalidateCache()
                             store.save()
 
-                            events = store.events(for: calendar.selectedDate)
+                            reloadTimeline()
                         }
 
-                        events = store.events(for: calendar.selectedDate)
+                        reloadTimeline()
                     },
 
                     secondaryButton: .default(Text("Only Today")) {
@@ -395,7 +424,7 @@ struct TimelineView: View {
                             minutes: minutes
                         )
 
-                        events = store.events(for: calendar.selectedDate)
+                        reloadTimeline()
                     }
                 )
                 
@@ -425,7 +454,7 @@ struct TimelineView: View {
                         increment: increment
                     )
 
-                    events = store.events(for: calendar.selectedDate)
+                    reloadTimeline()
 
                     addButtonsIndex =
                     TimelineEngine.largestGapIndex(events: events)
@@ -471,7 +500,7 @@ struct DraggableEventRow: View {
     
     var onDragEnded: () -> Void
     var onTapEvent: (EventItem) -> Void
-  
+    var onResizeCommit: ((UUID, Int) -> Void)?
     
     @State private var dragOffsetY: CGFloat = 0
     @State private var dragOffsetX: CGFloat = 0
@@ -487,10 +516,37 @@ struct DraggableEventRow: View {
     @State private var didSnapMorning = false
     @State private var didSnapNight = false
     @State private var lastHapticMinute: Int = -1
+    @State private var nearSwapTarget = false
+    
+    @State private var isResizingStart = false
+    @State private var isResizingEnd = false
+    
+    @State private var durationPreview: String? = nil
+    
+    
+    
+    
+    
+    
+    
+    
+    func formatDuration(_ minutes: Int) -> String {
+
+        let h = minutes / 60
+        let m = minutes % 60
+
+        if h > 0 && m > 0 {
+            return "\(h)h \(m)m"
+        } else if h > 0 {
+            return "\(h)h"
+        } else {
+            return "\(m)m"
+        }
+    }
     
     
     var body: some View {
-
+        
         TimelineEventRow(
             time: event.time,
             endTime: event.endTime,
@@ -502,8 +558,8 @@ struct DraggableEventRow: View {
             hasDuration: event.duration != nil,
             durationMinutes: event.duration,
             isNearNowIndicator: isNearNowIndicator,
-            
-            
+            nearSwapTarget: nearSwapTarget,
+            durationPreview: durationPreview,
             
             
             
@@ -515,13 +571,14 @@ struct DraggableEventRow: View {
                 }
             },
             
-
+            
+            
             onDragChanged: { value in
-
-
+                
+                
                 isDragging = true
                 dragOffsetY = value.translation.height
-
+                
                 let newMinutes = TimelineEngine.move(
                     event: event,
                     index: index,
@@ -530,85 +587,102 @@ struct DraggableEventRow: View {
                 )
                 
                 let clamped = min(max(newMinutes, 0), 1440)
-
+                
                 if clamped != event.minutes {
                     event.update(minutes: clamped)
                 }
-
+                
                 
                 let minutes = event.minutes
                 let morningStart = 6 * 60
                 let nightStart = 22 * 60
                 let snapRange = 12
-
+                
                 // MORNING SNAP
                 if abs(minutes - morningStart) < snapRange && !didSnapMorning {
                     event.update(minutes: morningStart)
                     UIImpactFeedbackGenerator(style: .soft).impactOccurred()
                     didSnapMorning = true
                 }
-
+                
                 if abs(minutes - morningStart) > snapRange {
                     didSnapMorning = false
                 }
-
+                
                 // NIGHT SNAP
                 if abs(minutes - nightStart) < snapRange && !didSnapNight {
                     event.update(minutes: nightStart)
                     UIImpactFeedbackGenerator(style: .soft).impactOccurred()
                     didSnapNight = true
                 }
-
+                
                 if abs(minutes - nightStart) > snapRange {
                     didSnapNight = false
                 }
                 
             },
-
+            
             onDragEnded: {
-
+                
                 dragOffsetY = 0
                 isDragging = false
-
+                
                 morningTriggered = false
                 nightTriggered = false
                 
                 didSnapMorning = false
                 didSnapNight = false
-
+                
+                durationPreview = nil
+                
                 onDragEnded()
+            },
+            
+            onResizeEnd: { translation in
+                
+                guard let duration = event.duration else { return }
+                
+                let minuteDelta = Int(translation / 4)
+                
+                let newDuration = max(5, ((duration + minuteDelta) / 5) * 5)
+                
+                event.duration = newDuration
+                
+                durationPreview = formatDuration(newDuration)
             }
+            
         )
         .opacity(isDragging && !isHolding ? 0.6 : 1)
         .frame(height: TimelineLayoutEngine.eventHeight(event))
         .fixedSize(horizontal: false, vertical: true)
         .offset(x: dragOffsetX, y: dragOffsetY)
-        .scaleEffect(isHolding ? 1.15 : 1)
-        .animation(.spring(response:0.25,dampingFraction:0.8), value:isHolding)
         .shadow(
             color: isHolding ? .black.opacity(0.25) : .clear,
-            radius: 8
+            radius: isHolding ? 14 : 0,
+            y: isHolding ? 8 : 0
         )
-        .animation(.interactiveSpring(response:0.22,dampingFraction:0.92), value: dragOffsetX)
+        .scaleEffect(isHolding ? 1.03 : 1)
+        .animation(.spring(response:0.28,dampingFraction:0.85), value:isHolding)
         .simultaneousGesture(
             LongPressGesture(minimumDuration: 0.25)
                 .onEnded { _ in
-
-
+                    
+                    
                     swapHaptic.prepare()
-
+                    
                     withAnimation(.spring()) {
                         isHolding = true
                     }
-
+                    
                     UIImpactFeedbackGenerator(style:.medium).impactOccurred()
                 }
         )
+        
         .gesture(
             event.isSystemEvent && !isHolding
             ? nil
             : DragGesture()
-                
+            
                 .onChanged { value in
                     
                     if event.isSystemEvent && !isHolding {
@@ -616,37 +690,37 @@ struct DraggableEventRow: View {
                     }
                     
                     if event.originalMinutes == nil {
-                           event.originalMinutes = event.minutes
-                       }
-                 
+                        event.originalMinutes = event.minutes
+                    }
+                    
                     // system event cũng phải hold mới drag
                     if event.isSystemEvent {
-
-
+                        
+                        
                         isDragging = true
-
+                        
                         let newMinutes = TimelineEngine.move(
                             event: event,
                             index: index,
                             events: events,
                             translation: value.translation.height
                         )
-
+                        
                         let clamped = max(0, min(newMinutes, 1440))
                         event.update(minutes: clamped)
-
+                        
                         TimelineEngine.autoPush(
                             events: &events,
                             movedIndex: index
                         )
-
+                        
                         let step = clamped / 5
-
+                        
                         if step != lastHapticMinute {
                             UIImpactFeedbackGenerator(style: .soft).impactOccurred()
                             lastHapticMinute = step
                         }
-
+                        
                         return
                     }
                     // các event khác phải hold trước
@@ -662,60 +736,71 @@ struct DraggableEventRow: View {
                         isReordering = true
                     }
                     
+                    let swapRange: CGFloat = 60
+                    
+                    if abs(dragOffsetY) > swapRange {
+                        if !nearSwapTarget {
+                            nearSwapTarget = true
+                            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+                        }
+                    } else {
+                        nearSwapTarget = false
+                    }
+                    
                     if isReordering {
-
+                        
                         let swapThreshold: CGFloat = 60
                         let resetThreshold: CGFloat = 25
                         let cooldown: TimeInterval = 0.12
                         let dragY = dragOffsetY
                         let now = Date()
-
+                        
                         // không cho swap quá nhanh
                         guard now.timeIntervalSince(lastSwapTime) > cooldown else { return }
-
+                        
                         // swap xuống
                         if dragY > swapThreshold, index < events.count - 1 {
-
+                            
                             let next = index + 1
-
+                            
                             if !events[next].isSystemEvent && lastSwapIndex != next {
-
+                                
                                 lastSwapIndex = next
                                 lastSwapTime = now
-
-                                withAnimation(.interactiveSpring(response: 0.28, dampingFraction: 0.9)) {
+                                
+                                withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.75)) {
                                     let temp = events[index].minutes
                                     events[index].update(minutes: events[next].minutes)
                                     events[next].update(minutes: temp)
-
+                                    
                                     events.swapAt(index, next)
                                 }
-
+                                
                                 swapHaptic.impactOccurred()
                             }
                         }
-
+                        
                         // swap lên
                         if dragY < -swapThreshold, index > 0 {
-
+                            
                             let prev = index - 1
-
+                            
                             if !events[prev].isSystemEvent && lastSwapIndex != prev {
-
+                                
                                 lastSwapIndex = prev
                                 lastSwapTime = now
-
+                                
                                 withAnimation(.interactiveSpring(response: 0.28, dampingFraction: 0.9)) {
                                     let temp = events[index].minutes
                                     events[index].update(minutes: events[prev].minutes)
                                     events[prev].update(minutes: temp)
-
+                                    
                                     events.swapAt(index, prev)
                                 }
                                 swapHaptic.impactOccurred()
                             }
                         }
-
+                        
                         // reset lock khi kéo gần lại trung tâm
                         if abs(dragY) < resetThreshold {
                             lastSwapIndex = -1
@@ -735,28 +820,47 @@ struct DraggableEventRow: View {
                 .onEnded { value in
                     
                     event.originalMinutes = nil
-
+                    
                     let predicted = value.predictedEndTranslation.height
-
+                    
                     let newMinutes = TimelineEngine.move(
                         event: event,
                         index: index,
                         events: events,
                         translation: predicted
                     )
-
+                    
                     event.update(minutes: min(max(newMinutes,0),1440))
-
+                    
                     dragOffsetX = 0
                     dragOffsetY = 0
                     isHolding = false
                     isReordering = false
                     isDragging = false
                     lastSwapIndex = -1
-
+                    
+                    if let duration = event.duration {
+                        onResizeCommit?(event.id, duration)
+                    }
+                    
+                    
                     onDragEnded()
                 }
         )
+        
+        .onReceive(NotificationCenter.default.publisher(for: .cancelTimelineHold)) { _ in
+
+            if isHolding {
+
+                withAnimation(.spring(response:0.25,dampingFraction:0.85)) {
+                    isHolding = false
+                    isReordering = false
+                    dragOffsetX = 0
+                    dragOffsetY = 0
+                }
+            }
+        }
+        
     }
 }
 
@@ -784,13 +888,15 @@ struct TimelineEventRow: View {
     let hasDuration: Bool
     let durationMinutes: Int?
     let isNearNowIndicator: Bool
-    
-    
+    let nearSwapTarget: Bool
+    let durationPreview: String?
     
     var onTap: (() -> Void)? = nil
     var onDragChanged: ((DragGesture.Value) -> Void)? = nil
     var onDragEnded: (() -> Void)? = nil
     var onIconHold: (() -> Void)? = nil
+    var onResizeEnd: ((CGFloat) -> Void)?
+    
     
     private var timeScale: CGFloat {
 
@@ -808,31 +914,44 @@ struct TimelineEventRow: View {
         return min(max(spacing, 2), 18) // clamp
     }
     
-    
+   
     
     
     var body: some View {
 
-        HStack(alignment: .center, spacing: 8) {
+        HStack(alignment: .center, spacing: 4) {
 
-            VStack(spacing: 0) {
+            VStack(spacing: isHolding ? 6 : 0) {
 
                 Text(time)
-                    .font(.system(size:15, weight:.semibold, design:.rounded))
-                    .monospacedDigit()
-                    .opacity(isNearNowIndicator ? 0.08 : 0.5)
-                    .animation(.easeOut(duration: 0.15), value: isNearNowIndicator)
+                    .scaleEffect(isHolding ? 1.05 : 1)
+                    .offset(y: isHolding ? -4 : 0)
+
                 if let endTime {
 
                     Spacer()
-                        .frame(height: timeSpacing * 1)
-                    
+                        .frame(height: timeSpacing)
+
                     Text(endTime)
-                        .font(.system(size:12, weight:.medium, design:.rounded))
-                        .monospacedDigit()
-                        .foregroundStyle(.secondary)
+                        .scaleEffect(isHolding ? 1.05 : 1)
+                        .offset(y: isHolding ? 4 : 0)
+                        .padding(.horizontal, isHolding ? 6 : 0)
+                        .padding(.vertical, isHolding ? 2 : 0)
+                        .background(
+                            Capsule()
+                                .fill(isHolding ? Color.primary.opacity(0.08) : .clear)
+                        )
+                        .gesture(
+                            isHolding ?
+                            DragGesture()
+                                .onChanged { value in
+                                    onResizeEnd?(value.translation.height)
+                                }
+                            : nil
+                        )
                 }
             }
+            .animation(.spring(response:0.25,dampingFraction:0.8), value:isHolding)
             .opacity(isNearNowIndicator ? 0.1 : 1)
             .frame(width:70, alignment:.leading)
            
@@ -840,51 +959,30 @@ struct TimelineEventRow: View {
             // 👇 DRAG HANDLE
             ZStack {
 
-                // base glow
                 Circle()
-                    .fill(color.opacity(0.18))
+                    .fill(color)
 
-                // gradient layer
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                color.opacity(0.9),
-                                color.opacity(0.6)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .padding(6)
+                Image(systemName: icon)
+                    .font(.system(size:18, weight:.semibold))
+                    .foregroundStyle(.white)
 
-                // icon
-                ZStack {
-                    Image(systemName: icon)
-                        .font(.system(size:18, weight:.bold))
-                        .foregroundStyle(.white)
-                    
-                    if isHolding {
-                        Image(systemName:"arrow.right")
-                            .font(.caption.bold())
-                            .foregroundStyle(.white.opacity(0.9))
-                            .offset(x:28)
-                            .transition(.move(edge:.leading).combined(with:.opacity))
-                    }
-                }
-                
                 if kind == .habit {
+                    Image(systemName: "repeat")
+                        .font(.system(size:7, weight:.bold))
+                        .foregroundStyle(.white)
+                        .offset(x:14,y:14)
+                }
 
-                     Image(systemName: "repeat")
-                         .font(.system(size:8, weight:.bold))
-                         .padding(4)
-                         .background(.ultraThinMaterial)
-                         .clipShape(Circle())
-                         .offset(x:14,y:14)
-                 }
-                
             }
             .frame(width:50,height:50)
+            .scaleEffect(isHolding ? 1.15 : 1)   // 👈 scale ở đây
+            .animation(.spring(response:0.25,dampingFraction:0.8), value:isHolding)
+            .offset(x:-1)
+            .shadow(
+                color: isHolding ? .black.opacity(0.25) : .clear,
+                radius: isHolding ? 12 : 0,
+                y: isHolding ? 6 : 0
+            )
             .background(
                 Circle()
                     .fill(.ultraThinMaterial)
@@ -895,13 +993,32 @@ struct TimelineEventRow: View {
                     .stroke(Color.primary.opacity(0.05), lineWidth:1)
             )
             .shadow(color: color.opacity(0.35), radius:6, y:3)
-            .offset(x: -4)
+           
                
 
-            VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 8) {
 
                 Text(title)
                     .font(.headline)
+
+                if let durationPreview {
+
+                    Text(durationPreview)
+                        .font(.caption.bold())
+                        .monospacedDigit()
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(
+                            Capsule()
+                                .fill(color.opacity(0.15))
+                        )
+                        .foregroundStyle(color)
+                        .transition(.opacity.combined(with: .scale))
+                        .animation(
+                            .spring(response:0.22,dampingFraction:0.8),
+                            value: durationPreview
+                        )
+                }
 
                 HStack(spacing:6){
 
@@ -923,9 +1040,20 @@ struct TimelineEventRow: View {
 
             Spacer()
 
+            ReorderHintArrows(
+                show: isHolding,
+                trigger: nearSwapTarget
+            )
+            .frame(width: 24)   // 👈 giữ vùng riêng cho arrow
+            .offset(x: -8)      // 👈 dịch sang trái
+            
+
             Circle()
                 .stroke(color,lineWidth:3)
                 .frame(width:28,height:28)
+                .scaleEffect(isHolding ? 1.15 : 1)
+                .animation(.spring(response:0.25,dampingFraction:0.8), value:isHolding)
+            
         }
     }
 }
@@ -948,5 +1076,61 @@ struct TimeNowIndicator: View {
            
 
         }
+    }
+}
+
+struct ReorderHintArrows: View {
+
+    let show: Bool
+    let trigger: Bool
+
+    @State private var slide: CGFloat = 0
+
+    var body: some View {
+
+        VStack(spacing: 6) {
+
+            Image(systemName: "arrow.up")
+                .font(.system(size: 12, weight: .bold))
+                .opacity(show ? 1 : 0)
+
+            Image(systemName: "arrow.right")
+                .font(.system(size: 12, weight: .bold))
+                .offset(x: slide)
+                .opacity(trigger ? 1 : 0.6)
+                .animation(
+                    trigger ?
+                    .easeInOut(duration:0.6).repeatForever(autoreverses:true)
+                    : .default,
+                    value: trigger
+                )
+            
+
+            Image(systemName: "arrow.down")
+                .font(.system(size: 12, weight: .bold))
+                .opacity(show ? 1 : 0)
+        }
+        .foregroundStyle(.secondary)
+        .scaleEffect(show ? 1 : 0.6)
+        .opacity(show ? 1 : 0)
+        .onChange(of: trigger) { _, value in
+
+            if value {
+
+                withAnimation(
+                    .easeInOut(duration: 0.35)
+                    .repeatForever(autoreverses: true)
+                ) {
+                    slide = 12
+                }
+
+            } else {
+
+                withAnimation(.easeOut(duration: 0.15)) {
+                    slide = 0
+                }
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: show)
     }
 }

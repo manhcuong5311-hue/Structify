@@ -157,7 +157,9 @@ struct EventOverride: Codable {
 
     var templateID: UUID
     var dateKey: Int
-    var minutes: Int
+    
+    var minutes: Int?
+    var duration: Int?
 }
 
 class TimelineStore: ObservableObject {
@@ -305,7 +307,8 @@ class TimelineStore: ObservableObject {
             EventOverride(
                 templateID: templateID,
                 dateKey: k,
-                minutes: -1
+                minutes: -1,
+                duration: nil
             )
         )
 
@@ -372,10 +375,18 @@ class TimelineStore: ObservableObject {
 
             if let index = events.firstIndex(where: { $0.id == override.templateID }) {
 
-                if override.minutes < 0 {
-                    events.remove(at: index)
-                } else {
-                    events[index].minutes = override.minutes
+                if let minutes = override.minutes {
+
+                    if minutes < 0 {
+                        events.remove(at: index)
+                        continue
+                    }
+
+                    events[index].minutes = minutes
+                }
+
+                if let duration = override.duration {
+                    events[index].duration = duration
                 }
             }
         }
@@ -544,7 +555,37 @@ class TimelineStore: ObservableObject {
         return dayEvents.last!.minutes + (dayEvents.last!.duration ?? 0)
     }
     
-    
+    func overrideEventDuration(
+        templateID: UUID,
+        date: Date,
+        duration: Int
+    ) {
+
+        let k = key(for: date)
+
+        if let index = overrides.firstIndex(where: {
+            $0.templateID == templateID &&
+            $0.dateKey == k
+        }) {
+
+            overrides[index].duration = duration
+
+        } else {
+
+            overrides.append(
+                EventOverride(
+                    templateID: templateID,
+                    dateKey: k,
+                    minutes: nil,
+                    duration: duration
+                )
+            )
+        }
+
+        rebuildIndex()
+        invalidateCache()
+        save()
+    }
     
     
     
