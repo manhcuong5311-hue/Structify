@@ -38,11 +38,17 @@ struct TimelineView: View {
     Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     @State private var now = TimelineEngine.currentMinutes()
     
-  
+    @State private var showNowBlockAlert = false
     
     
     
-    
+    func isPastDate() -> Bool {
+
+        let today = Calendar.current.startOfDay(for: Date())
+        let selected = Calendar.current.startOfDay(for: calendar.selectedDate)
+
+        return selected < today
+    }
     
     func reloadTimeline() {
         events = store.events(for: calendar.selectedDate)
@@ -109,6 +115,7 @@ struct TimelineView: View {
                         events: $events,
                         isDragging: $isDragging,
                         isNearNowIndicator: indicatorTouchesEvent(i),
+                        isLocked: isPastDate(),
                         
                         onDragEnded: {
 
@@ -142,12 +149,15 @@ struct TimelineView: View {
                             )
                         } ,
                         onTapEvent: { event in
+                            
                             guard !event.isSystemEvent else { return }
+                            guard !isPastDate() else { return }
+                            
                             activeSheet = .eventDetail(event)
                         },
                         onResizeCommit: { templateID, newDuration in
 
-                         
+                            guard !isPastDate() else { return }
 
                             store.overrideEvent(
                                 templateID: templateID,
@@ -173,7 +183,7 @@ struct TimelineView: View {
                             Spacer()
                                 .frame(height: spacing / 2)
 
-                            if addButtonsIndex == i {
+                            if addButtonsIndex == i && !isPastDate() {
 
                                 AddItemButton {
                                     activeSheet = .createItem
@@ -197,6 +207,10 @@ struct TimelineView: View {
                 
                 Spacer(minLength: 120)
             }
+            .opacity(isPastDate() ? 0.65 : 1)
+            .saturation(isPastDate() ? 0.6 : 1)
+            .allowsHitTesting(!isPastDate())
+            
             .background(alignment: .topLeading) {
 
                 ZStack(alignment: .topLeading) {
@@ -265,6 +279,11 @@ struct TimelineView: View {
         .ignoresSafeArea(edges: .bottom)
         .onReceive(timer) { _ in
             now = TimelineEngine.currentMinutes()
+        }
+        .onReceive(
+            NotificationCenter.default.publisher(for: Notification.Name("timelineNowBlock"))
+        ) { _ in
+            showNowBlockAlert = true
         }
         .onAppear {
 
@@ -507,7 +526,7 @@ struct DraggableEventRow: View {
     @Binding var events: [EventItem]
     @Binding var isDragging: Bool
     var isNearNowIndicator: Bool = false
-    
+    let isLocked: Bool
     var onDragEnded: () -> Void
     var onTapEvent: (EventItem) -> Void
     var onResizeCommit: ((UUID, Int) -> Void)?
@@ -537,10 +556,21 @@ struct DraggableEventRow: View {
     
     
     
+    func isCurrentEvent() -> Bool {
+
+        let now = TimelineEngine.currentMinutes()
+
+        let start = event.minutes
+        let end = event.minutes + (event.duration ?? 0)
+
+        return now >= start && now <= end
+    }
     
    
     
     func commitSwap() {
+
+        guard !isLocked else { return }
 
         for e in events {
 
@@ -589,20 +619,14 @@ struct DraggableEventRow: View {
             isNearNowIndicator: isNearNowIndicator,
             nearSwapTarget: nearSwapTarget,
             durationPreview: durationPreview,
-            
-            
-            
+            startMinutes: event.minutes,
             
             
             onTap: {
                 if !event.isSystemEvent {
                     onTapEvent(event)
                 }
-            },
-            
-            
-            
-            onDragChanged: { value in
+            }, onDragChanged: { value in
                 
                 
                 isDragging = true
@@ -649,9 +673,7 @@ struct DraggableEventRow: View {
                     didSnapNight = false
                 }
                 
-            },
-            
-            onDragEnded: {
+            }, onDragEnded: {
                 
                 dragOffsetY = 0
                 isDragging = false
@@ -665,22 +687,20 @@ struct DraggableEventRow: View {
                 durationPreview = nil
                 
                 onDragEnded()
-            },
-            
-            onResizeEnd: { translation in
-
+            }, onResizeEnd: { translation in
+                
                 guard let duration = event.duration else { return }
-
+                
                 let minuteDelta = Int(translation / 4)
-
+                
                 let newDuration = max(5, ((duration + minuteDelta) / 5) * 5)
-
+                
                 event.duration = newDuration
                 durationPreview = formatDuration(newDuration)
-
+                
                 // 🔴 COMMIT NGAY
                 onResizeCommit?(event.id, newDuration)
-            }
+            }, isLocked: isLocked
             
         )
         .opacity(isDragging && !isHolding ? 0.6 : 1)
@@ -698,6 +718,9 @@ struct DraggableEventRow: View {
             LongPressGesture(minimumDuration: 0.25)
                 .onEnded { _ in
                     
+                    guard !isLocked else { return }
+                    
+                    guard !isCurrentEvent() else { return }
                     
                     swapHaptic.prepare()
                     
@@ -710,9 +733,11 @@ struct DraggableEventRow: View {
         )
         
         .gesture(
-            event.isSystemEvent && !isHolding
+            isLocked
             ? nil
-            : DragGesture()
+            : (event.isSystemEvent && !isHolding
+               ? nil
+               : DragGesture())
             
                 .onChanged { value in
                     
@@ -851,6 +876,20 @@ struct DraggableEventRow: View {
                             translation: value.translation.height
                         )
                         
+                        let now = TimelineEngine.currentMinutes()
+
+                        if event.minutes > now && newMinutes < now {
+
+                            UINotificationFeedbackGenerator().notificationOccurred(.warning)
+
+                            NotificationCenter.default.post(
+                                name: Notification.Name("timelineNowBlock"),
+                                object: nil
+                            )
+
+                            return
+                        }
+
                         event.update(minutes: max(0, min(newMinutes, 1440)))
                     }
                 }
@@ -925,12 +964,62 @@ struct TimelineEventRow: View {
     let isNearNowIndicator: Bool
     let nearSwapTarget: Bool
     let durationPreview: String?
+    let startMinutes: Int
+    
+    
     
     var onTap: (() -> Void)? = nil
     var onDragChanged: ((DragGesture.Value) -> Void)? = nil
     var onDragEnded: (() -> Void)? = nil
     var onIconHold: (() -> Void)? = nil
     var onResizeEnd: ((CGFloat) -> Void)?
+    
+    let isLocked: Bool
+    
+    
+    
+    
+    
+    @Environment(\.colorScheme) private var scheme
+    
+    var brandRing: Color {
+
+        let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
+
+        if scheme == .dark {
+            return brand.opacity(0.85)
+        } else {
+            return brand.opacity(0.65)
+        }
+    }
+    
+    
+    
+    
+    
+    func isRunning() -> Bool {
+
+        guard let durationMinutes else { return false }
+
+        let now = TimelineEngine.currentMinutes()
+        return now >= startMinutes && now <= startMinutes + durationMinutes
+    }
+    
+    
+    func progress() -> CGFloat {
+
+        guard let durationMinutes else { return 0 }
+
+        let now = TimelineEngine.currentMinutes()
+
+        let start = startMinutes
+        let end = start + durationMinutes
+
+        if now <= start { return 0 }
+        if now >= end { return 1 }
+
+        return CGFloat(now - start) / CGFloat(durationMinutes)
+    }
     
     
     private var timeScale: CGFloat {
@@ -995,7 +1084,7 @@ struct TimelineEventRow: View {
                                 .fill(isHolding ? Color.primary.opacity(0.08) : .clear)
                         )
                         .gesture(
-                            isHolding ?
+                            isHolding && !isLocked ?
                             DragGesture()
                                 .onChanged { value in
                                     onResizeEnd?(value.translation.height)
@@ -1017,6 +1106,21 @@ struct TimelineEventRow: View {
 
                 Circle()
                     .fill(color)
+                
+                if isRunning() {
+
+                      Circle()
+                          .trim(from: 0, to: progress())
+                          .stroke(
+                            brandRing,
+                              style: StrokeStyle(
+                                  lineWidth: 4,
+                                  lineCap: .round
+                              )
+                          )
+                          .rotationEffect(.degrees(-90))
+                          .animation(.linear(duration: 0.5), value: progress())
+                  }
 
                 Image(systemName: icon)
                     .font(.system(size:18, weight:.semibold))
@@ -1120,11 +1224,8 @@ struct TimelineEventRow: View {
             .offset(x: -8)      // 👈 dịch sang trái
             
 
-            Circle()
-                .stroke(color,lineWidth:3)
-                .frame(width:28,height:28)
-                .scaleEffect(isHolding ? 1.15 : 1)
-                .animation(.spring(response:0.25,dampingFraction:0.8), value:isHolding)
+    
+              
             
         }
     }

@@ -573,7 +573,7 @@ class TimelineStore: ObservableObject {
 
        
         // MARK: Prevent past time
-        if Calendar.current.isDateInToday(date) {
+        if Calendar.current.isDateInToday(date) && !template.isSystemEvent {
             let now = currentMinutesToday()
             newMinutes = max(newMinutes, now)
         }
