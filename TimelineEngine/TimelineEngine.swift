@@ -16,7 +16,7 @@ struct TimelineEngine {
     ) -> Int {
 
         let resistance = translation * 0.7
-        let minuteChange = Int(resistance / 8)
+        let minuteChange = Int(resistance / 10)
         var newMinutes = event.minutes + minuteChange
 
         // snap
@@ -66,7 +66,7 @@ struct TimelineEngine {
     
     static func snap(_ minutes: Int) -> Int {
 
-        (minutes / snapStep) * snapStep
+        Int((Double(minutes) / Double(snapStep)).rounded()) * snapStep
 
     }
     
@@ -210,36 +210,34 @@ struct TimelineEngine {
 
         guard movedIndex < events.count else { return }
 
-        // push xuống
+        // PUSH DOWN
         for i in (movedIndex + 1)..<events.count {
 
             let prev = events[i - 1]
-            let current = events[i]
+            let required = endMinute(prev) + minSpacing
 
-            let required = prev.minutes + minSpacing
+            if events[i].minutes < required {
 
-            if current.minutes < required {
-
-                events[i].update(minutes: required)
+                let snapped = snap(required)
+                events[i].update(minutes: snapped)
 
             } else {
                 break
             }
         }
 
-        // push lên (trường hợp kéo lên)
+        // PUSH UP
         if movedIndex > 0 {
 
             for i in stride(from: movedIndex - 1, through: 0, by: -1) {
 
                 let next = events[i + 1]
-                let current = events[i]
-
                 let required = next.minutes - minSpacing
 
-                if current.minutes > required {
+                if events[i].minutes > required {
 
-                    events[i].update(minutes: required)
+                    let snapped = snap(required)
+                    events[i].update(minutes: snapped)
 
                 } else {
                     break

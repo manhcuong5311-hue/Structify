@@ -535,78 +535,93 @@ class TimelineStore: ObservableObject {
         return dayEvents.last!.minutes + (dayEvents.last!.duration ?? 0)
     }
     
-   
+    func buildEventsFresh(date: Date) -> [EventItem] {
+
+        var result: [EventItem] = []
+
+        for template in templates where template.matches(date: date) {
+            result.append(template.toEvent())
+        }
+
+        applyOverrides(&result, date: date)
+
+        result.sort { $0.minutes < $1.minutes }
+
+        return result
+    }
+    
+    
+    
     
     func overrideEvent(
         templateID: UUID,
         date: Date,
         minutes: Int? = nil,
-        duration: Int? = nil
+        duration: Int? = nil,
+        ignoreOverlap: Bool = false
     ) {
 
         let k = key(for: date)
 
         guard let template = templates.first(where: { $0.id == templateID }) else { return }
 
-        // Base values
-        var newMinutes = minutes ?? template.minutes
-        var newDuration = duration ?? template.duration
+        var dayEvents = buildEventsFresh(date: date)
+        let currentEvent = dayEvents.first { $0.id == templateID }
 
-        // MARK: 1️⃣ Prevent past time if today
+        var newMinutes = minutes ?? currentEvent?.minutes ?? template.minutes
+        var newDuration = duration ?? currentEvent?.duration ?? template.duration
 
+       
+        // MARK: Prevent past time
         if Calendar.current.isDateInToday(date) {
             let now = currentMinutesToday()
-            if newMinutes < now {
-                newMinutes = now
-            }
+            newMinutes = max(newMinutes, now)
         }
-
-        // MARK: 2️⃣ Clamp wake / sleep bounds
 
         let wake = wakeMinutes
         let sleep = sleepMinutes
+        let minDuration = 5
+        let maxDuration = 720
 
-        if newMinutes < wake {
-            newMinutes = wake
-        }
+        // MARK: Clamp start bounds
+        newMinutes = max(newMinutes, wake)
+        newMinutes = min(newMinutes, sleep - minDuration)
 
-        // MARK: 3️⃣ Clamp duration min / max
-
+        // MARK: Duration normalize
         if var d = newDuration {
-
-            let minDuration = 5
-            let maxDuration = 720
 
             d = max(minDuration, d)
             d = min(maxDuration, d)
 
+            // midnight clamp
+            if newMinutes + d > 1440 {
+                d = 1440 - newMinutes
+            }
+
+            // sleep clamp
+            if newMinutes + d > sleep {
+                d = sleep - newMinutes
+            }
+
+            // prevent zero duration
+            if d < minDuration {
+                return
+            }
+
             newDuration = d
         }
 
-        // MARK: 4️⃣ Clamp midnight
+        // MARK: Prevent overlap
 
-        if let d = newDuration {
-            if newMinutes + d > 1440 {
-                newDuration = 1440 - newMinutes
-            }
+        if let idx = dayEvents.firstIndex(where: { $0.id == templateID }) {
+            dayEvents[idx].minutes = newMinutes
+            dayEvents[idx].duration = newDuration
         }
 
-        // MARK: 5️⃣ Clamp sleep boundary
-
-        if let d = newDuration {
-            if newMinutes + d > sleep {
-                newDuration = max(0, sleep - newMinutes)
-            }
-        }
-
-        // MARK: 6️⃣ Prevent overlap
-
-        if let d = newDuration {
+        if !ignoreOverlap, let d = newDuration {
 
             let newStart = newMinutes
             let newEnd = newMinutes + d
-
-            let dayEvents = events(for: date)
 
             for e in dayEvents where e.id != templateID {
 
@@ -621,7 +636,7 @@ class TimelineStore: ObservableObject {
             }
         }
 
-        // MARK: 7️⃣ Remove redundant override
+        // MARK: Remove redundant override
 
         if newMinutes == template.minutes &&
            newDuration == template.duration {
@@ -637,7 +652,7 @@ class TimelineStore: ObservableObject {
             return
         }
 
-        // MARK: 8️⃣ Apply override
+        // MARK: Apply override
 
         if let index = overrides.firstIndex(where: {
             $0.templateID == templateID &&
@@ -664,8 +679,6 @@ class TimelineStore: ObservableObject {
         objectWillChange.send()
         save()
     }
-    
-    
     
     
     

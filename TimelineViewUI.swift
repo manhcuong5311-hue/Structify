@@ -124,17 +124,23 @@ struct TimelineView: View {
                                 return
                             }
 
-                            store.overrideEvent(
-                                templateID: event.id,
-                                date: calendar.selectedDate,
-                                minutes: event.minutes
-                            )
+                            for e in events {
+
+                                if !e.isSystemEvent {
+
+                                    store.overrideEvent(
+                                        templateID: e.id,
+                                        date: calendar.selectedDate,
+                                        minutes: e.minutes
+                                    )
+                                }
+                            }
                             
                             addButtonsIndex =
                             TimelineEngine.largestGapIndex(
                                 events: events
                             )
-                        },
+                        } ,
                         onTapEvent: { event in
                             guard !event.isSystemEvent else { return }
                             activeSheet = .eventDetail(event)
@@ -490,7 +496,10 @@ struct TimelineView: View {
 
 
 struct DraggableEventRow: View {
-
+    
+    @EnvironmentObject var store: TimelineStore
+      @EnvironmentObject var calendar: CalendarState
+    
     @Binding var event: EventItem
 
     let index: Int
@@ -526,6 +535,25 @@ struct DraggableEventRow: View {
     
     
     
+    
+    
+    
+   
+    
+    func commitSwap() {
+
+        for e in events {
+
+            guard !e.isSystemEvent else { continue }
+
+            store.overrideEvent(
+                templateID: e.id,
+                date: calendar.selectedDate,
+                minutes: e.minutes,
+                ignoreOverlap: true
+            )
+        }
+    }
     
     
     
@@ -772,13 +800,16 @@ struct DraggableEventRow: View {
                                 lastSwapTime = now
                                 
                                 withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.75)) {
+
                                     let temp = events[index].minutes
                                     events[index].update(minutes: events[next].minutes)
                                     events[next].update(minutes: temp)
-                                    
+
                                     events.swapAt(index, next)
                                 }
-                                
+                                commitSwap()
+
+                                lastSwapIndex = -1
                                 swapHaptic.impactOccurred()
                             }
                         }
@@ -800,6 +831,9 @@ struct DraggableEventRow: View {
                                     
                                     events.swapAt(index, prev)
                                 }
+                                commitSwap()
+                                
+                                lastSwapIndex = -1
                                 swapHaptic.impactOccurred()
                             }
                         }
