@@ -105,108 +105,108 @@ struct TimelineView: View {
            
             VStack(alignment: .leading) {
                 
-
-
-                ForEach(Array(events.enumerated()), id: \.element.id) { i, _ in
-
-                    DraggableEventRow(
-                        event: $events[i],
-                        index: i,
-                        events: $events,
-                        isDragging: $isDragging,
-                        isNearNowIndicator: indicatorTouchesEvent(i),
-                        isLocked: isPastDate(),
+                
+                
+                ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
+                    if events.indices.contains(index) {
                         
-                        onDragEnded: {
-
-                            let event = events[i]
+                        DraggableEventRow(
+                            event: $events[index],
+                            index: index,
+                            events: $events,
+                            isDragging: $isDragging,
+                            isNearNowIndicator: indicatorTouchesEvent(index),
+                            isLocked: isPastDate(),
                             
-                            if event.isSystemEvent {
-
-                                pendingSystemChange = event
-                                pendingMinutes = event.minutes
-
-                                activeAlert = .systemEventChange(event, event.minutes)
-
-                                return
+                            onDragEnded: {
+                                
+                                guard events.indices.contains(index) else { return }
+                                
+                                let event = events[index]
+                                
+                                if event.isSystemEvent {
+                                    
+                                    pendingSystemChange = event
+                                    pendingMinutes = event.minutes
+                                    
+                                    activeAlert = .systemEventChange(event, event.minutes)
+                                    
+                                    return
+                                }
+                                
+                                for e in events {
+                                    
+                                    if !e.isSystemEvent {
+                                        
+                                        store.overrideEvent(
+                                            templateID: e.id,
+                                            date: calendar.selectedDate,
+                                            minutes: e.minutes
+                                        )
+                                    }
+                                }
+                                
+                                addButtonsIndex =
+                                TimelineEngine.largestGapIndex(events: events)
+                            },
+                            onTapEvent: { event in
+                                
+                                guard !event.isSystemEvent else { return }
+                                guard !isPastDate() else { return }
+                                
+                                activeSheet = .eventDetail(event)
+                            },
+                            onResizeCommit: { templateID, newDuration in
+                                
+                                guard !isPastDate() else { return }
+                                
+                                store.overrideEvent(
+                                    templateID: templateID,
+                                    date: calendar.selectedDate,
+                                    duration: newDuration
+                                )
+                                
+                                reloadTimeline()
                             }
-
-                            for e in events {
-
-                                if !e.isSystemEvent {
-
-                                    store.overrideEvent(
-                                        templateID: e.id,
-                                        date: calendar.selectedDate,
-                                        minutes: e.minutes
+                        )
+                        .id(events[index].id)
+                        
+                        if events.indices.contains(index),
+                           events.indices.contains(index + 1) {
+                            
+                            let spacing = TimelineLayoutEngine.spacing(
+                                current: events[index],
+                                next: events[index + 1]
+                            )
+                            
+                            VStack(spacing: 0) {
+                                
+                                Spacer()
+                                    .frame(height: spacing / 2)
+                                
+                                if addButtonsIndex == index && !isPastDate() {
+                                    
+                                    AddItemButton {
+                                        activeSheet = .createItem
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .transition(.opacity)
+                                    .animation(
+                                        isDragging ? nil :
+                                                .easeInOut(duration: 0.15),
+                                        value: spacing
                                     )
                                 }
+                                
+                                Spacer()
+                                    .frame(height: spacing / 2)
                             }
-                            
-                            addButtonsIndex =
-                            TimelineEngine.largestGapIndex(
-                                events: events
-                            )
-                        } ,
-                        onTapEvent: { event in
-                            
-                            guard !event.isSystemEvent else { return }
-                            guard !isPastDate() else { return }
-                            
-                            activeSheet = .eventDetail(event)
-                        },
-                        onResizeCommit: { templateID, newDuration in
-
-                            guard !isPastDate() else { return }
-
-                            store.overrideEvent(
-                                templateID: templateID,
-                                date: calendar.selectedDate,
-                                duration: newDuration
-                            )
-
-                            reloadTimeline()
-                        }
-                        
-                    )
-
-                    if i < events.count - 1 {
-
-                        let spacing = TimelineLayoutEngine.spacing(
-                            current: events[i],
-                            next: events[i + 1]
-                        )
-                    
-
-                        VStack(spacing: 0) {
-
-                            Spacer()
-                                .frame(height: spacing / 2)
-
-                            if addButtonsIndex == i && !isPastDate() {
-
-                                AddItemButton {
-                                    activeSheet = .createItem
-                                }
-                                .frame(maxWidth: .infinity)
-                                .transition(.opacity)
-                                .animation(
-                                    isDragging ? nil :
-                                    .easeInOut(duration: 0.15),
-                                    value: spacing
-                                )
-                            }
-
-                            Spacer()
-                                .frame(height: spacing / 2)
                         }
                     }
                 }
-
-               
-                
-                Spacer(minLength: 120)
             }
+            
+            
             .opacity(isPastDate() ? 0.65 : 1)
             .saturation(isPastDate() ? 0.6 : 1)
             .allowsHitTesting(!isPastDate())
@@ -263,14 +263,15 @@ struct TimelineView: View {
             RoundedRectangle(cornerRadius: 30)
                 .fill(
                     scheme == .dark
-                    ? Color(.systemBackground)
+                    ? Color(.secondarySystemBackground)
                     : Color(red: 0.992, green: 0.991, blue: 0.985)
                 )
                 .shadow(
                     color: scheme == .dark
-                    ? .clear
+                    ? .black.opacity(0.25)
                     : .black.opacity(0.05),
-                    radius: 10
+                    radius: 12,
+                    y: 4
                 )
         )
        
@@ -296,10 +297,13 @@ struct TimelineView: View {
         }
         .onChange(of: calendar.selectedDate) { _, newDate in
 
-            events = store.events(for: newDate)
+            withAnimation(.easeOut(duration: 0.15)) {
 
-            addButtonsIndex =
-            TimelineEngine.largestGapIndex(events: events)
+                events = store.events(for: newDate)
+
+                addButtonsIndex =
+                    TimelineEngine.largestGapIndex(events: events)
+            }
         }
         // MARK: Sheet
 
@@ -551,6 +555,34 @@ struct DraggableEventRow: View {
     @State private var isResizingEnd = false
     
     @State private var durationPreview: String? = nil
+    @State private var resizeBaseDuration: Int?
+    
+    @State private var isCompleted = false
+
+    func syncCompletion() {
+
+        let date = calendar.selectedDate
+
+        guard events.indices.contains(index) else { return }
+
+        let id = events[index].id
+
+        let completed = store.isCompleted(
+            templateID: id,
+            date: date
+        )
+
+        if completed != isCompleted {
+            isCompleted = completed
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -620,7 +652,25 @@ struct DraggableEventRow: View {
             nearSwapTarget: nearSwapTarget,
             durationPreview: durationPreview,
             startMinutes: event.minutes,
+            isCompleted: isCompleted,
             
+         
+            onToggleComplete: {
+                
+                guard !isLocked else { return }
+
+                store.toggleCompletion(
+                    templateID: event.id,
+                    date: calendar.selectedDate
+                )
+
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+                    isCompleted = store.isCompleted(
+                        templateID: event.id,
+                        date: calendar.selectedDate
+                    )
+                }
+            },
             
             onTap: {
                 if !event.isSystemEvent {
@@ -687,20 +737,37 @@ struct DraggableEventRow: View {
                 durationPreview = nil
                 
                 onDragEnded()
-            }, onResizeEnd: { translation in
+            },onResizeEnd: { translation in
                 
                 guard let duration = event.duration else { return }
-                
-                let minuteDelta = Int(translation / 4)
-                
-                let newDuration = max(5, ((duration + minuteDelta) / 5) * 5)
-                
-                event.duration = newDuration
-                durationPreview = formatDuration(newDuration)
-                
-                // 🔴 COMMIT NGAY
-                onResizeCommit?(event.id, newDuration)
-            }, isLocked: isLocked
+
+                // lưu duration gốc khi bắt đầu drag
+                if resizeBaseDuration == nil {
+                    resizeBaseDuration = duration
+                }
+
+                guard let base = resizeBaseDuration else { return }
+
+                let minuteDelta = Int(translation / 12)
+
+                let raw = base + minuteDelta
+
+                // snap 5 phút
+                let snapped = max(5, (raw / 5) * 5)
+
+                let step = snapped / 5
+                if step != lastHapticMinute {
+                    UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                    lastHapticMinute = step
+                }
+
+                event.duration = snapped
+                durationPreview = formatDuration(snapped)
+
+                onResizeCommit?(event.id, snapped)
+            },
+            
+            isLocked: isLocked
             
         )
         .opacity(isDragging && !isHolding ? 0.6 : 1)
@@ -830,7 +897,7 @@ struct DraggableEventRow: View {
                                     events[index].update(minutes: events[next].minutes)
                                     events[next].update(minutes: temp)
 
-                                    events.swapAt(index, next)
+                                    events = events
                                 }
                                 commitSwap()
 
@@ -914,13 +981,24 @@ struct DraggableEventRow: View {
                     isReordering = false
                     isDragging = false
                     lastSwapIndex = -1
-                    
+                    resizeBaseDuration = nil
+                    lastHapticMinute = -1
                    
                     
     
                     onDragEnded()
                 }
         )
+        .onAppear {
+            syncCompletion()
+        }
+
+
+        .onChange(of: calendar.selectedDate) { _, _ in
+            DispatchQueue.main.async {
+                syncCompletion()
+            }
+        }
         
         .onReceive(NotificationCenter.default.publisher(for: .cancelTimelineHold)) { _ in
 
@@ -936,6 +1014,7 @@ struct DraggableEventRow: View {
         }
         
     }
+    
 }
 
 
@@ -965,7 +1044,8 @@ struct TimelineEventRow: View {
     let nearSwapTarget: Bool
     let durationPreview: String?
     let startMinutes: Int
-    
+    let isCompleted: Bool
+    var onToggleComplete: (() -> Void)?
     
     
     var onTap: (() -> Void)? = nil
@@ -1161,7 +1241,16 @@ struct TimelineEventRow: View {
                 Text(title)
                     .font(.headline)
                     .opacity(durationPreview != nil ? 0.7 : 1)
-
+                    .opacity(isCompleted ? 0.45 : 1)
+                    .overlay(
+                        Rectangle()
+                            .fill(Color.primary)
+                            .frame(height: 1.5)
+                            .scaleEffect(x: isCompleted ? 1 : 0, anchor: .leading)
+                            .animation(.easeOut(duration: 0.25), value: isCompleted),
+                        alignment: .center
+                    )
+                
                 if kind == .event {
                     
                     HStack(spacing: 6) {
@@ -1216,13 +1305,35 @@ struct TimelineEventRow: View {
 
             Spacer()
 
+            // ✅ CHECK BUTTON
+            Button {
+
+                onToggleComplete?()
+
+            } label: {
+
+                ZStack {
+
+                    Circle()
+                        .fill(isCompleted ? color.opacity(0.25) : Color.clear)
+                        .frame(width: 28, height: 28)
+                        .animation(.easeInOut(duration: 0.2), value: isCompleted)
+
+                    Circle()
+                        .stroke(color.opacity(0.8), lineWidth: 2)
+
+                    AnimatedCheckmark(progress: isCompleted ? 1 : 0)
+                }
+            }
+            .buttonStyle(.plain)
+            .frame(width: 28, height: 28)
+
             ReorderHintArrows(
                 show: isHolding,
                 trigger: nearSwapTarget
             )
-            .frame(width: 24)   // 👈 giữ vùng riêng cho arrow
-            .offset(x: -8)      // 👈 dịch sang trái
-            
+            .frame(width: 24)
+            .offset(x: -8)
 
     
               

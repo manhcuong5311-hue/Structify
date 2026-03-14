@@ -178,8 +178,8 @@ class TimelineStore: ObservableObject {
     
     
     
-    @Published var habitLogs: [HabitLog] = []
-    private var habitIndex: [Int: [HabitLog]] = [:]
+    @Published var completionLogs: [CompletionLog] = []
+    private var completionIndex: [Int: [CompletionLog]] = [:]
     
     
     
@@ -191,8 +191,8 @@ class TimelineStore: ObservableObject {
         cache.removeAll()
     }
     
-    func rebuildHabitIndex() {
-        habitIndex = Dictionary(grouping: habitLogs) { $0.dateKey }
+    func rebuildCompletionIndex() {
+        completionIndex = Dictionary(grouping: completionLogs) { $0.dateKey }
     }
     
     init() {
@@ -201,9 +201,9 @@ class TimelineStore: ObservableObject {
         
         load()
         rebuildIndex()
-        rebuildHabitIndex()
+        rebuildCompletionIndex()
         cleanupOverrides()
-        cleanupHabitLogs()
+        cleanupCompletionLogs()
         
         if templates.isEmpty {
 
@@ -260,10 +260,10 @@ class TimelineStore: ObservableObject {
             overrides = decoded
         }
         
-        if let data = UserDefaults.standard.data(forKey: "habitLogs"),
-           let decoded = try? decoder.decode([HabitLog].self, from: data) {
+        if let data = UserDefaults.standard.data(forKey: "completionLogs"),
+           let decoded = try? decoder.decode([CompletionLog].self, from: data) {
 
-            habitLogs = decoded
+            completionLogs = decoded
         }
         
     }
@@ -288,8 +288,8 @@ class TimelineStore: ObservableObject {
             UserDefaults.standard.set(overrideData, forKey: "overrides")
         }
         
-        if let habitData = try? encoder.encode(habitLogs) {
-            UserDefaults.standard.set(habitData, forKey: "habitLogs")
+        if let data = try? encoder.encode(completionLogs) {
+            UserDefaults.standard.set(data, forKey: "completionLogs")
         }
         
     }
@@ -371,17 +371,18 @@ class TimelineStore: ObservableObject {
 
         guard let dayOverrides = overrideIndex[k] else { return }
 
+        var removeIDs: Set<UUID> = []
+
         for override in dayOverrides {
+
+            if let minutes = override.minutes, minutes < 0 {
+                removeIDs.insert(override.templateID)
+                continue
+            }
 
             if let index = events.firstIndex(where: { $0.id == override.templateID }) {
 
                 if let minutes = override.minutes {
-
-                    if minutes < 0 {
-                        events.remove(at: index)
-                        continue
-                    }
-
                     events[index].minutes = minutes
                 }
 
@@ -389,6 +390,10 @@ class TimelineStore: ObservableObject {
                     events[index].duration = duration
                 }
             }
+        }
+
+        if !removeIDs.isEmpty {
+            events.removeAll { removeIDs.contains($0.id) }
         }
     }
     
@@ -682,10 +687,65 @@ class TimelineStore: ObservableObject {
     
     
     
+    func toggleCompletion(templateID: UUID, date: Date) {
+        
+        if date > Date() && !Calendar.current.isDateInToday(date) {
+               return
+           }
+
+        guard let event = events(for: date).first(where: {$0.id == templateID})
+        else { return }
+        
+        if Calendar.current.isDateInToday(date) {
+
+            if event.isEvent,
+               let duration = event.duration {
+
+                let now = currentMinutesToday()
+
+                if now < event.minutes + duration {
+                    return
+                }
+            }
+        }
+
+
+        let k = key(for: date)
+
+        if let index = completionLogs.firstIndex(where: {
+            $0.templateID == templateID && $0.dateKey == k
+        }) {
+
+            completionLogs[index].completed = !(completionLogs[index].completed ?? false)
+            completionLogs[index].value = nil
+
+        } else {
+
+            completionLogs.append(
+                CompletionLog(
+                    templateID: templateID,
+                    dateKey: k,
+                    completed: true,
+                    value: nil
+                )
+            )
+        }
+
+        rebuildCompletionIndex()
+        invalidateCache()
+        objectWillChange.send()
+        save()
+    }
     
     
-    
-    
+    func isCompleted(templateID: UUID, date: Date) -> Bool {
+
+        let k = key(for: date)
+
+        return completionIndex[k]?.contains {
+            $0.templateID == templateID && $0.completed == true
+        } ?? false
+    }
     
     
     
@@ -754,70 +814,126 @@ class TimelineStore: ObservableObject {
         save()
     }
     
-    func toggleHabit(templateID: UUID, date: Date) {
-        
-        guard let template = templates.first(where: {$0.id == templateID}),
-                 template.matches(date: date)
-           else { return }
+    func updateAccumulation(
+        templateID: UUID,
+        date: Date,
+        value: Double
+    ) {
 
         let k = key(for: date)
 
-        if let index = habitLogs.firstIndex(where: {
+        if let index = completionLogs.firstIndex(where: {
             $0.templateID == templateID && $0.dateKey == k
         }) {
 
-            habitLogs[index].completed.toggle()
+            completionLogs[index].value = max(0, value)
+            completionLogs[index].completed = nil
 
         } else {
 
-            habitLogs.append(
-                HabitLog(
+            completionLogs.append(
+                CompletionLog(
                     templateID: templateID,
                     dateKey: k,
-                    completed: true
+                    completed: nil,
+                    value: max(0, value)
                 )
             )
         }
 
-        rebuildHabitIndex()
+        rebuildCompletionIndex()
         invalidateCache()
+        objectWillChange.send()
         save()
     }
     
-    func habitCompleted(templateID: UUID, date: Date) -> Bool {
+    func accumulationValue(
+        templateID: UUID,
+        date: Date
+    ) -> Double {
 
         let k = key(for: date)
 
-        return habitIndex[k]?.contains {
-            $0.templateID == templateID && $0.completed
-        } ?? false
+        return completionIndex[k]?.first {
+            $0.templateID == templateID
+        }?.value ?? 0
     }
+    
+    func accumulationCompleted(
+        templateID: UUID,
+        date: Date
+    ) -> Bool {
+
+        guard let template = templates.first(where: {$0.id == templateID}),
+              let target = template.targetValue
+        else { return false }
+
+        let value = accumulationValue(
+            templateID: templateID,
+            date: date
+        )
+
+        return value >= target
+    }
+    
+    
+
     
     func deleteTemplate(_ id: UUID) {
 
         templates.removeAll { $0.id == id }
 
-        habitLogs.removeAll { $0.templateID == id }
+        completionLogs.removeAll { $0.templateID == id }
 
-        rebuildHabitIndex()
+        rebuildCompletionIndex()
         invalidateCache()
         save()
     }
     
-    func cleanupHabitLogs() {
+    
+    func cleanupCompletionLogs() {
 
-        let cutoff = key(for: Calendar.current.date(byAdding: .year, value: -1, to: Date())!)
+        let cutoff = key(
+            for: Calendar.current.date(
+                byAdding: .year,
+                value: -1,
+                to: Date()
+            )!
+        )
 
-        habitLogs.removeAll {
+        completionLogs.removeAll {
             $0.dateKey < cutoff
         }
 
-        rebuildHabitIndex()
+        rebuildCompletionIndex()
+        invalidateCache()
         save()
     }
-    
    
-    
+    func completionProgress(
+        templateID: UUID,
+        date: Date
+    ) -> Double {
+
+        guard let template = templates.first(where: {$0.id == templateID})
+        else { return 0 }
+
+        if template.kind == .event {
+            return isCompleted(templateID: templateID, date: date) ? 1 : 0
+        }
+
+        if let target = template.targetValue, target > 0 {
+
+            let value = accumulationValue(
+                templateID: templateID,
+                date: date
+            )
+
+            return min(value / target, 1)
+        }
+
+        return isCompleted(templateID: templateID, date: date) ? 1 : 0
+    }
     
     
     
@@ -865,11 +981,16 @@ extension EventTemplate {
 }
 
 
-struct HabitLog: Codable {
+struct CompletionLog: Codable {
 
     var templateID: UUID
     var dateKey: Int
-    var completed: Bool
+
+    // binary habit / event
+    var completed: Bool?
+
+    // accumulative habit
+    var value: Double?
 }
 
 extension EventItem {

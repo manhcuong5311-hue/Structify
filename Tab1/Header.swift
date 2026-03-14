@@ -18,7 +18,7 @@ class CalendarState: ObservableObject {
     var weekDates: [Date] {
 
         let startOfWeek =
-        calendar.dateInterval(of: .weekOfYear, for: selectedDate)!.start
+        calendar.dateInterval(of: .weekOfYear, for: selectedDate)?.start ?? selectedDate
 
         return (0..<7).compactMap {
             calendar.date(byAdding: .day, value: $0, to: startOfWeek)
@@ -61,6 +61,7 @@ struct HeaderDateView: View {
     @EnvironmentObject var calendar: CalendarState
     let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
     
+    @Environment(\.colorScheme) private var scheme
     
     var body: some View {
 
@@ -90,6 +91,12 @@ struct HeaderDateView: View {
         }
         .padding(.horizontal)
         .padding(.top, 10)
+        .background(
+                   (scheme == .dark
+                    ? Color.black
+                    : Color(.systemGray6))
+                       .ignoresSafeArea(edges: .top)
+               )
     }
 }
 
@@ -107,7 +114,7 @@ struct WeekStripView: View {
     @EnvironmentObject var store: TimelineStore
     @Environment(\.horizontalSizeClass) private var hSize
     let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
-    
+    @Environment(\.colorScheme) private var scheme
     
     var uiScale: CGFloat {
         hSize == .regular ? 1.35 : 1.0
@@ -127,17 +134,26 @@ struct WeekStripView: View {
                 .tag(1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemGray6))
+        .background(
+            (scheme == .dark
+             ? Color.black
+             : Color(.systemGray6))
+                .ignoresSafeArea(edges: .top)
+        )
         .tabViewStyle(.page(indexDisplayMode: .never))
-        .onChange(of: weekOffset) { oldValue, newValue in
+        .onChange(of: weekOffset) { _, newValue in
+
+            guard newValue != 0 else { return }
 
             if newValue == 1 {
                 calendar.nextWeek()
-                weekOffset = 0
             }
 
             if newValue == -1 {
                 calendar.previousWeek()
+            }
+
+            DispatchQueue.main.async {
                 weekOffset = 0
             }
         }
@@ -313,6 +329,15 @@ struct WeekStripView: View {
 
                     ZStack {
 
+                        // TODAY RING
+                        if isToday {
+                            Circle()
+                                .stroke(brand, lineWidth: 1.8)
+                                .opacity(0.9)
+                                .frame(width: 42 * uiScale, height: 42 * uiScale)
+                                .animation(.easeInOut(duration: 0.25), value: isToday)
+                        }
+
                         if isSelected {
 
                             Circle()
@@ -320,11 +345,9 @@ struct WeekStripView: View {
                                 .matchedGeometryEffect(id: "DAY", in: dayAnim)
                                 .frame(width: 38 * uiScale, height: 38 * uiScale)
                                 .shadow(
-                                    color: isToday
-                                    ? .orange.opacity(0.25)
-                                    : .brown.opacity(0.3),
-                                    radius: isToday ? 10 : 6,
-                                    y: 3
+                                    color: .black.opacity(0.15),
+                                    radius: 4,
+                                    y: 2
                                 )
                         }
 
@@ -333,9 +356,7 @@ struct WeekStripView: View {
                             .foregroundStyle(
                                 isSelected
                                 ? .white
-                                : (isToday
-                                   ? Color(red: 0.45, green: 0.30, blue: 0.18)
-                                   : .primary)
+                                : (isToday ? brand : .primary)
                             )
                     }
                     .frame(width: 38 * uiScale, height: 38 * uiScale)
