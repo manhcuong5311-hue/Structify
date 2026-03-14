@@ -86,8 +86,140 @@ struct CreateEventDetailSheet: View {
 
     @State private var selectedWeekdays: Set<Int> = []
     
+    @State private var timeWarning: TimeWarning? = nil
+    @State private var durationWarning: DurationWarning? = nil
     
     
+    @State private var titleWarning: String? = nil
+
+    var isFormBlocked: Bool {
+        durationWarning == .noTimeLeft || durationWarning == .tooShort
+    }
+    
+    
+    enum TimeWarning: String {
+        case past        = "⏰ This time has already passed"
+        case overlap     = "⚡ Another event is already scheduled here"
+        case pastSleep   = "🌙 Start time is past Night Reset"
+        case beforeWake  = "🌅 Start time is before Morning Start"
+    }
+
+    enum DurationWarning: String {
+        case exceedsSleep  = "🌙 Duration runs past Night Reset — will be trimmed"
+        case tooShort      = "⚡ Minimum duration is 5 minutes"
+        case noTimeLeft    = "🚫 No time left before Night Reset"
+    }
+    
+    
+    var sleepMinutes: Int { store.sleepMinutes }
+    var wakeMinutes:  Int { store.wakeMinutes  }
+
+    func isHourDimmed(_ hour: Int) -> Bool {
+        let start = hour * 60
+        let end   = hour * 60 + 59
+        if isToday && end < currentMinutes { return true }  // giữ nguyên
+        if start >= sleepMinutes           { return true }
+        if start < wakeMinutes             { return true }
+        return false
+        // Bỏ điều kiện isToday ở 2 dòng cuối vì sleep/wake áp dụng cho mọi ngày
+    }
+
+    func isMinuteDimmed(_ minute: Int) -> Bool {
+        let total = startHour * 60 + minute
+        if isToday && total < currentMinutes { return true }  // chỉ today
+        if total >= sleepMinutes             { return true }
+        if total < wakeMinutes               { return true }
+        return false
+    }
+
+    func validateAndClampTime() {
+        guard !isAllDay else { timeWarning = nil; return }
+
+        let total = startHour * 60 + startMinute
+
+        // 1. Trước Morning Start
+        if total < wakeMinutes {
+            timeWarning = .beforeWake
+            let clamped = ((wakeMinutes + 4) / 5) * 5
+            startMinutes = clamped
+            startHour   = clamped / 60
+            startMinute = clamped % 60
+            updateEndTimeFromDuration()
+            return
+        }
+
+        // 2. Quá khứ — CHỈ check khi là today
+        if isToday && total < currentMinutes {
+            timeWarning = .past
+            let clamped = ((currentMinutes + 4) / 5) * 5
+            startMinutes = min(clamped, sleepMinutes - 5)
+            startHour   = startMinutes / 60
+            startMinute = startMinutes % 60
+            updateEndTimeFromDuration()
+            return
+        }
+
+        // 3. Qua sleep
+        if total >= sleepMinutes {
+            timeWarning = .pastSleep
+            let clamped = ((sleepMinutes - 60 + 4) / 5) * 5
+            startMinutes = max(wakeMinutes, clamped)
+            startHour   = startMinutes / 60
+            startMinute = startMinutes % 60
+            updateEndTimeFromDuration()
+            return
+        }
+
+        // 4. Overlap — check theo date đang chọn (đã đúng vì truyền date vào)
+        if store.hasOverlap(minutes: total, duration: Int(duration * 60), date: date) {
+            timeWarning = .overlap
+            return
+        }
+
+        timeWarning = nil
+    }
+
+    func validateDuration() {
+        guard !isAllDay else { durationWarning = nil; return }
+
+        let d = Int(duration * 60)
+
+        if d < 5 {
+            durationWarning = .tooShort
+            return
+        }
+
+        let remaining = sleepMinutes - startMinutes
+        if remaining <= 0 {
+            durationWarning = .noTimeLeft
+            return
+        }
+
+        if startMinutes + d > sleepMinutes {
+            durationWarning = .exceedsSleep
+            return
+        }
+
+        durationWarning = nil
+    }
+    
+    
+    @ViewBuilder
+    func warningBanner(_ text: String, color: Color) -> some View {
+        HStack(spacing: 8) {
+            Text(text)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.white)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(color.opacity(0.85))
+        )
+        .transition(.move(edge: .top).combined(with: .opacity))
+    }
     
     
     
@@ -107,18 +239,19 @@ struct CreateEventDetailSheet: View {
     
     
     var timeRangeText: String {
-        
+
+        if isAllDay {
+            return "All Day"
+        }
+
         let sh = startMinutes / 60
         let sm = startMinutes % 60
-        
         let eh = endMinutes / 60
         let em = endMinutes % 60
-        
         let duration = endMinutes - startMinutes
-        
         let dh = duration / 60
         let dm = duration % 60
-        
+
         return String(
             format: "%02d:%02d–%02d:%02d (%d giờ, %d phút)",
             sh, sm, eh, em, dh, dm
@@ -169,6 +302,7 @@ struct CreateEventDetailSheet: View {
     
     init(
         suggestedStart: Int,
+        initialDate: Date = Date(),
         onOpenHabit: (() -> Void)? = nil,
         onCreate: @escaping (String,String,Int,Int,String,Recurrence) -> Void
     ) {
@@ -177,6 +311,7 @@ struct CreateEventDetailSheet: View {
         self.onCreate = onCreate
         self.onOpenHabit = onOpenHabit
 
+        _date = State(initialValue: initialDate) 
         _startMinutes = State(initialValue: suggestedStart)
         _endMinutes = State(initialValue: suggestedStart + 90)
 
@@ -414,17 +549,30 @@ extension CreateEventDetailSheet {
 
                         ZStack(alignment: .leading) {
 
-                            TextField("Tên sự kiện", text: $title)
+                            // TÌM TextField "Tên sự kiện", thêm overlay border đỏ khi empty + đã tap:
+                            TextField("Event name", text: $title)
                                 .font(.title3.weight(.semibold))
                                 .foregroundStyle(.white)
-                                .padding(.vertical,8)
-                                .padding(.horizontal,12)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 12)
                                 .background(
                                     RoundedRectangle(cornerRadius: 10)
                                         .fill(Color.white.opacity(0.18))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .stroke(
+                                                    titleWarning != nil ? Color.red.opacity(0.8) : Color.clear,
+                                                    lineWidth: 1.5
+                                                )
+                                        )
                                 )
                                 .textInputAutocapitalization(.sentences)
                                 .disableAutocorrection(true)
+                                .onChange(of: title) { _ in
+                                    if !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                        titleWarning = nil
+                                    }
+                                }
 
                             GeometryReader { geo in
 
@@ -469,6 +617,22 @@ extension CreateEventDetailSheet {
             .padding(.horizontal, 20)
             .padding(.top, 50)
             .padding(.bottom, 30)
+        }
+        .onAppear {
+            let weekday = Calendar.current.component(.weekday, from: date)
+            if !isPastWeekday(weekday) {
+                selectedWeekdays.insert(weekday)
+            }
+            validateAndClampTime()
+            validateDuration()
+        }
+        .onChange(of: date) { newDate in
+            let weekday = Calendar.current.component(.weekday, from: newDate)
+            if repeatRule == .weekly {
+                selectedWeekdays.insert(weekday)
+            }
+            validateAndClampTime()
+            validateDuration()
         }
         .onChange(of: date) { newDate in
 
@@ -586,105 +750,147 @@ extension CreateEventDetailSheet {
     }
 
     var timeSection: some View {
-        
-        
+        VStack(alignment: .leading, spacing: 12) {
 
-        VStack(alignment: .leading, spacing: 16) {
+            // Header với remaining time hint
+            HStack {
+                Text("Start time")
+                    .font(.title3.bold())
 
-            Text("Thời gian bắt đầu")
-                .font(.title3.bold())
+                Spacer()
+
+                if !isAllDay {
+                    let effectiveStart = isToday ? max(startMinutes, currentMinutes) : startMinutes
+                    let remaining = sleepMinutes - effectiveStart
+                    let total = sleepMinutes - wakeMinutes
+                    let progress = max(0, min(1, CGFloat(remaining) / CGFloat(max(total, 1))))
+
+                    HStack(spacing: 6) {
+                        // Progress bar thời gian còn lại
+                        GeometryReader { g in
+                            ZStack(alignment: .leading) {
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(Color.gray.opacity(0.2))
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(
+                                        progress > 0.3 ? Color.green.opacity(0.7) :
+                                        progress > 0.1 ? Color.orange.opacity(0.7) :
+                                        Color.red.opacity(0.7)
+                                    )
+                                    .frame(width: g.size.width * progress)
+                            }
+                        }
+                        .frame(width: 60, height: 6)
+                        .animation(.easeInOut(duration: 0.3), value: startMinutes)
+
+                        // Text thời gian còn lại
+                        Text(remainingTimeText)
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(
+                                remaining < 60 ? .red :
+                                remaining < 180 ? .orange : .secondary
+                            )
+                            .monospacedDigit()
+                    }
+                }
+            }
+
 
             HStack(alignment: .center, spacing: 12) {
 
                 if !isAllDay {
-
-                    HStack {
+                    HStack(spacing: 0) {
 
                         Picker("", selection: $startHour) {
-
                             ForEach(0..<24) { hour in
-
-                                let minutes = hour * 60
-
                                 Text(String(format: "%02d", hour))
                                     .tag(hour)
                                     .foregroundStyle(
-                                        isToday && minutes < currentMinutes
-                                        ? Color.gray.opacity(0.35)
+                                        isHourDimmed(hour)
+                                        ? Color.gray.opacity(0.3)
                                         : Color.primary
                                     )
                             }
-
                         }
                         .pickerStyle(.wheel)
-                        .frame(width: 80, height:120)
+                        .frame(width: 80, height: 120)
                         .clipped()
+                        .saturation(isHourDimmed(startHour) ? 0.2 : 1)
+                        .opacity(isHourDimmed(startHour) ? 0.5 : 1)
 
                         Text(":")
                             .font(.title2.bold())
+                            .padding(.horizontal, 4)
 
                         Picker("", selection: $startMinute) {
-
-                            ForEach(Array(stride(from: 0, to: 60, by: 5)), id:\.self) { minute in
-
-                                let total = startHour * 60 + minute
-
+                            ForEach(Array(stride(from: 0, to: 60, by: 5)), id: \.self) { minute in
                                 Text(String(format: "%02d", minute))
                                     .tag(minute)
                                     .foregroundStyle(
-                                        isToday && total < currentMinutes
-                                        ? Color.gray.opacity(0.35)
+                                        isMinuteDimmed(minute)
+                                        ? Color.gray.opacity(0.3)
                                         : Color.primary
                                     )
                             }
                         }
                         .pickerStyle(.wheel)
-                        .frame(width: 80, height:120)
+                        .frame(width: 80, height: 120)
                         .clipped()
+                        .saturation(isMinuteDimmed(startMinute) ? 0.2 : 1)
+                        .opacity(isMinuteDimmed(startMinute) ? 0.5 : 1)
                     }
-                    .onChange(of: startHour) { _ in
-                        updateStartMinutes()
-                        clampPastTime()
-                    }
-
-                    .onChange(of: startMinute) { _ in
-                        updateStartMinutes()
-                        clampPastTime()
-                    }
+                    .onChange(of: startHour)   { _ in updateStartMinutes(); validateAndClampTime(); validateDuration() }
+                    .onChange(of: startMinute) { _ in updateStartMinutes(); validateAndClampTime(); validateDuration() }
                 }
 
                 Spacer()
 
                 Button {
-
                     withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
                         isAllDay.toggle()
                     }
-                    
                     if isAllDay {
-                           startHour = 0
-                           startMinute = 0
-                           startMinutes = 0
-                       }
-
+                        startHour = 0; startMinute = 0
+                        startMinutes = 0; endMinutes = 1440
+                        durationHours = 24; durationMinutesOnly = 0
+                        timeWarning = nil; durationWarning = nil
+                    } else {
+                        startHour = suggestedStart / 60
+                        startMinute = suggestedStart % 60
+                        startMinutes = suggestedStart
+                        durationHours = 1; durationMinutesOnly = 30
+                        updateEndTimeFromDuration()
+                        validateAndClampTime()
+                        validateDuration()
+                    }
                 } label: {
-
                     Text("All Day")
                         .font(.subheadline.weight(.semibold))
-                        .padding(.horizontal,14)
-                        .padding(.vertical,8)
-                        .background(
-                            isAllDay
-                            ? Color.primary
-                            : Color.gray.opacity(0.15)
-                        )
-                        .foregroundStyle(
-                            isAllDay ? Color(.systemBackground) : .primary
-                        )
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .background(isAllDay ? Color.primary : Color.gray.opacity(0.15))
+                        .foregroundStyle(isAllDay ? Color(.systemBackground) : .primary)
                         .clipShape(Capsule())
                 }
             }
+
+            if let w = timeWarning {
+                warningBanner(w.rawValue, color: .orange)
+            }
         }
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: timeWarning?.rawValue)
+    }
+    var remainingTimeText: String {
+        // Future date: tính từ startMinutes đến sleep
+        // Today: tính từ max(startMinutes, currentMinutes) đến sleep
+        let effectiveStart = isToday ? max(startMinutes, currentMinutes) : startMinutes
+        let remaining = sleepMinutes - effectiveStart
+        if remaining <= 0 { return "No time left" }
+        let h = remaining / 60
+        let m = remaining % 60
+        if h > 0 && m > 0 { return "\(h)h \(m)m left" }
+        if h > 0 { return "\(h)h left" }
+        return "\(m)m left"
     }
     
     var repeatSection: some View {
@@ -759,7 +965,14 @@ extension CreateEventDetailSheet {
         }
     }
     
-    
+    var maxDurationText: String {
+        let m = max(0, sleepMinutes - startMinutes)
+        let h = m / 60
+        let mins = m % 60
+        if h > 0 && mins > 0 { return "\(h)h \(mins)m" }
+        if h > 0 { return "\(h)h" }
+        return "\(mins)m"
+    }
     
     
     
@@ -778,8 +991,32 @@ extension CreateEventDetailSheet {
             
             VStack(alignment: .leading, spacing: 16) {
 
-                Text("Thời lượng")
-                    .font(.title3.bold())
+                // Thay "Thời lượng" header thành:
+                HStack {
+                    Text("Duration")
+                        .font(.title3.bold())
+
+                    Spacer()
+
+                    if !isAllDay && !isPastTime {
+                        let maxMins = sleepMinutes - startMinutes
+                        let currentDur = Int(duration * 60)
+                        let isNearLimit = currentDur > maxMins - 30
+
+                        Text("max \(maxDurationText)")
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(isNearLimit ? .orange : .secondary)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(
+                                Capsule()
+                                    .fill(isNearLimit ? Color.orange.opacity(0.12) : Color.gray.opacity(0.1))
+                            )
+                            .animation(.easeInOut(duration: 0.2), value: isNearLimit)
+                    }
+                }
+
+             
 
                 HStack(spacing: isWide ? 40 : 20) {
 
@@ -827,18 +1064,18 @@ extension CreateEventDetailSheet {
 
                     }
                     .frame(height: isWide ? 120 : 95)
-                    .onChange(of: durationHours) { _ in
-                        updateDurationFromPicker()
-                    }
-                    .onChange(of: durationMinutesOnly) { _ in
-                        updateDurationFromPicker()
-                    }
+                    .onChange(of: durationHours)      { _ in updateDurationFromPicker(); validateDuration() }
+                    .onChange(of: durationMinutesOnly) { _ in updateDurationFromPicker(); validateDuration() }
                 }
+                
                 .disabled(isAllDay || isPastTime)
                 .opacity(isAllDay || isPastTime ? 0.4 : 1)
+                if let w = durationWarning {
+                    warningBanner(w.rawValue, color: .purple)
+                }
             }
         }
-        .frame(height: 140)
+        .frame(height: durationWarning != nil ? 180 : 140)
     }
     
     
@@ -926,69 +1163,72 @@ extension CreateEventDetailSheet {
 extension CreateEventDetailSheet {
 
     var continueButton: some View {
+        VStack(spacing: 8) {
 
-        Button {
-
-            let cleanTitle =
-            title.trimmingCharacters(in: .whitespacesAndNewlines)
-
-            guard !cleanTitle.isEmpty else { return }
-
-            if repeatRule == .weekly && selectedWeekdays.isEmpty {
-                return
+            // Hint text phía trên nút khi có vấn đề
+            if title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                Text("✏️ Enter a title to continue")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+                    .transition(.opacity)
+            } else if repeatRule == .weekly && selectedWeekdays.isEmpty {
+                Text("📅 Pick at least one day")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+                    .transition(.opacity)
+            } else if isFormBlocked {
+                Text("Fix the issues above to continue")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+                    .transition(.opacity)
             }
 
-            guard endMinutes > startMinutes else {
-                return
+            Button {
+                let cleanTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+
+                // Show title warning instead of silent fail
+                if cleanTitle.isEmpty {
+                    withAnimation { titleWarning = "✏️ Please enter a title" }
+                    return
+                }
+
+                if repeatRule == .weekly && selectedWeekdays.isEmpty { return }
+                guard endMinutes > startMinutes else { return }
+                if isToday && startMinutes < currentMinutes { return }
+                if isFormBlocked { return }
+
+                var duration = endMinutes - startMinutes
+                if isAllDay {
+                    duration = 1440
+                } else if startMinutes + duration > sleepMinutes {
+                    duration = sleepMinutes - startMinutes
+                }
+
+                guard duration >= 5 else { return }
+                guard endMinutes <= 1440 else { return }
+                guard !store.hasOverlap(minutes: startMinutes, duration: duration, date: date) else { return }
+
+                onCreate(cleanTitle, icon, startMinutes, duration, color.toHex(), buildRecurrence())
+                dismiss()
+
+            } label: {
+                let isBlocked = title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                             || isFormBlocked
+                             || (repeatRule == .weekly && selectedWeekdays.isEmpty)
+
+                Text("Create event")
+                    .font(.title3.bold())
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(isBlocked ? Color.gray.opacity(0.4) : Color(.label))
+                    .foregroundStyle(Color(.systemBackground))
+                    .clipShape(Capsule())
+                    .animation(.easeInOut(duration: 0.2), value: isBlocked)
             }
-
-            if isToday && startMinutes < currentMinutes {
-                return
-            }
-
-            var duration = endMinutes - startMinutes
-
-            if isAllDay {
-                duration = 1440
-            }
-
-            guard endMinutes <= 1440 else { return }
-
-            guard !store.hasOverlap(
-                minutes: startMinutes,
-                duration: duration,
-                date: date
-            ) else { return }
-
-            let recurrence = buildRecurrence()
-
-            onCreate(
-                cleanTitle,
-                icon,
-                startMinutes,
-                duration,
-                color.toHex(),
-                recurrence
-            )
-
-            dismiss()
-
-        } label: {
-
-            Text("Create event")
-                .font(.title3.bold())
-                .frame(maxWidth:.infinity)
-                .padding()
-                .background(Color(.label))
-                .shadow(
-                    color: .black.opacity(0.25),
-                    radius: 20,
-                    y: 10
-                )
-                .foregroundStyle(Color(.systemBackground))
-                .clipShape(Capsule())
         }
-        .padding(.top,10)
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: title.isEmpty)
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isFormBlocked)
+        .padding(.top, 10)
     }
 }
 

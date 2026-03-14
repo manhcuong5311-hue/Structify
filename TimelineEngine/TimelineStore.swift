@@ -75,6 +75,7 @@ struct EventTemplate: Identifiable, Codable {
     
     var isSystemEvent: Bool = false
     var systemType: SystemEventType? = nil
+    var notes: String? = nil 
 }
 
 
@@ -154,12 +155,14 @@ enum Recurrence {
 }
 
 struct EventOverride: Codable {
-
     var templateID: UUID
     var dateKey: Int
-    
     var minutes: Int?
     var duration: Int?
+    // Thêm mới:
+    var title: String? = nil
+    var icon: String? = nil
+    var colorHex: String? = nil
 }
 
 class TimelineStore: ObservableObject {
@@ -323,22 +326,80 @@ class TimelineStore: ObservableObject {
   
     
     func updateSystemEvents(wakeMinutes: Int, sleepMinutes: Int) {
-
         UserDefaults.standard.set(wakeMinutes, forKey: wakeKey)
         UserDefaults.standard.set(sleepMinutes, forKey: sleepKey)
 
         for i in templates.indices {
-
             if templates[i].systemType == .wake {
                 templates[i].minutes = wakeMinutes
             }
-
             if templates[i].systemType == .sleep {
                 templates[i].minutes = sleepMinutes
             }
         }
 
+        // Clamp tất cả events từ today về sau vào trong window mới
+        let todayKey = key(for: Calendar.current.startOfDay(for: Date()))
+
+        for i in templates.indices {
+            guard !templates[i].isSystemEvent else { continue }
+
+            // Chỉ xử lý events từ today trở đi
+            // Với daily/weekdays recurrence → clamp minutes
+            // Với once → chỉ clamp nếu date >= today
+
+            var needsClamp = false
+
+            switch templates[i].recurrence {
+            case .daily, .weekdays, .specific:
+                needsClamp = true
+            case .once(let d):
+                let dKey = key(for: d)
+                needsClamp = dKey >= todayKey
+            }
+
+            if needsClamp {
+                
+                if templates[i].duration == 1440 { continue }
+                // Clamp start sau wake
+                if templates[i].minutes < wakeMinutes {
+                    templates[i].minutes = wakeMinutes + 5
+                }
+
+                // Clamp start trước sleep
+                let dur = templates[i].duration ?? 0
+                if templates[i].minutes + dur > sleepMinutes {
+                    // Đẩy start lùi để fit
+                    let newStart = sleepMinutes - dur
+                    if newStart >= wakeMinutes {
+                        templates[i].minutes = newStart
+                    } else {
+                        // Không fit → đặt sau wake, trim duration
+                        templates[i].minutes = wakeMinutes + 5
+                        if let _ = templates[i].duration {
+                            templates[i].duration = max(5, sleepMinutes - (wakeMinutes + 5))
+                        }
+                    }
+                }
+            }
+        }
+
+        // Clamp overrides từ today trở đi
+        for i in overrides.indices {
+            guard overrides[i].dateKey >= todayKey else { continue }
+
+            if var mins = overrides[i].minutes {
+                mins = max(mins, wakeMinutes + 5)
+                let dur = overrides[i].duration ?? 0
+                if mins + dur > sleepMinutes {
+                    mins = max(wakeMinutes + 5, sleepMinutes - dur)
+                }
+                overrides[i].minutes = mins
+            }
+        }
+
         save()
+        rebuildIndex()
         invalidateCache()
     }
     
@@ -388,6 +449,16 @@ class TimelineStore: ObservableObject {
 
                 if let duration = override.duration {
                     events[index].duration = duration
+                }
+                
+                if let title = override.title {
+                    events[index].title = title
+                }
+                if let icon = override.icon {
+                    events[index].icon = icon
+                }
+                if let colorHex = override.colorHex {
+                    events[index].colorHex = colorHex
                 }
             }
         }
@@ -482,20 +553,22 @@ class TimelineStore: ObservableObject {
     }
     
     
+    // TÌM hàm hasOverlap, sửa vòng for:
     func hasOverlap(
         minutes: Int,
         duration: Int,
         date: Date
     ) -> Bool {
-
         let newStart = minutes
         let newEnd = minutes + duration
 
         let dayEvents = events(for: date)
 
         for e in dayEvents {
-
             guard let d = e.duration else { continue }
+            
+            // Bỏ qua all-day events
+            if d == 1440 { continue }
 
             let start = e.minutes
             let end = e.minutes + d
@@ -588,32 +661,38 @@ class TimelineStore: ObservableObject {
         let minDuration = 5
         let maxDuration = 720
 
+     
         // MARK: Clamp start bounds
-        newMinutes = max(newMinutes, wake)
-        newMinutes = min(newMinutes, sleep - minDuration)
-
+        if !template.isSystemEvent {
+            newMinutes = max(newMinutes, wake)
+            newMinutes = min(newMinutes, sleep - minDuration)
+        } else {
+            if template.systemType == .wake {
+                newMinutes = max(0, min(newMinutes, sleep - 30))
+            } else if template.systemType == .sleep {
+                newMinutes = max(wake + 30, min(newMinutes, 1440))
+            }
+        }
+      
         // MARK: Duration normalize
         if var d = newDuration {
+            // All-day events không clamp
+            if d == 1440 {
+                newDuration = 1440
+            } else {
+                d = max(minDuration, d)
+                d = min(maxDuration, d)
 
-            d = max(minDuration, d)
-            d = min(maxDuration, d)
+                if newMinutes + d > 1440 {
+                    d = 1440 - newMinutes
+                }
+                if newMinutes + d > sleep {
+                    d = sleep - newMinutes
+                }
+                if d < minDuration { return }
 
-            // midnight clamp
-            if newMinutes + d > 1440 {
-                d = 1440 - newMinutes
+                newDuration = d
             }
-
-            // sleep clamp
-            if newMinutes + d > sleep {
-                d = sleep - newMinutes
-            }
-
-            // prevent zero duration
-            if d < minDuration {
-                return
-            }
-
-            newDuration = d
         }
 
         // MARK: Prevent overlap
@@ -748,14 +827,86 @@ class TimelineStore: ObservableObject {
     }
     
     
+    func updateNotes(templateID: UUID, notes: String) {
+        guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
+        templates[idx].notes = notes.isEmpty ? nil : notes
+        invalidateCache()
+        save()
+    }
+    
+    func updateEvent(templateID: UUID, title: String, icon: String, colorHex: String) {
+        guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
+        templates[idx].title = title
+        templates[idx].icon = icon
+        templates[idx].colorHex = colorHex
+        invalidateCache()
+        save()
+        objectWillChange.send()
+    }
+    
+    func overrideEventAppearance(
+        templateID: UUID,
+        date: Date,
+        title: String,
+        icon: String,
+        colorHex: String
+    ) {
+        let k = key(for: date)
+
+        if let index = overrides.firstIndex(where: {
+            $0.templateID == templateID && $0.dateKey == k
+        }) {
+            overrides[index].title    = title
+            overrides[index].icon     = icon
+            overrides[index].colorHex = colorHex
+        } else {
+            overrides.append(EventOverride(
+                templateID: templateID,
+                dateKey: k,
+                title: title,
+                icon: icon,
+                colorHex: colorHex
+            ))
+        }
+
+        rebuildIndex()
+        invalidateCache()
+        objectWillChange.send()
+        save()
+    }
     
     
-    
-    
-    
-    
-    
-    
+    // Update template time cho "All Days"
+    func updateEventTime(templateID: UUID, minutes: Int) {
+        guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
+        templates[idx].minutes = minutes
+        // Xóa override minutes cho tất cả ngày (giữ lại duration/appearance overrides)
+        for i in overrides.indices {
+            if overrides[i].templateID == templateID {
+                overrides[i].minutes = nil
+            }
+        }
+        rebuildIndex()
+        invalidateCache()
+        objectWillChange.send()
+        save()
+    }
+
+    // Update template duration cho "All Days"
+    func updateEventDuration(templateID: UUID, duration: Int) {
+        guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
+        templates[idx].duration = duration
+        // Xóa override duration cho tất cả ngày
+        for i in overrides.indices {
+            if overrides[i].templateID == templateID {
+                overrides[i].duration = nil
+            }
+        }
+        rebuildIndex()
+        invalidateCache()
+        objectWillChange.send()
+        save()
+    }
     
     
     

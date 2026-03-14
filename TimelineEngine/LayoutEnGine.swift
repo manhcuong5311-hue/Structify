@@ -133,42 +133,45 @@ extension TimelineLayoutEngine {
 
         let now = nowMinutes()
 
-        guard
-            let wake = events.first(where: {$0.systemType == .wake}),
-            let sleep = events.first(where: {$0.systemType == .sleep})
-        else { return 0 }
-
-        // clamp theo timeline
-        let clamped = min(max(now, wake.minutes), sleep.minutes)
-
-        var y: CGFloat = 0
-
-        for i in 0..<events.count - 1 {
-
-            let start = events[i]
-            let end = events[i + 1]
-
-            let startCenter = y + eventHeight(start)/2
-
-            let endCenter =
-                startCenter
-                + spacing(current: start, next: end)
-                + eventHeight(end)/2
-
-            if clamped >= start.minutes && clamped <= end.minutes {
-
-                let progress =
-                CGFloat(clamped - start.minutes) /
-                CGFloat(max(end.minutes - start.minutes,1))
-
-                return startCenter + (endCenter - startCenter) * progress
+        // tính y từng event giống hệt TimelineLineView.yPosition
+        func topY(for index: Int) -> CGFloat {
+            var y: CGFloat = 0
+            for i in 0..<index {
+                y += eventHeight(events[i])
+                if i < events.count - 1 {
+                    y += spacing(  // phải là TimelineLayoutEngine.spacing
+                        current: events[i],
+                        next: events[i + 1]
+                    )
+                }
             }
-
-            y += eventHeight(start)
-            y += spacing(current: start, next: end)
+            return y
         }
 
-        return y
+        for i in 0..<events.count - 1 {
+            let eventStart  = events[i].minutes
+            let eventEnd    = TimelineEngine.endMinute(events[i])
+            let nextStart   = events[i + 1].minutes
+
+            let thisTopY    = topY(for: i)
+            let thisH       = eventHeight(events[i])
+            let thisBottomY = thisTopY + thisH
+            let nextTopY    = topY(for: i + 1)
+
+            // Now trong event
+            if now >= eventStart && now <= eventEnd {
+                let progress = CGFloat(now - eventStart) / CGFloat(max(eventEnd - eventStart, 1))
+                return thisTopY + thisH * progress
+            }
+
+            // Now trong gap
+            if now > eventEnd && now < nextStart {
+                let progress = CGFloat(now - eventEnd) / CGFloat(max(nextStart - eventEnd, 1))
+                return thisBottomY + (nextTopY - thisBottomY) * progress
+            }
+        }
+
+        return topY(for: events.count - 1)
     }
     
     

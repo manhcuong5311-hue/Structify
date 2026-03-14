@@ -6,290 +6,322 @@
 //
 import SwiftUI
 
+import SwiftUI
+
+// MARK: - IconPicker
+
 struct IconPicker: View {
-    
+
     @Binding var icon: String
     @Binding var color: Color
-    
+
     @Environment(\.dismiss) var dismiss
-    
-    @State private var search = ""
-    
-    @State private var iconScale: CGFloat = 1
-    @State private var recentIcons: [String] =
-    UserDefaults.standard.stringArray(forKey: "recentIcons") ?? []
-    
-    @State private var hexInput = ""
-    @State private var showHexEditor = false
-    
-    @State private var hue: Double = 0
-    @State private var brightness: Double = 1
-    
-    @State private var selectedIcon: String?
     @Environment(\.colorScheme) var colorScheme
-    
-    var scrollContent: some View {
-        
-        ScrollView {
-            
-                categoryGrid
-            
-        }
-        .frame(maxHeight: .infinity)
-    }
-    
-    func updateRecent(_ symbol: String) {
 
-        if let index = recentIcons.firstIndex(of: symbol) {
-            recentIcons.remove(at: index)
-        }
+    // Local state để tránh lag — chỉ sync về binding khi Done
+    @State private var selectedIcon: String = ""
+    @State private var selectedColor: Color = .blue
 
-        recentIcons.insert(symbol, at: 0)
+    @State private var recentIcons: [String] =
+        UserDefaults.standard.stringArray(forKey: "recentIcons") ?? []
+    @State private var showHexEditor = false
+    @State private var iconScale: CGFloat = 1
 
-        if recentIcons.count > 15 {
-            recentIcons.removeLast()
-        }
-
-        UserDefaults.standard.set(recentIcons, forKey: "recentIcons")
-    }
-    
-    
     var body: some View {
-
         NavigationStack {
-            
             ZStack {
-                
-                Color.paper
-                          .ignoresSafeArea()
-                
-            VStack(spacing:20) {
-                
-                iconHeader
-                
-                ScrollView {
-                    categoryGrid
+                Color.paper.ignoresSafeArea()
+
+                VStack(spacing: 0) {
+                    // Header: preview + color swatches
+                    headerSection
+                        .padding(.horizontal, 16)
+                        .padding(.top, 12)
+                        .padding(.bottom, 16)
+
+                    Divider()
+                        .opacity(0.4)
+
+                    // Icon grid
+                    ScrollView(showsIndicators: false) {
+                        iconGridSection
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 20)
+                    }
                 }
             }
-            .padding()
-        }
-            
-            .navigationTitle("Icon")
+            .navigationTitle("Choose Icon")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Cancel") { dismiss() }
+                        .foregroundStyle(.secondary)
+                }
                 ToolbarItem(placement: .topBarTrailing) {
-
                     Button("Done") {
-
-                        if let selectedIcon {
-                            updateRecent(selectedIcon)
-                        }
-
+                        // Chỉ sync về binding 1 lần khi Done
+                        icon = selectedIcon
+                        color = selectedColor
+                        updateRecent(selectedIcon)
                         dismiss()
                     }
+                    .fontWeight(.semibold)
+                    .foregroundStyle(selectedColor)
                 }
             }
         }
         .onAppear {
             selectedIcon = icon
+            selectedColor = color
         }
         .sheet(isPresented: $showHexEditor) {
-
-            ColorPickerSheet(color: $color)
+            ColorPickerSheet(color: $selectedColor)
                 .presentationDetents([.height(420)])
         }
+        .onChange(of: showHexEditor) { _, isShowing in
+            // Sheet vừa đóng → save màu custom vào palette
+            if !isShowing {
+                var current = EventColorPalette.colors
+                // Chỉ thêm nếu chưa có màu giống
+                let alreadyExists = current.contains {
+                    $0.toHex() == selectedColor.toHex()
+                }
+                if !alreadyExists {
+                    // Giới hạn palette tối đa 20 màu
+                    if current.count >= 20 {
+                        // Xóa màu cuối (không xóa 13 màu default)
+                        current.removeLast()
+                    }
+                    current.append(selectedColor)
+                    EventColorPalette.colors = current
+                }
+            }
+        }
     }
-    
-    
+
+    // MARK: - Helpers
+
+    func updateRecent(_ symbol: String) {
+        if let i = recentIcons.firstIndex(of: symbol) { recentIcons.remove(at: i) }
+        recentIcons.insert(symbol, at: 0)
+        if recentIcons.count > 20 { recentIcons.removeLast() }
+        UserDefaults.standard.set(recentIcons, forKey: "recentIcons")
+    }
 }
+
+// MARK: - Header
 
 extension IconPicker {
 
-    var categoryGrid: some View {
+    var headerSection: some View {
+        HStack(spacing: 20) {
 
-        VStack(spacing: 28) {
-            
+            // Preview circle
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            colors: [selectedColor.opacity(0.9), selectedColor.opacity(0.55)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 72, height: 72)
+
+                Image(systemName: selectedIcon.isEmpty ? "star.fill" : selectedIcon)
+                    .font(.system(size: 28, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .scaleEffect(iconScale)
+                    .id(selectedIcon) // force redraw only this
+            }
+            .shadow(color: selectedColor.opacity(0.35), radius: 10, y: 4)
+
+            // Color swatches
+            LazyVGrid(
+                columns: Array(repeating: GridItem(.fixed(28), spacing: 10), count: 7),
+                spacing: 10
+            ) {
+                ForEach(EventColorPalette.colors, id: \.self) { c in
+                    ColorSwatch(
+                        color: c,
+                        isSelected: selectedColor == c,
+                        onTap: {
+                            // Chỉ update local state — không trigger icon grid rebuild
+                            selectedColor = c
+                        }
+                    )
+                }
+
+                // Custom color button
+                Button {
+                    showHexEditor = true
+                } label: {
+                    ZStack {
+                        Circle()
+                            .fill(
+                                AngularGradient(
+                                    colors: [.red, .orange, .yellow, .green, .blue, .purple, .red],
+                                    center: .center
+                                )
+                            )
+                            .frame(width: 28, height: 28)
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(width: 16, height: 16)
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(colorScheme == .dark ? Color(.secondarySystemBackground) : .white)
+                .shadow(color: .black.opacity(0.05), radius: 12, y: 3)
+        )
+    }
+}
+
+// MARK: - ColorSwatch (isolated component — không rebuild khi icon thay đổi)
+
+struct ColorSwatch: View {
+    let color: Color
+    let isSelected: Bool
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            ZStack {
+                Circle()
+                    .fill(color)
+                    .frame(width: 28, height: 28)
+
+                if isSelected {
+                    Circle()
+                        .stroke(.white, lineWidth: 2.5)
+                        .frame(width: 28, height: 28)
+
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(.white)
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .animation(.spring(response: 0.25, dampingFraction: 0.7), value: isSelected)
+    }
+}
+
+// MARK: - Icon Grid
+
+extension IconPicker {
+
+    var iconGridSection: some View {
+        VStack(alignment: .leading, spacing: 28) {
+
+            // Recent
             if !recentIcons.isEmpty {
-
-                VStack(alignment: .leading, spacing: 12) {
-
-                    Text("Recent")
-                        .font(.headline)
-                        .foregroundStyle(.primary)
+                VStack(alignment: .leading, spacing: 10) {
+                    sectionLabel("Recent")
 
                     ScrollView(.horizontal, showsIndicators: false) {
-
-                        HStack(spacing: 14) {
-
-                            ForEach(recentIcons, id: \.self) { symbol in
-
-                                iconCell(
-                                    EventIcon(symbol: symbol, name: symbol)
+                        HStack(spacing: 10) {
+                            ForEach(recentIcons, id: \.self) { sym in
+                                IconCell(
+                                    symbol: sym,
+                                    accentColor: selectedColor,
+                                    isSelected: selectedIcon == sym,
+                                    onTap: { selectIcon(sym) }
                                 )
                             }
                         }
-                        .scrollTargetLayout()
                         .padding(.vertical, 4)
                     }
-                    .scrollIndicators(.hidden)
                 }
             }
 
+            // Categories
             ForEach(IconCategoryCatalog.categories) { category in
+                VStack(alignment: .leading, spacing: 10) {
+                    sectionLabel(category.title)
 
-                VStack(alignment: .leading, spacing: 12) {
-
-                    Text(category.title)
-                        .font(.headline)
-
-                    HStack {
-
-                        LazyVGrid(
-                            columns: gridColumns,
-                            spacing: 18
-                        ) {
-
-                            ForEach(category.icons) { item in
-                                iconCell(item)
-                            }
+                    LazyVGrid(
+                        columns: Array(repeating: GridItem(.fixed(52), spacing: 10), count: 6),
+                        spacing: 10
+                    ) {
+                        ForEach(category.icons) { item in
+                            IconCell(
+                                symbol: item.symbol,
+                                accentColor: selectedColor,
+                                isSelected: selectedIcon == item.symbol,
+                                onTap: { selectIcon(item.symbol) }
+                            )
                         }
-
                     }
-                    .frame(maxWidth: .infinity)
                 }
             }
         }
     }
-    
-    
-    
-    
-    var gridColumns: [GridItem] {
 
-        Array(
-            repeating: GridItem(
-                .fixed(48),
-                spacing: 16
-            ),
-            count: 5
-        )
+    func sectionLabel(_ title: String) -> some View {
+        Text(title.uppercased())
+            .font(.system(size: 11, weight: .semibold))
+            .foregroundStyle(.secondary)
+            .tracking(0.8)
     }
-    
-    
-    func iconCell(_ item: EventIcon) -> some View {
 
-        Button {
+    func selectIcon(_ sym: String) {
+        withAnimation(.spring(response: 0.25, dampingFraction: 0.65)) {
+            selectedIcon = sym
+        }
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    }
+}
 
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                icon = item.symbol
-                selectedIcon = item.symbol
-                iconScale = 1.2
+// MARK: - IconCell (fully isolated — không nhận Binding, chỉ nhận value)
+
+struct IconCell: View {
+    let symbol: String
+    let accentColor: Color
+    let isSelected: Bool
+    let onTap: () -> Void
+
+    @Environment(\.colorScheme) var colorScheme
+
+    var body: some View {
+        Button(action: onTap) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(
+                        isSelected
+                        ? accentColor.opacity(0.15)
+                        : Color(.secondarySystemBackground)
+                    )
+
+                if isSelected {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .stroke(accentColor.opacity(0.5), lineWidth: 1.5)
+                }
+
+                Image(systemName: symbol)
+                    .symbolRenderingMode(.hierarchical)
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(isSelected ? accentColor : .primary)
             }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                iconScale = 1
-            }
-
-        } label: {
-
-            Image(systemName: item.symbol)
-                .symbolRenderingMode(.hierarchical)
-                .font(.system(size:20, weight:.medium))
-                .foregroundStyle(.primary)
-                .frame(width:48,height:48)
-                .background(
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(
-                            icon == item.symbol
-                            ? color.opacity(0.18)
-                            : Color(.secondarySystemBackground)
-                        )
-                        .shadow(
-                            color: .black.opacity(
-                                colorScheme == .dark ? 0.35 : 0.08
-                            ),
-                            radius: 6,
-                            y: 2
-                        )
-                )
-                .shadow(
-                    color: icon == item.symbol ? color.opacity(0.3) : .clear,
-                    radius: 6,
-                    y: 2
-                )
+            .frame(width: 52, height: 52)
         }
         .buttonStyle(.plain)
-    }
-    
-    
-    
-}
-
-
-extension IconPicker {
-
-    var colorPicker: some View {
-
-        HStack(spacing:16) {
-
-            ForEach(EventColorPalette.colors,id:\.self) { c in
-
-                Button {
-
-                    color = c
-
-                } label: {
-
-                    Circle()
-                        .fill(c)
-                        .frame(width:32,height:32)
-                        .overlay(
-                            Circle()
-                                .stroke(.white,lineWidth:2)
-                                .opacity(color == c ? 1 : 0)
-                        )
-                }
-            }
-        }
+        .animation(.spring(response: 0.2, dampingFraction: 0.7), value: isSelected)
     }
 }
 
 
 
-extension IconPicker {
 
-    var preview: some View {
 
-        ZStack {
 
-            Circle()
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            color.opacity(0.9),
-                            color.opacity(0.5)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .frame(width: 140, height: 140)
-                .shadow(color: color.opacity(0.25), radius: 6, y: 3)
 
-            Circle()
-                .stroke(color.opacity(0.35), lineWidth: 1)
 
-            Image(systemName: icon)
-                .font(.system(size: 48, weight: .semibold))
-                .symbolRenderingMode(.monochrome)
-                .foregroundStyle(.white)
-                .scaleEffect(iconScale)
-                .animation(.spring(response: 0.35, dampingFraction: 0.6), value: icon)
-        }
-        .shadow(color: color.opacity(0.35), radius: 12, y: 5)
-    }
-}
+
 
 struct EventIcon: Identifiable, Hashable {
 
@@ -507,67 +539,7 @@ struct EventColorPalette {
     }
 }
 
-extension IconPicker {
 
-    var iconHeader: some View {
-
-        HStack(alignment: .center, spacing: 20) {
-
-            preview
-                .fixedSize()
-
-            LazyVGrid(
-                columns: [
-                    GridItem(.adaptive(minimum: 28), spacing: 12)
-                ],
-                spacing: 12
-            ) {
-
-                ForEach(EventColorPalette.colors, id: \.self) { c in
-
-                    Button {
-                        color = c
-                    } label: {
-
-                        Circle()
-                            .fill(c)
-                            .frame(width: 28, height: 28)
-                            .overlay(
-                                Circle()
-                                    .stroke(.white, lineWidth: 2)
-                                    .opacity(color == c ? 1 : 0)
-                            )
-                    }
-                }
-                
-                Button {
-                    showHexEditor = true
-                } label: {
-
-                    ZStack {
-
-                        Circle()
-                            .fill(Color(.systemGray5))
-                            .frame(width: 28, height: 28)
-
-                        Image(systemName: "plus")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(.primary)
-                    }
-                }
-                
-                
-            }
-        }
-        .padding(18)
-        .frame(maxWidth: .infinity)
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color(.systemBackground))
-        )
-        .shadow(color:.black.opacity(0.05),radius:10,y:4)
-    }
-}
 
 
 extension Color {

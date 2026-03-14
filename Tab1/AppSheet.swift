@@ -28,19 +28,17 @@ enum AppSheet: Identifiable {
 
 
 enum AppAlert: Identifiable {
-
     case deleteEvent(EventItem)
     case systemEventChange(EventItem, Int)
+    case recurringTimeChange(EventItem, Int)      // 👈 thêm — drag
+    case recurringDurationChange(EventItem, Int)  // 👈 thêm — resize
 
     var id: String {
-
         switch self {
-
-        case .deleteEvent(let event):
-            return "delete-\(event.id)"
-
-        case .systemEventChange(let event, _):
-            return "system-\(event.id)"
+        case .deleteEvent(let e):           return "delete_\(e.id)"
+        case .systemEventChange(let e, _):  return "system_\(e.id)"
+        case .recurringTimeChange(let e, _):     return "time_\(e.id)"
+        case .recurringDurationChange(let e, _): return "dur_\(e.id)"
         }
     }
 }

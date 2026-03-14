@@ -20,8 +20,8 @@ struct TimelineLineView: View {
     func isCurrentSegment(_ index: Int) -> Bool {
         let now = nowMinute()
         let start = events[index].minutes
-        let end   = events[index + 1].minutes
-        return now >= start && now <= end
+        let end   = events[index + 1].minutes  // giữ nguyên vì đây là segment gap
+        return now > TimelineEngine.endMinute(events[index]) && now <= end
     }
     
     func nowMinute() -> Int {
@@ -34,23 +34,26 @@ struct TimelineLineView: View {
     }
     
     func nowY() -> CGFloat? {
-
         let now = nowMinute()
 
-        for i in 0..<events.count-1 {
+        for i in 0..<events.count - 1 {
+            let eventStart  = events[i].minutes
+            let eventEnd    = TimelineEngine.endMinute(events[i])
+            let nextStart   = events[i + 1].minutes
 
-            let start = events[i].minutes
-            let end   = events[i+1].minutes
+            let thisTopY    = yPosition(for: i) - TimelineLayoutEngine.eventHeight(events[i]) / 2
+            let thisH       = TimelineLayoutEngine.eventHeight(events[i])
+            let thisBottomY = thisTopY + thisH
+            let nextTopY    = yPosition(for: i + 1) - TimelineLayoutEngine.eventHeight(events[i + 1]) / 2
 
-            if now >= start && now <= end {
+            if now >= eventStart && now <= eventEnd {
+                let progress = CGFloat(now - eventStart) / CGFloat(max(eventEnd - eventStart, 1))
+                return thisTopY + thisH * progress
+            }
 
-                let startY = yPosition(for: i)
-                let endY   = yPosition(for: i+1)
-
-                let progress =
-                CGFloat(now - start) / CGFloat(max(end - start,1))
-
-                return startY + (endY - startY) * progress
+            if now > eventEnd && now < nextStart {
+                let progress = CGFloat(now - eventEnd) / CGFloat(max(nextStart - eventEnd, 1))
+                return thisBottomY + (nextTopY - thisBottomY) * progress
             }
         }
 
@@ -74,78 +77,72 @@ struct TimelineLineView: View {
 
                 let rise = riseIndex()
                 let window = windowIndex()
+                let indices = Array(rise..<window)
 
                 ZStack(alignment: .topLeading) {
 
-                    ForEach(rise..<window, id: \.self) { i in
+                    ForEach(indices, id: \.self) { i in
 
                         let startY = yPosition(for: i)
                         let endY   = yPosition(for: i + 1)
 
-                        let minutesGap =
-                        events[i + 1].minutes - TimelineEngine.endMinute(events[i])
-
+                        let minutesGap    = events[i + 1].minutes - TimelineEngine.endMinute(events[i])
                         let segmentHeight = endY - startY
+                        let ppm           = segmentHeight / CGFloat(max(minutesGap, 1))
+                        let dashLength    = max(4, ppm * 8)
+                        let gapLength     = max(4, ppm * 5)
+                        let style         = StrokeStyle(
+                            lineWidth: isDragging ? 4 : 3,
+                            lineCap: .round,
+                            dash: [dashLength, gapLength]
+                        )
 
-                        let pixelsPerMinute =
-                        segmentHeight / CGFloat(max(minutesGap,1))
-
-                        // GAP DYNAMIC
-                        let dashLength =
-                        max(4, pixelsPerMinute * 8)
-
-                        let gapLength =
-                        max(4, pixelsPerMinute * 5)
-
+                        // Đường base xám
                         Path { path in
                             path.move(to: CGPoint(x: 0, y: startY))
                             path.addLine(to: CGPoint(x: 0, y: endY))
                         }
                         .stroke(
-                            isDragging
-                            ? Color.blue.opacity(0.7)
-                            : Color.gray.opacity(0.45),
-                            style: StrokeStyle(
-                                lineWidth: isDragging ? 4 : 3,
-                                lineCap: .round,
-                                dash: [dashLength, gapLength]
-                            )
+                            isDragging ? Color.blue.opacity(0.7) : Color.gray.opacity(0.45),
+                            style: style
                         )
-                        if isToday() && isPastOrCurrentSegment(i) {
 
-                            let end = isCurrentSegment(i) ? (nowY() ?? endY) : endY
-                            let sleepMinute = events[windowIndex()].minutes
-                            let now = nowMinute()
+                        // Đường orange
+                        if isToday() {
+                            let now      = nowMinute()
+                            let sleepMin = events[windowIndex()].minutes
+                            let segStart = events[i].minutes
+                            let segEnd   = events[i + 1].minutes
 
-                            let progressColor: Color =
-                                now < sleepMinute
-                                ? Color.orange.opacity(0.6)
-                                : events[windowIndex()].color.opacity(0.7)
+                            if now > segStart && segStart < sleepMin {
 
-                            Path { path in
-                                path.move(to: CGPoint(x: 0, y: startY))
-                                path.addLine(to: CGPoint(x: 0, y: end))
+                                let paintTo: CGFloat = {
+                                    if now >= segStart && now <= segEnd {
+                                        return nowY() ?? endY
+                                    } else if now > segEnd {
+                                        return endY
+                                    }
+                                    return startY
+                                }()
+
+                                if paintTo > startY {
+                                    Path { path in
+                                        path.move(to: CGPoint(x: 0, y: startY))
+                                        path.addLine(to: CGPoint(x: 0, y: paintTo))
+                                    }
+                                    .stroke(
+                                        now < sleepMin
+                                            ? Color.orange.opacity(0.6)
+                                            : events[windowIndex()].color.opacity(0.7),
+                                        style: style
+                                    )
+                                }
                             }
-                            .stroke(
-                                progressColor,
-                                style: StrokeStyle(
-                                    lineWidth: isDragging ? 4 : 3,
-                                    lineCap: .round,
-                                    dash: [dashLength, gapLength]
-                                )
-                            )
                         }
-                        
                     }
-                    
-                    
-                    
-                    
                 }
                 .shadow(
-                    color: isDragging
-                    ? Color.blue.opacity(0.5)
-                    : .clear,
+                    color: isDragging ? Color.blue.opacity(0.5) : .clear,
                     radius: 6
                 )
                 .animation(.easeInOut(duration: 0.2), value: isDragging)

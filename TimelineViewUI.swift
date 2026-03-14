@@ -42,6 +42,27 @@ struct TimelineView: View {
     
     
     
+    func isRecurring(_ event: EventItem) -> Bool {
+        guard let t = store.templates.first(where: { $0.id == event.id }) else { return false }
+        switch t.recurrence {
+        case .once: return false
+        default:    return true
+        }
+    }
+
+    func recurringMessage(_ event: EventItem) -> String {
+        guard let t = store.templates.first(where: { $0.id == event.id }) else { return "" }
+        switch t.recurrence {
+        case .daily:    return "This event repeats every day."
+        case .weekdays: return "This event repeats Mon–Fri."
+        case .specific(let days):
+            let s = Calendar.current.shortWeekdaySymbols
+            return "Repeats on " + days.sorted().map { s[$0-1] }.joined(separator: ", ")
+        case .once: return ""
+        }
+    }
+    
+    
     func isPastDate() -> Bool {
 
         let today = Calendar.current.startOfDay(for: Date())
@@ -51,10 +72,40 @@ struct TimelineView: View {
     }
     
     func reloadTimeline() {
-        events = store.events(for: calendar.selectedDate)
-        addButtonsIndex = TimelineEngine.largestGapIndex(events: events)
+        // Disable animation khi reload hoàn toàn
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
+            events = store.events(for: calendar.selectedDate)
+        }
+        addButtonsIndex = bestGapIndex()
     }
    
+    func bestGapIndex() -> Int? {
+        guard events.count > 1 else { return nil }
+
+        let nowMinutes = TimelineEngine.currentMinutes()
+        let isToday = Calendar.current.isDateInToday(calendar.selectedDate)
+
+        var largestGap = 0
+        var index: Int? = nil
+
+        for i in 0..<(events.count - 1) {
+            let gapStart = TimelineEngine.endMinute(events[i])
+            let gapEnd   = events[i + 1].minutes
+            let gap      = gapEnd - gapStart
+
+            // Nếu là today → chỉ xét gap bắt đầu sau now
+            if isToday && gapStart < nowMinutes { continue }
+
+            if gap > largestGap {
+                largestGap = gap
+                index = i
+            }
+        }
+
+        return index
+    }
     
     func nowTimeString() -> String {
         TimelineEngine.formatTime(now)
@@ -92,6 +143,48 @@ struct TimelineView: View {
                abs(nearest.element.minutes - now) <= 5
     }
     
+    // Thêm helper binding theo id
+    func eventBinding(for id: UUID) -> Binding<EventItem>? {
+        guard let index = events.firstIndex(where: { $0.id == id }) else { return nil }
+        return $events[index]
+    }
+    
+    func gapMessage(for index: Int) -> String? {
+        guard events.indices.contains(index),
+              events.indices.contains(index + 1) else { return nil }
+
+        let current = events[index]
+        let next = events[index + 1]
+        let gapMinutes = next.minutes - TimelineEngine.endMinute(current)
+
+        switch gapMinutes {
+        case ..<60:
+            return nil
+        case 60..<120:
+            return "A little gap — sneak something in? 🌿"
+        case 120..<240:
+            return "2 hours of untapped potential ✦"
+        case 240..<360:
+            return "4 hours? That's a side project waiting to happen 🚀"
+        case 360..<480:
+            return "Half a workday just sitting there... 👀"
+        case 480..<600:
+            return "8 whole hours. No excuses now ⚡"
+        case 600..<720:
+            return "10 hours of pure possibility 🔥"
+        case 720..<840:
+            return "Half a day with zero plans. Bold move 🎲"
+        case 840..<960:
+            return "14 hours free. Are you even trying? 😂"
+        case 960...:
+            return "The entire day is a blank canvas 🌍"
+        default:
+            return nil
+        }
+    }
+    
+    
+    
     
     
     
@@ -101,155 +194,200 @@ struct TimelineView: View {
         
         
         ScrollView {
-            
-           
-            VStack(alignment: .leading) {
-                
-                
-                
-                ForEach(Array(events.enumerated()), id: \.element.id) { index, event in
-                    if events.indices.contains(index) {
-                        
-                        DraggableEventRow(
-                            event: $events[index],
-                            index: index,
-                            events: $events,
-                            isDragging: $isDragging,
-                            isNearNowIndicator: indicatorTouchesEvent(index),
-                            isLocked: isPastDate(),
-                            
-                            onDragEnded: {
+
+            VStack(alignment: .leading, spacing: 0) {
+
+                let allDayEvents = events.filter { $0.duration == 1440 }
+
+                // ALL DAY ROW
+                if !allDayEvents.isEmpty {
+                    AllDayEventsRow(events: allDayEvents) { event in
+                        activeSheet = .eventDetail(event)
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                    .padding(.bottom, 4)
+                }
+
+                // Spacer NẰM NGOÀI VStack có line — line không biết về khoảng này
+                Spacer().frame(height: allDayEvents.isEmpty ? 30 : 8)
+
+                // VStack này bắt đầu ĐÚNG tại Morning Start
+                // → line.yPosition(for: 0) khớp chính xác với Morning Start
+                let visibleEvents = events.filter { $0.duration != 1440 }
+
+                VStack(alignment: .leading, spacing: 0) {
+
+                    ForEach(visibleEvents) { event in
+
+                        let eventID = event.id
+
+                        if events.contains(where: { $0.id == eventID }),
+                           let safeBinding = Binding<Any>.safe($events, id: eventID),
+                           let index = events.firstIndex(where: { $0.id == eventID }) {
+
+                            DraggableEventRow(
+                                event: safeBinding,
+                                index: index,
+                                events: $events,
+                                isDragging: $isDragging,
+                                isNearNowIndicator: indicatorTouchesEvent(index),
+                                isLocked: isPastDate(),
                                 
-                                guard events.indices.contains(index) else { return }
                                 
-                                let event = events[index]
-                                
-                                if event.isSystemEvent {
-                                    
-                                    pendingSystemChange = event
-                                    pendingMinutes = event.minutes
-                                    
-                                    activeAlert = .systemEventChange(event, event.minutes)
-                                    
-                                    return
-                                }
-                                
-                                for e in events {
-                                    
-                                    if !e.isSystemEvent {
-                                        
+                                onDragEnded: {
+                                    guard let liveIndex = events.firstIndex(where: { $0.id == eventID }),
+                                          events.indices.contains(liveIndex) else { return }
+                                    let liveEvent = events[liveIndex]
+
+                                    if liveEvent.isSystemEvent {
+                                        pendingSystemChange = liveEvent
+                                        pendingMinutes = liveEvent.minutes
+                                        activeAlert = .systemEventChange(liveEvent, liveEvent.minutes)
+                                        return
+                                    }
+
+                                    // Lưu tất cả non-system positions (only today)
+                                    for e in events where !e.isSystemEvent {
+                                        if e.duration == 1440 { continue }
                                         store.overrideEvent(
                                             templateID: e.id,
                                             date: calendar.selectedDate,
-                                            minutes: e.minutes
+                                            minutes: e.minutes,
+                                            duration: e.duration,
+                                            ignoreOverlap: true
                                         )
                                     }
-                                }
-                                
-                                addButtonsIndex =
-                                TimelineEngine.largestGapIndex(events: events)
-                            },
-                            onTapEvent: { event in
-                                
-                                guard !event.isSystemEvent else { return }
-                                guard !isPastDate() else { return }
-                                
-                                activeSheet = .eventDetail(event)
-                            },
-                            onResizeCommit: { templateID, newDuration in
-                                
-                                guard !isPastDate() else { return }
-                                
-                                store.overrideEvent(
-                                    templateID: templateID,
-                                    date: calendar.selectedDate,
-                                    duration: newDuration
-                                )
-                                
-                                reloadTimeline()
-                            }
-                        )
-                        .id(events[index].id)
-                        
-                        if events.indices.contains(index),
-                           events.indices.contains(index + 1) {
-                            
-                            let spacing = TimelineLayoutEngine.spacing(
-                                current: events[index],
-                                next: events[index + 1]
-                            )
-                            
-                            VStack(spacing: 0) {
-                                
-                                Spacer()
-                                    .frame(height: spacing / 2)
-                                
-                                if addButtonsIndex == index && !isPastDate() {
-                                    
-                                    AddItemButton {
-                                        activeSheet = .createItem
+
+                                    // Nếu event dragged là recurring → hỏi scope
+                                    if isRecurring(liveEvent) {
+                                        activeAlert = .recurringTimeChange(liveEvent, liveEvent.minutes)
                                     }
-                                    .frame(maxWidth: .infinity)
-                                    .transition(.opacity)
-                                    .animation(
-                                        isDragging ? nil :
-                                                .easeInOut(duration: 0.15),
-                                        value: spacing
+
+                                    addButtonsIndex = bestGapIndex()
+                                },
+                                
+                                
+                                onTapEvent: { tapped in
+                                    guard !tapped.isSystemEvent, !isPastDate() else { return }
+                                    activeSheet = .eventDetail(tapped)
+                                },
+                                
+                                
+                                onResizeCommit: { templateID, newDuration in
+                                    guard !isPastDate() else { return }
+                                    // Save only today trước
+                                    store.overrideEvent(
+                                        templateID: templateID,
+                                        date: calendar.selectedDate,
+                                        duration: newDuration,
+                                        ignoreOverlap: true
                                     )
+                                    // Nếu recurring → hỏi sau khi resize xong (onResizeComplete)
+                                    if let e = events.first(where: { $0.id == templateID }), isRecurring(e) {
+                                        // Lưu pending để hỏi khi resize final
+                                        pendingSystemChange = e
+                                        pendingMinutes = newDuration  // tái dụng state này để lưu duration
+                                    }
+                                },
+                                onResizeComplete: {
+                                    reloadTimeline()
+                                    // Hỏi scope nếu có pending recurring resize
+                                    if let e = pendingSystemChange, !e.isSystemEvent {
+                                        activeAlert = .recurringDurationChange(e, pendingMinutes)
+                                        pendingSystemChange = nil
+                                    }
                                 }
                                 
-                                Spacer()
-                                    .frame(height: spacing / 2)
+                            )
+                            .id(eventID)
+
+                            if let currentIdx = events.firstIndex(where: { $0.id == eventID }),
+                               events.indices.contains(currentIdx + 1) {
+
+                                let spacing = TimelineLayoutEngine.spacing(
+                                    current: events[currentIdx],
+                                    next: events[currentIdx + 1]
+                                )
+
+                                VStack(spacing: 0) {
+                                    Spacer().frame(height: spacing / 2)
+
+                                    if addButtonsIndex == currentIdx && !isPastDate() {
+                                        if let message = gapMessage(for: currentIdx) {
+                                            Button {
+                                                activeSheet = .createItem
+                                            } label: {
+                                                HStack(spacing: 7) {
+                                                    ZStack {
+                                                        Circle()
+                                                            .fill(Color.orange.opacity(0.15))
+                                                            .frame(width: 22, height: 22)
+                                                        Image(systemName: "plus")
+                                                            .font(.system(size: 11, weight: .bold))
+                                                            .foregroundStyle(Color.orange)
+                                                    }
+                                                    Text(message)
+                                                        .font(.caption.weight(.semibold))
+                                                        .foregroundStyle(Color.primary.opacity(0.55))
+                                                }
+                                                .padding(.horizontal, 12)
+                                                .padding(.vertical, 6)
+                                                .background(
+                                                    Capsule()
+                                                        .fill(Color.orange.opacity(0.08))
+                                                        .overlay(
+                                                            Capsule()
+                                                                .stroke(Color.orange.opacity(0.2), lineWidth: 1)
+                                                        )
+                                                )
+                                            }
+                                            .padding(.leading, 108)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .leading)))
+                                            .animation(.easeInOut(duration: 0.15), value: addButtonsIndex)
+                                        }
+                                    }
+
+                                    Spacer().frame(height: spacing / 2)
+                                }
                             }
                         }
                     }
                 }
-            }
-            
-            
-            .opacity(isPastDate() ? 0.65 : 1)
-            .saturation(isPastDate() ? 0.6 : 1)
-            .allowsHitTesting(!isPastDate())
-            
-            .background(alignment: .topLeading) {
+                .opacity(isPastDate() ? 0.65 : 1)
+                .saturation(isPastDate() ? 0.6 : 1)
+                .allowsHitTesting(!isPastDate())
+                .background(alignment: .topLeading) {
+                    ZStack(alignment: .topLeading) {
 
-                ZStack(alignment: .topLeading) {
-
-                    TimelineLineView(
-                        events: events,
-                        isDragging: isDragging,
-                        date: calendar.selectedDate
-                    )
-                    .padding(.leading, 100)
-
-                    if events.count > 1 &&
-                       Calendar.current.isDateInToday(calendar.selectedDate) &&
-                       TimelineLayoutEngine.isNowInsideTimeline(events: events) {
-
-                        TimeNowIndicator(
-                            time: TimelineEngine.formatTime(now)
+                        // Line không cần offset — tọa độ đã khớp Morning Start
+                        TimelineLineView(
+                            events: visibleEvents,
+                            isDragging: isDragging,
+                            date: calendar.selectedDate
                         )
-                        .frame(width: 70, alignment: .leading)
-                        .offset(y: TimelineLayoutEngine.nowY(events: events))
-                        .opacity(
-                            TimelineLayoutEngine.isNowInsideTimeline(events: events)
-                            ? 1 : 0
-                        )
-                        .animation(.easeOut(duration: 0.2), value: events)
+                        .padding(.leading, 100)
+
+                        if visibleEvents.count > 1 &&
+                           Calendar.current.isDateInToday(calendar.selectedDate) &&
+                           TimelineLayoutEngine.isNowInsideTimeline(events: visibleEvents) {
+                            TimeNowIndicator(time: TimelineEngine.formatTime(now))
+                                .frame(width: 70, alignment: .leading)
+                                .offset(y: TimelineLayoutEngine.nowY(events: visibleEvents))
+                                .id(visibleEvents.map { "\($0.id)\($0.duration ?? 0)\($0.minutes)" }.joined())
+                                .opacity(TimelineLayoutEngine.isNowInsideTimeline(events: visibleEvents) ? 1 : 0)
+                        }
                     }
                 }
+                .transaction { t in if isDragging { t.animation = nil } }
+                .animation(nil, value: isDragging)
+                .animation(
+                    isDragging ? nil : .spring(response: 0.35, dampingFraction: 0.85),
+                    value: events.map(\.minutes)
+                )
+                .padding(.horizontal)
             }
-            .transaction { t in
-                if isDragging { t.animation = nil }
-                
-            }
-            .animation(nil, value: isDragging)
-            .animation(
-                isDragging ? nil : .interactiveSpring(),
-                value: events.map(\.minutes)
-            )
-            .padding(.horizontal)
-            .padding(.top, 30)
         }
         .contentShape(Rectangle())
         .onTapGesture {
@@ -287,22 +425,16 @@ struct TimelineView: View {
             showNowBlockAlert = true
         }
         .onAppear {
-
             reloadTimeline()
-
-            addButtonsIndex =
-            TimelineEngine.largestGapIndex(
-                events: events
-            )
+            addButtonsIndex = bestGapIndex()
         }
         .onChange(of: calendar.selectedDate) { _, newDate in
-
-            withAnimation(.easeOut(duration: 0.15)) {
-
+            // Không animate khi switch date
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
                 events = store.events(for: newDate)
-
-                addButtonsIndex =
-                    TimelineEngine.largestGapIndex(events: events)
+                addButtonsIndex = bestGapIndex()
             }
         }
         // MARK: Sheet
@@ -321,6 +453,7 @@ struct TimelineView: View {
 
                 CreateEventDetailSheet(
                     suggestedStart: suggested,
+                    initialDate: calendar.selectedDate,
                     onOpenHabit: {
 
                         activeSheet = nil
@@ -342,8 +475,7 @@ struct TimelineView: View {
 
                     reloadTimeline()
 
-                    addButtonsIndex =
-                    TimelineEngine.largestGapIndex(events: events)
+                    addButtonsIndex = bestGapIndex()
                 }
                 .presentationSizing(.page)          // 👈 mở rộng modal trên iPad
                   .presentationDetents([
@@ -353,14 +485,22 @@ struct TimelineView: View {
                   .presentationDragIndicator(.visible)
                   .presentationCornerRadius(32)
                 
+            
+                // ĐỔI THÀNH — chỉ cần onDelete:
             case .eventDetail(let event):
-
                 EventDetailSheet(
                     event: event,
                     onDelete: {
-                        activeAlert = .deleteEvent(event)
+                        guard !event.isSystemEvent else { return }
+                        store.deleteEvent(templateID: event.id, date: calendar.selectedDate)
+                        reloadTimeline()
+                        addButtonsIndex = bestGapIndex()
                     }
                 )
+                .environmentObject(calendar)
+                .onDisappear {
+                    reloadTimeline()   // 👈 reload sau khi sheet đóng để title/icon mới hiện lên
+                }
                
             }
         }
@@ -387,8 +527,7 @@ struct TimelineView: View {
 
                         reloadTimeline()
 
-                        addButtonsIndex =
-                            TimelineEngine.largestGapIndex(events: events)
+                        addButtonsIndex = bestGapIndex()
                     },
                     secondaryButton: .cancel()
                 )
@@ -399,61 +538,74 @@ struct TimelineView: View {
                     title: Text("Change System Event"),
                     message: Text("Apply this change to all days or only today?"),
 
+                    // Trong primaryButton "All Days":
                     primaryButton: .default(Text("All Days")) {
 
                         if event.systemType == .wake {
-
+                            // Không cho set wake sau sleep
+                            let newWake = min(minutes, store.sleepMinutes - 30)
                             store.updateSystemEvents(
-                                wakeMinutes: minutes,
+                                wakeMinutes: newWake,
                                 sleepMinutes: store.sleepMinutes
                             )
-
-                           
-                            let k = store.key(for: calendar.selectedDate)
-
-                            if let index = store.overrides.firstIndex(where: {
-                                $0.templateID == event.id &&
-                                $0.dateKey == k
-                            }) {
-                                store.overrides[index].minutes = nil
-                            }
-
-                            store.rebuildIndex()
-                            store.invalidateCache()
-                            store.save()
-
-                            reloadTimeline()
-
                         } else if event.systemType == .sleep {
-
+                            // Không cho set sleep trước wake
+                            let newSleep = max(minutes, store.wakeMinutes + 30)
                             store.updateSystemEvents(
                                 wakeMinutes: store.wakeMinutes,
-                                sleepMinutes: minutes
+                                sleepMinutes: newSleep
                             )
-
-                            store.overrides.removeAll {
-                                $0.templateID == event.id &&
-                                $0.dateKey == store.key(for: calendar.selectedDate)
-                            }
-
-                            store.rebuildIndex()
-                            store.invalidateCache()
-                            store.save()
-
-                            reloadTimeline()
                         }
 
+                        // Xóa override của ngày hôm nay vì đã apply vào template
+                        store.overrides.removeAll {
+                            $0.templateID == event.id &&
+                            $0.dateKey == store.key(for: calendar.selectedDate)
+                        }
+
+                        store.rebuildIndex()
+                        store.invalidateCache()
+                        store.save()
                         reloadTimeline()
                     },
 
+                    // Trong secondaryButton "Only Today":
                     secondaryButton: .default(Text("Only Today")) {
+                        // Chỉ cho đổi today trở đi, không cho đổi past
+                        guard !isPastDate() else { return }
 
                         store.overrideEvent(
                             templateID: event.id,
                             date: calendar.selectedDate,
                             minutes: minutes
                         )
+                        reloadTimeline()
+                    }
+                )
+                
+            case .recurringTimeChange(let event, let minutes):
+                return Alert(
+                    title: Text("Move event"),
+                    message: Text(recurringMessage(event)),
+                    primaryButton: .default(Text("All Days")) {
+                        store.updateEventTime(templateID: event.id, minutes: minutes)
+                        reloadTimeline()
+                    },
+                    secondaryButton: .default(Text("Only Today")) {
+                        // Already saved as override, nothing to do
+                        reloadTimeline()
+                    }
+                )
 
+            case .recurringDurationChange(let event, let duration):
+                return Alert(
+                    title: Text("Change duration"),
+                    message: Text(recurringMessage(event)),
+                    primaryButton: .default(Text("All Days")) {
+                        store.updateEventDuration(templateID: event.id, duration: duration)
+                        reloadTimeline()
+                    },
+                    secondaryButton: .default(Text("Only Today")) {
                         reloadTimeline()
                     }
                 )
@@ -486,8 +638,7 @@ struct TimelineView: View {
 
                     reloadTimeline()
 
-                    addButtonsIndex =
-                    TimelineEngine.largestGapIndex(events: events)
+                    addButtonsIndex = bestGapIndex()
                 },
 
                 onOpenEvent: {
@@ -534,6 +685,8 @@ struct DraggableEventRow: View {
     var onDragEnded: () -> Void
     var onTapEvent: (EventItem) -> Void
     var onResizeCommit: ((UUID, Int) -> Void)?
+    var onResizeComplete: (() -> Void)? = nil
+    
     
     @State private var dragOffsetY: CGFloat = 0
     @State private var dragOffsetX: CGFloat = 0
@@ -562,10 +715,7 @@ struct DraggableEventRow: View {
     func syncCompletion() {
 
         let date = calendar.selectedDate
-
-        guard events.indices.contains(index) else { return }
-
-        let id = events[index].id
+        let id = event.id  // 👈 dùng event binding trực tiếp, không qua events[index]
 
         let completed = store.isCompleted(
             templateID: id,
@@ -640,21 +790,23 @@ struct DraggableEventRow: View {
         
         TimelineEventRow(
             time: event.time,
-            endTime: event.endTime,
-            title: event.title,
-            icon: event.icon,
-            color: event.color,
-            kind: event.kind,
-            isHolding: isHolding && !event.isSystemEvent,
-            hasDuration: event.duration != nil,
-            durationMinutes: event.duration,
-            isNearNowIndicator: isNearNowIndicator,
-            nearSwapTarget: nearSwapTarget,
-            durationPreview: durationPreview,
-            startMinutes: event.minutes,
-            isCompleted: isCompleted,
+               endTime: event.endTime,
+               title: event.title,
+               icon: event.icon,
+               color: event.color,
+               kind: event.kind,
+               isHolding: isHolding && !event.isSystemEvent,
+               hasDuration: event.duration != nil,
+               durationMinutes: event.duration,
+               isNearNowIndicator: isNearNowIndicator,
+               nearSwapTarget: nearSwapTarget,
+               durationPreview: durationPreview,
+               startMinutes: event.minutes,
+               isCompleted: isCompleted,
+               isSystemEvent: event.isSystemEvent,
+             
             
-         
+            
             onToggleComplete: {
                 
                 guard !isLocked else { return }
@@ -767,7 +919,17 @@ struct DraggableEventRow: View {
                 onResizeCommit?(event.id, snapped)
             },
             
-            isLocked: isLocked
+            onResizeFinal: { _ in
+                durationPreview = nil
+                resizeBaseDuration = nil
+                lastHapticMinute = -1
+                isDragging = false
+                isHolding = false
+                onResizeComplete?()   // 👈 chỉ gọi reloadTimeline, không đụng minutes
+            },
+            
+            isLocked: isLocked,
+            isToday: Calendar.current.isDateInToday(calendar.selectedDate)
             
         )
         .opacity(isDragging && !isHolding ? 0.6 : 1)
@@ -832,10 +994,12 @@ struct DraggableEventRow: View {
                         let clamped = max(0, min(newMinutes, 1440))
                         event.update(minutes: clamped)
                         
-                        TimelineEngine.autoPush(
-                            events: &events,
-                            movedIndex: index
-                        )
+                        if let liveIdx = events.firstIndex(where: { $0.id == event.id }) {
+                            TimelineEngine.autoPush(
+                                events: &events,
+                                movedIndex: liveIdx
+                            )
+                        }
                         
                         let step = clamped / 5
                         
@@ -882,21 +1046,17 @@ struct DraggableEventRow: View {
                         guard now.timeIntervalSince(lastSwapTime) > cooldown else { return }
                         
                         // swap xuống
-                        if dragY > swapThreshold, index < events.count - 1 {
-                            
-                            let next = index + 1
-                            
+                        if dragY > swapThreshold,
+                           let liveIdx = events.firstIndex(where: { $0.id == event.id }),
+                           liveIdx < events.count - 1 {
+                            let next = liveIdx + 1
                             if !events[next].isSystemEvent && lastSwapIndex != next {
-                                
                                 lastSwapIndex = next
                                 lastSwapTime = now
-                                
                                 withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.75)) {
-
-                                    let temp = events[index].minutes
-                                    events[index].update(minutes: events[next].minutes)
+                                    let temp = events[liveIdx].minutes
+                                    events[liveIdx].update(minutes: events[next].minutes)
                                     events[next].update(minutes: temp)
-
                                     events = events
                                 }
                                 commitSwap()
@@ -907,21 +1067,18 @@ struct DraggableEventRow: View {
                         }
                         
                         // swap lên
-                        if dragY < -swapThreshold, index > 0 {
-                            
-                            let prev = index - 1
-                            
+                        if dragY < -swapThreshold,
+                           let liveIdx = events.firstIndex(where: { $0.id == event.id }),
+                           liveIdx > 0 {
+                            let prev = liveIdx - 1
                             if !events[prev].isSystemEvent && lastSwapIndex != prev {
-                                
                                 lastSwapIndex = prev
                                 lastSwapTime = now
-                                
                                 withAnimation(.interactiveSpring(response: 0.28, dampingFraction: 0.9)) {
-                                    let temp = events[index].minutes
-                                    events[index].update(minutes: events[prev].minutes)
+                                    let temp = events[liveIdx].minutes
+                                    events[liveIdx].update(minutes: events[prev].minutes)
                                     events[prev].update(minutes: temp)
-                                    
-                                    events.swapAt(index, prev)
+                                    events.swapAt(liveIdx, prev)
                                 }
                                 commitSwap()
                                 
@@ -1045,6 +1202,7 @@ struct TimelineEventRow: View {
     let durationPreview: String?
     let startMinutes: Int
     let isCompleted: Bool
+    let isSystemEvent: Bool
     var onToggleComplete: (() -> Void)?
     
     
@@ -1053,9 +1211,10 @@ struct TimelineEventRow: View {
     var onDragEnded: (() -> Void)? = nil
     var onIconHold: (() -> Void)? = nil
     var onResizeEnd: ((CGFloat) -> Void)?
+    var onResizeFinal: ((CGFloat) -> Void)? = nil
     
     let isLocked: Bool
-    
+    let isToday: Bool
     
     
     
@@ -1075,12 +1234,21 @@ struct TimelineEventRow: View {
     
     
     
+    private func pillHeight(durationMinutes: Int?) -> CGFloat {
+        guard let d = durationMinutes else { return 50 }
+        let h = 50 + CGFloat(d - 15) * (80.0 / 105.0)
+        return min(max(h, 50), 130)
+    }
     
+    private func isNowNearEndTime() -> Bool {
+        guard isToday, let d = durationMinutes else { return false }  // 👈 guard isToday
+        let now = TimelineEngine.currentMinutes()
+        let end = startMinutes + d
+        return abs(now - end) <= 5
+    }
     
     func isRunning() -> Bool {
-
-        guard let durationMinutes else { return false }
-
+        guard isToday, let durationMinutes else { return false }  // 👈 guard isToday
         let now = TimelineEngine.currentMinutes()
         return now >= startMinutes && now <= startMinutes + durationMinutes
     }
@@ -1141,22 +1309,26 @@ struct TimelineEventRow: View {
     
     var body: some View {
 
-        HStack(alignment: .center, spacing: 4) {
+        // 1. Đổi alignment HStack
+        HStack(alignment: .top, spacing: 4) {
 
-            VStack(spacing: isHolding ? 6 : 0) {
+            let ph = pillHeight(durationMinutes: durationMinutes)
 
+            // 2. Đổi ZStack sang .topLeading
+            ZStack(alignment: .topLeading) {
+
+                // Start time — TOP
                 Text(time)
-                    .scaleEffect(isHolding ? 1.05 : 1)
-                    .offset(y: isHolding ? -4 : 0)
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundStyle(.primary)
 
+                // End time — BOTTOM
                 if let endTime {
-
-                    Spacer()
-                        .frame(height: timeSpacing)
-
                     Text(endTime)
-                        .scaleEffect(isHolding ? 1.05 : 1)
-                        .offset(y: isHolding ? 4 : 0)
+                        .font(.system(size: 12, weight: .regular))
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
                         .padding(.horizontal, isHolding ? 6 : 0)
                         .padding(.vertical, isHolding ? 2 : 0)
                         .background(
@@ -1166,73 +1338,37 @@ struct TimelineEventRow: View {
                         .gesture(
                             isHolding && !isLocked ?
                             DragGesture()
-                                .onChanged { value in
+                                .onChanged { value in onResizeEnd?(value.translation.height) }
+                                .onEnded   { value in
                                     onResizeEnd?(value.translation.height)
-                                }
-                                .onEnded { value in
-                                    onResizeEnd?(value.translation.height)
+                                    onResizeFinal?(value.translation.height)  // 👈 thêm dòng này
                                 }
                             : nil
                         )
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                        .opacity(isNowNearEndTime() ? 0 : 1)          // 👈 thêm dòng này
+                        .animation(.easeInOut(duration: 0.2), value: isNowNearEndTime())  // 👈 và dòng này
                 }
             }
-            .animation(.spring(response:0.25,dampingFraction:0.8), value:isHolding)
+            // 3. Frame đặt ở ZStack, alignment .topLeading
+            .frame(width: 70, height: ph, alignment: .topLeading)
             .opacity(isNearNowIndicator ? 0.1 : 1)
-            .frame(width:70, alignment:.leading)
+            .animation(.spring(response: 0.25, dampingFraction: 0.8), value: isHolding)
            
 
             // 👇 DRAG HANDLE
-            ZStack {
-
-                Circle()
-                    .fill(color)
-                
-                if isRunning() {
-
-                      Circle()
-                          .trim(from: 0, to: progress())
-                          .stroke(
-                            brandRing,
-                              style: StrokeStyle(
-                                  lineWidth: 4,
-                                  lineCap: .round
-                              )
-                          )
-                          .rotationEffect(.degrees(-90))
-                          .animation(.linear(duration: 0.5), value: progress())
-                  }
-
-                Image(systemName: icon)
-                    .font(.system(size:18, weight:.semibold))
-                    .foregroundStyle(.white)
-
-                if kind == .habit {
-                    Image(systemName: "repeat")
-                        .font(.system(size:7, weight:.bold))
-                        .foregroundStyle(.white)
-                        .offset(x:14,y:14)
-                }
-
-            }
-            .frame(width:50,height:50)
-            .scaleEffect(isHolding ? 1.15 : 1)   // 👈 scale ở đây
-            .animation(.spring(response:0.25,dampingFraction:0.8), value:isHolding)
-            .offset(x:-0.5)
-            .shadow(
-                color: isHolding ? .black.opacity(0.25) : .clear,
-                radius: isHolding ? 12 : 0,
-                y: isHolding ? 6 : 0
+            EventIconView(
+                icon: icon,
+                color: color,
+                kind: kind,
+                isHolding: isHolding,
+                durationMinutes: durationMinutes,
+                startMinutes: startMinutes,
+                isCompleted: isCompleted,
+                isSystemEvent: isSystemEvent,
+                isToday: isToday
             )
-            .background(
-                Circle()
-                    .fill(.ultraThinMaterial)
-                    .frame(width:60,height:60)
-            )
-            .overlay(
-                Circle()
-                    .stroke(Color.primary.opacity(0.05), lineWidth:1)
-            )
-            .shadow(color: color.opacity(0.35), radius:6, y:3)
+            .offset(x: -0.5)
            
                
 
@@ -1416,5 +1552,164 @@ struct ReorderHintArrows: View {
             }
         }
         .animation(.easeOut(duration: 0.2), value: show)
+    }
+}
+
+
+// MARK: - EventIconView (thay thế ZStack icon cũ)
+
+struct EventIconView: View {
+
+    let icon: String
+    let color: Color
+    let kind: EventKind
+    let isHolding: Bool
+    let durationMinutes: Int?
+    let startMinutes: Int
+    let isCompleted: Bool
+    let isSystemEvent: Bool
+    let isToday: Bool
+    
+    
+    @Environment(\.colorScheme) private var scheme
+
+    // Chiều cao pill scale theo duration
+    private var pillHeight: CGFloat {
+        guard let d = durationMinutes else { return 50 }
+        // 15 phút → 50pt, 60 phút → 80pt, 120 phút → 110pt, cap 130pt
+        let h = 50 + CGFloat(d - 15) * (80.0 / 105.0)
+        return min(max(h, 50), 130)
+    }
+
+    private var pillWidth: CGFloat { 50 }
+
+    var brandRing: Color {
+        let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
+        return scheme == .dark ? brand.opacity(0.85) : brand.opacity(0.65)
+    }
+
+    func isRunning() -> Bool {
+        guard isToday, let d = durationMinutes else { return false }  // 👈 guard isToday
+        let now = TimelineEngine.currentMinutes()
+        return now >= startMinutes && now <= startMinutes + d
+    }
+
+    func progress() -> CGFloat {
+        guard let d = durationMinutes else { return 0 }
+        let now = TimelineEngine.currentMinutes()
+        let start = startMinutes
+        let end = start + d
+        if now <= start { return 0 }
+        if now >= end { return 1 }
+        return CGFloat(now - start) / CGFloat(d)
+    }
+
+    var body: some View {
+        Group {
+            if kind == .habit {
+                // ── HABIT: tròn như cũ ──
+                ZStack {
+                    Circle()
+                        .fill(color)
+
+                    Image(systemName: icon)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(.white)
+
+                    // badge repeat
+                    Image(systemName: "repeat")
+                        .font(.system(size: 7, weight: .bold))
+                        .foregroundStyle(.white)
+                        .offset(x: 14, y: 14)
+                }
+                .frame(width: 50, height: 50)
+
+            } else {
+                ZStack {
+                    // Nền pill
+                    RoundedRectangle(cornerRadius: pillWidth / 2)
+                        .fill(
+                            isSystemEvent
+                            ? color
+                            : (scheme == .dark ? Color.white.opacity(0.1) : Color.black.opacity(0.07))
+                        )
+
+
+
+                    // Stroke viền màu khi running
+                    if isRunning() {
+                        RoundedRectangle(cornerRadius: pillWidth / 2)
+                            .stroke(
+                                isSystemEvent ? Color.white.opacity(0.5) : color,  // bỏ .opacity(0.6)
+                                lineWidth: 2.5                                       // tăng từ 2 → 2.5
+                            )
+                            .animation(.easeInOut, value: isRunning())
+                    }
+
+                    // Icon giữa pill
+                    Image(systemName: icon)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(isSystemEvent ? .white : color)
+                }
+                .frame(width: pillWidth, height: pillHeight)
+            }
+        }
+        // hold scale áp dụng cho cả 2
+        .scaleEffect(isHolding ? 1.15 : 1)
+        .animation(.spring(response: 0.25, dampingFraction: 0.8), value: isHolding)
+        .shadow(
+            color: color.opacity(isHolding ? 0.3 : 0.15),
+            radius: isHolding ? 12 : 4,
+            y: isHolding ? 6 : 2
+        )
+        .background(
+            // halo blur phía sau
+            Group {
+                if kind == .habit {
+                    Circle()
+                        .fill(.ultraThinMaterial)
+                        .frame(width: 60, height: 60)
+                } else {
+                    RoundedRectangle(cornerRadius: pillWidth / 2 + 5)
+                        .fill(.ultraThinMaterial)
+                        .frame(width: pillWidth + 10, height: pillHeight + 10)
+                }
+            }
+        )
+        .overlay(
+            Group {
+                if kind == .habit {
+                    Circle()
+                        .stroke(Color.primary.opacity(0.05), lineWidth: 1)
+                } else {
+                    RoundedRectangle(cornerRadius: pillWidth / 2)
+                        .stroke(Color.white.opacity(isHolding ? 0.25 : 0.12), lineWidth: 1)
+                }
+            }
+        )
+    }
+}
+
+
+extension Binding {
+    static func safe<T: Identifiable>(
+        _ array: Binding<[T]>,
+        id: T.ID
+    ) -> Binding<T>? {
+        guard array.wrappedValue.contains(where: { $0.id == id }) else {
+            return nil
+        }
+        return Binding<T>(
+            get: {
+                guard let found = array.wrappedValue.first(where: { $0.id == id }) else {
+                    return array.wrappedValue[0]  // wake event luôn tồn tại
+                }
+                return found
+            },
+            set: {
+                guard let idx = array.wrappedValue.firstIndex(where: { $0.id == id }) else { return }
+                array.wrappedValue[idx] = $0
+            }
+        )
     }
 }
