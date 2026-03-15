@@ -260,6 +260,12 @@ class TimelineStore: ObservableObject {
 
             save()
         }
+        
+        NotificationManager.shared.scheduleSystemEvents(
+             wakeMinutes: wakeMinutes,
+             sleepMinutes: sleepMinutes
+         )
+        
     }
     
     var wakeMinutes: Int {
@@ -408,6 +414,12 @@ class TimelineStore: ObservableObject {
         save()
         rebuildIndex()
         invalidateCache()
+        
+        NotificationManager.shared.cancelSystemEvents()
+          NotificationManager.shared.scheduleSystemEvents(
+              wakeMinutes: wakeMinutes,
+              sleepMinutes: sleepMinutes
+          )
     }
     
     func events(for date: Date) -> [EventItem] {

@@ -212,6 +212,7 @@ struct HabitDetailSheet: View {
             .sheet(isPresented: $showIconPicker) {
                 IconPicker(icon: $editIcon, color: $editColor)
                     .presentationCornerRadius(28)
+                    .adaptiveSheet()
             }
             // MARK: Scope alert (edit recurring)
             .alert("Apply changes to", isPresented: $showScopeAlert) {

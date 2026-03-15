@@ -298,6 +298,7 @@ extension CreateHabitDetailSheet {
         .sheet(isPresented: $showIconPicker) {
             IconPicker(icon: $icon, color: $color)
                 .presentationBackground(Color.paper)
+                .adaptiveSheet()
         }
     }
 }

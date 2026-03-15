@@ -654,6 +654,7 @@ extension CreateEventDetailSheet {
                 color: $color
             )
             .presentationBackground(Color.paper)
+            .adaptiveSheet()
         }
         .sheet(isPresented: $showHabitSheet) {
             CreateHabitDetailSheet(

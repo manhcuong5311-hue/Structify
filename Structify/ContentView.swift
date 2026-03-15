@@ -59,9 +59,7 @@ struct ContentView: View {
                 store.addEvent(title: title, icon: icon, minutes: minutes,
                                duration: duration, colorHex: colorHex, recurrence: recurrence)
             }
-            .presentationDetents([.fraction(0.85), .large])
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(32)
+            .adaptiveSheet()
         }
 
         .sheet(isPresented: $showHabitSheet) {
@@ -95,9 +93,7 @@ struct ContentView: View {
                 }
             )
             .environmentObject(store)
-            .presentationDetents([.fraction(0.85), .large])
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(32)
+            .adaptiveSheet()
         }
     }
 }

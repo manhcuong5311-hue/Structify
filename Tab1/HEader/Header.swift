@@ -315,23 +315,22 @@ struct WeekStripView: View {
     }
 }
 
-import SwiftUI
-
 struct WeekTimelineView: View {
 
     @EnvironmentObject var store: TimelineStore
     @EnvironmentObject var calendar: CalendarState
     @Environment(\.colorScheme) private var scheme
 
-    private let hourHeight: CGFloat = 52
-    private let pillWidth: CGFloat = 38
+    // Fixed constants — không dùng GeometryReader nữa
+    private let hourHeight: CGFloat = 40
+    private let iconSize: CGFloat = 32
+    private var pillWidth: CGFloat {
+        UIDevice.current.userInterfaceIdiom == .pad ? 70 : 50
+    }
     private let lineWidth: CGFloat = 1.5
-    private let iconSize: CGFloat = 36
 
     private var wakeHour: Int { store.wakeMinutes / 60 }
     private var sleepHour: Int { (store.sleepMinutes + 59) / 60 }
-    private var totalHours: Int { max(sleepHour - wakeHour, 1) }
-    private var totalHeight: CGFloat { CGFloat(totalHours) * hourHeight + iconSize }
 
     private var weekDates: [Date] {
         let start = Calendar.current
@@ -344,31 +343,32 @@ struct WeekTimelineView: View {
 
     var body: some View {
         GeometryReader { geo in
-            // Tính hourHeight để wake→sleep fit trong 30% màn hình
-            let targetHeight = geo.size.height * 0.30
-            let dynamicHourHeight = max(
-                (targetHeight - iconSize * 2) / CGFloat(max(totalHours, 1)),
-                20
-            )
+            let maxH = geo.size.height * 0.60          // 👈 tăng từ 0.45 → 0.60 để dài ra
+            let isIpad = UIDevice.current.userInterfaceIdiom == .pad
+                 let targetHourH = isIpad
+                     ? max((maxH - iconSize * 2 - 16) / CGFloat(max(sleepHour - wakeHour, 1)), 20)
+                     : min(
+                         max((maxH - iconSize * 2 - 16) / CGFloat(max(sleepHour - wakeHour, 1)), 20),
+                         hourHeight
+                       )
 
-            ScrollView(.vertical, showsIndicators: false) {
-                HStack(alignment: .top, spacing: 0) {
-                    ForEach(weekDates, id: \.self) { date in
-                        CompactDayColumn(
-                            date: date,
-                            wakeHour: wakeHour,
-                            sleepHour: sleepHour,
-                            hourHeight: dynamicHourHeight,  // 👈 dynamic
-                            pillWidth: pillWidth,
-                            lineWidth: lineWidth,
-                            iconSize: iconSize
-                        )
-                        .frame(maxWidth: .infinity)
-                    }
+            HStack(alignment: .top, spacing: 0) {
+                ForEach(weekDates, id: \.self) { date in
+                    CompactDayColumn(
+                        date: date,
+                        wakeHour: wakeHour,
+                        sleepHour: sleepHour,
+                        hourHeight: targetHourH,        // 👈 dynamic theo screen
+                        pillWidth: pillWidth,
+                        lineWidth: lineWidth,
+                        iconSize: iconSize
+                    )
+                    .frame(maxWidth: .infinity)
                 }
-                .padding(.top, 8)
-                .padding(.bottom, 24)
             }
+            .padding(.top, UIDevice.current.userInterfaceIdiom == .pad ? 48 : 4)  // 👈 dịch xuống trên iPad
+                   .padding(.bottom, 8)
+            .frame(maxWidth: .infinity)
         }
     }
 }
@@ -397,20 +397,15 @@ struct CompactDayColumn: View {
         Calendar.current.startOfDay(for: date) < Calendar.current.startOfDay(for: Date())
     }
 
-    private var totalHeight: CGFloat { CGFloat(sleepHour - wakeHour) * hourHeight }
+    private var totalHours: Int { max(sleepHour - wakeHour, 1) }
+    private var timelineHeight: CGFloat { CGFloat(totalHours) * hourHeight }
 
     private var allEvents: [EventItem] {
         store.events(for: date).filter { $0.duration != 1440 }
     }
-    private var wakeEvent: EventItem? {
-        allEvents.first { $0.systemType == .wake }
-    }
-    private var sleepEvent: EventItem? {
-        allEvents.first { $0.systemType == .sleep }
-    }
-    private var userEvents: [EventItem] {
-        allEvents.filter { !$0.isSystemEvent }
-    }
+    private var wakeEvent: EventItem? { allEvents.first { $0.systemType == .wake } }
+    private var sleepEvent: EventItem? { allEvents.first { $0.systemType == .sleep } }
+    private var userEvents: [EventItem] { allEvents.filter { !$0.isSystemEvent } }
 
     private var nowMinutes: Int {
         Calendar.current.component(.hour, from: Date()) * 60 +
@@ -419,42 +414,173 @@ struct CompactDayColumn: View {
 
     private let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
 
-    var body: some View {
-        ZStack(alignment: .top) {
+    // Pixel Y từ top của timeline (tính từ ngay dưới wake icon)
+    private func yInTimeline(minutes: Int) -> CGFloat {
+        CGFloat(minutes - wakeHour * 60) / 60.0 * hourHeight
+    }
+    
+    struct PillLayout {
+        let event: EventItem
+        let xOffset: CGFloat
+    }
 
-            // Vertical line — full height
-            verticalLine
+    func layoutPills(_ events: [EventItem]) -> [PillLayout] {
+        let sorted = events.sorted { $0.minutes < $1.minutes }
+        var result: [PillLayout] = []
+        let slotW = pillWidth * 0.75 + 2  // width mỗi slot + gap
 
-            // Wake icon — top anchor
-            if let wake = wakeEvent {
-                solidIcon(
-                    icon: wake.icon,
-                    color: wake.color,
-                    yOffset: 0
-                )
+        for event in sorted {
+            let startMin = max(event.minutes, wakeHour * 60)
+            let endMin   = min(event.minutes + (event.duration ?? 30), sleepHour * 60)
+            guard endMin > startMin else {
+                result.append(PillLayout(event: event, xOffset: 0))
+                continue
             }
 
-            // User event pills
-            ForEach(userEvents) { event in
-                eventPill(event)
-            }
-
-            // Sleep icon — bottom anchor
-            if let sleep = sleepEvent {
-                solidIcon(
-                    icon: sleep.icon,
-                    color: sleep.color,
-                    yOffset: iconSize + totalHeight - iconSize / 2
-                )
-            }
-
-            // Now dot on today
-            if isToday {
-                nowIndicator
+            // Tìm slot ngang không overlap
+            var slot = 0
+            while true {
+                let xOff = CGFloat(slot) * slotW - CGFloat(slot) * slotW / 2
+                let overlaps = result.contains { placed in
+                    let ps = max(placed.event.minutes, wakeHour * 60)
+                    let pe = min(placed.event.minutes + (placed.event.duration ?? 30), sleepHour * 60)
+                    let overlap = ps < endMin && pe > startMin
+                    let sameCol = placed.xOffset == xOff
+                    return overlap && sameCol
+                }
+                if !overlaps {
+                    result.append(PillLayout(event: event, xOffset: xOff))
+                    break
+                }
+                slot += 1
+                if slot > 3 { // max 4 columns
+                    result.append(PillLayout(event: event, xOffset: 0))
+                    break
+                }
             }
         }
+        return result
+    }
+
+    @ViewBuilder
+    func eventPillPositioned(_ event: EventItem, xOffset: CGFloat) -> some View {
+        let startMin = max(event.minutes, wakeHour * 60)
+        let endMin   = min(event.minutes + (event.duration ?? 30), sleepHour * 60)
+
+        if endMin > startMin {
+            let rawH      = CGFloat(endMin - startMin) / 60.0 * hourHeight
+            let pillH     = max(rawH, 22)
+            let safePillH = min(pillH, timelineHeight - yInTimeline(minutes: startMin))
+            let yStart    = yInTimeline(minutes: startMin)
+            let w         = pillWidth * 0.75
+
+            ZStack {
+                RoundedRectangle(cornerRadius: min(w / 2, safePillH / 2), style: .continuous)
+                    .fill(event.color)
+                    .shadow(color: event.color.opacity(0.2), radius: 2, y: 1)
+                if safePillH > 18 {
+                    Image(systemName: event.icon)
+                        .font(.system(size: safePillH > 40 ? 11 : 8, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+            }
+            .frame(width: w, height: max(safePillH, 0))
+            .offset(x: xOffset, y: yStart)
+        }
+    }
+    
+    @ViewBuilder
+    func eventPillCentered(_ event: EventItem) -> some View {
+        let startMin = max(event.minutes, wakeHour * 60)
+        let endMin   = min(event.minutes + (event.duration ?? 30), sleepHour * 60)
+
+        if endMin > startMin {
+            let rawH      = CGFloat(endMin - startMin) / 60.0 * hourHeight
+            let pillH     = max(rawH, 16)
+            let safePillH = min(pillH, timelineHeight - yInTimeline(minutes: startMin))
+            let yStart    = yInTimeline(minutes: startMin)
+            let w         = pillWidth * 0.85
+
+            ZStack {
+                RoundedRectangle(cornerRadius: min(w / 2, safePillH / 2), style: .continuous)
+                    .fill(event.color)
+                    .shadow(color: event.color.opacity(0.2), radius: 2, y: 1)
+                if safePillH > 16 {
+                    Image(systemName: event.icon)
+                        .font(.system(size: safePillH > 46 ? 22 : 16, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+            }
+            .frame(width: w, height: max(safePillH, 0))
+            // Căn giữa trên line — không dịch ngang
+            .frame(maxWidth: .infinity, alignment: .center)
+            .offset(y: yStart)
+        }
+    }
+    
+
+    var body: some View {
+        // Dùng VStack + overlay thay vì ZStack + offset
+        VStack(spacing: 4) {
+
+            // Wake icon — top
+            iconCircle(
+                icon: wakeEvent?.icon ?? "sunrise.fill",
+                color: wakeEvent?.color ?? .orange
+            )
+
+            // Timeline zone — fixed height
+            ZStack(alignment: .top) {
+
+                // Background line
+                Capsule()
+                    .fill(Color.primary.opacity(isSelected ? 0.18 : 0.08))
+                    .frame(width: lineWidth)
+                    .frame(maxWidth: .infinity)
+
+                // Past fill on today
+                if isToday {
+                    let pastH = max(
+                        min(yInTimeline(minutes: nowMinutes), timelineHeight),
+                        0
+                    )
+                    Capsule()
+                        .fill(
+                            LinearGradient(
+                                colors: [brand.opacity(0.5), brand.opacity(0.15)],
+                                startPoint: .top, endPoint: .bottom
+                            )
+                        )
+                        .frame(width: lineWidth, height: pastH)
+                        .frame(maxWidth: .infinity, alignment: .top)
+                }
+
+                // User event pills
+                
+                ForEach(userEvents) { event in
+                    eventPillCentered(event)
+                }
+
+                // Now dot
+                if isToday && nowMinutes >= wakeHour * 60 && nowMinutes <= sleepHour * 60 {
+                    ZStack {
+                        Circle().fill(Color.white).frame(width: 9, height: 9)
+                        Circle().fill(brand).frame(width: 6, height: 6)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .offset(y: yInTimeline(minutes: nowMinutes) - 4.5)
+                    .shadow(color: brand.opacity(0.4), radius: 3)
+                }
+            }
+            .frame(height: timelineHeight)
+           
+            // Sleep icon — bottom
+            iconCircle(
+                icon: sleepEvent?.icon ?? "moon.stars.fill",
+                color: sleepEvent?.color ?? .indigo
+            )
+        }
         .frame(maxWidth: .infinity)
-        .frame(height: iconSize + totalHeight + iconSize / 2)
         .opacity(isPast ? 0.4 : 1)
         .onTapGesture {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
@@ -463,98 +589,46 @@ struct CompactDayColumn: View {
         }
     }
 
-    // MARK: Vertical line
-
-    var verticalLine: some View {
-        ZStack(alignment: .top) {
-            // Base gray line
-            Capsule()
-                .fill(Color.primary.opacity(isSelected ? 0.18 : 0.08))
-                .frame(width: lineWidth)
-                .frame(height: iconSize + totalHeight + iconSize / 2)
-                .frame(maxWidth: .infinity)
-
-            // Colored past portion on today
-            if isToday {
-                let pastH = min(
-                    CGFloat(nowMinutes - wakeHour * 60) / 60.0 * hourHeight + iconSize,
-                    iconSize + totalHeight
-                )
-                Capsule()
-                    .fill(
-                        LinearGradient(
-                            colors: [brand.opacity(0.5), brand.opacity(0.2)],
-                            startPoint: .top, endPoint: .bottom
-                        )
-                    )
-                    .frame(width: lineWidth)
-                    .frame(height: max(pastH, 0))
-                    .frame(maxWidth: .infinity)
-            }
-        }
-    }
-
-    // MARK: Solid icon (no transparency)
-
-    func solidIcon(icon: String, color: Color, yOffset: CGFloat) -> some View {
+    // Icon tròn cố định — không dùng offset
+    func iconCircle(icon: String, color: Color) -> some View {
         ZStack {
             Circle()
                 .fill(color)
                 .frame(width: iconSize, height: iconSize)
-                .shadow(color: color.opacity(0.3), radius: 6, y: 3)
-
+                .shadow(color: color.opacity(0.3), radius: 4, y: 2)
             Image(systemName: icon)
                 .font(.system(size: iconSize * 0.42, weight: .semibold))
-                .symbolRenderingMode(.monochrome)
                 .foregroundStyle(.white)
         }
         .frame(maxWidth: .infinity)
-        .offset(y: yOffset)
     }
-
-    // MARK: Event pill
 
     @ViewBuilder
     func eventPill(_ event: EventItem) -> some View {
         let startMin = max(event.minutes, wakeHour * 60)
         let endMin   = min(event.minutes + (event.duration ?? 30), sleepHour * 60)
 
-        if endMin > startMin {  // ✅ dùng if thay guard
-            let pillH  = max(CGFloat(endMin - startMin) / 60.0 * hourHeight, 32)
-            let yStart = iconSize + CGFloat(startMin - wakeHour * 60) / 60.0 * hourHeight
+        if endMin > startMin {
+            let rawH   = CGFloat(endMin - startMin) / 60.0 * hourHeight
+            let pillH  = max(rawH, 22)
+            let yStart = yInTimeline(minutes: startMin)
+            // Clamp để không vượt quá timeline
+            let safePillH = min(pillH, timelineHeight - yStart)
 
             ZStack {
-                RoundedRectangle(cornerRadius: pillWidth / 2, style: .continuous)
+                RoundedRectangle(cornerRadius: min(pillWidth / 2, safePillH / 2), style: .continuous)
                     .fill(event.color)
-                    .shadow(color: event.color.opacity(0.25), radius: 4, y: 2)
-
-                Image(systemName: event.icon)
-                    .font(.system(size: pillH > 48 ? 15 : 11, weight: .semibold))
-                    .symbolRenderingMode(.monochrome)
-                    .foregroundStyle(.white)
+                    .shadow(color: event.color.opacity(0.2), radius: 2, y: 1)
+                if safePillH > 18 {
+                    Image(systemName: event.icon)
+                        .font(.system(size: safePillH > 40 ? 12 : 9, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
             }
-            .frame(width: pillWidth, height: pillH)
+            .frame(width: pillWidth * 0.75, height: safePillH)
             .frame(maxWidth: .infinity)
             .offset(y: yStart)
         }
-    }
-
-    // MARK: Now dot
-
-    var nowIndicator: some View {
-        let yPos = iconSize + CGFloat(nowMinutes - wakeHour * 60) / 60.0 * hourHeight
-
-        return ZStack {
-            Circle()
-                .fill(Color.white)
-                .frame(width: 10, height: 10)
-            Circle()
-                .fill(brand)
-                .frame(width: 7, height: 7)
-        }
-        .frame(maxWidth: .infinity)
-        .offset(y: yPos - 5)
-        .shadow(color: brand.opacity(0.4), radius: 3)
     }
 }
 // MARK: - Day Column

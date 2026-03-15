@@ -13,6 +13,17 @@ struct SettingsView: View {
     
     @Environment(\.colorScheme) private var scheme
 
+    
+    
+    
+    
+    
+    
+    
+    
+    @State private var footerTapCount = 0
+    @State private var showOnboarding = false
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 28) {
@@ -257,11 +268,47 @@ extension SettingsView {
             Text("Made with ♥ by Structify")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
+
             Text("© 2026 All rights reserved")
                 .font(.caption2)
-                .foregroundStyle(.quaternary)
+                .foregroundStyle(footerTapCount > 0 ? .secondary : .quaternary)
+                .overlay(
+                    // Hint dots khi đang tap
+                    HStack(spacing: 4) {
+                        ForEach(0..<5) { i in
+                            Circle()
+                                .fill(i < footerTapCount
+                                      ? Color.primary.opacity(0.5)
+                                      : Color.primary.opacity(0.12))
+                                .frame(width: 5, height: 5)
+                        }
+                    }
+                    .offset(y: 14)
+                    .opacity(footerTapCount > 0 ? 1 : 0)
+                    .animation(.easeInOut(duration: 0.15), value: footerTapCount)
+                )
+                .onTapGesture {
+                    footerTapCount += 1
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+
+                    if footerTapCount >= 5 {
+                        footerTapCount = 0
+                        showOnboarding = true
+                        UINotificationFeedbackGenerator().notificationOccurred(.success)
+                    }
+
+                    // Reset sau 3 giây nếu không tap đủ
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        if footerTapCount > 0 && footerTapCount < 5 {
+                            withAnimation { footerTapCount = 0 }
+                        }
+                    }
+                }
         }
         .padding(.top, 8)
+        .fullScreenCover(isPresented: $showOnboarding) {
+            OnboardingView()
+        }
     }
 }
 

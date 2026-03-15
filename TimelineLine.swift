@@ -6,8 +6,6 @@ struct TimelineLineView: View {
     let isDragging: Bool
     let date: Date
 
-    // MARK: - Helpers
-
     func nowMinute() -> Int {
         let c = Calendar.current
         return c.component(.hour, from: Date()) * 60 + c.component(.minute, from: Date())
@@ -37,69 +35,33 @@ struct TimelineLineView: View {
                 )
             }
         }
-        // Cộng thêm nửa chiều cao event hiện tại để lấy center
         return y + TimelineLayoutEngine.eventHeight(events[index]) / 2
     }
 
-    func nowY() -> CGFloat? {
-        let now = nowMinute()
-        for i in 0..<events.count - 1 {
-            let eventStart  = events[i].minutes
-            let eventEnd    = TimelineEngine.endMinute(events[i])
-            let nextStart   = events[i + 1].minutes
-            let thisTopY    = yPosition(for: i) - TimelineLayoutEngine.eventHeight(events[i]) / 2
-            let thisH       = TimelineLayoutEngine.eventHeight(events[i])
-            let thisBottomY = thisTopY + thisH
-            let nextTopY    = yPosition(for: i + 1) - TimelineLayoutEngine.eventHeight(events[i + 1]) / 2
-
-            if now >= eventStart && now <= eventEnd {
-                let p = CGFloat(now - eventStart) / CGFloat(max(eventEnd - eventStart, 1))
-                return thisTopY + thisH * p
-            }
-            if now > eventEnd && now < nextStart {
-                let p = CGFloat(now - eventEnd) / CGFloat(max(nextStart - eventEnd, 1))
-                return thisBottomY + (nextTopY - thisBottomY) * p
-            }
-        }
-        return nil
-    }
-
-    // MARK: - Dash style dựa trên gap time
     func dashStyle(gapMinutes: Int, segmentHeight: CGFloat) -> StrokeStyle {
-        let lineWidth: CGFloat = isDragging ? 3.5 : 2.5  // đậm hơn
-
+        let lineWidth: CGFloat = isDragging ? 3.5 : 2.5
         let ratio = CGFloat(min(max(gapMinutes, 0), 300)) / 300.0
-
-        // Gap lớn: dash=16, space=12 → thoáng rõ
-        // Gap nhỏ: dash=6, space=4 → dày đặc
-        let dashLen = 6 + ratio * 10   // 6...16
-        let gapLen  = 4 + ratio * 8    // 4...12
-
-        return StrokeStyle(
-            lineWidth: lineWidth,
-            lineCap: .round,
-            dash: [dashLen, gapLen]
-        )
+        let dashLen = 6 + ratio * 10
+        let gapLen  = 4 + ratio * 8
+        return StrokeStyle(lineWidth: lineWidth, lineCap: .round, dash: [dashLen, gapLen])
     }
-
-    // MARK: - Body
 
     var body: some View {
         GeometryReader { _ in
             if events.count > 1 {
-                let rise   = riseIndex()
-                let window = windowIndex()
+                let rise    = riseIndex()
+                let window  = windowIndex()
                 let indices = Array(rise..<window)
 
                 ZStack(alignment: .topLeading) {
                     ForEach(indices, id: \.self) { i in
-                        let startY      = yPosition(for: i)
-                        let endY        = yPosition(for: i + 1)
-                        let gapMinutes  = events[i + 1].minutes - TimelineEngine.endMinute(events[i])
-                        let segH        = endY - startY
-                        let style       = dashStyle(gapMinutes: gapMinutes, segmentHeight: segH)
+                        let startY     = yPosition(for: i)
+                        let endY       = yPosition(for: i + 1)
+                        let gapMinutes = events[i + 1].minutes - TimelineEngine.endMinute(events[i])
+                        let segH       = endY - startY
+                        let style      = dashStyle(gapMinutes: gapMinutes, segmentHeight: segH)
 
-                        // ── Base line (gray mờ) ──
+                        // ── Base line ──
                         Path { p in
                             p.move(to:    CGPoint(x: 0, y: startY))
                             p.addLine(to: CGPoint(x: 0, y: endY))
@@ -111,7 +73,7 @@ struct TimelineLineView: View {
                             style: style
                         )
 
-                        // ── Progress line (orange) — chỉ today ──
+                        // ── Progress line — chỉ today ──
                         if isToday() {
                             let now      = nowMinute()
                             let sleepMin = events[windowIndex()].minutes
@@ -119,9 +81,10 @@ struct TimelineLineView: View {
                             let segEnd   = events[i + 1].minutes
 
                             if now > segStart && segStart < sleepMin {
+                                // 👇 Dùng TimelineLayoutEngine.nowY thay vì nowY() cũ
                                 let paintTo: CGFloat = {
                                     if now >= segStart && now <= segEnd {
-                                        return nowY() ?? endY
+                                        return TimelineLayoutEngine.nowY(events: events)
                                     } else if now > segEnd {
                                         return endY
                                     }
@@ -129,17 +92,65 @@ struct TimelineLineView: View {
                                 }()
 
                                 if paintTo > startY {
-                                    Path { p in
-                                        p.move(to:    CGPoint(x: 0, y: startY))
-                                        p.addLine(to: CGPoint(x: 0, y: paintTo))
+                                    let eveningStart = 18 * 60
+                                    let sleepColor = events[windowIndex()].color
+                                    let orangeColor = Color(red: 1.0, green: 0.58, blue: 0.25)
+
+                                    // Y tương ứng với 18:00 trên timeline
+                                    let eveningY: CGFloat = {
+                                      
+                                        // Dùng tỉ lệ nội suy trong segment hiện tại
+                                        if eveningStart >= segStart && eveningStart <= segEnd {
+                                            let p = CGFloat(eveningStart - segStart) / CGFloat(max(segEnd - segStart, 1))
+                                            return startY + (endY - startY) * p
+                                        } else {
+                                            return startY // không trong segment này
+                                        }
+                                    }()
+
+                                    // ── Đoạn CAM: startY → min(eveningY, paintTo) ──
+                                    if now <= eveningStart || startY < eveningY {
+                                        let camEnd = min(eveningY, paintTo)
+                                        if camEnd > startY {
+                                            Path { p in
+                                                p.move(to:    CGPoint(x: 0, y: startY))
+                                                p.addLine(to: CGPoint(x: 0, y: camEnd))
+                                            }
+                                            .stroke(
+                                                LinearGradient(
+                                                    colors: [orangeColor.opacity(0.4), orangeColor.opacity(0.9)],
+                                                    startPoint: .top,
+                                                    endPoint: .bottom
+                                                ),
+                                                style: StrokeStyle(lineWidth: isDragging ? 4 : 3, lineCap: .round, dash: style.dash)
+                                            )
+                                        }
                                     }
-                                    .stroke(
-                                        // Sau sleep → dùng màu sleep event, trước đó → orange ấm
-                                        now < sleepMin
-                                            ? Color(red: 1.0, green: 0.58, blue: 0.25).opacity(0.75)
-                                            : events[windowIndex()].color.opacity(0.6),
-                                        style: style
-                                    )
+
+                                    // ── Đoạn SLEEP COLOR: eveningY → paintTo ──
+                                    if now > eveningStart && eveningY < paintTo {
+                                        let nightStart = max(startY, eveningY)
+                                        Path { p in
+                                            p.move(to:    CGPoint(x: 0, y: nightStart))
+                                            p.addLine(to: CGPoint(x: 0, y: paintTo))
+                                        }
+                                        .stroke(
+                                            LinearGradient(
+                                                colors: [sleepColor.opacity(0.5), sleepColor.opacity(0.9)],
+                                                startPoint: .top,
+                                                endPoint: .bottom
+                                            ),
+                                            style: StrokeStyle(lineWidth: isDragging ? 4 : 3, lineCap: .round, dash: style.dash)
+                                        )
+                                    }
+
+                                    // ── Dot tại now ──
+                                    let dotColor = now >= eveningStart ? sleepColor : orangeColor
+                                    Circle()
+                                        .fill(dotColor)
+                                        .frame(width: 7, height: 7)
+                                        .offset(x: -3.5, y: paintTo + 6)
+                                        .shadow(color: dotColor.opacity(0.6), radius: 4, y: 0)
                                 }
                             }
                         }

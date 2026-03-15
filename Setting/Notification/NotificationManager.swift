@@ -48,10 +48,10 @@ struct NotificationManager {
         guard fireDate > Date() else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = title
+        content.title = isHabit ? "Habit Reminder" : "Upcoming Event"
         content.body = isHabit
-            ? "Time for your habit \(icon)"
-            : "Starting in \(leadMinutes) minutes \(icon)"  // 👈 dynamic text
+            ? "\(title) — time to start!"
+            : "\(title) starts in \(leadMinutes) minutes"
         content.sound = .default
         content.userInfo = ["templateID": templateID.uuidString]
 
@@ -125,6 +125,75 @@ struct NotificationManager {
         }
     }
 
+    
+    func scheduleSystemEvents(wakeMinutes: Int, sleepMinutes: Int) {
+        let global = UserDefaults.standard.object(forKey: "notif_global_enabled") as? Bool ?? true
+        guard global else { return }
+
+        let center = UNUserNotificationCenter.current()
+        let cal = Calendar.current
+
+        // Schedule 30 ngày tới
+        for dayOffset in 0..<30 {
+            guard let date = cal.date(
+                byAdding: .day, value: dayOffset,
+                to: cal.startOfDay(for: Date())
+            ) else { continue }
+
+            // Morning Start
+            let wakeNotifyMin = max(0, wakeMinutes - 5)
+            if let wakeDate = cal.date(
+                bySettingHour: wakeNotifyMin / 60,
+                minute: wakeNotifyMin % 60,
+                second: 0, of: date
+            ), wakeDate > Date() {
+                let content = UNMutableNotificationContent()
+                content.title = "Good morning ☀️"
+                content.body = "Your day starts in 5 minutes"
+                content.sound = .default
+
+                let components = cal.dateComponents([.year,.month,.day,.hour,.minute], from: wakeDate)
+                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                let id = "system_wake_\(dayOffset)"
+                center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
+            }
+
+            // Night Reset
+            if let sleepDate = cal.date(
+                bySettingHour: sleepMinutes / 60,
+                minute: sleepMinutes % 60,
+                second: 0, of: date
+            ), sleepDate > Date() {
+                let content = UNMutableNotificationContent()
+                content.title = "Wind down 🌙"
+                content.body = "Time to wrap up your day"
+                content.sound = .default
+
+                let components = cal.dateComponents([.year,.month,.day,.hour,.minute], from: sleepDate)
+                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                let id = "system_sleep_\(dayOffset)"
+                center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
+            }
+        }
+    }
+
+    func cancelSystemEvents() {
+        let ids = (0..<30).flatMap { ["system_wake_\($0)", "system_sleep_\($0)"] }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ids)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // MARK: - Helper
     private func dateToKey(_ date: Date) -> Int {
         let c = Calendar.current.dateComponents([.year, .month, .day], from: date)

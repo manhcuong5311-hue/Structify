@@ -183,6 +183,7 @@ struct EventDetailSheet: View {
             .sheet(isPresented: $showIconPicker) {
                 IconPicker(icon: $editIcon, color: $editColor)
                     .presentationCornerRadius(28)
+                    .adaptiveSheet()
             }
             .onChange(of: showIconPicker) { _, isShowing in
                 if !isShowing {
