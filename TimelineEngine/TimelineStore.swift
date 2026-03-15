@@ -71,7 +71,7 @@ struct EventTemplate: Identifiable, Codable {
     var habitType: HabitType? = nil
        var targetValue: Double? = nil
        var unit: String? = nil
-    
+    var increment: Double? = nil
     
     var isSystemEvent: Bool = false
     var systemType: SystemEventType? = nil
@@ -86,6 +86,7 @@ extension Recurrence {
         case type
         case days
         case date
+        case endDate
     }
 }
 
@@ -110,6 +111,11 @@ extension Recurrence: Codable {
         case .once(let date):
             try container.encode("once", forKey: .type)
             try container.encode(date, forKey: .date)
+            
+        case .dateRange(let start, let end):
+            try container.encode("dateRange", forKey: .type)
+            try container.encode(start, forKey: .date)
+            try container.encode(end, forKey: CodingKeys.endDate)
         }
     }
 
@@ -134,6 +140,11 @@ extension Recurrence: Codable {
         case "once":
             let date = try container.decode(Date.self, forKey: .date)
             self = .once(date)
+            
+        case "dateRange":                                              // 👈 thêm
+            let start = try container.decode(Date.self, forKey: .date)
+            let end   = try container.decode(Date.self, forKey: .endDate)
+            self = .dateRange(start, end)
 
         default:
             self = .daily
@@ -147,11 +158,11 @@ enum SystemEventType: String, Codable {
 }
 
 enum Recurrence {
-
     case daily
     case weekdays
     case specific([Int])
     case once(Date)
+    case dateRange(Date, Date)  // 👈 thêm: từ ngày start đến end (inclusive)
 }
 
 struct EventOverride: Codable {
@@ -196,6 +207,20 @@ class TimelineStore: ObservableObject {
     
     func rebuildCompletionIndex() {
         completionIndex = Dictionary(grouping: completionLogs) { $0.dateKey }
+    }
+    
+    func cleanupCompletionLogs() {
+        let cutoff = key(
+            for: Calendar.current.date(
+                byAdding: .year,
+                value: -1,
+                to: Date()
+            )!
+        )
+        completionLogs.removeAll { $0.dateKey < cutoff }
+        rebuildCompletionIndex()
+        invalidateCache()
+        save()
     }
     
     init() {
@@ -297,28 +322,7 @@ class TimelineStore: ObservableObject {
         
     }
     
-    func deleteEvent(templateID: UUID, date: Date) {
-
-        let k = key(for: date)
-
-        overrides.removeAll {
-            $0.templateID == templateID &&
-            $0.dateKey == k
-        }
-
-        overrides.append(
-            EventOverride(
-                templateID: templateID,
-                dateKey: k,
-                minutes: -1,
-                duration: nil
-            )
-        )
-
-        rebuildIndex()
-        invalidateCache()
-        save()
-    }
+   
     
     
     // MARK: Add Event
@@ -355,6 +359,9 @@ class TimelineStore: ObservableObject {
                 needsClamp = true
             case .once(let d):
                 let dKey = key(for: d)
+                needsClamp = dKey >= todayKey
+            case .dateRange(let start, _):       // 👈 thêm
+                let dKey = key(for: start)
                 needsClamp = dKey >= todayKey
             }
 
@@ -543,6 +550,8 @@ class TimelineStore: ObservableObject {
 
         invalidateCache()
         save()
+        
+        NotificationManager.shared.scheduleRecurring(template: new)
     }
     
     func currentMinutesToday() -> Int {
@@ -653,7 +662,21 @@ class TimelineStore: ObservableObject {
         // MARK: Prevent past time
         if Calendar.current.isDateInToday(date) && !template.isSystemEvent {
             let now = currentMinutesToday()
-            newMinutes = max(newMinutes, now)
+
+            // Reject hoàn toàn nếu event đã qua hoặc đang chạy
+            let currentMins = currentEvent?.minutes ?? template.minutes
+            let currentDur  = currentEvent?.duration ?? template.duration
+
+            let isPast: Bool = {
+                if let d = currentDur { return currentMins + d < now }
+                return currentMins < now
+            }()
+            let isRunning: Bool = {
+                guard let d = currentDur else { return false }
+                return currentMins <= now && currentMins + d >= now
+            }()
+
+            if isPast || isRunning { return }   // 👈 khoá cứng hoàn toàn
         }
 
         let wake = wakeMinutes
@@ -733,6 +756,19 @@ class TimelineStore: ObservableObject {
             rebuildIndex()
             invalidateCache()
             save()
+            
+            NotificationManager.shared.cancel(templateID: templateID, date: date)
+            if let template = templates.first(where: { $0.id == templateID }) {
+                NotificationManager.shared.schedule(
+                    templateID: templateID,
+                    title: template.title,
+                    icon: template.icon,
+                    minutes: newMinutes,
+                    date: date,
+                    isHabit: template.kind == .habit
+                )
+            }
+            
             return
         }
 
@@ -766,65 +802,9 @@ class TimelineStore: ObservableObject {
     
     
     
-    func toggleCompletion(templateID: UUID, date: Date) {
-        
-        if date > Date() && !Calendar.current.isDateInToday(date) {
-               return
-           }
-
-        guard let event = events(for: date).first(where: {$0.id == templateID})
-        else { return }
-        
-        if Calendar.current.isDateInToday(date) {
-
-            if event.isEvent,
-               let duration = event.duration {
-
-                let now = currentMinutesToday()
-
-                if now < event.minutes + duration {
-                    return
-                }
-            }
-        }
-
-
-        let k = key(for: date)
-
-        if let index = completionLogs.firstIndex(where: {
-            $0.templateID == templateID && $0.dateKey == k
-        }) {
-
-            completionLogs[index].completed = !(completionLogs[index].completed ?? false)
-            completionLogs[index].value = nil
-
-        } else {
-
-            completionLogs.append(
-                CompletionLog(
-                    templateID: templateID,
-                    dateKey: k,
-                    completed: true,
-                    value: nil
-                )
-            )
-        }
-
-        rebuildCompletionIndex()
-        invalidateCache()
-        objectWillChange.send()
-        save()
-    }
+   
     
-    
-    func isCompleted(templateID: UUID, date: Date) -> Bool {
-
-        let k = key(for: date)
-
-        return completionIndex[k]?.contains {
-            $0.templateID == templateID && $0.completed == true
-        } ?? false
-    }
+  
     
     
     func updateNotes(templateID: UUID, notes: String) {
@@ -890,6 +870,10 @@ class TimelineStore: ObservableObject {
         invalidateCache()
         objectWillChange.send()
         save()
+        
+        if let template = templates.first(where: { $0.id == templateID }) {
+              NotificationManager.shared.scheduleRecurring(template: template)
+          }
     }
 
     // Update template duration cho "All Days"
@@ -936,60 +920,81 @@ class TimelineStore: ObservableObject {
     
 //HABIT logic
     
+    // MARK: - Habit Functions (Production-grade)
+
     func addHabit(
         title: String,
         icon: String,
+        colorHex: String = "#34C759",
         minutes: Int,
         habitType: HabitType,
         targetValue: Double?,
         unit: String?,
-        increment: Double?
+        increment: Double?,
+        recurrence: Recurrence = .daily
     ) {
+        let cleanTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !cleanTitle.isEmpty else { return }
 
-        let new = EventTemplate(
+        // Clamp minutes vào trong wake/sleep window
+        let clampedMinutes = max(wakeMinutes, min(minutes, sleepMinutes - 1))
+
+        var new = EventTemplate(
             kind: .habit,
-            minutes: minutes,
+            minutes: clampedMinutes,
             duration: nil,
-            title: title,
-            icon: icon,
-            colorHex: "#34C759",
-            recurrence: .daily,
+            title: cleanTitle,
+            icon: icon.isEmpty ? "checkmark.circle.fill" : icon,
+            colorHex: colorHex.isEmpty ? "#34C759" : colorHex,
+            recurrence: recurrence,
             habitType: habitType,
-            targetValue: targetValue,
-            unit: unit
+            targetValue: habitType == .accumulative ? max(0.01, targetValue ?? 1) : nil,
+            unit: habitType == .accumulative ? unit : nil
         )
+        new.increment = habitType == .accumulative ? max(0.01, increment ?? 1) : nil 
 
         templates.append(new)
-
         invalidateCache()
         save()
+        
+        NotificationManager.shared.scheduleRecurring(template: new)
     }
-    
-    func updateAccumulation(
-        templateID: UUID,
-        date: Date,
-        value: Double
-    ) {
+
+    func toggleCompletion(templateID: UUID, date: Date) {
+        // Không cho complete future dates (trừ today)
+        let startOfToday = Calendar.current.startOfDay(for: Date())
+        let startOfTarget = Calendar.current.startOfDay(for: date)
+        guard startOfTarget <= startOfToday else { return }
+
+        guard let template = templates.first(where: { $0.id == templateID }) else { return }
+        guard let event = events(for: date).first(where: { $0.id == templateID }) else { return }
+
+        // Event chưa kết thúc → không cho complete
+        if Calendar.current.isDateInToday(date) && template.kind == .event {
+            if let duration = event.duration {
+                let now = currentMinutesToday()
+                if now < event.minutes + duration { return }
+            }
+        }
+
+        // Accumulative habit → dùng updateAccumulation thay vì toggle
+        // toggleCompletion chỉ dành cho binary
+        if template.kind == .habit && template.habitType == .accumulative { return }
 
         let k = key(for: date)
 
         if let index = completionLogs.firstIndex(where: {
             $0.templateID == templateID && $0.dateKey == k
         }) {
-
-            completionLogs[index].value = max(0, value)
-            completionLogs[index].completed = nil
-
+            completionLogs[index].completed = !(completionLogs[index].completed ?? false)
+            completionLogs[index].value = nil
         } else {
-
-            completionLogs.append(
-                CompletionLog(
-                    templateID: templateID,
-                    dateKey: k,
-                    completed: nil,
-                    value: max(0, value)
-                )
-            )
+            completionLogs.append(CompletionLog(
+                templateID: templateID,
+                dateKey: k,
+                completed: true,
+                value: nil
+            ))
         }
 
         rebuildCompletionIndex()
@@ -997,90 +1002,167 @@ class TimelineStore: ObservableObject {
         objectWillChange.send()
         save()
     }
-    
-    func accumulationValue(
+
+    func updateAccumulation(
         templateID: UUID,
-        date: Date
-    ) -> Double {
+        date: Date,
+        value: Double
+    ) {
+        // Không cho update future dates
+        let startOfToday = Calendar.current.startOfDay(for: Date())
+        let startOfTarget = Calendar.current.startOfDay(for: date)
+        guard startOfTarget <= startOfToday else { return }
+
+        guard let template = templates.first(where: { $0.id == templateID }),
+              template.habitType == .accumulative else { return }
+
+        // Clamp value: 0 → targetValue (không vượt quá target)
+        let maxValue = template.targetValue ?? Double.greatestFiniteMagnitude
+        let clamped = max(0, min(value, maxValue))
 
         let k = key(for: date)
 
+        if let index = completionLogs.firstIndex(where: {
+            $0.templateID == templateID && $0.dateKey == k
+        }) {
+            completionLogs[index].value = clamped
+            completionLogs[index].completed = nil
+        } else {
+            completionLogs.append(CompletionLog(
+                templateID: templateID,
+                dateKey: k,
+                completed: nil,
+                value: clamped
+            ))
+        }
+
+        rebuildCompletionIndex()
+        invalidateCache()
+        objectWillChange.send()
+        save()
+    }
+
+    // Increment accumulation (dùng cho nút +)
+    func incrementAccumulation(
+        templateID: UUID,
+        date: Date,
+        by increment: Double
+    ) {
+        guard increment > 0 else { return }
+        let current = accumulationValue(templateID: templateID, date: date)
+        updateAccumulation(templateID: templateID, date: date, value: current + increment)
+    }
+
+    func accumulationValue(templateID: UUID, date: Date) -> Double {
+        let k = key(for: date)
         return completionIndex[k]?.first {
             $0.templateID == templateID
         }?.value ?? 0
     }
-    
-    func accumulationCompleted(
-        templateID: UUID,
-        date: Date
-    ) -> Bool {
 
-        guard let template = templates.first(where: {$0.id == templateID}),
-              let target = template.targetValue
-        else { return false }
+    func accumulationCompleted(templateID: UUID, date: Date) -> Bool {
+        guard let template = templates.first(where: { $0.id == templateID }),
+              let target = template.targetValue,
+              target > 0 else { return false }
+        return accumulationValue(templateID: templateID, date: date) >= target
+    }
 
-        let value = accumulationValue(
+    func isCompleted(templateID: UUID, date: Date) -> Bool {
+        guard let template = templates.first(where: { $0.id == templateID }) else { return false }
+
+        // Accumulative → check target reached
+        if template.kind == .habit && template.habitType == .accumulative {
+            return accumulationCompleted(templateID: templateID, date: date)
+        }
+
+        // Binary habit / event
+        let k = key(for: date)
+        return completionIndex[k]?.contains {
+            $0.templateID == templateID && $0.completed == true
+        } ?? false
+    }
+
+    // Xóa habit/event đúng cách — xóa cả overrides và completion logs
+    func deleteEvent(templateID: UUID, date: Date) {
+        
+        NotificationManager.shared.cancel(templateID: templateID, date: date)
+        
+        let k = key(for: date)
+
+        overrides.removeAll {
+            $0.templateID == templateID && $0.dateKey == k
+        }
+
+        overrides.append(EventOverride(
             templateID: templateID,
-            date: date
-        )
+            dateKey: k,
+            minutes: -1,
+            duration: nil
+        ))
 
-        return value >= target
+        rebuildIndex()
+        invalidateCache()
+        save()
     }
-    
-    
 
-    
     func deleteTemplate(_ id: UUID) {
-
+        
+        NotificationManager.shared.cancelAll(templateID: id)
+        
         templates.removeAll { $0.id == id }
-
-        completionLogs.removeAll { $0.templateID == id }
-
+        overrides.removeAll { $0.templateID == id }      // 👈 xóa overrides
+        completionLogs.removeAll { $0.templateID == id } // 👈 xóa completion logs
+        rebuildIndex()
         rebuildCompletionIndex()
         invalidateCache()
+        objectWillChange.send()
         save()
     }
-    
-    
-    func cleanupCompletionLogs() {
 
-        let cutoff = key(
-            for: Calendar.current.date(
-                byAdding: .year,
-                value: -1,
-                to: Date()
-            )!
-        )
+    // From-today variants cho recurring changes
+    func updateEventTimeFromToday(templateID: UUID, minutes: Int) {
+        guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
+        let todayKey = key(for: Calendar.current.startOfDay(for: Date()))
 
-        completionLogs.removeAll {
-            $0.dateKey < cutoff
+        for i in overrides.indices {
+            if overrides[i].templateID == templateID && overrides[i].dateKey >= todayKey {
+                overrides[i].minutes = nil
+            }
         }
 
-        rebuildCompletionIndex()
+        templates[idx].minutes = minutes
+        rebuildIndex()
         invalidateCache()
+        objectWillChange.send()
         save()
+
+        // 👇 thêm reschedule
+        NotificationManager.shared.scheduleRecurring(template: templates[idx])
     }
-   
-    func completionProgress(
-        templateID: UUID,
-        date: Date
-    ) -> Double {
 
-        guard let template = templates.first(where: {$0.id == templateID})
-        else { return 0 }
+    func updateEventDurationFromToday(templateID: UUID, duration: Int) {
+        guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
+        let todayKey = key(for: Calendar.current.startOfDay(for: Date()))
 
-        if template.kind == .event {
-            return isCompleted(templateID: templateID, date: date) ? 1 : 0
+        for i in overrides.indices {
+            if overrides[i].templateID == templateID && overrides[i].dateKey >= todayKey {
+                overrides[i].duration = nil
+            }
         }
 
-        if let target = template.targetValue, target > 0 {
+        templates[idx].duration = duration
+        rebuildIndex()
+        invalidateCache()
+        objectWillChange.send()
+        save()
+    }
 
-            let value = accumulationValue(
-                templateID: templateID,
-                date: date
-            )
+    func completionProgress(templateID: UUID, date: Date) -> Double {
+        guard let template = templates.first(where: { $0.id == templateID }) else { return 0 }
 
-            return min(value / target, 1)
+        if template.kind == .habit && template.habitType == .accumulative {
+            guard let target = template.targetValue, target > 0 else { return 0 }
+            return min(accumulationValue(templateID: templateID, date: date) / target, 1)
         }
 
         return isCompleted(templateID: templateID, date: date) ? 1 : 0
@@ -1111,22 +1193,18 @@ extension EventTemplate {
 extension EventTemplate {
 
     func matches(date: Date) -> Bool {
-
-        let weekday = Calendar.current.component(.weekday, from: date)
-
+        let cal     = Calendar.current
+        let weekday = cal.component(.weekday, from: date)
         switch recurrence {
-
-        case .daily:
-            return true
-
-        case .weekdays:
-            return weekday >= 2 && weekday <= 6
-
-        case .specific(let days):
-            return days.contains(weekday)
-
-        case .once(let d):
-            return Calendar.current.isDate(d, inSameDayAs: date)
+        case .daily:                return true
+        case .weekdays:             return weekday >= 2 && weekday <= 6
+        case .specific(let days):   return days.contains(weekday)
+        case .once(let d):          return cal.isDate(d, inSameDayAs: date)
+        case .dateRange(let start, let end):
+            let startDay = cal.startOfDay(for: start)
+            let endDay   = cal.startOfDay(for: end)
+            let checkDay = cal.startOfDay(for: date)
+            return checkDay >= startDay && checkDay <= endDay
         }
     }
 }

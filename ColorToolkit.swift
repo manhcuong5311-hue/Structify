@@ -297,9 +297,7 @@ extension ColorPickerSheet {
     var hueSlider: some View {
 
         Slider(value: $hue)
-            .onChange(of: hue) { _ in
-                updateColor()
-            }
+            .onChange(of: hue) { updateColor() }
             .accentColor(.clear)
             .background(
 
@@ -321,9 +319,7 @@ extension ColorPickerSheet {
     var brightnessSlider: some View {
 
         Slider(value: $brightness)
-            .onChange(of: brightness) { _ in
-                updateColor()
-            }
+            .onChange(of: brightness) { updateColor() }
             .accentColor(.clear)
             .background(
 

@@ -39,14 +39,48 @@ struct TimelineView: View {
     @State private var now = TimelineEngine.currentMinutes()
     
     @State private var showNowBlockAlert = false
+    @State private var suggestedMinutes: Int? = nil
+    
+    func isNowApproachingStart(of eventID: UUID, in visible: [EventItem]) -> Bool {
+        guard Calendar.current.isDateInToday(calendar.selectedDate) else { return false }
+        let now = TimelineEngine.currentMinutes()
+
+        guard let idx = visible.firstIndex(where: { $0.id == eventID }),
+              idx > 0 else { return false }
+
+        let event    = visible[idx]
+        let prevEvent = visible[idx - 1]
+
+        guard now < event.minutes else { return false } // đã qua start
+
+        let prevEnd     = TimelineEngine.endMinute(prevEvent)
+        let gapMinutes  = event.minutes - prevEnd
+        guard gapMinutes > 0 else { return false }
+
+        // Chiều cao pixel của gap này
+        let spacingPx   = TimelineLayoutEngine.spacing(current: prevEvent, next: event)
+
+        // Quy đổi 30pt → minutes tương đương trong gap này
+        let minutesPerPx    = CGFloat(gapMinutes) / spacingPx
+        let thresholdMin    = Int(30 * minutesPerPx)
+
+        return (event.minutes - now) <= max(thresholdMin, 3)
+    }
+    
+    
+    
+    
+    
+    
     
     
     
     func isRecurring(_ event: EventItem) -> Bool {
         guard let t = store.templates.first(where: { $0.id == event.id }) else { return false }
         switch t.recurrence {
-        case .once: return false
-        default:    return true
+        case .once:      return false
+        case .dateRange: return false  // 👈 không hỏi scope vì chỉ là range cố định
+        default:         return true
         }
     }
 
@@ -59,6 +93,9 @@ struct TimelineView: View {
             let s = Calendar.current.shortWeekdaySymbols
             return "Repeats on " + days.sorted().map { s[$0-1] }.joined(separator: ", ")
         case .once: return ""
+        case .dateRange(let start, let end):
+            let f = DateFormatter(); f.dateFormat = "d MMM"
+            return "Repeats \(f.string(from: start)) – \(f.string(from: end))."
         }
     }
     
@@ -81,29 +118,24 @@ struct TimelineView: View {
         addButtonsIndex = bestGapIndex()
     }
    
+    // Sửa bestGapIndex() — dùng visibleEvents:
     func bestGapIndex() -> Int? {
-        guard events.count > 1 else { return nil }
-
+        let visible = events.filter { $0.duration != 1440 }
+        guard visible.count > 1 else { return nil }
         let nowMinutes = TimelineEngine.currentMinutes()
         let isToday = Calendar.current.isDateInToday(calendar.selectedDate)
-
         var largestGap = 0
         var index: Int? = nil
-
-        for i in 0..<(events.count - 1) {
-            let gapStart = TimelineEngine.endMinute(events[i])
-            let gapEnd   = events[i + 1].minutes
+        for i in 0..<(visible.count - 1) {
+            let gapStart = TimelineEngine.endMinute(visible[i])
+            let gapEnd   = visible[i + 1].minutes
             let gap      = gapEnd - gapStart
-
-            // Nếu là today → chỉ xét gap bắt đầu sau now
             if isToday && gapStart < nowMinutes { continue }
-
             if gap > largestGap {
                 largestGap = gap
                 index = i
             }
         }
-
         return index
     }
     
@@ -131,16 +163,16 @@ struct TimelineView: View {
         return y + TimelineLayoutEngine.eventHeight(events[index]) / 2
     }
     
+   
+
+    // Sửa func indicatorTouchesEvent — truyền visibleEvents:
     func indicatorTouchesEvent(_ index: Int) -> Bool {
-
+        let visible = events.filter { $0.duration != 1440 }
         let now = self.now
-
-        guard let nearest = events.enumerated()
+        guard let nearest = visible.enumerated()
             .min(by: { abs($0.element.minutes - now) < abs($1.element.minutes - now) })
             else { return false }
-
-        return nearest.offset == index &&
-               abs(nearest.element.minutes - now) <= 5
+        return nearest.offset == index && abs(nearest.element.minutes - now) <= 5
     }
     
     // Thêm helper binding theo id
@@ -189,6 +221,9 @@ struct TimelineView: View {
     
     
     
+    
+    
+    
     var body: some View {
 
         
@@ -221,17 +256,31 @@ struct TimelineView: View {
                     ForEach(visibleEvents) { event in
 
                         let eventID = event.id
-
+                        
                         if events.contains(where: { $0.id == eventID }),
                            let safeBinding = Binding<Any>.safe($events, id: eventID),
-                           let index = events.firstIndex(where: { $0.id == eventID }) {
+                           let index = visibleEvents.firstIndex(where: { $0.id == eventID }) {
 
+                            let approaching = isNowApproachingStart(of: eventID, in: visibleEvents)
+
+                            
                             DraggableEventRow(
                                 event: safeBinding,
                                 index: index,
-                                events: $events,
+                                events: Binding(
+                                    get: { events.filter { $0.duration != 1440 } },
+                                    set: { newVisible in
+                                        for item in newVisible {
+                                            if let i = events.firstIndex(where: { $0.id == item.id }) {
+                                                events[i] = item
+                                            }
+                                        }
+                                        events.sort { $0.minutes < $1.minutes } // 👈 thêm dòng này
+                                    }
+                                ),
                                 isDragging: $isDragging,
                                 isNearNowIndicator: indicatorTouchesEvent(index),
+                                isNowApproachingStart: approaching,
                                 isLocked: isPastDate(),
                                 
                                 
@@ -248,8 +297,22 @@ struct TimelineView: View {
                                     }
 
                                     // Lưu tất cả non-system positions (only today)
+                                    let nowMin = TimelineEngine.currentMinutes()
+                                    let isToday = Calendar.current.isDateInToday(calendar.selectedDate)
+
                                     for e in events where !e.isSystemEvent {
                                         if e.duration == 1440 { continue }
+
+                                        // TÌM trong onDragEnded của TimelineView — thêm check tương tự:
+                                        if isToday {
+                                            let endMin = e.minutes + (e.duration ?? 0)
+                                            if endMin < nowMin { continue }
+                                            if e.minutes < nowMin && e.duration == nil { continue }
+                                            // 👈 thêm:
+                                            if let d = e.duration, e.minutes <= nowMin && e.minutes + d >= nowMin { continue }
+                                        }
+                                        
+                                        
                                         store.overrideEvent(
                                             templateID: e.id,
                                             date: calendar.selectedDate,
@@ -270,7 +333,11 @@ struct TimelineView: View {
                                 
                                 onTapEvent: { tapped in
                                     guard !tapped.isSystemEvent, !isPastDate() else { return }
-                                    activeSheet = .eventDetail(tapped)
+                                    if tapped.kind == .habit {
+                                        activeSheet = .habitDetail(tapped)
+                                    } else {
+                                        activeSheet = .eventDetail(tapped)
+                                    }
                                 },
                                 
                                 
@@ -302,20 +369,31 @@ struct TimelineView: View {
                             )
                             .id(eventID)
 
-                            if let currentIdx = events.firstIndex(where: { $0.id == eventID }),
-                               events.indices.contains(currentIdx + 1) {
-
+                            if let currentIdx = visibleEvents.firstIndex(where: { $0.id == eventID }),
+                               visibleEvents.indices.contains(currentIdx + 1) {
                                 let spacing = TimelineLayoutEngine.spacing(
-                                    current: events[currentIdx],
-                                    next: events[currentIdx + 1]
+                                    current: visibleEvents[currentIdx],
+                                    next: visibleEvents[currentIdx + 1]
                                 )
 
-                                VStack(spacing: 0) {
-                                    Spacer().frame(height: spacing / 2)
+                                ZStack(alignment: .leading) {
+                                    // Spacer giữ đúng height — line tính dựa vào đây
+                                    Color.clear.frame(height: spacing)
 
+                                    // Button float bên trên, không ảnh hưởng layout
                                     if addButtonsIndex == currentIdx && !isPastDate() {
                                         if let message = gapMessage(for: currentIdx) {
                                             Button {
+                                                // Tính giờ bắt đầu của gap này
+                                                let gapStart = TimelineEngine.endMinute(visibleEvents[currentIdx])
+                                                let gapEnd   = visibleEvents[currentIdx + 1].minutes
+                                                // Đặt suggested vào đầu gap, hoặc now nếu now nằm trong gap
+                                                let nowMin   = TimelineEngine.currentMinutes()
+                                                if Calendar.current.isDateInToday(calendar.selectedDate) && nowMin > gapStart && nowMin < gapEnd {
+                                                    suggestedMinutes = nowMin
+                                                } else {
+                                                    suggestedMinutes = gapStart
+                                                }
                                                 activeSheet = .createItem
                                             } label: {
                                                 HStack(spacing: 7) {
@@ -343,13 +421,10 @@ struct TimelineView: View {
                                                 )
                                             }
                                             .padding(.leading, 108)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
                                             .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .leading)))
                                             .animation(.easeInOut(duration: 0.15), value: addButtonsIndex)
                                         }
                                     }
-
-                                    Spacer().frame(height: spacing / 2)
                                 }
                             }
                         }
@@ -388,6 +463,7 @@ struct TimelineView: View {
                 )
                 .padding(.horizontal)
             }
+            .padding(.bottom, 400)
         }
         .contentShape(Rectangle())
         .onTapGesture {
@@ -444,12 +520,11 @@ struct TimelineView: View {
             switch sheet {
 
             case .createItem:
-
-                let suggested =
-                store.suggestFreeSlot(
-                    date: calendar.selectedDate,
-                    duration: 60
-                )
+                let suggested = suggestedMinutes ??
+                    store.suggestFreeSlot(
+                        date: calendar.selectedDate,
+                        duration: 60
+                    )
 
                 CreateEventDetailSheet(
                     suggestedStart: suggested,
@@ -484,7 +559,9 @@ struct TimelineView: View {
                   ])
                   .presentationDragIndicator(.visible)
                   .presentationCornerRadius(32)
-                
+                  .onDisappear {
+                          suggestedMinutes = nil
+                      }
             
                 // ĐỔI THÀNH — chỉ cần onDelete:
             case .eventDetail(let event):
@@ -502,6 +579,23 @@ struct TimelineView: View {
                     reloadTimeline()   // 👈 reload sau khi sheet đóng để title/icon mới hiện lên
                 }
                
+            case .habitDetail(let event):
+                HabitDetailSheet(
+                    event: event,
+                    onDelete: {
+                        store.deleteTemplate(event.id)
+                        reloadTimeline()
+                        addButtonsIndex = bestGapIndex()
+                    }
+                )
+                .environmentObject(store)
+                .environmentObject(calendar)
+                .onDisappear {
+                    reloadTimeline()
+                }
+                
+                
+                
             }
         }
 
@@ -617,27 +711,47 @@ struct TimelineView: View {
 
             CreateHabitDetailSheet(
 
-                onCreate: { title, icon, date, type, target, unit, minutes, increment in
+                onCreate: { title, icon, colorHex, date, type, target, unit, minutes, increment, repeatMode in
 
-                    let startMinutes =
-                        minutes ??
-                        TimelineEngine.smartSlotMinutes(
-                            events: events,
-                            duration: 0
-                        )
+                    let startMinutes = minutes ?? TimelineEngine.smartSlotMinutes(
+                        events: events, duration: 0
+                    )
+
+                    // Map HabitRepeat → Recurrence
+                    let recurrence: Recurrence = {
+                        let cal = Calendar.current
+                        switch repeatMode {
+                        case .everyday:
+                            return .daily
+
+                        case .oneDay:
+                            return .once(date)
+
+                        case .week:
+                            let start = cal.startOfDay(for: date)
+                            let end   = cal.startOfDay(for: cal.date(byAdding: .day, value: 6, to: start) ?? start)
+                            return .dateRange(start, end)   // 7 ngày từ hôm nay
+
+                        case .month:
+                            let start = cal.startOfDay(for: date)
+                            let end   = cal.startOfDay(for: cal.date(byAdding: .day, value: 29, to: start) ?? start)
+                            return .dateRange(start, end)   // 30 ngày từ hôm nay
+                        }
+                    }()
 
                     store.addHabit(
                         title: title,
                         icon: icon,
+                        colorHex: colorHex,
                         minutes: startMinutes,
                         habitType: type,
                         targetValue: target,
                         unit: unit,
-                        increment: increment
+                        increment: increment,
+                        recurrence: recurrence   // 👈 truyền recurrence đúng
                     )
 
                     reloadTimeline()
-
                     addButtonsIndex = bestGapIndex()
                 },
 
@@ -650,6 +764,7 @@ struct TimelineView: View {
                     }
                 }
             )
+            .environmentObject(store)
             .presentationSizing(.page)          // 👈 mở rộng modal trên iPad
               .presentationDetents([
                   .fraction(0.85),                // 👈 cao ~85% màn hình
@@ -673,7 +788,7 @@ struct DraggableEventRow: View {
     
     @EnvironmentObject var store: TimelineStore
       @EnvironmentObject var calendar: CalendarState
-    
+    @State private var visibleEventsBinding: [EventItem] = []
     @Binding var event: EventItem
 
     let index: Int
@@ -681,6 +796,7 @@ struct DraggableEventRow: View {
     @Binding var events: [EventItem]
     @Binding var isDragging: Bool
     var isNearNowIndicator: Bool = false
+    var isNowApproachingStart: Bool = false
     let isLocked: Bool
     var onDragEnded: () -> Void
     var onTapEvent: (EventItem) -> Void
@@ -728,14 +844,46 @@ struct DraggableEventRow: View {
     }
     
     
+   
+    func recurrenceLabel(for event: EventItem) -> String {
+        guard let t = store.templates.first(where: { $0.id == event.id }) else {
+            return "Habit"
+        }
+        switch t.recurrence {
+        case .daily:     return "Everyday"
+        case .weekdays:  return "Weekdays"
+        case .specific(let days):
+            let s = Calendar.current.shortWeekdaySymbols
+            return days.sorted().map { s[$0-1] }.joined(separator: ", ")
+        case .once:      return "1 Day"
+        case .dateRange(let start, let end):
+            let cal = Calendar.current
+            let days = cal.dateComponents([.day], from: start, to: end).day ?? 0
+            if days <= 6  { return "1 Week" }   // 👈 sửa 7 → 6
+            if days <= 31 { return "1 Month" }
+            let f = DateFormatter(); f.dateFormat = "d MMM"
+            return "\(f.string(from: start)) – \(f.string(from: end))"
+        }
+    }
     
     
     
     
     
     
-    
-    
+    func isPastEvent() -> Bool {
+        guard Calendar.current.isDateInToday(calendar.selectedDate) else {
+            // Ngày khác → dùng isPastDate từ TimelineView
+            return false
+        }
+        let now = TimelineEngine.currentMinutes()
+        // Event đã kết thúc hoàn toàn
+        if let duration = event.duration {
+            return event.minutes + duration < now
+        }
+        // Habit không có duration → đã qua start time
+        return event.minutes < now
+    }
     
     
     func isCurrentEvent() -> Bool {
@@ -751,12 +899,21 @@ struct DraggableEventRow: View {
    
     
     func commitSwap() {
-
         guard !isLocked else { return }
+        let nowMin = TimelineEngine.currentMinutes()
+        let isToday = Calendar.current.isDateInToday(calendar.selectedDate)
 
         for e in events {
-
             guard !e.isSystemEvent else { continue }
+
+            // TÌM trong commitSwap — thêm check isRunning:
+            if isToday {
+                let endMin = e.minutes + (e.duration ?? 0)
+                if endMin < nowMin { continue }
+                if e.minutes < nowMin && e.duration == nil { continue }
+                // 👈 thêm: skip running events
+                if let d = e.duration, e.minutes <= nowMin && e.minutes + d >= nowMin { continue }
+            }
 
             store.overrideEvent(
                 templateID: e.id,
@@ -767,7 +924,16 @@ struct DraggableEventRow: View {
         }
     }
     
-    
+    // Thêm helper — dùng chung cho cả 2 chiều swap:
+    func isEventLocked(_ e: EventItem) -> Bool {
+        guard !e.isSystemEvent else { return true }
+        guard Calendar.current.isDateInToday(calendar.selectedDate) else { return false }
+        let now = TimelineEngine.currentMinutes()
+        if let d = e.duration {
+            return e.minutes + d <= now   // past hoặc running đều lock
+        }
+        return e.minutes < now           // habit đã qua start
+    }
     
     
     
@@ -799,29 +965,65 @@ struct DraggableEventRow: View {
                hasDuration: event.duration != nil,
                durationMinutes: event.duration,
                isNearNowIndicator: isNearNowIndicator,
+            isNowApproachingStart: isNowApproachingStart,
                nearSwapTarget: nearSwapTarget,
                durationPreview: durationPreview,
                startMinutes: event.minutes,
                isCompleted: isCompleted,
                isSystemEvent: event.isSystemEvent,
-             
+            recurrenceLabel: recurrenceLabel(for: event),
             
+            progressFraction: {
+                           let t = store.templates.first { $0.id == event.id }
+                           guard t?.habitType == .accumulative,
+                                 let target = t?.targetValue, target > 0 else { return 0 }
+                           let val = store.accumulationValue(templateID: event.id, date: calendar.selectedDate)
+                           return CGFloat(min(val / target, 1))
+                       }(),
+                       incrementValue: store.templates.first { $0.id == event.id }?.increment ?? 1,
             
             onToggleComplete: {
-                
-                guard !isLocked else { return }
+                let isHabit = event.kind == .habit
+                let isToday = Calendar.current.isDateInToday(calendar.selectedDate)
 
-                store.toggleCompletion(
-                    templateID: event.id,
-                    date: calendar.selectedDate
-                )
-
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
-                    isCompleted = store.isCompleted(
-                        templateID: event.id,
-                        date: calendar.selectedDate
-                    )
+                // Habit: chỉ chặn nếu là past date (ngày khác), không chặn past time
+                if isHabit {
+                    guard isToday || !isLocked else { return }
+                } else {
+                    guard !isLocked else { return }
                 }
+
+                let template = store.templates.first { $0.id == event.id }
+
+                if template?.habitType == .accumulative {
+                                  guard !store.isCompleted(templateID: event.id, date: calendar.selectedDate) else { return } // 👈 khoá
+                                  let increment = store.templates.first { $0.id == event.id }?.increment ?? 1.0
+                                  store.incrementAccumulation(
+                                      templateID: event.id,
+                                      date: calendar.selectedDate,
+                                      by: increment
+                                  )
+                              } else {
+                                  store.toggleCompletion(
+                                      templateID: event.id,
+                                      date: calendar.selectedDate
+                                  )
+                              }
+
+                              let nowCompleted = store.isCompleted(templateID: event.id, date: calendar.selectedDate)
+
+                              // Haptic: medium khi done, light khi increment
+                              if nowCompleted {
+                                  UINotificationFeedbackGenerator().notificationOccurred(.success)
+                              } else if template?.habitType == .accumulative {
+                                  UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                              } else {
+                                  UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                              }
+
+                              withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+                                  isCompleted = nowCompleted
+                              }
             },
             
             onTap: {
@@ -951,6 +1153,8 @@ struct DraggableEventRow: View {
                     
                     guard !isCurrentEvent() else { return }
                     
+                    guard !isPastEvent() else { return }
+                    
                     swapHaptic.prepare()
                     
                     withAnimation(.spring()) {
@@ -962,7 +1166,7 @@ struct DraggableEventRow: View {
         )
         
         .gesture(
-            isLocked
+            (isLocked || isPastEvent()) 
             ? nil
             : (event.isSystemEvent && !isHolding
                ? nil
@@ -1019,75 +1223,99 @@ struct DraggableEventRow: View {
                     dragOffsetY = value.translation.height
                     
                     // khi kéo ngang đủ xa → bật reorder
-                    if dragOffsetX > 40 {
+                    if dragOffsetX > 65 {
                         isReordering = true
                     }
                     
                     let swapRange: CGFloat = 60
                     
-                    if abs(dragOffsetY) > swapRange {
-                        if !nearSwapTarget {
-                            nearSwapTarget = true
-                            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
-                        }
+                    if abs(dragOffsetY) > 80 {
+                        nearSwapTarget = true
                     } else {
                         nearSwapTarget = false
                     }
                     
+                    
+                    // TÌM toàn bộ khối if isReordering { ... } — THAY HOÀN TOÀN:
                     if isReordering {
-                        
-                        let swapThreshold: CGFloat = 60
-                        let resetThreshold: CGFloat = 25
-                        let cooldown: TimeInterval = 0.12
+
+                        let swapThreshold: CGFloat = 75   // giảm từ 60 → dễ swap hơn
+                        let resetThreshold: CGFloat = 20
+                        let cooldown: TimeInterval = 0.15
                         let dragY = dragOffsetY
                         let now = Date()
-                        
-                        // không cho swap quá nhanh
+
                         guard now.timeIntervalSince(lastSwapTime) > cooldown else { return }
-                        
-                        // swap xuống
-                        if dragY > swapThreshold,
-                           let liveIdx = events.firstIndex(where: { $0.id == event.id }),
-                           liveIdx < events.count - 1 {
+
+                        guard let liveIdx = events.firstIndex(where: { $0.id == event.id }) else { return }
+
+                        // SWAP XUỐNG
+                        if dragY > swapThreshold && liveIdx < events.count - 1 {
                             let next = liveIdx + 1
-                            if !events[next].isSystemEvent && lastSwapIndex != next {
+                            let target = events[next]
+
+                            if !isEventLocked(target) && lastSwapIndex != next {
                                 lastSwapIndex = next
                                 lastSwapTime = now
-                                withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.75)) {
-                                    let temp = events[liveIdx].minutes
-                                    events[liveIdx].update(minutes: events[next].minutes)
-                                    events[next].update(minutes: temp)
-                                    events = events
-                                }
-                                commitSwap()
 
-                                lastSwapIndex = -1
+                                withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.8)) {
+                                    // Hoán đổi minutes
+                                    let aMin = events[liveIdx].minutes
+                                    let bMin = events[next].minutes
+
+                                    // Đảm bảo minutes không trùng nhau sau swap
+                                    let newA = min(aMin, bMin)
+                                    let newB = max(aMin, bMin)
+
+                                    events[liveIdx].update(minutes: newB)
+                                    events[next].update(minutes: newA)
+
+                                    // Re-sort để giữ visual order đúng
+                                    events.sort { $0.minutes < $1.minutes }
+                                }
+
+                                commitSwap()
                                 swapHaptic.impactOccurred()
+
+                                // Reset để cho phép swap tiếp ngay
+                                DispatchQueue.main.asyncAfter(deadline: .now() + cooldown) {
+                                    lastSwapIndex = -1
+                                }
                             }
                         }
-                        
-                        // swap lên
-                        if dragY < -swapThreshold,
-                           let liveIdx = events.firstIndex(where: { $0.id == event.id }),
-                           liveIdx > 0 {
+
+                        // SWAP LÊN
+                        if dragY < -swapThreshold && liveIdx > 0 {
                             let prev = liveIdx - 1
-                            if !events[prev].isSystemEvent && lastSwapIndex != prev {
+                            let target = events[prev]
+
+                            if !isEventLocked(target) && lastSwapIndex != prev {
                                 lastSwapIndex = prev
                                 lastSwapTime = now
-                                withAnimation(.interactiveSpring(response: 0.28, dampingFraction: 0.9)) {
-                                    let temp = events[liveIdx].minutes
-                                    events[liveIdx].update(minutes: events[prev].minutes)
-                                    events[prev].update(minutes: temp)
-                                    events.swapAt(liveIdx, prev)
+
+                                withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 0.8)) {
+                                    let aMin = events[prev].minutes
+                                    let bMin = events[liveIdx].minutes
+
+                                    let newA = min(aMin, bMin)
+                                    let newB = max(aMin, bMin)
+
+                                    events[prev].update(minutes: newB)
+                                    events[liveIdx].update(minutes: newA)
+
+                                    events.sort { $0.minutes < $1.minutes }
                                 }
+
                                 commitSwap()
-                                
-                                lastSwapIndex = -1
                                 swapHaptic.impactOccurred()
+
+                                DispatchQueue.main.asyncAfter(deadline: .now() + cooldown) {
+                                    lastSwapIndex = -1
+                                }
                             }
                         }
-                        
-                        // reset lock khi kéo gần lại trung tâm
+
+                        // Reset khi gần trung tâm
                         if abs(dragY) < resetThreshold {
                             lastSwapIndex = -1
                         }
@@ -1198,11 +1426,15 @@ struct TimelineEventRow: View {
     let hasDuration: Bool
     let durationMinutes: Int?
     let isNearNowIndicator: Bool
+    let isNowApproachingStart: Bool
     let nearSwapTarget: Bool
     let durationPreview: String?
     let startMinutes: Int
     let isCompleted: Bool
     let isSystemEvent: Bool
+    var recurrenceLabel: String = "Daily habit"
+    var progressFraction: CGFloat = 0        // 👈 thêm
+    var incrementValue: Double = 1
     var onToggleComplete: (() -> Void)?
     
     
@@ -1241,10 +1473,11 @@ struct TimelineEventRow: View {
     }
     
     private func isNowNearEndTime() -> Bool {
-        guard isToday, let d = durationMinutes else { return false }  // 👈 guard isToday
+        guard isToday, let d = durationMinutes else { return false }
         let now = TimelineEngine.currentMinutes()
         let end = startMinutes + d
-        return abs(now - end) <= 5
+        // Ẩn end time trong 10 phút cuối
+        return now >= end - 10 && now <= end + 2
     }
     
     func isRunning() -> Bool {
@@ -1287,30 +1520,52 @@ struct TimelineEventRow: View {
     }
     
     private var durationText: String? {
-
         if let durationPreview {
             return durationPreview
         }
-
         guard let durationMinutes else { return nil }
+
+        // Khi đang chạy → show còn bao lâu
+        if isRunning() && isToday {
+            let now = TimelineEngine.currentMinutes()
+            let remaining = (startMinutes + durationMinutes) - now
+            if remaining > 0 {
+                let h = remaining / 60
+                let m = remaining % 60
+                if h > 0 && m > 0 { return "\(h)h \(m)m left" }
+                else if h > 0 { return "\(h)h left" }
+                else { return "\(m)m left" }
+            }
+        }
 
         let h = durationMinutes / 60
         let m = durationMinutes % 60
-
-        if h > 0 && m > 0 {
-            return "\(h)h \(m)m"
-        } else if h > 0 {
-            return "\(h)h"
-        } else {
-            return "\(m)m"
-        }
+        if h > 0 && m > 0 { return "\(h)h \(m)m" }
+        else if h > 0 { return "\(h)h" }
+        else { return "\(m)m" }
     }
+    
+    // TÌM và THAY TOÀN BỘ func isNowNearStartTime:
+    private func isNowNearStartTime() -> Bool {
+        guard isToday else { return false }
+        if isNowApproachingStart { return true }   // pixel-based, đến gần 30pt thì ẩn
+        guard let d = durationMinutes else { return false }
+        let now = TimelineEngine.currentMinutes()
+        return now >= startMinutes && now <= startMinutes + d  // đang trong event
+    }
+    
+    
+    
+    
+    
+    
+    
     
     
     var body: some View {
 
         // 1. Đổi alignment HStack
-        HStack(alignment: .top, spacing: 4) {
+        HStack(alignment: .center, spacing: 4) {
 
             let ph = pillHeight(durationMinutes: durationMinutes)
 
@@ -1319,9 +1574,11 @@ struct TimelineEventRow: View {
 
                 // Start time — TOP
                 Text(time)
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                    .monospacedDigit()
-                    .foregroundStyle(.primary)
+                      .font(.system(size: 13, weight: .semibold, design: .rounded))
+                      .monospacedDigit()
+                      .foregroundStyle(.primary)
+                      .opacity(isNowNearStartTime() ? 0 : 1)
+                      .animation(.easeInOut(duration: 0.2), value: isNowNearStartTime())
 
                 // End time — BOTTOM
                 if let endTime {
@@ -1352,40 +1609,56 @@ struct TimelineEventRow: View {
             }
             // 3. Frame đặt ở ZStack, alignment .topLeading
             .frame(width: 70, height: ph, alignment: .topLeading)
-            .opacity(isNearNowIndicator ? 0.1 : 1)
+            .frame(maxHeight: .infinity, alignment: .top)
             .animation(.spring(response: 0.25, dampingFraction: 0.8), value: isHolding)
            
 
             // 👇 DRAG HANDLE
             EventIconView(
-                icon: icon,
-                color: color,
-                kind: kind,
-                isHolding: isHolding,
-                durationMinutes: durationMinutes,
-                startMinutes: startMinutes,
-                isCompleted: isCompleted,
-                isSystemEvent: isSystemEvent,
-                isToday: isToday
-            )
+                         icon: icon,
+                         color: color,
+                         kind: kind,
+                         isHolding: isHolding,
+                         durationMinutes: durationMinutes,
+                         startMinutes: startMinutes,
+                         isCompleted: isCompleted,
+                         isSystemEvent: isSystemEvent,
+                         isToday: isToday,
+                         progressFraction: progressFraction,
+                         isAccumulative: kind == .habit && incrementValue > 0
+                     )
             .offset(x: -0.5)
            
                
 
             VStack(alignment: .leading, spacing: 2) {
 
-                Text(title)
-                    .font(.headline)
-                    .opacity(durationPreview != nil ? 0.7 : 1)
-                    .opacity(isCompleted ? 0.45 : 1)
-                    .overlay(
-                        Rectangle()
-                            .fill(Color.primary)
-                            .frame(height: 1.5)
-                            .scaleEffect(x: isCompleted ? 1 : 0, anchor: .leading)
-                            .animation(.easeOut(duration: 0.25), value: isCompleted),
-                        alignment: .center
-                    )
+                // Title + recurrence badge cùng hàng
+                HStack(alignment: .center, spacing: 6) {
+                    Text(title)
+                        .font(.headline)
+                        .opacity(durationPreview != nil ? 0.7 : 1)
+                        .opacity(isCompleted ? 0.45 : 1)
+                        .overlay(
+                            Rectangle()
+                                .fill(Color.primary)
+                                .frame(height: 1.5)
+                                .scaleEffect(x: isCompleted ? 1 : 0, anchor: .leading)
+                                .animation(.easeOut(duration: 0.25), value: isCompleted),
+                            alignment: .center
+                        )
+
+                    if kind == .habit {
+                        Text(recurrenceLabel)
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundStyle(color)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Capsule().fill(color.opacity(0.12)))
+                            .fixedSize()
+                            .opacity(isCompleted ? 0.45 : 1)
+                    }
+                }
                 
                 if kind == .event {
                     
@@ -1424,13 +1697,19 @@ struct TimelineEventRow: View {
                     }
                 }
 
-                if kind == .habit {
-                    HStack(spacing:4){
-                        Image(systemName:"repeat")
-                        Text("Habit")
+                if isRunning() && hasDuration {
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            Capsule()
+                                .fill(Color.primary.opacity(0.08))
+                                .frame(height: 3)
+                            Capsule()
+                                .fill(color.opacity(0.6))
+                                .frame(width: geo.size.width * progress(), height: 3)
+                                .animation(.linear(duration: 30), value: progress())
+                        }
                     }
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .frame(height: 3)
                 }
             }
             .contentShape(Rectangle())
@@ -1441,28 +1720,13 @@ struct TimelineEventRow: View {
 
             Spacer()
 
-            // ✅ CHECK BUTTON
-            Button {
-
-                onToggleComplete?()
-
-            } label: {
-
-                ZStack {
-
-                    Circle()
-                        .fill(isCompleted ? color.opacity(0.25) : Color.clear)
-                        .frame(width: 28, height: 28)
-                        .animation(.easeInOut(duration: 0.2), value: isCompleted)
-
-                    Circle()
-                        .stroke(color.opacity(0.8), lineWidth: 2)
-
-                    AnimatedCheckmark(progress: isCompleted ? 1 : 0)
-                }
-            }
-            .buttonStyle(.plain)
-            .frame(width: 28, height: 28)
+            FlyingIncrementButton(
+                          color: color,
+                          isCompleted: isCompleted,
+                          isAccumulative: kind == .habit && incrementValue > 0,
+                          incrementValue: incrementValue,
+                          onTap: { onToggleComplete?() }
+                      )
 
             ReorderHintArrows(
                 show: isHolding,
@@ -1496,6 +1760,65 @@ struct TimeNowIndicator: View {
            
 
         }
+    }
+}
+
+struct FlyingIncrementButton: View {
+    let color: Color
+    let isCompleted: Bool
+    let isAccumulative: Bool
+    let incrementValue: Double
+    let onTap: () -> Void
+
+    @State private var flyItems: [(id: UUID, offset: CGFloat, opacity: Double, scale: CGFloat)] = []
+
+    func formatIncrement(_ v: Double) -> String {
+        v.truncatingRemainder(dividingBy: 1) == 0 ? "+\(Int(v))" : String(format: "+%.1f", v)
+    }
+
+    var body: some View {
+        ZStack {
+            
+            Button {
+                guard !(isAccumulative && isCompleted) else { return }
+                onTap()
+                guard isAccumulative && !isCompleted else { return }
+                let id = UUID()
+                flyItems.append((id: id, offset: 0, opacity: 1, scale: 1))
+                withAnimation(.easeOut(duration: 0.55)) {
+                    if let i = flyItems.firstIndex(where: { $0.id == id }) {
+                        flyItems[i].offset  = -36
+                        flyItems[i].opacity = 0
+                        flyItems[i].scale   = 1.3
+                    }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                    flyItems.removeAll { $0.id == id }
+                }
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(isCompleted ? color.opacity(0.25) : Color.clear)
+                        .frame(width: 28, height: 28)
+                        .animation(.easeInOut(duration: 0.2), value: isCompleted)
+                    Circle()
+                        .stroke(color.opacity(0.8), lineWidth: 2)
+                    AnimatedCheckmark(progress: isCompleted ? 1 : 0)
+                }
+            }
+            .buttonStyle(.plain)
+
+            ForEach(flyItems, id: \.id) { item in
+                Text(formatIncrement(incrementValue))
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundStyle(color)
+                    .scaleEffect(item.scale)
+                    .offset(y: item.offset)
+                    .opacity(item.opacity)
+                    .allowsHitTesting(false)
+            }
+        }
+        .frame(width: 28, height: 28)
     }
 }
 
@@ -1569,7 +1892,8 @@ struct EventIconView: View {
     let isCompleted: Bool
     let isSystemEvent: Bool
     let isToday: Bool
-    
+    let progressFraction: CGFloat   // 0...1
+    let isAccumulative: Bool
     
     @Environment(\.colorScheme) private var scheme
 
@@ -1607,22 +1931,38 @@ struct EventIconView: View {
     var body: some View {
         Group {
             if kind == .habit {
-                // ── HABIT: tròn như cũ ──
                 ZStack {
-                    Circle()
-                        .fill(color)
+                                  Circle()
+                                      .fill(color)
 
-                    Image(systemName: icon)
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(.white)
+                                  Image(systemName: icon)
+                                      .font(.system(size: 18, weight: .semibold))
+                                      .foregroundStyle(.white)
 
-                    // badge repeat
-                    Image(systemName: "repeat")
-                        .font(.system(size: 7, weight: .bold))
-                        .foregroundStyle(.white)
-                        .offset(x: 14, y: 14)
-                }
-                .frame(width: 50, height: 50)
+                                  // badge repeat
+                                  Image(systemName: "repeat")
+                                      .font(.system(size: 7, weight: .bold))
+                                      .foregroundStyle(.white)
+                                      .offset(x: 14, y: 14)
+
+                                  // Progress ring cho accumulative
+                    if isAccumulative {
+                                          Circle()
+                                              .stroke(Color.white.opacity(0.2), lineWidth: 2.5)
+                                              .frame(width: 56, height: 56)
+
+                                          Circle()
+                                              .trim(from: 0, to: progressFraction)
+                                              .stroke(
+                                                  isCompleted ? Color.green : Color.white,
+                                                  style: StrokeStyle(lineWidth: 2.5, lineCap: .round)
+                                              )
+                                              .rotationEffect(.degrees(-90))
+                                              .frame(width: 56, height: 56)
+                                              .animation(.spring(response: 0.4, dampingFraction: 0.7), value: progressFraction)
+                                      }
+                              }
+                              .frame(width: 50, height: 50)
 
             } else {
                 ZStack {

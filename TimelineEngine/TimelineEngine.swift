@@ -207,45 +207,44 @@ struct TimelineEngine {
         movedIndex: Int,
         minSpacing: Int = 5
     ) {
-
         guard movedIndex < events.count else { return }
+        let now = currentMinutes()
+
+        func isLocked(_ e: EventItem) -> Bool {
+            if e.isSystemEvent { return false }
+            if let d = e.duration {
+                if e.minutes + d < now { return true }   // past
+                if e.minutes <= now && e.minutes + d >= now { return true } // running
+            } else {
+                if e.minutes < now { return true }   // habit past
+            }
+            return false
+        }
 
         // PUSH DOWN
         for i in (movedIndex + 1)..<events.count {
-
+            guard !isLocked(events[i]) else { break }   // 👈 dừng nếu gặp locked
             let prev = events[i - 1]
             let required = endMinute(prev) + minSpacing
-
             if events[i].minutes < required {
-
                 let snapped = snap(required)
                 events[i].update(minutes: snapped)
-
-            } else {
-                break
-            }
+            } else { break }
         }
 
         // PUSH UP
         if movedIndex > 0 {
-
             for i in stride(from: movedIndex - 1, through: 0, by: -1) {
-
+                guard !isLocked(events[i]) else { break }   // 👈 dừng nếu gặp locked
                 let next = events[i + 1]
                 let required = next.minutes - minSpacing
-
                 if events[i].minutes > required {
-
                     let snapped = snap(required)
                     events[i].update(minutes: snapped)
-
-                } else {
-                    break
-                }
+                } else { break }
             }
         }
     }
-    
     
     static func currentMinutes() -> Int {
 

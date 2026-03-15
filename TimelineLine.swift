@@ -5,109 +5,113 @@ struct TimelineLineView: View {
     let events: [EventItem]
     let isDragging: Bool
     let date: Date
-    
-    
-    
-    func isPastOrCurrentSegment(_ index: Int) -> Bool {
 
-        let now = nowMinute()
-        let start = events[index].minutes
-        let sleep = events[windowIndex()].minutes
+    // MARK: - Helpers
 
-        return now >= start && start < sleep
-    }
-    
-    func isCurrentSegment(_ index: Int) -> Bool {
-        let now = nowMinute()
-        let start = events[index].minutes
-        let end   = events[index + 1].minutes  // giữ nguyên vì đây là segment gap
-        return now > TimelineEngine.endMinute(events[index]) && now <= end
-    }
-    
     func nowMinute() -> Int {
-
-        let cal = Calendar.current
-        let now = Date()
-
-        return cal.component(.hour, from: now) * 60 +
-               cal.component(.minute, from: now)
+        let c = Calendar.current
+        return c.component(.hour, from: Date()) * 60 + c.component(.minute, from: Date())
     }
-    
+
+    func isToday() -> Bool {
+        Calendar.current.isDateInToday(date)
+    }
+
+    func riseIndex() -> Int {
+        events.firstIndex { $0.systemType == .wake } ?? 0
+    }
+
+    func windowIndex() -> Int {
+        events.firstIndex { $0.systemType == .sleep } ?? events.count - 1
+    }
+
+    func yPosition(for index: Int) -> CGFloat {
+        var y: CGFloat = 0
+        for i in 0..<index {
+            let h = TimelineLayoutEngine.eventHeight(events[i])
+            y += h
+            if i < events.count - 1 {
+                y += TimelineLayoutEngine.spacing(
+                    current: events[i],
+                    next: events[i + 1]
+                )
+            }
+        }
+        // Cộng thêm nửa chiều cao event hiện tại để lấy center
+        return y + TimelineLayoutEngine.eventHeight(events[index]) / 2
+    }
+
     func nowY() -> CGFloat? {
         let now = nowMinute()
-
         for i in 0..<events.count - 1 {
             let eventStart  = events[i].minutes
             let eventEnd    = TimelineEngine.endMinute(events[i])
             let nextStart   = events[i + 1].minutes
-
             let thisTopY    = yPosition(for: i) - TimelineLayoutEngine.eventHeight(events[i]) / 2
             let thisH       = TimelineLayoutEngine.eventHeight(events[i])
             let thisBottomY = thisTopY + thisH
             let nextTopY    = yPosition(for: i + 1) - TimelineLayoutEngine.eventHeight(events[i + 1]) / 2
 
             if now >= eventStart && now <= eventEnd {
-                let progress = CGFloat(now - eventStart) / CGFloat(max(eventEnd - eventStart, 1))
-                return thisTopY + thisH * progress
+                let p = CGFloat(now - eventStart) / CGFloat(max(eventEnd - eventStart, 1))
+                return thisTopY + thisH * p
             }
-
             if now > eventEnd && now < nextStart {
-                let progress = CGFloat(now - eventEnd) / CGFloat(max(nextStart - eventEnd, 1))
-                return thisBottomY + (nextTopY - thisBottomY) * progress
+                let p = CGFloat(now - eventEnd) / CGFloat(max(nextStart - eventEnd, 1))
+                return thisBottomY + (nextTopY - thisBottomY) * p
             }
         }
-
         return nil
     }
-    
-    func isToday() -> Bool {
-        Calendar.current.isDateInToday(date)
+
+    // MARK: - Dash style dựa trên gap time
+    func dashStyle(gapMinutes: Int, segmentHeight: CGFloat) -> StrokeStyle {
+        let lineWidth: CGFloat = isDragging ? 3.5 : 2.5  // đậm hơn
+
+        let ratio = CGFloat(min(max(gapMinutes, 0), 300)) / 300.0
+
+        // Gap lớn: dash=16, space=12 → thoáng rõ
+        // Gap nhỏ: dash=6, space=4 → dày đặc
+        let dashLen = 6 + ratio * 10   // 6...16
+        let gapLen  = 4 + ratio * 8    // 4...12
+
+        return StrokeStyle(
+            lineWidth: lineWidth,
+            lineCap: .round,
+            dash: [dashLen, gapLen]
+        )
     }
-    
-    
-    
-    
-    
+
+    // MARK: - Body
 
     var body: some View {
-
-        GeometryReader { geo in
-
+        GeometryReader { _ in
             if events.count > 1 {
-
-                let rise = riseIndex()
+                let rise   = riseIndex()
                 let window = windowIndex()
                 let indices = Array(rise..<window)
 
                 ZStack(alignment: .topLeading) {
-
                     ForEach(indices, id: \.self) { i in
+                        let startY      = yPosition(for: i)
+                        let endY        = yPosition(for: i + 1)
+                        let gapMinutes  = events[i + 1].minutes - TimelineEngine.endMinute(events[i])
+                        let segH        = endY - startY
+                        let style       = dashStyle(gapMinutes: gapMinutes, segmentHeight: segH)
 
-                        let startY = yPosition(for: i)
-                        let endY   = yPosition(for: i + 1)
-
-                        let minutesGap    = events[i + 1].minutes - TimelineEngine.endMinute(events[i])
-                        let segmentHeight = endY - startY
-                        let ppm           = segmentHeight / CGFloat(max(minutesGap, 1))
-                        let dashLength    = max(4, ppm * 8)
-                        let gapLength     = max(4, ppm * 5)
-                        let style         = StrokeStyle(
-                            lineWidth: isDragging ? 4 : 3,
-                            lineCap: .round,
-                            dash: [dashLength, gapLength]
-                        )
-
-                        // Đường base xám
-                        Path { path in
-                            path.move(to: CGPoint(x: 0, y: startY))
-                            path.addLine(to: CGPoint(x: 0, y: endY))
+                        // ── Base line (gray mờ) ──
+                        Path { p in
+                            p.move(to:    CGPoint(x: 0, y: startY))
+                            p.addLine(to: CGPoint(x: 0, y: endY))
                         }
                         .stroke(
-                            isDragging ? Color.blue.opacity(0.7) : Color.gray.opacity(0.45),
+                            isDragging
+                                ? Color.blue.opacity(0.5)
+                                : Color.primary.opacity(0.14),
                             style: style
                         )
 
-                        // Đường orange
+                        // ── Progress line (orange) — chỉ today ──
                         if isToday() {
                             let now      = nowMinute()
                             let sleepMin = events[windowIndex()].minutes
@@ -115,7 +119,6 @@ struct TimelineLineView: View {
                             let segEnd   = events[i + 1].minutes
 
                             if now > segStart && segStart < sleepMin {
-
                                 let paintTo: CGFloat = {
                                     if now >= segStart && now <= segEnd {
                                         return nowY() ?? endY
@@ -126,14 +129,15 @@ struct TimelineLineView: View {
                                 }()
 
                                 if paintTo > startY {
-                                    Path { path in
-                                        path.move(to: CGPoint(x: 0, y: startY))
-                                        path.addLine(to: CGPoint(x: 0, y: paintTo))
+                                    Path { p in
+                                        p.move(to:    CGPoint(x: 0, y: startY))
+                                        p.addLine(to: CGPoint(x: 0, y: paintTo))
                                     }
                                     .stroke(
+                                        // Sau sleep → dùng màu sleep event, trước đó → orange ấm
                                         now < sleepMin
-                                            ? Color.orange.opacity(0.6)
-                                            : events[windowIndex()].color.opacity(0.7),
+                                            ? Color(red: 1.0, green: 0.58, blue: 0.25).opacity(0.75)
+                                            : events[windowIndex()].color.opacity(0.6),
                                         style: style
                                     )
                                 }
@@ -141,45 +145,9 @@ struct TimelineLineView: View {
                         }
                     }
                 }
-                .shadow(
-                    color: isDragging ? Color.blue.opacity(0.5) : .clear,
-                    radius: 6
-                )
                 .animation(.easeInOut(duration: 0.2), value: isDragging)
             }
         }
         .allowsHitTesting(false)
-    }
-
-    // MARK: Rise / Window
-
-    func riseIndex() -> Int {
-        events.firstIndex { $0.systemType == .wake } ?? 0
-    }
-
-    func windowIndex() -> Int {
-        events.firstIndex { $0.systemType == .sleep } ?? events.count - 1
-    }
-
-    // MARK: Y Position
-
-    func yPosition(for index: Int) -> CGFloat {
-
-        var y: CGFloat = 0
-
-        for i in 0..<index {
-
-            y += TimelineLayoutEngine.eventHeight(events[i])
-
-            if i < events.count - 1 {
-
-                y += TimelineLayoutEngine.spacing(
-                    current: events[i],
-                    next: events[i + 1]
-                )
-            }
-        }
-
-        return y + TimelineLayoutEngine.eventHeight(events[index]) / 2
     }
 }

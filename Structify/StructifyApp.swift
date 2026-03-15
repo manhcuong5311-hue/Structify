@@ -19,10 +19,14 @@ struct StructifyApp: App {
                         
                 } else {
                     OnboardingView()
+                       
                 }
             }
             .environmentObject(timeline)
             .environmentObject(calendar)
+            .onAppear {
+                NotificationManager.shared.requestPermission()
+            }
         }
         
     }

@@ -10,8 +10,8 @@ import SwiftUI
 struct TimelineLayoutEngine {
     
     static let pixelsPerMinute: CGFloat = 0.7
-    static let minHeight: CGFloat = 44
-    static let maxHeight: CGFloat = 90
+    static let minHeight: CGFloat = 50
+    static let maxHeight: CGFloat = 80
     
     /// tính height của event theo duration
     static func eventHeight(_ event: EventItem) -> CGFloat {
@@ -35,35 +35,36 @@ struct TimelineLayoutEngine {
         next: EventItem
     ) -> CGFloat {
 
-        let diff =
-            next.minutes -
-            TimelineEngine.endMinute(current)
-
+        let diff = next.minutes - TimelineEngine.endMinute(current)
         let safeDiff = max(diff, 0)
 
-        var base: CGFloat = 16
+        var base: CGFloat = 20  // 👈 tăng từ 16 → 28
 
         if current.isSystemEvent || next.isSystemEvent {
             base += 8
         }
 
-        let normalized =
-            min(CGFloat(safeDiff) / 120, 1)
+        // 👈 thêm: bù cho phần pill tràn ra ngoài eventHeight
+        let currentPillOverflow = max(0, pillOverflow(current) - eventHeight(current))
+        let nextPillOverflow    = max(0, pillOverflow(next))
+        base += currentPillOverflow * 0.5 + nextPillOverflow * 0.3
 
-        let curve =
-            1 - pow(1 - normalized, 2)
+        let normalized = min(CGFloat(safeDiff) / 120, 1)
+        let curve      = 1 - pow(1 - normalized, 2)
+        let dynamic    = curve * 55
 
-        let dynamic =
-            curve * 55
+        let heightFactor = (eventHeight(current) + eventHeight(next)) * 0.1
 
-        let heightFactor =
-            (eventHeight(current) +
-             eventHeight(next)) * 0.1
-
-        let result =
-            base + dynamic + heightFactor
+        let result = base + dynamic + heightFactor
 
         return (result / 2).rounded() * 2
+    }
+
+    // 👈 thêm helper tính chiều cao pill thực tế
+    private static func pillOverflow(_ event: EventItem) -> CGFloat {
+        guard let d = event.duration else { return 50 }
+        let h = 50 + CGFloat(d - 15) * (80.0 / 105.0)
+        return min(max(h, 50), 130)
     }
     
     

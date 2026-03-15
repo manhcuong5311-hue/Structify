@@ -5,7 +5,7 @@ import SwiftUI
 struct CreateItemSheet: View {
 
     @Environment(\.dismiss) private var dismiss
-
+    @EnvironmentObject var store: TimelineStore
     @State private var kind: EventKind = .event
     @State private var showNext = false
     var onCreate: ((EventKind, String, String, Date, Int) -> Void)?
@@ -90,24 +90,44 @@ struct CreateItemSheet: View {
             } else {
 
                 CreateHabitDetailSheet(
+                    onCreate: { title, icon, colorHex, date, type, target, unit, minutes, increment, repeatMode in
+                        let cal = Calendar.current
+                        let startMinutes = minutes ?? 540
 
-                    onCreate: { title, icon, date, type, target, unit, minutes, increment in
+                        let recurrence: Recurrence = {
+                            switch repeatMode {
+                            case .everyday: return .daily
+                            case .oneDay:   return .once(date)
+                            case .week:
+                                let start = cal.startOfDay(for: date)
+                                let end   = cal.startOfDay(for: cal.date(byAdding: .day, value: 6, to: start) ?? start)
+                                return .dateRange(start, end)
+                            case .month:
+                                let start = cal.startOfDay(for: date)
+                                let end   = cal.startOfDay(for: cal.date(byAdding: .day, value: 29, to: start) ?? start)
+                                return .dateRange(start, end)
+                            }
+                        }()
 
-                        onCreate?(
-                            .habit,
-                            title,
-                            icon,
-                            date,
-                            0
+                        store.addHabit(           // 👈 gọi store trực tiếp
+                            title: title,
+                            icon: icon,
+                            colorHex: colorHex,
+                            minutes: startMinutes,
+                            habitType: type,
+                            targetValue: target,
+                            unit: unit,
+                            increment: increment,
+                            recurrence: recurrence
                         )
 
+                        onCreate?(.habit, title, icon, date, 0)
+                        dismiss()
                     },
 
                     onOpenEvent: {
-
                         showNext = false
                         kind = .event
-
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                             showNext = true
                         }

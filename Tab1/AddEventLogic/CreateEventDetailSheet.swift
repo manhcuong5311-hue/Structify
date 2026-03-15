@@ -568,12 +568,11 @@ extension CreateEventDetailSheet {
                                 )
                                 .textInputAutocapitalization(.sentences)
                                 .disableAutocorrection(true)
-                                .onChange(of: title) { _ in
+                                .onChange(of: title) {
                                     if !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                                         titleWarning = nil
                                     }
                                 }
-
                             GeometryReader { geo in
 
                                 Rectangle()
@@ -626,7 +625,7 @@ extension CreateEventDetailSheet {
             validateAndClampTime()
             validateDuration()
         }
-        .onChange(of: date) { newDate in
+        .onChange(of: date) { _, newDate in
             let weekday = Calendar.current.component(.weekday, from: newDate)
             if repeatRule == .weekly {
                 selectedWeekdays.insert(weekday)
@@ -634,10 +633,8 @@ extension CreateEventDetailSheet {
             validateAndClampTime()
             validateDuration()
         }
-        .onChange(of: date) { newDate in
-
+        .onChange(of: date) { _, newDate in
             let weekday = Calendar.current.component(.weekday, from: newDate)
-
             if repeatRule == .weekly {
                 selectedWeekdays.insert(weekday)
             }
@@ -659,14 +656,13 @@ extension CreateEventDetailSheet {
             .presentationBackground(Color.paper)
         }
         .sheet(isPresented: $showHabitSheet) {
-
             CreateHabitDetailSheet(
-
-                onCreate: { title, icon, date, type, target, unit, minutes, increment in
-
+                onCreate: { title, icon, colorHex, date, type, target, unit, minutes, increment, repeatMode in
+                //                  👆 thêm colorHex
                     store.addHabit(
                         title: title,
                         icon: icon,
+                        colorHex: colorHex,   // 👈 dùng colorHex từ closure
                         minutes: minutes ?? 540,
                         habitType: type,
                         targetValue: target,
@@ -674,11 +670,8 @@ extension CreateEventDetailSheet {
                         increment: increment
                     )
                 },
-
                 onOpenEvent: {
-
                     showHabitSheet = false
-
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                         onOpenHabit?()
                     }
@@ -710,8 +703,7 @@ extension CreateEventDetailSheet {
                 displayedComponents: [.date]
             )
             .labelsHidden()
-            .onChange(of: date) { newDate in
-                
+            .onChange(of: date) { _, newDate in
                 selectedDate = newDate
             }
         }
@@ -839,8 +831,9 @@ extension CreateEventDetailSheet {
                         .saturation(isMinuteDimmed(startMinute) ? 0.2 : 1)
                         .opacity(isMinuteDimmed(startMinute) ? 0.5 : 1)
                     }
-                    .onChange(of: startHour)   { _ in updateStartMinutes(); validateAndClampTime(); validateDuration() }
-                    .onChange(of: startMinute) { _ in updateStartMinutes(); validateAndClampTime(); validateDuration() }
+                    .onChange(of: startHour)   { updateStartMinutes(); validateAndClampTime(); validateDuration() }
+                    .onChange(of: startMinute) { updateStartMinutes(); validateAndClampTime(); validateDuration() }
+
                 }
 
                 Spacer()
@@ -1064,8 +1057,8 @@ extension CreateEventDetailSheet {
 
                     }
                     .frame(height: isWide ? 120 : 95)
-                    .onChange(of: durationHours)      { _ in updateDurationFromPicker(); validateDuration() }
-                    .onChange(of: durationMinutesOnly) { _ in updateDurationFromPicker(); validateDuration() }
+                    .onChange(of: durationHours)       { updateDurationFromPicker(); validateDuration() }
+                    .onChange(of: durationMinutesOnly) { updateDurationFromPicker(); validateDuration() }
                 }
                 
                 .disabled(isAllDay || isPastTime)

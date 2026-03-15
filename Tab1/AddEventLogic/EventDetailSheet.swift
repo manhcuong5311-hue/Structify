@@ -47,6 +47,9 @@ struct EventDetailSheet: View {
             let names = days.sorted().map { s[$0 - 1] }.joined(separator: ", ")
             return "This event repeats on \(names)."
         case .once: return ""
+        case .dateRange(let start, let end):
+            let f = DateFormatter(); f.dateFormat = "d MMM"
+            return "This repeats from \(f.string(from: start)) to \(f.string(from: end))."
         }
     }
 
@@ -65,6 +68,9 @@ struct EventDetailSheet: View {
         case .once(let d):
             let f = DateFormatter(); f.dateFormat = "d MMM yyyy"
             return f.string(from: d)
+        case .dateRange(let start, let end):
+            let f = DateFormatter(); f.dateFormat = "d MMM"
+            return "\(f.string(from: start)) – \(f.string(from: end))"
         }
     }
 
@@ -74,7 +80,8 @@ struct EventDetailSheet: View {
         case .daily:    return "arrow.clockwise"
         case .weekdays: return "briefcase"
         case .specific: return "calendar.badge.checkmark"
-        case .once:     return "1.circle"
+        case .once:      return "1.circle"
+        case .dateRange: return "calendar.badge.clock"
         }
     }
 
@@ -286,7 +293,7 @@ struct EventDetailSheet: View {
                                     withAnimation { isEditingTitle = false }
                                     hasUnsavedEdits = true
                                 }
-                                .onChange(of: editTitle) { _ in hasUnsavedEdits = true }
+                                .onChange(of: editTitle) { hasUnsavedEdits = true }
                         } else {
                             Button {
                                 withAnimation(.spring(response: 0.25)) {
