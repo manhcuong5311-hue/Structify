@@ -123,7 +123,13 @@ struct CreateHabitDetailSheet: View {
     var isPastDate: Bool {
         let today = Calendar.current.startOfDay(for: Date())
         let selected = Calendar.current.startOfDay(for: date)
-        return repeatMode == .oneDay && selected < today
+        // Block cả .week và .oneDay nếu start date là quá khứ
+        switch repeatMode {
+        case .oneDay, .week, .month:
+            return selected < today
+        case .everyday:
+            return false
+        }
     }
 
     
@@ -594,6 +600,8 @@ extension CreateHabitDetailSheet {
                     return
                 }
                 guard timeWarning == nil, targetWarning == nil else { return }
+                
+                guard !isPastDate else { return }
 
                 let minutes = isAnytime ? nil : selectedMinutes
 
@@ -664,7 +672,7 @@ extension CreateHabitDetailSheet {
     }
 
     var dateText: String {
-        let f = DateFormatter(); f.dateFormat = "E, d MMM yyyy"; f.locale = Locale(identifier: "vi")
+        let f = DateFormatter(); f.dateFormat = "E, d MMM yyyy"; f.locale = Locale(identifier: "en")
         return f.string(from: date)
     }
 
@@ -685,20 +693,21 @@ extension CreateHabitDetailSheet {
     }
 
     func formattedDate(_ d: Date) -> String {
-        let f = DateFormatter(); f.dateFormat = "E, d MMM"; f.locale = Locale(identifier: "vi")
+        let f = DateFormatter(); f.dateFormat = "E, d MMM"; f.locale = Locale(identifier: "en")
         return f.string(from: d)
     }
 
     func shortDate(_ d: Date) -> String {
-        let f = DateFormatter(); f.dateFormat = "d MMM"; f.locale = Locale(identifier: "vi")
+        let f = DateFormatter(); f.dateFormat = "d MMM"; f.locale = Locale(identifier: "en")
         return f.string(from: d)
     }
 
+   
     func updateDateForRepeatMode() {
         let today = Calendar.current.startOfDay(for: Date())
         switch repeatMode {
         case .oneDay: break
-        default: date = today
+        default: date = today   
         }
     }
 }

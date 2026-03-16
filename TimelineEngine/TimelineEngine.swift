@@ -3,7 +3,7 @@ import Foundation
 
 struct TimelineEngine {
 
-    static let snapStep = 5
+    static var snapStep: Int { PreferencesStore().snapStep }
     static let minMinute = 0
     static let maxMinute = 1440
     static let spacing = 5
@@ -19,10 +19,8 @@ struct TimelineEngine {
         let minuteChange = Int(resistance / 10)
         var newMinutes = event.minutes + minuteChange
 
-        // snap
-        if abs(minuteChange) > 2 {
-            newMinutes = snap(newMinutes)
-        }
+        // snap — luôn snap bất kể minuteChange nhỏ bao nhiêu
+        newMinutes = snap(newMinutes)
 
         // system zones
         if event.systemType == .wake {

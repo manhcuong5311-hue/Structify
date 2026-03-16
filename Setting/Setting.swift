@@ -1,10 +1,21 @@
 import SwiftUI
+import SafariServices
+
 
 struct SettingsView: View {
 
     @State private var showPremium = false
     @State private var showDataManager = false
     @State private var showNotifications = false
+    @State private var showPreferences = false
+    
+    @State private var showPrivacy = false
+    @State private var showTerms = false
+    
+    @State private var showFAQ = false
+    
+    
+    
     
     @EnvironmentObject var store: TimelineStore
     
@@ -36,14 +47,15 @@ struct SettingsView: View {
 
                 // MARK: - Sections
                 settingsGroup(title: "Manage", items: [
-                    .init(icon: "externaldrive.fill",    label: "Data",          color: .blue)   { showDataManager = true },
-                    .init(icon: "bell.badge.fill",       label: "Notifications", color: .red)    { showNotifications = true },
-                    .init(icon: "gearshape.2.fill",      label: "Preferences",   color: .gray)   { }
+                    .init(icon: "bell.badge.fill",  label: "Notifications", color: .red)  { showNotifications = true },
+                    .init(icon: "gearshape.2.fill", label: "Preferences",   color: .gray) { showPreferences = true }
                 ])
 
                 settingsGroup(title: "Support", items: [
                     .init(icon: "envelope.fill",         label: "Contact Us",    color: .teal)   { contactSupport() },
-                    .init(icon: "questionmark.bubble.fill", label: "FAQ",         color: .indigo) { },
+                    .init(icon: "questionmark.bubble.fill", label: "FAQ", color: .indigo) {
+                        showFAQ = true
+                    },
                     .init(icon: "square.and.arrow.up.fill", label: "Share App",   color: .orange) { shareApp() },
                     .init(icon: "star.fill",             label: "Rate App",      color: .yellow) { rateApp() }
                 ])
@@ -54,8 +66,12 @@ struct SettingsView: View {
                 ])
 
                 settingsGroup(title: "Legal", items: [
-                    .init(icon: "lock.shield.fill",      label: "Privacy Policy", color: .cyan)  { openURL("https://yourapp.com/privacy") },
-                    .init(icon: "doc.text.fill",         label: "Terms of Use",   color: .mint)  { openURL("https://yourapp.com/terms") }
+                    .init(icon: "lock.shield.fill", label: "Privacy Policy", color: .cyan) {
+                        showPrivacy = true
+                    },
+                    .init(icon: "doc.text.fill", label: "Terms of Use", color: .mint) {
+                        showTerms = true
+                    }
                 ])
 
                 // MARK: - Footer
@@ -72,37 +88,63 @@ struct SettingsView: View {
                   NotificationsSettingsView()
                       .environmentObject(store)
               }
+        .navigationDestination(isPresented: $showFAQ) {
+            FAQView()
+        }
+        // Thêm sheet trong màn hình chính của bạn:
+        .sheet(isPresented: $showPreferences) {
+            PreferencesView()
+                .environmentObject(store)
+        }
+        .sheet(isPresented: $showPremium) {
+            PremiumView()
+                .presentationDetents([.large])
+                .ifPad { $0.presentationSizing(.page) }
+        }
+        .sheet(isPresented: $showPrivacy) {
+            SafariView(url: URL(string: "https://manhcuong5311-hue.github.io/Structify-legal/")!)
+        }
+        .sheet(isPresented: $showTerms) {
+            SafariView(url: URL(string: "https://manhcuong5311-hue.github.io/Structify-legal/terms.html")!)
+        }
     }
 }
 
 // MARK: - Hero Card
 extension SettingsView {
 
+    // TÌM toàn bộ heroCard, ĐỔI THÀNH:
     var heroCard: some View {
         HStack(spacing: 16) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [Color(hex: "#4F46E5"), Color(hex: "#7C3AED")],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+            // App icon thật
+            Group {
+                if let icons = Bundle.main.infoDictionary?["CFBundleIcons"] as? [String: Any],
+                   let primary = icons["CFBundlePrimaryIcon"] as? [String: Any],
+                   let files = primary["CFBundleIconFiles"] as? [String],
+                   let name = files.last,
+                   let img = UIImage(named: name) {
+                    Image(uiImage: img)
+                        .resizable()
+                        .scaledToFit()
+                } else {
+                    Image(systemName: "calendar.badge.clock")
+                        .font(.system(size: 26, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 60, height: 60)
+                        .background(
+                            LinearGradient(
+                                colors: [Color(hex: "#4F46E5"), Color(hex: "#7C3AED")],
+                                startPoint: .topLeading, endPoint: .bottomTrailing
+                            )
                         )
-                    )
-                    .frame(width: 60, height: 60)
-                Image(systemName: "calendar.badge.clock")
-                    .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(.white)
+                }
             }
-            .shadow(color: Color(hex: "#4F46E5").opacity(0.4), radius: 12, y: 6)
+            .frame(width: 60, height: 60)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .shadow(color: Color(hex: "#4F46E5").opacity(0.3), radius: 10, y: 4)
 
-            VStack(alignment: .leading, spacing: 3) {
-                Text("Structify")
-                    .font(.title3.bold())
-                Text("Version 1.0.0")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
+            Text("Structify")
+                .font(.title3.bold())
 
             Spacer()
         }
@@ -117,34 +159,74 @@ extension SettingsView {
 // MARK: - Premium Card
 extension SettingsView {
 
+    // TÌM toàn bộ premiumCard, ĐỔI THÀNH:
     var premiumCard: some View {
-        Button { showPremium = true } label: {
+        let isPremium = PremiumStore.shared.isPremium
+
+        return Button { showPremium = true } label: {
             HStack(spacing: 16) {
                 ZStack {
                     Circle()
-                        .fill(.white.opacity(0.15))
+                        .fill(isPremium
+                            ? Color(red: 0.95, green: 0.78, blue: 0.25).opacity(0.25)
+                            : Color.white.opacity(0.15)
+                        )
                         .frame(width: 48, height: 48)
-                    Image(systemName: "crown.fill")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(.yellow)
+                    Image(systemName: isPremium ? "crown.fill" : "crown")
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(
+                            isPremium
+                                ? Color(red: 0.95, green: 0.78, blue: 0.25)
+                                : .yellow
+                        )
                 }
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Upgrade to Pro")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                    Text("Unlock all features & themes")
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.75))
+                VStack(alignment: .leading, spacing: 5) {
+                    HStack(spacing: 6) {
+                        Text(isPremium ? "Structify Premium" : "Upgrade to Premium")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(.white)
+
+                        if isPremium {
+                            Text("ACTIVE")
+                                .font(.system(size: 9, weight: .black))
+                                .foregroundStyle(Color(red: 0.95, green: 0.78, blue: 0.25))
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 3)
+                                .background(
+                                    Capsule()
+                                        .fill(Color(red: 0.95, green: 0.78, blue: 0.25).opacity(0.2))
+                                        .overlay(
+                                            Capsule()
+                                                .stroke(Color(red: 0.95, green: 0.78, blue: 0.25).opacity(0.4), lineWidth: 1)
+                                        )
+                                )
+                        }
+                    }
+
+                    Text(isPremium
+                        ? "Thank you for your support ♥"
+                        : "Unlock all features, no subscription"
+                    )
+                    .font(.system(size: 12))
+                    .foregroundStyle(.white.opacity(isPremium ? 0.65 : 0.6))
                 }
 
                 Spacer()
 
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.6))
+                Image(systemName: isPremium ? "checkmark.seal.fill" : "chevron.right")
+                    .font(.system(size: isPremium ? 20 : 13, weight: .semibold))
+                    .foregroundStyle(
+                        isPremium
+                            ? Color(red: 0.95, green: 0.78, blue: 0.25)
+                            : .white.opacity(0.6)
+                    )
                     .padding(8)
-                    .background(.white.opacity(0.15))
+                    .background(
+                        isPremium
+                            ? Color(red: 0.95, green: 0.78, blue: 0.25).opacity(0.15)
+                            : Color.white.opacity(0.15)
+                    )
                     .clipShape(Circle())
             }
             .padding(18)
@@ -153,27 +235,35 @@ extension SettingsView {
                     RoundedRectangle(cornerRadius: 22, style: .continuous)
                         .fill(
                             LinearGradient(
-                                colors: [
-                                    Color(hex: "#1D1D2E"),
-                                    Color(hex: "#2D2B55")
-                                ],
+                                colors: isPremium
+                                    ? [Color(hex: "#1A1A18"), Color(hex: "#2A2410")]
+                                    : [Color(hex: "#1D1D2E"), Color(hex: "#2D2B55")],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
 
-                    // Decorative glow
+                    // Glow
                     Circle()
-                        .fill(Color(hex: "#7C3AED").opacity(0.35))
-                        .frame(width: 100)
-                        .blur(radius: 40)
+                        .fill(
+                            isPremium
+                                ? Color(red: 0.95, green: 0.78, blue: 0.25).opacity(0.2)
+                                : Color(hex: "#7C3AED").opacity(0.3)
+                        )
+                        .frame(width: 120)
+                        .blur(radius: 50)
                         .offset(x: 100, y: -10)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .stroke(.white.opacity(0.08), lineWidth: 1)
+                    .stroke(
+                        isPremium
+                            ? Color(red: 0.95, green: 0.78, blue: 0.25).opacity(0.2)
+                            : Color.white.opacity(0.08),
+                        lineWidth: 1
+                    )
             )
         }
         .buttonStyle(.plain)
@@ -327,17 +417,17 @@ extension SettingsView {
     }
 
     func restorePurchases() {
-        print("Restore purchases")
+        Task { await PremiumStore.shared.restore() }
     }
 
     func contactSupport() {
-        if let url = URL(string: "mailto:support@structify.app") {
+        if let url = URL(string: "mailto:Manhcuong531@gmail.com") {
             UIApplication.shared.open(url)
         }
     }
 
     func shareApp() {
-        guard let url = URL(string: "https://apps.apple.com/app/idXXXXXXXX") else { return }
+        guard let url = URL(string: "https://apps.apple.com/app/id6760645592") else { return }
         let vc = UIActivityViewController(activityItems: [url], applicationActivities: nil)
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let root = scene.windows.first?.rootViewController else { return }
@@ -345,7 +435,20 @@ extension SettingsView {
     }
 
     func rateApp() {
-        guard let url = URL(string: "https://apps.apple.com/app/idXXXXXXXX?action=write-review") else { return }
+        guard let url = URL(string: "https://apps.apple.com/app/id6760645592?action=write-review") else { return }
         UIApplication.shared.open(url)
     }
+}
+
+// Thêm struct này vào cuối file SettingsView hoặc file riêng:
+struct SafariView: UIViewControllerRepresentable {
+    let url: URL
+
+    func makeUIViewController(context: Context) -> SFSafariViewController {
+        let config = SFSafariViewController.Configuration()
+        config.entersReaderIfAvailable = false
+        return SFSafariViewController(url: url, configuration: config)
+    }
+
+    func updateUIViewController(_ uvc: SFSafariViewController, context: Context) {}
 }

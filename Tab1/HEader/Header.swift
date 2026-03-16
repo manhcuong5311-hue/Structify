@@ -16,12 +16,12 @@ class CalendarState: ObservableObject {
     private let calendar = Calendar.current
 
     var weekDates: [Date] {
-
-        let startOfWeek =
-        calendar.dateInterval(of: .weekOfYear, for: selectedDate)?.start ?? selectedDate
-
+        let prefs = PreferencesStore()
+        var cal = calendar
+        cal.firstWeekday = prefs.firstWeekday  // 1=Sun, 2=Mon
+        let startOfWeek = cal.dateInterval(of: .weekOfYear, for: selectedDate)?.start ?? selectedDate
         return (0..<7).compactMap {
-            calendar.date(byAdding: .day, value: $0, to: startOfWeek)
+            cal.date(byAdding: .day, value: $0, to: startOfWeek)
         }
     }
 
@@ -59,9 +59,16 @@ class CalendarState: ObservableObject {
 struct HeaderDateView: View {
 
     @EnvironmentObject var calendar: CalendarState
-    let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
+    var brand: Color { Color(hex: PreferencesStore().accentHex) }
     
     @Environment(\.colorScheme) private var scheme
+    
+
+    func safeSystemIcon(_ name: String, fallback: String = "checkmark.circle.fill") -> String {
+        guard !name.isEmpty, UIImage(systemName: name) != nil else { return fallback }
+        return name
+    }
+    
     
     var body: some View {
 
@@ -108,7 +115,7 @@ struct WeekStripView: View {
     @Environment(\.colorScheme) private var scheme
 
     @Namespace private var dayAnim
-    let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
+    var brand: Color { Color(hex: PreferencesStore().accentHex) }
 
     // MARK: Drag state
     @State private var dragOffset: CGFloat = 0
@@ -196,8 +203,9 @@ struct WeekStripView: View {
             to: calendar.selectedDate
         )!
 
-        let startOfWeek = Calendar.current
-            .dateInterval(of: .weekOfYear, for: baseDate)!.start
+        var cal = Calendar.current
+        cal.firstWeekday = PreferencesStore().firstWeekday
+        let startOfWeek = cal.dateInterval(of: .weekOfYear, for: baseDate)!.start
 
         let dates = (0..<7).compactMap {
             Calendar.current.date(byAdding: .day, value: $0, to: startOfWeek)
@@ -333,8 +341,9 @@ struct WeekTimelineView: View {
     private var sleepHour: Int { (store.sleepMinutes + 59) / 60 }
 
     private var weekDates: [Date] {
-        let start = Calendar.current
-            .dateInterval(of: .weekOfYear, for: calendar.selectedDate)?.start
+        var cal = Calendar.current
+        cal.firstWeekday = PreferencesStore().firstWeekday
+        let start = cal.dateInterval(of: .weekOfYear, for: calendar.selectedDate)?.start
             ?? calendar.selectedDate
         return (0..<7).compactMap {
             Calendar.current.date(byAdding: .day, value: $0, to: start)
@@ -343,14 +352,14 @@ struct WeekTimelineView: View {
 
     var body: some View {
         GeometryReader { geo in
-            let maxH = geo.size.height * 0.60          // 👈 tăng từ 0.45 → 0.60 để dài ra
+            let maxH = geo.size.height * 0.5         // 👈 tăng từ 0.45 → 0.60 để dài ra
             let isIpad = UIDevice.current.userInterfaceIdiom == .pad
-                 let targetHourH = isIpad
-                     ? max((maxH - iconSize * 2 - 16) / CGFloat(max(sleepHour - wakeHour, 1)), 20)
-                     : min(
-                         max((maxH - iconSize * 2 - 16) / CGFloat(max(sleepHour - wakeHour, 1)), 20),
-                         hourHeight
-                       )
+            let targetHourH = isIpad
+                ? max((maxH - iconSize * 2 - 16) / CGFloat(max(sleepHour - wakeHour, 1)), 20)
+                : min(
+                    max((maxH - iconSize * 2 - 16) / CGFloat(max(sleepHour - wakeHour, 1)), 20),
+                    35  // 👈 tăng từ hourHeight(40) → 52
+                  )
 
             HStack(alignment: .top, spacing: 0) {
                 ForEach(weekDates, id: \.self) { date in
@@ -412,8 +421,7 @@ struct CompactDayColumn: View {
         Calendar.current.component(.minute, from: Date())
     }
 
-    private let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
-
+    var brand: Color { Color(hex: PreferencesStore().accentHex) }
     // Pixel Y từ top của timeline (tính từ ngay dưới wake icon)
     private func yInTimeline(minutes: Int) -> CGFloat {
         CGFloat(minutes - wakeHour * 60) / 60.0 * hourHeight
@@ -479,7 +487,7 @@ struct CompactDayColumn: View {
                     .fill(event.color)
                     .shadow(color: event.color.opacity(0.2), radius: 2, y: 1)
                 if safePillH > 18 {
-                    Image(systemName: event.icon)
+                    Image(systemName: safeIcon(event.icon))
                         .font(.system(size: safePillH > 40 ? 11 : 8, weight: .semibold))
                         .foregroundStyle(.white)
                 }
@@ -491,34 +499,63 @@ struct CompactDayColumn: View {
     
     @ViewBuilder
     func eventPillCentered(_ event: EventItem) -> some View {
+        let isHabit = event.duration == nil
+        // Habit hiển thị pill cố định 30pt thay vì theo duration
+        let displayDuration = event.duration ?? 60
+        
         let startMin = max(event.minutes, wakeHour * 60)
-        let endMin   = min(event.minutes + (event.duration ?? 30), sleepHour * 60)
+        let endMin   = min(event.minutes + displayDuration, sleepHour * 60)
 
         if endMin > startMin {
             let rawH      = CGFloat(endMin - startMin) / 60.0 * hourHeight
-            let pillH     = max(rawH, 16)
+            // Habit: min height lớn hơn để icon luôn hiện
+            let minHeight: CGFloat = isHabit ? 36 : 22
+            let pillH     = max(rawH, minHeight)
             let safePillH = min(pillH, timelineHeight - yInTimeline(minutes: startMin))
             let yStart    = yInTimeline(minutes: startMin)
             let w         = pillWidth * 0.85
 
             ZStack {
                 RoundedRectangle(cornerRadius: min(w / 2, safePillH / 2), style: .continuous)
-                    .fill(event.color)
+                    .fill(
+                        isHabit
+                        ? event.color.opacity(0.85)          // habit: màu đặc hơn
+                        : event.color
+                    )
+                    .overlay(
+                        // Habit: thêm viền repeat để phân biệt
+                        isHabit ?
+                        RoundedRectangle(cornerRadius: min(w / 2, safePillH / 2))
+                            .stroke(Color.white.opacity(0.4), lineWidth: 1)
+                        : nil
+                    )
                     .shadow(color: event.color.opacity(0.2), radius: 2, y: 1)
-                if safePillH > 16 {
-                    Image(systemName: event.icon)
-                        .font(.system(size: safePillH > 46 ? 22 : 16, weight: .semibold))
-                        .foregroundStyle(.white)
-                }
+
+                // Icon — luôn hiện, dùng safeIcon
+                let isPad = UIDevice.current.userInterfaceIdiom == .pad
+                Image(systemName: safeIcon(event.icon))
+                    .font(.system(size: safePillH > 46 ? (isPad ? 25 : 19) : (isPad ? 19 : 17), weight: .semibold))
+                    .foregroundStyle(.white)
             }
-            .frame(width: w, height: max(safePillH, 0))
-            // Căn giữa trên line — không dịch ngang
+            .frame(width: w, height: max(safePillH, minHeight))
             .frame(maxWidth: .infinity, alignment: .center)
             .offset(y: yStart)
         }
     }
     
-
+    func safeIcon(_ name: String) -> String {
+        let fallback = "checkmark.circle.fill"
+        guard !name.isEmpty else { return fallback }
+        // UIImage check — nếu không tìm thấy SF Symbol thì dùng fallback
+        if UIImage(systemName: name) == nil { return fallback }
+        return name
+    }
+    
+    
+    
+    
+    
+    
     var body: some View {
         // Dùng VStack + overlay thay vì ZStack + offset
         VStack(spacing: 4) {
@@ -669,7 +706,7 @@ struct WeekDayColumn: View {
         Calendar.current.component(.minute, from: Date())
     }
 
-    private let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
+    private var brand: Color { Color(hex: PreferencesStore().accentHex) }
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -794,7 +831,7 @@ struct WeekDayColumn: View {
                         .stroke(event.color.opacity(0.35), lineWidth: 1)
                 )
 
-            Image(systemName: event.icon)
+            Image(systemName: UIImage(systemName: event.icon) != nil ? event.icon : "checkmark.circle.fill")
                 .font(.system(size: height > 50 ? 16 : 12, weight: .semibold))
                 .symbolRenderingMode(.hierarchical)
                 .foregroundStyle(event.color)
@@ -834,7 +871,7 @@ struct EventMiniIcon: View {
                 .frame(width: size, height: size)
                
 
-            Image(systemName: icon)
+            Image(systemName: UIImage(systemName: icon) != nil ? icon : "checkmark.circle.fill")
                 .symbolRenderingMode(.hierarchical)
                 .font(.system(size: size * 0.55, weight: .semibold))
                 .foregroundStyle(color)   // 👈 không opacity

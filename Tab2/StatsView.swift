@@ -151,7 +151,8 @@ struct StatsView: View {
             // Ít nhất 50% habit hoàn thành mới tính
             let done = evs.filter { store.isCompleted(templateID: $0.id, date: date) }.count
             let ratio = Double(done) / Double(evs.count)
-            if ratio < 0.5 { break }
+            let threshold = PreferencesStore().streakThreshold.value
+            if ratio < threshold { break }
             
             streak += 1
             guard let prev = cal.date(byAdding: .day, value: -1, to: date) else { break }
@@ -167,6 +168,12 @@ struct StatsView: View {
                 LinearGradient(colors: skyColors, startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
                     .animation(.easeInOut(duration: 2), value: currentHour)
+                
+                if scheme == .light {
+                    Color.black.opacity(isDaytime ? 0.28 : 0.10)
+                        .ignoresSafeArea()
+                        .animation(.easeInOut(duration: 2), value: isDaytime)
+                }
                 
                 SkyBodyView(currentHour: currentHour, currentMinute: currentMinute)
 
@@ -253,10 +260,12 @@ struct StatsView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(greetingText)
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.7))
+                    .foregroundStyle(.white.opacity(0.85))
+                    .shadow(color: .black.opacity(0.4), radius: 4, y: 1)  // 👈
                 Text("Your Progress")
                     .font(.system(size: 28, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.4), radius: 6, y: 2)  // 👈
             }
             Spacer()
             Image(systemName: celestialIcon)
@@ -529,7 +538,7 @@ struct RingView: View {
 // MARK: - Glass Card
 struct GlassCard<Content: View>: View {
     let content: Content
-
+    @Environment(\.colorScheme) private var scheme
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
     }
@@ -539,7 +548,11 @@ struct GlassCard<Content: View>: View {
             .padding(18)
             .background(
                 RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .fill(.ultraThinMaterial.opacity(0.6))
+                    .fill(
+                                           scheme == .dark
+                                           ? Color.white.opacity(0.08)
+                                           : Color.black.opacity(0.35)
+                                           )
                     .overlay(
                         RoundedRectangle(cornerRadius: 24, style: .continuous)
                             .stroke(Color.white.opacity(0.15), lineWidth: 1)
@@ -615,7 +628,7 @@ struct SkyBodyView: View {
 
                 ZStack {
                     // Glow
-                    Circle()
+                   
                     Circle()
                         .fill(Color(red:1.0, green:0.92, blue:0.50).opacity(0.18))
                         .frame(width: 80, height: 80)

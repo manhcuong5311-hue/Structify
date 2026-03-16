@@ -9,9 +9,25 @@ import SwiftUI
 
 struct TimelineLayoutEngine {
     
-    static let pixelsPerMinute: CGFloat = 0.7
-    static let minHeight: CGFloat = 50
-    static let maxHeight: CGFloat = 80
+  
+    
+    
+    static var minHeight: CGFloat {
+        switch PreferencesStore().timelineDensity {
+        case .compact:     return 38
+        case .normal:      return 50
+        case .comfortable: return 64
+        }
+    }
+
+    static var maxHeight: CGFloat {
+        switch PreferencesStore().timelineDensity {
+        case .compact:     return 60
+        case .normal:      return 85
+        case .comfortable: return 120
+        }
+    }
+
     
     /// tính height của event theo duration
     static func eventHeight(_ event: EventItem) -> CGFloat {
@@ -38,7 +54,13 @@ struct TimelineLayoutEngine {
         let diff = next.minutes - TimelineEngine.endMinute(current)
         let safeDiff = max(diff, 0)
 
-        var base: CGFloat = 20  // 👈 tăng từ 16 → 28
+        var base: CGFloat = {
+            switch PreferencesStore().timelineDensity {
+            case .compact:     return 12
+            case .normal:      return 20
+            case .comfortable: return 32
+            }
+        }()
 
         if current.isSystemEvent || next.isSystemEvent {
             base += 8
@@ -66,6 +88,21 @@ struct TimelineLayoutEngine {
         let h = 50 + CGFloat(d - 15) * (80.0 / 105.0)
         return min(max(h, 50), 130)
     }
+    
+    // Thêm vào TimelineLayoutEngine:
+    static func updateDensity() {
+        _cachedPixelsPerMinute = PreferencesStore().timelineDensity.hourHeight / 60.0
+    }
+
+    private static var _cachedPixelsPerMinute: CGFloat = -1  // -1 = chưa init
+
+    static var pixelsPerMinute: CGFloat {
+        if _cachedPixelsPerMinute < 0 { updateDensity() }
+        return _cachedPixelsPerMinute
+    }
+
+   
+    
     
     
 }

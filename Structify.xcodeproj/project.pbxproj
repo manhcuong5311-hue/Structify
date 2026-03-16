@@ -11,6 +11,7 @@
 		0D5D998D2F5D467A00C60A69 /* ColorToolkit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5D998C2F5D467600C60A69 /* ColorToolkit.swift */; };
 		0D67F3C62F5EF0BC00F84CF6 /* TimelineLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D67F3C52F5EF0B900F84CF6 /* TimelineLine.swift */; };
 		0D73442A2F5A9E4900AA4159 /* TimelineViewUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7344292F5A9E4700AA4159 /* TimelineViewUI.swift */; };
+		0D75263A2F6800F500CC7B7F /* ReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7526392F6800F100CC7B7F /* ReviewManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		0D67F3C52F5EF0B900F84CF6 /* TimelineLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineLine.swift; sourceTree = "<group>"; };
 		0D73441B2F5A9E3100AA4159 /* Structify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Structify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D7344292F5A9E4700AA4159 /* TimelineViewUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewUI.swift; sourceTree = "<group>"; };
+		0D7526392F6800F100CC7B7F /* ReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -73,6 +75,7 @@
 		0D7344122F5A9E3100AA4159 = {
 			isa = PBXGroup;
 			children = (
+				0D7526392F6800F100CC7B7F /* ReviewManager.swift */,
 				0D4388E82F5EBBD400E52307 /* Global.swift */,
 				0D5D998C2F5D467600C60A69 /* ColorToolkit.swift */,
 				0D5EE7E02F5BF22C001EC44B /* Onboarding */,
@@ -176,6 +179,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D75263A2F6800F500CC7B7F /* ReviewManager.swift in Sources */,
 				0D5D998D2F5D467A00C60A69 /* ColorToolkit.swift in Sources */,
 				0D67F3C62F5EF0BC00F84CF6 /* TimelineLine.swift in Sources */,
 				0D73442A2F5A9E4900AA4159 /* TimelineViewUI.swift in Sources */,

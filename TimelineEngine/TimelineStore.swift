@@ -75,7 +75,8 @@ struct EventTemplate: Identifiable, Codable {
     
     var isSystemEvent: Bool = false
     var systemType: SystemEventType? = nil
-    var notes: String? = nil 
+    var notes: String? = nil
+    var startDate: Date? = nil
 }
 
 
@@ -539,6 +540,14 @@ class TimelineStore: ObservableObject {
         colorHex: String,
         recurrence: Recurrence
     ) {
+        
+        let currentEventCount = templates.filter {
+               !$0.isSystemEvent && $0.kind == .event
+           }.count
+           guard PremiumStore.shared.canAddEvent(currentCount: currentEventCount) else {
+               NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+               return
+           }
 
         // Chỉ chặn quá khứ nếu là event hôm nay
         if case .once(let date) = recurrence {
@@ -549,7 +558,7 @@ class TimelineStore: ObservableObject {
             }
         }
 
-        let new = EventTemplate(
+        var new = EventTemplate(
             minutes: minutes,
             duration: duration,
             title: title,
@@ -557,6 +566,10 @@ class TimelineStore: ObservableObject {
             colorHex: colorHex,
             recurrence: recurrence
         )
+
+        if case .specific = recurrence {
+            new.startDate = Calendar.current.startOfDay(for: Date())
+        }
 
         templates.append(new)
 
@@ -945,9 +958,24 @@ class TimelineStore: ObservableObject {
         increment: Double?,
         recurrence: Recurrence = .daily
     ) {
+        
+        let currentHabitCount = templates.filter {
+              !$0.isSystemEvent && $0.kind == .habit
+          }.count
+          guard PremiumStore.shared.canAddHabit(currentCount: currentHabitCount) else {
+              NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+              return
+          }
+        
         let cleanTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !cleanTitle.isEmpty else { return }
 
+        if case .once(let date) = recurrence {
+            let today = Calendar.current.startOfDay(for: Date())
+            let target = Calendar.current.startOfDay(for: date)
+            if target < today { return }
+        }
+        
         // Clamp minutes vào trong wake/sleep window
         let clampedMinutes = max(wakeMinutes, min(minutes, sleepMinutes - 1))
 
@@ -965,6 +993,17 @@ class TimelineStore: ObservableObject {
         )
         new.increment = habitType == .accumulative ? max(0.01, increment ?? 1) : nil 
 
+        if case .dateRange(let start, _) = recurrence {
+            new.startDate = start
+        }
+        if case .specific = recurrence {
+            new.startDate = Calendar.current.startOfDay(for: Date())
+        }
+        
+        if case .daily = recurrence {
+            new.startDate = Calendar.current.startOfDay(for: Date())
+        }
+        
         templates.append(new)
         invalidateCache()
         save()
@@ -1180,6 +1219,113 @@ class TimelineStore: ObservableObject {
         return isCompleted(templateID: templateID, date: date) ? 1 : 0
     }
     
+    // Thêm vào TimelineStore (cuối file):
+    func exportCSV() -> String {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        let f = DateFormatter()
+        f.dateFormat = "dd/MM/yyyy"
+        
+        var rows = ["Date,Title,Type,Start,Duration,Completed"]
+        
+        for dayOffset in stride(from: -90, through: 0, by: 1) {
+            guard let date = cal.date(byAdding: .day, value: dayOffset, to: today) else { continue }
+            let dayEvents = events(for: date).filter { !$0.isSystemEvent && $0.duration != 1440 }
+            
+            for event in dayEvents {
+                let completed = isCompleted(templateID: event.id, date: date) ? "Yes" : "No"
+                let dur = event.duration.map { "\($0)" } ?? ""
+                let row = "\(f.string(from: date)),\"\(event.title)\",\(event.kind.rawValue),\(event.time),\(dur),\(completed)"
+                rows.append(row)
+            }
+        }
+        return rows.joined(separator: "\n")
+    }
+    
+    
+   
+    
+    // Thêm vào TimelineStore:
+    func resetAllData() {
+        templates.removeAll { !$0.isSystemEvent }
+        overrides.removeAll()
+        completionLogs.removeAll()
+        rebuildIndex()
+        rebuildCompletionIndex()
+        invalidateCache()
+        save()
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
+    
+    // Thêm vào TimelineStore:
+    func exportBackup() -> URL? {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        
+        var dict: [String: Data] = [:]
+        
+        if let t = try? encoder.encode(templates) { dict["templates"] = t }
+        if let o = try? encoder.encode(overrides) { dict["overrides"] = o }
+        if let c = try? encoder.encode(completionLogs) { dict["completionLogs"] = c }
+        
+        // Wake/sleep riêng vì là Int
+        let meta = BackupMeta(
+            wakeMinutes: wakeMinutes,
+            sleepMinutes: sleepMinutes,
+            exportedAt: Date()
+        )
+        if let m = try? encoder.encode(meta) { dict["meta"] = m }
+        
+        guard let finalData = try? JSONEncoder().encode(dict) else { return nil }
+        
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"
+        let fileName = "structify_backup_\(f.string(from: Date())).json"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+        
+        do {
+            try finalData.write(to: url)
+            return url
+        } catch {
+            print("Backup error: \(error)")
+            return nil
+        }
+    }
+
+    func restoreBackup(from url: URL) throws {
+        let data = try Data(contentsOf: url)
+        let dict = try JSONDecoder().decode([String: Data].self, from: data)
+        
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        
+        if let t = dict["templates"],
+           let decoded = try? decoder.decode([EventTemplate].self, from: t) {
+            templates = decoded
+        }
+        if let o = dict["overrides"],
+           let decoded = try? decoder.decode([EventOverride].self, from: o) {
+            overrides = decoded
+        }
+        if let c = dict["completionLogs"],
+           let decoded = try? decoder.decode([CompletionLog].self, from: c) {
+            completionLogs = decoded
+        }
+        if let m = dict["meta"],
+           let meta = try? decoder.decode(BackupMeta.self, from: m) {
+            UserDefaults.standard.set(meta.wakeMinutes, forKey: "user_wake_minutes")
+            UserDefaults.standard.set(meta.sleepMinutes, forKey: "user_sleep_minutes")
+        }
+        
+        rebuildIndex()
+        rebuildCompletionIndex()
+        invalidateCache()
+        save()
+        objectWillChange.send()
+    }
+    
+    
+    
+    
     
     
 }
@@ -1205,7 +1351,14 @@ extension EventTemplate {
 extension EventTemplate {
 
     func matches(date: Date) -> Bool {
-        let cal     = Calendar.current
+        let cal = Calendar.current
+
+        // 👈 Thêm check startDate trước tất cả các case
+        if let start = startDate,
+           cal.startOfDay(for: date) < cal.startOfDay(for: start) {
+            return false
+        }
+
         let weekday = cal.component(.weekday, from: date)
         switch recurrence {
         case .daily:                return true
@@ -1243,4 +1396,11 @@ extension EventItem {
     var isHabit: Bool {
         kind == .habit
     }
+}
+
+// Thêm struct này bên ngoài TimelineStore (cuối file TimelineStore):
+struct BackupMeta: Codable {
+    var wakeMinutes: Int
+    var sleepMinutes: Int
+    var exportedAt: Date
 }

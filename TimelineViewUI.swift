@@ -40,6 +40,9 @@ struct TimelineView: View {
     
     @State private var showNowBlockAlert = false
     @State private var suggestedMinutes: Int? = nil
+    private var brand: Color { Color(hex: PreferencesStore().accentHex) }
+    @State private var showPremiumSheet = false
+    
     
     func isNowApproachingStart(of eventID: UUID, in visible: [EventItem]) -> Bool {
         guard Calendar.current.isDateInToday(calendar.selectedDate) else { return false }
@@ -193,23 +196,25 @@ struct TimelineView: View {
         case ..<60:
             return nil
         case 60..<120:
-            return "A little gap — sneak something in? 🌿"
-        case 120..<240:
-            return "2 hours of untapped potential ✦"
+            return "A quiet hour — worth filling"
+        case 120..<180:
+            return "Two hours with nowhere to be"
+        case 180..<240:
+            return "Three hours, no excuses"
         case 240..<360:
-            return "4 hours? That's a side project waiting to happen 🚀"
+            return "A good chunk of the day"
         case 360..<480:
-            return "Half a workday just sitting there... 👀"
+            return "Half a workday, unspoken for"
         case 480..<600:
-            return "8 whole hours. No excuses now ⚡"
+            return "The better part of a morning"
         case 600..<720:
-            return "10 hours of pure possibility 🔥"
+            return "Ten hours of open road"
         case 720..<840:
-            return "Half a day with zero plans. Bold move 🎲"
+            return "Nearly half a day, untouched"
         case 840..<960:
-            return "14 hours free. Are you even trying? 😂"
+            return "A generous stretch of nothing"
         case 960...:
-            return "The entire day is a blank canvas 🌍"
+            return "The whole day is yours"
         default:
             return nil
         }
@@ -253,7 +258,14 @@ struct TimelineView: View {
                     
                     // VStack này bắt đầu ĐÚNG tại Morning Start
                     // → line.yPosition(for: 0) khớp chính xác với Morning Start
-                    let visibleEvents = events.filter { $0.duration != 1440 }
+                    let prefs = PreferencesStore()
+                    let visibleEvents = events.filter { event in
+                        guard event.duration != 1440 else { return false }
+                        if prefs.hideCompleted && !event.isSystemEvent {
+                            return !store.isCompleted(templateID: event.id, date: calendar.selectedDate)
+                        }
+                        return true
+                    }
                     
                     VStack(alignment: .leading, spacing: 0) {
                         
@@ -499,6 +511,21 @@ struct TimelineView: View {
             
             .padding(.bottom, -20)
             .ignoresSafeArea(edges: .bottom)
+        
+            .onReceive(NotificationCenter.default.publisher(for: .preferencesDidChange)) { _ in
+                TimelineLayoutEngine.updateDensity()
+                reloadTimeline()
+                // Reschedule habits khi habitReminders thay đổi
+                let habitEnabled = PreferencesStore().habitReminders
+                UserDefaults.standard.set(habitEnabled, forKey: "notif_habit_ontime")
+                for template in store.templates where template.kind == .habit && !template.isSystemEvent {
+                    if habitEnabled {
+                        NotificationManager.shared.scheduleRecurring(template: template)
+                    } else {
+                        NotificationManager.shared.cancelAll(templateID: template.id)
+                    }
+                }
+            }
             .onReceive(timer) { _ in
                 now = TimelineEngine.currentMinutes()
             }
@@ -510,6 +537,12 @@ struct TimelineView: View {
             .onAppear {
                 reloadTimeline()
                 addButtonsIndex = bestGapIndex()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .showPremiumPaywall)) { _ in
+                showPremiumSheet = true
+            }
+            .sheet(isPresented: $showPremiumSheet) {
+                PremiumView()
             }
             .onChange(of: calendar.selectedDate) { _, newDate in
                 // Không animate khi switch date
@@ -527,11 +560,20 @@ struct TimelineView: View {
                 switch sheet {
                     
                 case .createItem:
-                    let suggested = suggestedMinutes ??
-                    store.suggestFreeSlot(
-                        date: calendar.selectedDate,
-                        duration: 60
-                    )
+                    let prefs = PreferencesStore()
+                    let suggested: Int = {
+                        if let pinned = suggestedMinutes { return pinned }
+                        if prefs.autoSuggestSlot {
+                            return store.suggestFreeSlot(
+                                date: calendar.selectedDate,
+                                duration: prefs.defaultDuration
+                            )
+                        }
+                        // Auto-suggest tắt → dùng current time hoặc wake time
+                        let now = TimelineEngine.currentMinutes()
+                        let wake = store.wakeMinutes
+                        return max(now, wake)
+                    }()
                     
                     CreateEventDetailSheet(
                         suggestedStart: suggested,
@@ -558,6 +600,7 @@ struct TimelineView: View {
                         reloadTimeline()
                         
                         addButtonsIndex = bestGapIndex()
+                        ReviewManager.recordEventCreated()
                     }
                     .adaptiveSheet()
                     .onDisappear {
@@ -1463,7 +1506,7 @@ struct TimelineView: View {
         
         var brandRing: Color {
             
-            let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
+            let brand = Color(hex: PreferencesStore().accentHex)
             
             if scheme == .dark {
                 return brand.opacity(0.85)
@@ -1925,7 +1968,7 @@ struct TimelineView: View {
         
         
         var brandRing: Color {
-            let brand = Color(red: 0.29, green: 0.44, blue: 0.65)
+            let brand = Color(hex: PreferencesStore().accentHex)
             return scheme == .dark ? brand.opacity(0.85) : brand.opacity(0.65)
         }
         

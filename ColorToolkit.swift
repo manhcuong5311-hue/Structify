@@ -260,7 +260,7 @@ extension ColorPickerSheet {
 
         HStack {
 
-            Text("Chọn một màu")
+            Text("Choose a color")
                 .font(.title2.bold())
 
             Spacer()
@@ -363,7 +363,7 @@ extension ColorPickerSheet {
 
             HStack {
 
-                Text("Thiết lập sẵn")
+                Text("Presets")
                     .font(.title3.bold())
 
                 Spacer()
@@ -372,7 +372,7 @@ extension ColorPickerSheet {
                     editingPresets.toggle()
                 } label: {
 
-                    Label("Sửa", systemImage: "star.fill")
+                    Label("Edit", systemImage: "pencil")
                         .padding(.horizontal,12)
                         .padding(.vertical,6)
                         .background(.thinMaterial)

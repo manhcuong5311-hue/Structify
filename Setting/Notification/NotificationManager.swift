@@ -125,6 +125,52 @@ struct NotificationManager {
         }
     }
 
+    // Thêm vào NotificationManager:
+    func scheduleMorningBriefing(hour: Int, minute: Int) {
+        cancelMorningBriefing()
+        let center = UNUserNotificationCenter.current()
+        let content = UNMutableNotificationContent()
+        content.title = "Good morning ☀️"
+        content.body = "Here's your plan for today"
+        content.sound = .default
+
+        var comps = DateComponents()
+        comps.hour = hour
+        comps.minute = minute
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: true)
+        let request = UNNotificationRequest(identifier: "pref_morning_briefing", content: content, trigger: trigger)
+        center.add(request) { error in if let e = error { print(e) } }
+    }
+
+    func cancelMorningBriefing() {
+        UNUserNotificationCenter.current()
+            .removePendingNotificationRequests(withIdentifiers: ["pref_morning_briefing"])
+    }
+
+    func scheduleEveningReview(hour: Int, minute: Int) {
+        cancelEveningReview()
+        let center = UNUserNotificationCenter.current()
+        let content = UNMutableNotificationContent()
+        content.title = "Evening check-in 🌙"
+        content.body = "How did your day go? Review your progress."
+        content.sound = .default
+
+        var comps = DateComponents()
+        comps.hour = hour
+        comps.minute = minute
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: true)
+        let request = UNNotificationRequest(identifier: "pref_evening_review", content: content, trigger: trigger)
+        center.add(request) { error in if let e = error { print(e) } }
+    }
+
+    func cancelEveningReview() {
+        UNUserNotificationCenter.current()
+            .removePendingNotificationRequests(withIdentifiers: ["pref_evening_review"])
+    }
+    
+    
+    
+    
     
     func scheduleSystemEvents(wakeMinutes: Int, sleepMinutes: Int) {
         let global = UserDefaults.standard.object(forKey: "notif_global_enabled") as? Bool ?? true

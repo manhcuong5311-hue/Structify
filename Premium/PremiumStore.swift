@@ -1,0 +1,111 @@
+//
+//  Untitled.swift
+//  Structify
+//
+//  Created by Sam Manh Cuong on 6/3/26.
+//
+
+import SwiftUI
+import StoreKit
+import Combine
+
+// MARK: - Limits
+enum PremiumLimit {
+    static let maxFreeEvents = 3
+    static let maxFreeHabits = 3
+    static let maxFreeIconsPerCategory = 5
+}
+
+// MARK: - PremiumStore
+class PremiumStore: ObservableObject {
+    static let shared = PremiumStore()
+
+    @Published private(set) var isPremium: Bool = false
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String? = nil
+
+    private let premiumKey = "structify_is_premium"
+    private let productID = "com.structify.premium.lifetime"
+
+    init() {
+        isPremium = UserDefaults.standard.bool(forKey: premiumKey)
+        Task { await refreshPurchaseStatus() }
+    }
+
+    // MARK: - Purchase
+    func purchase() async {
+        await MainActor.run { isLoading = true; errorMessage = nil }
+        do {
+            let products = try await Product.products(for: [productID])
+            guard let product = products.first else {
+                await MainActor.run {
+                    errorMessage = "Product not found."
+                    isLoading = false
+                }
+                return
+            }
+            let result = try await product.purchase()
+            switch result {
+            case .success(let verification):
+                switch verification {
+                case .verified:
+                    await MainActor.run { unlock() }
+                case .unverified:
+                    await MainActor.run { errorMessage = "Purchase could not be verified." }
+                }
+            case .userCancelled:
+                break
+            case .pending:
+                await MainActor.run { errorMessage = "Purchase is pending approval." }
+            @unknown default:
+                break
+            }
+        } catch {
+            await MainActor.run { errorMessage = error.localizedDescription }
+        }
+        await MainActor.run { isLoading = false }
+    }
+
+    // MARK: - Restore
+    func restore() async {
+        await MainActor.run { isLoading = true; errorMessage = nil }
+        do {
+            try await AppStore.sync()
+            await refreshPurchaseStatus()
+        } catch {
+            await MainActor.run { errorMessage = error.localizedDescription }
+        }
+        await MainActor.run { isLoading = false }
+    }
+
+    // MARK: - Refresh
+    func refreshPurchaseStatus() async {
+        for await result in Transaction.currentEntitlements {
+            if case .verified(let transaction) = result,
+               transaction.productID == productID {
+                await MainActor.run { unlock() }
+                return
+            }
+        }
+    }
+
+    // MARK: - Unlock (dùng cho testing)
+    func unlock() {
+        isPremium = true
+        UserDefaults.standard.set(true, forKey: premiumKey)
+        objectWillChange.send()
+    }
+
+    // MARK: - Gating helpers
+    func canAddEvent(currentCount: Int) -> Bool {
+        isPremium || currentCount < PremiumLimit.maxFreeEvents
+    }
+
+    func canAddHabit(currentCount: Int) -> Bool {
+        isPremium || currentCount < PremiumLimit.maxFreeHabits
+    }
+
+    func visibleIconCount(total: Int) -> Int {
+        isPremium ? total : min(total, PremiumLimit.maxFreeIconsPerCategory)
+    }
+}

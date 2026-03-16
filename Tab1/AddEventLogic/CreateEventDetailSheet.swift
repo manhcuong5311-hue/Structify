@@ -79,7 +79,8 @@ struct CreateEventDetailSheet: View {
     
     enum RepeatRule: String, CaseIterable {
         case none = "None"
-        case weekly = "Week"
+        case weekly = "Weekly"
+        case specificWeek = "Week"
     }
 
     @State private var repeatRule: RepeatRule = .none
@@ -91,6 +92,8 @@ struct CreateEventDetailSheet: View {
     
     
     @State private var titleWarning: String? = nil
+    @State private var selectedWeekOffset: Int = 0
+    @State private var selectedWeekDates: Set<Date> = []
 
     var isFormBlocked: Bool {
         durationWarning == .noTimeLeft || durationWarning == .tooShort
@@ -285,14 +288,13 @@ struct CreateEventDetailSheet: View {
     }
     
     func buildRecurrence() -> Recurrence {
-
         switch repeatRule {
-
         case .none:
             return .once(date)
-
         case .weekly:
             return .specific(Array(selectedWeekdays))
+        case .specificWeek:
+            return .once(date) // không dùng — specificWeek tạo từng event riêng trong continueButton
         }
     }
     
@@ -306,24 +308,24 @@ struct CreateEventDetailSheet: View {
         onOpenHabit: (() -> Void)? = nil,
         onCreate: @escaping (String,String,Int,Int,String,Recurrence) -> Void
     ) {
-
         self.suggestedStart = suggestedStart
         self.onCreate = onCreate
         self.onOpenHabit = onOpenHabit
 
-        _date = State(initialValue: initialDate) 
+        let defaultDur = PreferencesStore().defaultDuration   // 👈
+
+        _date = State(initialValue: initialDate)
         _startMinutes = State(initialValue: suggestedStart)
-        _endMinutes = State(initialValue: suggestedStart + 90)
+        _endMinutes = State(initialValue: suggestedStart + defaultDur)  // 👈
 
         _startHour = State(initialValue: suggestedStart / 60)
         _startMinute = State(initialValue: suggestedStart % 60)
 
+        _durationHours = State(initialValue: defaultDur / 60)          // 👈
+        _durationMinutesOnly = State(initialValue: defaultDur % 60)    // 👈
+
         _startTime = State(
-            initialValue:
-                TimelineEngine.dateFrom(
-                    minutes: suggestedStart,
-                    base: Date()
-                )
+            initialValue: TimelineEngine.dateFrom(minutes: suggestedStart, base: Date())
         )
     }
     
@@ -544,8 +546,21 @@ extension CreateEventDetailSheet {
                             .foregroundStyle(.white.opacity(0.8))
                         
                         if repeatRule == .weekly {
-                              weekdayChips
-                          }
+                            weekdayChips
+                        } else if repeatRule == .specificWeek && !selectedWeekDates.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 4) {
+                                    let f: DateFormatter = { let f = DateFormatter(); f.dateFormat = "EEE d"; return f }()
+                                    ForEach(selectedWeekDates.sorted(), id: \.self) { d in
+                                        Text(f.string(from: d))
+                                            .font(.caption.bold())
+                                            .padding(.horizontal, 8).padding(.vertical, 4)
+                                            .background(Color.white.opacity(0.25))
+                                            .clipShape(Capsule())
+                                    }
+                                }
+                            }
+                        }
 
                         ZStack(alignment: .leading) {
 
@@ -852,7 +867,9 @@ extension CreateEventDetailSheet {
                         startHour = suggestedStart / 60
                         startMinute = suggestedStart % 60
                         startMinutes = suggestedStart
-                        durationHours = 1; durationMinutesOnly = 30
+                        let defaultDur = PreferencesStore().defaultDuration  // 👈
+                        durationHours = defaultDur / 60
+                        durationMinutesOnly = defaultDur % 60
                         updateEndTimeFromDuration()
                         validateAndClampTime()
                         validateDuration()
@@ -888,24 +905,23 @@ extension CreateEventDetailSheet {
     }
     
     var repeatSection: some View {
-
         VStack(alignment: .leading, spacing: 16) {
-
             Text("Repeat")
                 .font(.title3.bold())
 
             Picker("", selection: $repeatRule) {
-
-                ForEach(RepeatRule.allCases, id:\.self) {
+                ForEach(RepeatRule.allCases, id: \.self) {
                     Text($0.rawValue).tag($0)
                 }
-
             }
             .pickerStyle(.segmented)
 
             if repeatRule == .weekly {
-
                 weekdayPicker
+            }
+
+            if repeatRule == .specificWeek {
+                weekPickerSection
             }
         }
     }
@@ -967,6 +983,83 @@ extension CreateEventDetailSheet {
         if h > 0 { return "\(h)h" }
         return "\(mins)m"
     }
+    
+    var weekPickerSection: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            // Chọn tuần
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(0..<6, id: \.self) { offset in
+                        Button {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                selectedWeekOffset = offset
+                                selectedWeekDates = []
+                            }
+                        } label: {
+                            VStack(spacing: 2) {
+                                Text(weekHeaderLabel(offset: offset))
+                                    .font(.caption.weight(.bold))
+                                Text(weekDateRange(offset: offset))
+                                    .font(.system(size: 9))
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(selectedWeekOffset == offset ? Color.orange : Color.gray.opacity(0.12))
+                            .foregroundStyle(selectedWeekOffset == offset ? .white : .primary)
+                            .clipShape(Capsule())
+                        }
+                    }
+                }
+                .padding(.horizontal, 2)
+            }
+
+            // Chọn ngày trong tuần
+            HStack(spacing: 6) {
+                ForEach(datesOfWeek(offset: selectedWeekOffset), id: \.self) { d in
+                    specificWeekDayChip(date: d)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    func specificWeekDayChip(date: Date) -> some View {
+        let cal = Calendar.current
+        let isPast = isDatePast(date)
+        let key = cal.startOfDay(for: date)
+        let isSelected = selectedWeekDates.contains(key)
+        let dayLetters = ["S","M","T","W","T","F","S"]
+        let dayLetter = dayLetters[cal.component(.weekday, from: date) - 1]
+        let dayNum = cal.component(.day, from: date)
+
+        Button {
+            guard !isPast else { return }
+            if isSelected { selectedWeekDates.remove(key) }
+            else { selectedWeekDates.insert(key) }
+        } label: {
+            VStack(spacing: 3) {
+                Text(dayLetter)
+                    .font(.system(size: 10, weight: .bold))
+                Text("\(dayNum)")
+                    .font(.system(size: 13, weight: .semibold))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .background(
+                isSelected ? Color.orange
+                : (isPast ? Color.gray.opacity(0.06) : Color.gray.opacity(0.12))
+            )
+            .foregroundStyle(
+                isSelected ? .white
+                : (isPast ? Color.gray.opacity(0.35) : .primary)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+        .disabled(isPast)
+    }
+    
+    
+    
     
     
     
@@ -1148,7 +1241,38 @@ extension CreateEventDetailSheet {
         }
     }
     
-    
+    func weekStart(offset: Int) -> Date {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        let weekday = cal.component(.weekday, from: today)
+        let daysFromMonday = (weekday == 1) ? 6 : weekday - 2
+        let thisMonday = cal.date(byAdding: .day, value: -daysFromMonday, to: today)!
+        return cal.date(byAdding: .weekOfYear, value: offset, to: thisMonday)!
+    }
+
+    func datesOfWeek(offset: Int) -> [Date] {
+        let start = weekStart(offset: offset)
+        return (0..<7).compactMap { Calendar.current.date(byAdding: .day, value: $0, to: start) }
+    }
+
+    func weekHeaderLabel(offset: Int) -> String {
+        switch offset {
+        case 0: return "This week"
+        case 1: return "Next week"
+        default: return "In \(offset) weeks"
+        }
+    }
+
+    func weekDateRange(offset: Int) -> String {
+        let dates = datesOfWeek(offset: offset)
+        guard let first = dates.first, let last = dates.last else { return "" }
+        let f = DateFormatter(); f.dateFormat = "d MMM"
+        return "\(f.string(from: first))–\(f.string(from: last))"
+    }
+
+    func isDatePast(_ d: Date) -> Bool {
+        Calendar.current.startOfDay(for: d) < Calendar.current.startOfDay(for: Date())
+    }
     
 }
 
@@ -1165,7 +1289,8 @@ extension CreateEventDetailSheet {
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
                     .transition(.opacity)
-            } else if repeatRule == .weekly && selectedWeekdays.isEmpty {
+            } else if (repeatRule == .weekly && selectedWeekdays.isEmpty) ||
+                      (repeatRule == .specificWeek && selectedWeekDates.isEmpty) {
                 Text("📅 Pick at least one day")
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
@@ -1200,6 +1325,17 @@ extension CreateEventDetailSheet {
 
                 guard duration >= 5 else { return }
                 guard endMinutes <= 1440 else { return }
+                
+                if repeatRule == .specificWeek {
+                    if selectedWeekDates.isEmpty { return }
+                    for weekDate in selectedWeekDates.sorted() {
+                        guard !store.hasOverlap(minutes: startMinutes, duration: duration, date: weekDate) else { continue }
+                        onCreate(cleanTitle, icon, startMinutes, duration, color.toHex(), .once(weekDate))
+                    }
+                    dismiss()
+                    return
+                }
+                
                 guard !store.hasOverlap(minutes: startMinutes, duration: duration, date: date) else { return }
 
                 onCreate(cleanTitle, icon, startMinutes, duration, color.toHex(), buildRecurrence())
@@ -1209,6 +1345,7 @@ extension CreateEventDetailSheet {
                 let isBlocked = title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                              || isFormBlocked
                              || (repeatRule == .weekly && selectedWeekdays.isEmpty)
+                             || (repeatRule == .specificWeek && selectedWeekDates.isEmpty)  // ← thêm
 
                 Text("Create event")
                     .font(.title3.bold())

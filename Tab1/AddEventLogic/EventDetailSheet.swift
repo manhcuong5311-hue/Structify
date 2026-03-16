@@ -11,6 +11,7 @@ struct EventDetailSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var scheme
     @State private var showDeleteAlert = false
+    @State private var showDeleteScopeAlert = false
     @State private var notesText: String = ""
     @State private var isEditingNotes = false
     @FocusState private var notesFocused: Bool
@@ -191,6 +192,7 @@ struct EventDetailSheet: View {
                     hasUnsavedEdits = true
                 }
             }
+            
             .alert(
                 "Delete \(event.kind == .habit ? "Habit" : "Event")",
                 isPresented: $showDeleteAlert
@@ -198,8 +200,29 @@ struct EventDetailSheet: View {
                 Button("Delete", role: .destructive) { onDelete(); dismiss() }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("\"\(event.title)\" will be permanently removed from your schedule.")
+                Text("\"\(event.title)\" will be removed from your schedule.")
             }
+
+            // Alert 2: recurring — hỏi scope
+            .alert(
+                "Delete \(event.kind == .habit ? "Habit" : "Event")",
+                isPresented: $showDeleteScopeAlert
+            ) {
+                Button("Only Today", role: .destructive) {
+                    // Chỉ xóa ngày này
+                    onDelete()
+                    dismiss()
+                }
+                Button("All Scheduled Days", role: .destructive) {
+                    // Xóa toàn bộ template + overrides + logs
+                    store.deleteTemplate(event.id)
+                    dismiss()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("\(recurrenceScopeMessage)\n\nDelete only today or all scheduled days?")
+            }
+            
             .alert("Apply changes to", isPresented: $showScopeAlert) {
                 Button("All Days") {
                     let clean = editTitle.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -566,7 +589,12 @@ struct EventDetailSheet: View {
 
     var deleteSection: some View {
         Button(role: .destructive) {
-            showDeleteAlert = true
+            // Nếu recurring → hỏi scope trước
+            if isRecurringEvent {
+                showDeleteScopeAlert = true
+            } else {
+                showDeleteAlert = true
+            }
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "trash")
@@ -589,4 +617,6 @@ struct EventDetailSheet: View {
         .padding(.horizontal, 20)
         .padding(.top, 4)
     }
+    
+    
 }

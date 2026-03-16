@@ -96,15 +96,17 @@ struct TimelineLineView: View {
                                     let sleepColor = events[windowIndex()].color
                                     let orangeColor = Color(red: 1.0, green: 0.58, blue: 0.25)
 
-                                    // Y tương ứng với 18:00 trên timeline
                                     let eveningY: CGFloat = {
-                                      
-                                        // Dùng tỉ lệ nội suy trong segment hiện tại
                                         if eveningStart >= segStart && eveningStart <= segEnd {
+                                            // 18h nằm trong segment này → nội suy Y
                                             let p = CGFloat(eveningStart - segStart) / CGFloat(max(segEnd - segStart, 1))
                                             return startY + (endY - startY) * p
+                                        } else if eveningStart > segEnd {
+                                            // Toàn bộ segment nằm TRƯỚC 18h → line cam kéo hết endY
+                                            return endY
                                         } else {
-                                            return startY // không trong segment này
+                                            // Toàn bộ segment nằm SAU 18h → line sleep color từ startY
+                                            return startY
                                         }
                                     }()
 

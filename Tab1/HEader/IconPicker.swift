@@ -26,7 +26,9 @@ struct IconPicker: View {
         UserDefaults.standard.stringArray(forKey: "recentIcons") ?? []
     @State private var showHexEditor = false
     @State private var iconScale: CGFloat = 1
-
+    @State private var showPremiumSheet = false
+    
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -97,6 +99,10 @@ struct IconPicker: View {
                 }
             }
         }
+        .sheet(isPresented: $showPremiumSheet) {
+            PremiumView()
+        }
+        
     }
 
     // MARK: - Helpers
@@ -248,7 +254,12 @@ extension IconPicker {
                         columns: Array(repeating: GridItem(.fixed(52), spacing: 10), count: 6),
                         spacing: 10
                     ) {
-                        ForEach(category.icons) { item in
+                        
+                        let visibleIcons = Array(category.icons.prefix(
+                            PremiumStore.shared.visibleIconCount(total: category.icons.count)
+                        ))
+
+                        ForEach(visibleIcons) { item in  
                             IconCell(
                                 symbol: item.symbol,
                                 accentColor: selectedColor,
@@ -256,6 +267,30 @@ extension IconPicker {
                                 onTap: { selectIcon(item.symbol) }
                             )
                         }
+                        if !PremiumStore.shared.isPremium && category.icons.count > PremiumLimit.maxFreeIconsPerCategory {
+                            Button {
+                                showPremiumSheet = true
+                            } label: {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .fill(Color.yellow.opacity(0.12))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .stroke(Color.yellow.opacity(0.3), lineWidth: 1)
+                                        )
+                                    VStack(spacing: 2) {
+                                        Image(systemName: "crown.fill")
+                                            .font(.system(size: 16))
+                                            .foregroundStyle(.yellow)
+                                        Text("+\(category.icons.count - PremiumLimit.maxFreeIconsPerCategory)")
+                                            .font(.system(size: 10, weight: .bold))
+                                            .foregroundStyle(.yellow)
+                                    }
+                                }
+                                .frame(width: 52, height: 52)
+                            }
+                        }
+                        
                     }
                 }
             }
@@ -486,7 +521,7 @@ struct IconCategoryCatalog {
             EventIcon(symbol: "server.rack",                       name: "Server"),
             EventIcon(symbol: "lock.shield.fill",                  name: "Security"),
             EventIcon(symbol: "antenna.radiowaves.left.and.right", name: "Signal"),
-            EventIcon(symbol: "robot.fill",                        name: "AI"),
+            EventIcon(symbol: "cpu.fill",                        name: "AI"),
             EventIcon(symbol: "visionpro",                         name: "XR"),
             EventIcon(symbol: "printer.fill",                      name: "Print"),
             EventIcon(symbol: "scanner.fill",                      name: "Scan")
