@@ -103,10 +103,30 @@ struct PreferencesView: View {
     @State private var showRestorePicker = false
     @State private var showRestoreSuccessAlert = false
     @State private var showRestoreErrorAlert = false
+    private var isPremium: Bool { PremiumStore.shared.isPremium }
     
     
-    
-    
+    @ViewBuilder
+    func premiumRow<Content: View>(_ content: () -> Content) -> some View {
+        ZStack(alignment: .trailing) {
+            content()
+                .opacity(isPremium ? 1 : 0.45)
+                .allowsHitTesting(isPremium)
+
+            if !isPremium {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .padding(.trailing, 14)
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if !isPremium {
+                NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+            }
+        }
+    }
     
     
     
@@ -451,8 +471,14 @@ struct PreferencesView: View {
 
                 // Color presets
                 HStack(spacing: 10) {
-                    ForEach(accentPresets, id: \.self) { hex in
+                    // TÌM toàn bộ ForEach accentPresets, ĐỔI THÀNH:
+                    ForEach(Array(accentPresets.enumerated()), id: \.element) { idx, hex in
+                        let isLocked = !isPremium && idx >= 3
                         Button {
+                            if isLocked {
+                                NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+                                return
+                            }
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                                 prefs.accentHex = hex
                                 tempAccentColor = Color(hex: hex)
@@ -462,7 +488,7 @@ struct PreferencesView: View {
                                 Circle()
                                     .fill(Color(hex: hex))
                                     .frame(width: 30, height: 30)
-                                if prefs.accentHex == hex {
+                                if prefs.accentHex == hex && !isLocked {
                                     Circle()
                                         .stroke(Color.white, lineWidth: 2.5)
                                         .frame(width: 30, height: 30)
@@ -471,6 +497,7 @@ struct PreferencesView: View {
                                         .foregroundStyle(.white)
                                 }
                             }
+                            .opacity(isLocked ? 0.35 : 1)
                         }
                     }
                     Spacer()
@@ -495,11 +522,17 @@ struct PreferencesView: View {
 
                 HStack(spacing: 8) {
                     ForEach(TimelineDensity.allCases, id: \.self) { density in
+                        let isLocked = !isPremium && density != .normal
                         Button {
+                            if isLocked {
+                                NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+                                return
+                            }
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                                 prefs.timelineDensity = density
                             }
                         } label: {
+                            // TÌM HStack(spacing: 3) trong density button label, ĐỔI THÀNH:
                             VStack(spacing: 4) {
                                 densityPreviewIcon(density)
                                 Text(density.rawValue)
@@ -520,6 +553,23 @@ struct PreferencesView: View {
                                     )
                             )
                             .foregroundStyle(prefs.timelineDensity == density ? brand : .secondary)
+                            .opacity(isLocked ? 0.35 : 1)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(prefs.timelineDensity == density
+                                        ? brand.opacity(0.12)
+                                        : Color.primary.opacity(0.04))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(prefs.timelineDensity == density
+                                                ? brand.opacity(0.4)
+                                                : Color.clear, lineWidth: 1.5)
+                                    )
+                            )
+                            .foregroundStyle(prefs.timelineDensity == density ? brand : .secondary)
+                            .opacity(isLocked ? 0.55 : 1)
                         }
                     }
                 }
@@ -642,14 +692,19 @@ struct PreferencesView: View {
         VStack(spacing: 0) {
             // Morning briefing
             VStack(spacing: 0) {
+                // TÌM prefToggleRow Morning Briefing, BỌC VÀO:
                 prefToggleRow(
                     icon: "sun.horizon.fill",
                     iconBg: Color(red: 1.0, green: 0.7, blue: 0.2),
                     label: "Morning Briefing",
-                    sublabel: "Daily plan reminder at wake time",
+                    sublabel: isPremium ? "Daily plan reminder at wake time" : "Premium feature",
                     binding: Binding(
                         get: { prefs.morningBriefing },
                         set: { val in
+                            guard isPremium else {
+                                NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+                                return
+                            }
                             prefs.morningBriefing = val
                             if val {
                                 NotificationManager.shared.scheduleMorningBriefing(
@@ -662,6 +717,14 @@ struct PreferencesView: View {
                         }
                     )
                 )
+                .opacity(isPremium ? 1 : 0.4)
+                .allowsHitTesting(isPremium)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    if !isPremium {
+                        NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+                    }
+                }
 
                 if prefs.morningBriefing {
                     HStack {
@@ -694,14 +757,19 @@ struct PreferencesView: View {
 
             // Evening review
             VStack(spacing: 0) {
+                // TÌM prefToggleRow Evening Review, BỌC TƯƠNG TỰ:
                 prefToggleRow(
                     icon: "moon.haze.fill",
                     iconBg: Color(red: 0.35, green: 0.35, blue: 0.75),
                     label: "Evening Review",
-                    sublabel: "Completion check-in reminder",
+                    sublabel: isPremium ? "Completion check-in reminder" : "Premium feature",
                     binding: Binding(
                         get: { prefs.eveningReview },
                         set: { val in
+                            guard isPremium else {
+                                NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+                                return
+                            }
                             prefs.eveningReview = val
                             if val {
                                 NotificationManager.shared.scheduleEveningReview(
@@ -714,6 +782,14 @@ struct PreferencesView: View {
                         }
                     )
                 )
+                .opacity(isPremium ? 1 : 0.4)
+                .allowsHitTesting(isPremium)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    if !isPremium {
+                        NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+                    }
+                }
 
                 if prefs.eveningReview {
                     HStack {
@@ -817,6 +893,10 @@ struct PreferencesView: View {
 
             // Export (placeholder)
             Button {
+                guard isPremium else {
+                    NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+                    return
+                }
                 if let url = generateCSVFile() {
                     csvURL = url
                     showShareSheet = true
@@ -828,18 +908,23 @@ struct PreferencesView: View {
                         .font(.body)
                         .foregroundStyle(.primary)
                     Spacer()
-                    Image(systemName: "chevron.right")
+                    Image(systemName: isPremium ? "chevron.right" : "lock.fill")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(.tertiary)
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 12)
+                .opacity(isPremium ? 1 : 0.5)
             }
             
             rowDivider
 
             // Backup
             Button {
+                guard isPremium else {
+                    NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+                    return
+                }
                 if let url = store.exportBackup() {
                     backupURL = url
                     showBackupShareSheet = true
@@ -856,18 +941,23 @@ struct PreferencesView: View {
                             .foregroundStyle(.tertiary)
                     }
                     Spacer()
-                    Image(systemName: "chevron.right")
+                    Image(systemName: isPremium ? "chevron.right" : "lock.fill")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(.tertiary)
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 12)
+                .opacity(isPremium ? 1 : 0.5)
             }
 
             rowDivider
 
             // Restore
             Button {
+                guard isPremium else {
+                    NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+                    return
+                }
                 showRestorePicker = true
             } label: {
                 HStack {
@@ -881,12 +971,13 @@ struct PreferencesView: View {
                             .foregroundStyle(.tertiary)
                     }
                     Spacer()
-                    Image(systemName: "chevron.right")
+                    Image(systemName: isPremium ? "chevron.right" : "lock.fill")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(.tertiary)
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 12)
+                .opacity(isPremium ? 1 : 0.5)
             }
             
         }

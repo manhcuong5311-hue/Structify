@@ -304,7 +304,10 @@ extension CreateHabitDetailSheet {
         .sheet(isPresented: $showIconPicker) {
             IconPicker(icon: $icon, color: $color)
                 .presentationBackground(Color.paper)
-                .adaptiveSheet()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(32)
+                .ifPad { $0.presentationSizing(.page) }
         }
     }
 }

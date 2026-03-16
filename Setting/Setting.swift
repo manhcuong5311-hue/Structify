@@ -73,6 +73,30 @@ struct SettingsView: View {
                         showTerms = true
                     }
                 ])
+                // TÌM dòng text vừa thêm, ĐỔI THÀNH:
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Structify provides general wellness and productivity information for personal planning purposes. It is not intended as medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional for medical concerns.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+
+                    Button {
+                        if let url = URL(string: "https://www.who.int") {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "link")
+                                .font(.system(size: 11))
+                            Text("Source: World Health Organization")
+                                .font(.caption)
+                                .underline()
+                        }
+                        .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.horizontal, 4)
+                .padding(.top, -8)
 
                 // MARK: - Footer
                 footer
@@ -95,6 +119,8 @@ struct SettingsView: View {
         .sheet(isPresented: $showPreferences) {
             PreferencesView()
                 .environmentObject(store)
+                .presentationDetents([.large])
+                .ifPad { $0.presentationSizing(.page) }
         }
         .sheet(isPresented: $showPremium) {
             PremiumView()

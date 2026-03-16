@@ -14,7 +14,9 @@ class CalendarState: ObservableObject {
     @Published var selectedDate: Date = Date()
 
     private let calendar = Calendar.current
-
+    
+    
+    
     var weekDates: [Date] {
         let prefs = PreferencesStore()
         var cal = calendar
@@ -56,54 +58,72 @@ class CalendarState: ObservableObject {
 
 
 
+// TÌM toàn bộ struct HeaderDateView, ĐỔI THÀNH:
 struct HeaderDateView: View {
 
     @EnvironmentObject var calendar: CalendarState
     var brand: Color { Color(hex: PreferencesStore().accentHex) }
-    
     @Environment(\.colorScheme) private var scheme
-    
+    @State private var showMonthPicker = false   // ← THÊM
 
-    func safeSystemIcon(_ name: String, fallback: String = "checkmark.circle.fill") -> String {
-        guard !name.isEmpty, UIImage(systemName: name) != nil else { return fallback }
-        return name
-    }
-    
-    
     var body: some View {
-
         HStack {
+            // Tap vào cả row date → mở picker
+            Button {
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                    showMonthPicker = true
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    Text(calendar.selectedDate,
+                         format: .dateTime.day())
+                        .font(.system(size: 32, weight: .bold))
 
-            HStack(spacing: 6) {
+                    Text(calendar.selectedDate,
+                         format: .dateTime.month(.abbreviated))
+                        .font(.system(size: 32, weight: .bold))
 
-                Text(calendar.selectedDate,
-                     format: .dateTime.day())
-                    .font(.system(size: 32, weight: .bold))
+                    Text(calendar.selectedDate,
+                         format: .dateTime.year())
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundStyle(brand)
 
-                Text(calendar.selectedDate,
-                     format: .dateTime.month(.abbreviated))
-                    .font(.system(size: 32, weight: .bold))
-
-                Text(calendar.selectedDate,
-                     format: .dateTime.year())
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(brand) 
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundStyle(brand)
+                        .rotationEffect(.degrees(showMonthPicker ? 90 : 0))
+                        .animation(
+                            .spring(response: 0.35, dampingFraction: 0.75),
+                            value: showMonthPicker
+                        )
+                }
             }
-
-            Image(systemName: "chevron.right")
-                .font(.system(size: 18, weight: .bold)) // to hơn
-                .foregroundStyle(brand)
+            .buttonStyle(.plain)
 
             Spacer()
         }
         .padding(.horizontal)
         .padding(.top, 10)
         .background(
-                   (scheme == .dark
-                    ? Color.black
-                    : Color(.systemGray6))
-                       .ignoresSafeArea(edges: .top)
-               )
+            (scheme == .dark ? Color.black : Color(.systemGray6))
+                .ignoresSafeArea(edges: .top)
+        )
+        // Sheet mở picker
+        .sheet(isPresented: $showMonthPicker) {
+            MonthYearPickerView(
+                selectedDate: $calendar.selectedDate
+            ) {
+                showMonthPicker = false
+            }
+            .presentationDetents(
+                UIDevice.current.userInterfaceIdiom == .pad
+                    ? [.large]
+                    : [.medium, .large]
+            )
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(28)
+            .ifPad { $0.presentationSizing(.form) }
+        }
     }
 }
 

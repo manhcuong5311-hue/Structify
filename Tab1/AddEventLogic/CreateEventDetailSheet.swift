@@ -256,7 +256,7 @@ struct CreateEventDetailSheet: View {
         let dm = duration % 60
 
         return String(
-            format: "%02d:%02d–%02d:%02d (%d giờ, %d phút)",
+            format: "%02d:%02d–%02d:%02d (%dh %dm)",
             sh, sm, eh, em, dh, dm
         )
     }
@@ -663,22 +663,20 @@ extension CreateEventDetailSheet {
             }
         }
         .sheet(isPresented: $showIconPicker) {
-
-            IconPicker(
-                icon: $icon,
-                color: $color
-            )
-            .presentationBackground(Color.paper)
-            .adaptiveSheet()
+            IconPicker(icon: $icon, color: $color)
+                .presentationBackground(Color.paper)
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(32)
+                .ifPad { $0.presentationSizing(.page) }
         }
         .sheet(isPresented: $showHabitSheet) {
             CreateHabitDetailSheet(
                 onCreate: { title, icon, colorHex, date, type, target, unit, minutes, increment, repeatMode in
-                //                  👆 thêm colorHex
                     store.addHabit(
                         title: title,
                         icon: icon,
-                        colorHex: colorHex,   // 👈 dùng colorHex từ closure
+                        colorHex: colorHex,
                         minutes: minutes ?? 540,
                         habitType: type,
                         targetValue: target,
@@ -693,6 +691,10 @@ extension CreateEventDetailSheet {
                     }
                 }
             )
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
+            .presentationCornerRadius(32)
+            .ifPad { $0.presentationSizing(.page) }
         }
     }
 }

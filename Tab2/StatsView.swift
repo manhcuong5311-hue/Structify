@@ -47,7 +47,7 @@ struct StatsView: View {
     @State private var currentHour: Double = Double(Calendar.current.component(.hour, from: Date()))
     @State private var currentMinute: Double = Double(Calendar.current.component(.minute, from: Date()))
     @State private var showLifetime = false
-    
+    @AppStorage("stats_sky_enabled") private var skyEnabled: Bool = true
     
     // Thời gian tính bằng phút trong ngày 0...1440
     var timeProgress: Double {
@@ -85,6 +85,15 @@ struct StatsView: View {
         }
     }
 
+    func adaptiveWhite(_ opacity: Double = 1.0) -> Color {
+        skyEnabled ? .white.opacity(opacity) : .primary.opacity(opacity)
+    }
+
+    func adaptiveSecondary() -> Color {
+        skyEnabled ? .white.opacity(0.7) : .secondary
+    }
+
+    
     var celestialColor: Color {
         isDaytime ? Color(red:1.0,green:0.88,blue:0.30) : Color(red:0.88,green:0.90,blue:1.0)
     }
@@ -164,73 +173,84 @@ struct StatsView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // MARK: Sky background
-                LinearGradient(colors: skyColors, startPoint: .top, endPoint: .bottom)
-                    .ignoresSafeArea()
-                    .animation(.easeInOut(duration: 2), value: currentHour)
-                
-                if scheme == .light {
-                    Color.black.opacity(isDaytime ? 0.28 : 0.10)
+
+                // MARK: - Background
+                if skyEnabled {
+                    LinearGradient(colors: skyColors, startPoint: .top, endPoint: .bottom)
                         .ignoresSafeArea()
-                        .animation(.easeInOut(duration: 2), value: isDaytime)
+                        .animation(.easeInOut(duration: 2), value: currentHour)
+
+                    if scheme == .light {
+                        Color.black.opacity(isDaytime ? 0.28 : 0.10)
+                            .ignoresSafeArea()
+                            .animation(.easeInOut(duration: 2), value: isDaytime)
+                    }
+
+                    SkyBodyView(currentHour: currentHour, currentMinute: currentMinute)
+
+                    Circle()
+                        .fill(celestialColor.opacity(isDaytime ? 0.35 : 0.18))
+                        .frame(width: 180, height: 180)
+                        .blur(radius: 60)
+                        .offset(x: 80, y: -120)
+                        .animation(.easeInOut(duration: 2), value: currentHour)
+
+                    if !isDaytime {
+                        StarsBackground()
+                            .transition(.opacity)
+                    }
+                } else {
+                    Color(.systemGroupedBackground)
+                        .ignoresSafeArea()
                 }
-                
-                SkyBodyView(currentHour: currentHour, currentMinute: currentMinute)
 
-                
-
-                // Celestial body glow
-                Circle()
-                    .fill(celestialColor.opacity(isDaytime ? 0.35 : 0.18))
-                    .frame(width: 180, height: 180)
-                    .blur(radius: 60)
-                    .offset(x: 80, y: -120)
-                    .animation(.easeInOut(duration: 2), value: currentHour)
-
-                // Stars (only at night)
-                if !isDaytime {
-                    StarsBackground()
-                        .transition(.opacity)
-                }
-
+                // MARK: - Content
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
-                        // Header
+
                         headerSection
 
-                        // 3 Rings card
                         completionRingsCard
 
-                        // Mood log
                         MoodLogCard(moodStore: moodStore)
 
-                        // Bottom stats row
                         HStack(spacing: 14) {
                             streakCard
                             bestTimeCard
                         }
-                        
+
                         Button {
                             showLifetime = true
                         } label: {
                             HStack {
                                 Image(systemName: "infinity.circle.fill")
-                                    .foregroundStyle(Color(red:0.55,green:0.75,blue:1.0))
+                                    .foregroundStyle(skyEnabled
+                                        ? Color(red: 0.55, green: 0.75, blue: 1.0)
+                                        : .blue
+                                    )
                                 Text("View Lifetime Stats")
                                     .font(.system(size: 14, weight: .semibold))
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(skyEnabled ? .white : .primary)
                                 Spacer()
                                 Image(systemName: "chevron.right")
                                     .font(.system(size: 12))
-                                    .foregroundStyle(.white.opacity(0.5))
+                                    .foregroundStyle(skyEnabled ? .white.opacity(0.5) : .secondary)
                             }
                             .padding(16)
                             .background(
                                 RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color.white.opacity(0.1))
+                                    .fill(skyEnabled
+                                        ? Color.white.opacity(0.1)
+                                        : Color(.secondarySystemGroupedBackground)
+                                    )
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 16)
-                                            .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                                            .stroke(
+                                                skyEnabled
+                                                    ? Color.white.opacity(0.15)
+                                                    : Color.primary.opacity(0.08),
+                                                lineWidth: 1
+                                            )
                                     )
                             )
                         }
@@ -246,6 +266,7 @@ struct StatsView: View {
                     .padding(.top, 16)
                 }
             }
+            .animation(.easeInOut(duration: 0.45), value: skyEnabled)
             .navigationBarHidden(true)
             .onReceive(timer) { _ in
                 currentHour   = Double(Calendar.current.component(.hour,   from: Date()))
@@ -255,24 +276,44 @@ struct StatsView: View {
     }
 
     // MARK: - Header
+    // TÌM var headerSection, ĐỔI THÀNH:
     var headerSection: some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(greetingText)
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.85))
-                    .shadow(color: .black.opacity(0.4), radius: 4, y: 1)  // 👈
+                    .foregroundStyle(skyEnabled ? .white.opacity(0.85) : .secondary)
+                    .shadow(color: skyEnabled ? .black.opacity(0.4) : .clear, radius: 4, y: 1)
                 Text("Your Progress")
                     .font(.system(size: 28, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
-                    .shadow(color: .black.opacity(0.4), radius: 6, y: 2)  // 👈
+                    .foregroundStyle(skyEnabled ? .white : .primary)
+                    .shadow(color: skyEnabled ? .black.opacity(0.4) : .clear, radius: 6, y: 2)
             }
             Spacer()
-            Image(systemName: celestialIcon)
-                .font(.system(size: 32))
-                .foregroundStyle(celestialColor)
-                .shadow(color: celestialColor.opacity(0.6), radius: 8)
-                .animation(.easeInOut(duration: 1), value: celestialIcon)
+
+            // Sky toggle button
+            Button {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                    skyEnabled.toggle()
+                }
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(skyEnabled
+                            ? Color.white.opacity(0.18)
+                            : Color.primary.opacity(0.08)
+                        )
+                        .frame(width: 44, height: 44)
+
+                    Image(systemName: skyEnabled ? celestialIcon : "sparkles")
+                        .font(.system(size: 18))
+                        .foregroundStyle(skyEnabled ? celestialColor : .secondary)
+                        .shadow(color: skyEnabled ? celestialColor.opacity(0.6) : .clear, radius: 6)
+                }
+            }
+            .buttonStyle(.plain)
+            .animation(.easeInOut(duration: 1), value: celestialIcon)
         }
         .padding(.top, 8)
     }
@@ -304,10 +345,10 @@ struct StatsView: View {
                     VStack(spacing: 1) {
                         Text("\(Int(todayCompletion * 100))%")
                             .font(.system(size: 16, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(adaptiveWhite())
                         Text("today")
                             .font(.system(size: 9, weight: .medium))
-                            .foregroundStyle(.white.opacity(0.6))
+                            .foregroundStyle(adaptiveSecondary())
                     }
                 }
                 .frame(width: 150, height: 150)
@@ -346,11 +387,11 @@ struct StatsView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(label)
                     .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(.white.opacity(0.7))
+                    .foregroundStyle(adaptiveSecondary())
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text("\(Int(value * 100))%")
                         .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(adaptiveWhite())
                     if let count {
                         Text(count)
                             .font(.system(size: 11))
@@ -463,14 +504,14 @@ struct StatsView: View {
                         .foregroundStyle(Color(red:1.0,green:0.55,blue:0.20))
                     Text("Streak")
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.7))
+                        .foregroundStyle(adaptiveSecondary())
                 }
                 Text("\(currentStreak)")
                     .font(.system(size: 40, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(adaptiveWhite())
                 Text(currentStreak == 1 ? "day" : "days")
                     .font(.system(size: 12))
-                    .foregroundStyle(.white.opacity(0.5))
+                    .foregroundStyle(adaptiveSecondary())
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -485,16 +526,16 @@ struct StatsView: View {
                         .foregroundStyle(Color(red:0.55,green:0.75,blue:1.0))
                     Text("Wake → Sleep")
                         .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.7))
+                        .foregroundStyle(adaptiveSecondary())
                 }
                 let hours = (store.sleepMinutes - store.wakeMinutes) / 60
                 let mins  = (store.sleepMinutes - store.wakeMinutes) % 60
                 Text("\(hours)h\(mins > 0 ? " \(mins)m" : "")")
                     .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(adaptiveWhite())
                 Text("active window")
                     .font(.system(size: 12))
-                    .foregroundStyle(.white.opacity(0.5))
+                    .foregroundStyle(adaptiveSecondary())
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -536,10 +577,14 @@ struct RingView: View {
 }
 
 // MARK: - Glass Card
+// TÌM toàn bộ struct GlassCard, ĐỔI THÀNH:
 struct GlassCard<Content: View>: View {
     let content: Content
+    var skyEnabled: Bool = true
     @Environment(\.colorScheme) private var scheme
-    init(@ViewBuilder content: () -> Content) {
+
+    init(skyEnabled: Bool = true, @ViewBuilder content: () -> Content) {
+        self.skyEnabled = skyEnabled
         self.content = content()
     }
 
@@ -549,16 +594,23 @@ struct GlassCard<Content: View>: View {
             .background(
                 RoundedRectangle(cornerRadius: 24, style: .continuous)
                     .fill(
-                                           scheme == .dark
-                                           ? Color.white.opacity(0.08)
-                                           : Color.black.opacity(0.35)
-                                           )
+                        skyEnabled
+                            ? Color.black.opacity(0.38)
+                            : (scheme == .dark
+                                ? Color(.secondarySystemBackground)
+                                : Color(.systemBackground))
+                    )
                     .overlay(
                         RoundedRectangle(cornerRadius: 24, style: .continuous)
-                            .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                            .stroke(
+                                skyEnabled
+                                    ? Color.white.opacity(0.18)
+                                    : Color.primary.opacity(0.12),
+                                lineWidth: 1
+                            )
                     )
             )
-            .shadow(color: .black.opacity(0.15), radius: 16, y: 8)
+            .shadow(color: .black.opacity(skyEnabled ? 0.25 : 0.10), radius: 12, y: 4)
     }
 }
 
