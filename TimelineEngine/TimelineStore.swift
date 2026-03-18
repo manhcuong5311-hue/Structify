@@ -1,4 +1,5 @@
 import SwiftUI
+import WidgetKit
 import Combine
 
 struct EventItem: Identifiable, Codable, Equatable {
@@ -196,7 +197,7 @@ class TimelineStore: ObservableObject {
     @Published var completionLogs: [CompletionLog] = []
     private var completionIndex: [Int: [CompletionLog]] = [:]
     
-    
+    private let sharedDefaults = UserDefaults(suiteName: "group.com.samcorp.structify") ?? .standard
     
     
     
@@ -270,37 +271,29 @@ class TimelineStore: ObservableObject {
     }
     
     var wakeMinutes: Int {
-        UserDefaults.standard.object(forKey: wakeKey) as? Int ?? 360
+        sharedDefaults.object(forKey: wakeKey) as? Int ?? 360
     }
 
     var sleepMinutes: Int {
-        UserDefaults.standard.object(forKey: sleepKey) as? Int ?? 1410
+        sharedDefaults.object(forKey: sleepKey) as? Int ?? 1410
     }
     
     // MARK: Load
     
     func load() {
-
         let decoder = JSONDecoder()
-
-        if let data = UserDefaults.standard.data(forKey: "templates"),
+        if let data = sharedDefaults.data(forKey: "templates"),
            let decoded = try? decoder.decode([EventTemplate].self, from: data) {
-
             templates = decoded
         }
-
-        if let data = UserDefaults.standard.data(forKey: "overrides"),
+        if let data = sharedDefaults.data(forKey: "overrides"),
            let decoded = try? decoder.decode([EventOverride].self, from: data) {
-
             overrides = decoded
         }
-        
-        if let data = UserDefaults.standard.data(forKey: "completionLogs"),
+        if let data = sharedDefaults.data(forKey: "completionLogs"),
            let decoded = try? decoder.decode([CompletionLog].self, from: data) {
-
             completionLogs = decoded
         }
-        
     }
     
     func rebuildIndex() {
@@ -312,21 +305,17 @@ class TimelineStore: ObservableObject {
     // MARK: Save
     
     func save() {
-
         let encoder = JSONEncoder()
-
         if let templateData = try? encoder.encode(templates) {
-            UserDefaults.standard.set(templateData, forKey: "templates")
+            sharedDefaults.set(templateData, forKey: "templates")
         }
-
         if let overrideData = try? encoder.encode(overrides) {
-            UserDefaults.standard.set(overrideData, forKey: "overrides")
+            sharedDefaults.set(overrideData, forKey: "overrides")
         }
-        
         if let data = try? encoder.encode(completionLogs) {
-            UserDefaults.standard.set(data, forKey: "completionLogs")
+            sharedDefaults.set(data, forKey: "completionLogs")
         }
-        
+        WidgetCenter.shared.reloadAllTimelines()
     }
     
    
@@ -337,8 +326,8 @@ class TimelineStore: ObservableObject {
   
     
     func updateSystemEvents(wakeMinutes: Int, sleepMinutes: Int) {
-        UserDefaults.standard.set(wakeMinutes, forKey: wakeKey)
-        UserDefaults.standard.set(sleepMinutes, forKey: sleepKey)
+        sharedDefaults.set(wakeMinutes, forKey: wakeKey)
+        sharedDefaults.set(sleepMinutes, forKey: sleepKey)
 
         for i in templates.indices {
             if templates[i].systemType == .wake {
@@ -1312,8 +1301,8 @@ class TimelineStore: ObservableObject {
         }
         if let m = dict["meta"],
            let meta = try? decoder.decode(BackupMeta.self, from: m) {
-            UserDefaults.standard.set(meta.wakeMinutes, forKey: "user_wake_minutes")
-            UserDefaults.standard.set(meta.sleepMinutes, forKey: "user_sleep_minutes")
+            sharedDefaults.set(meta.wakeMinutes, forKey: "user_wake_minutes")
+            sharedDefaults.set(meta.sleepMinutes, forKey: "user_sleep_minutes")
         }
         
         rebuildIndex()

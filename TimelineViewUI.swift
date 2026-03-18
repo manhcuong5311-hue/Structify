@@ -42,7 +42,12 @@ struct TimelineView: View {
     @State private var suggestedMinutes: Int? = nil
     private var brand: Color { Color(hex: PreferencesStore().accentHex) }
     @State private var showPremiumSheet = false
-    
+    @State private var showRecurringDragDialog = false
+    @State private var pendingRecurringDrag: (EventItem, Int)?
+    @State private var showSystemEventDialog = false
+    // Thêm vào đầu TimelineView cùng với các state khác
+    @State private var showRecurringResizeDialog = false
+    @State private var pendingRecurringResize: (EventItem, Int)?
     
     func isNowApproachingStart(of eventID: UUID, in visible: [EventItem]) -> Bool {
         guard Calendar.current.isDateInToday(calendar.selectedDate) else { return false }
@@ -81,9 +86,8 @@ struct TimelineView: View {
     func isRecurring(_ event: EventItem) -> Bool {
         guard let t = store.templates.first(where: { $0.id == event.id }) else { return false }
         switch t.recurrence {
-        case .once:      return false
-        case .dateRange: return false  // 👈 không hỏi scope vì chỉ là range cố định
-        default:         return true
+        case .once: return false
+        default:    return true
         }
     }
     
@@ -308,7 +312,7 @@ struct TimelineView: View {
                                         if liveEvent.isSystemEvent {
                                             pendingSystemChange = liveEvent
                                             pendingMinutes = liveEvent.minutes
-                                            activeAlert = .systemEventChange(liveEvent, liveEvent.minutes)
+                                            showSystemEventDialog = true  // thay activeAlert = .systemEventChange
                                             return
                                         }
                                         
@@ -340,7 +344,8 @@ struct TimelineView: View {
                                         
                                         // Nếu event dragged là recurring → hỏi scope
                                         if isRecurring(liveEvent) {
-                                            activeAlert = .recurringTimeChange(liveEvent, liveEvent.minutes)
+                                            pendingRecurringDrag = (liveEvent, liveEvent.minutes)
+                                            showRecurringDragDialog = true  // thay activeAlert = .recurringTimeChange
                                         }
                                         
                                         addButtonsIndex = bestGapIndex()
@@ -375,9 +380,9 @@ struct TimelineView: View {
                                     },
                                     onResizeComplete: {
                                         reloadTimeline()
-                                        // Hỏi scope nếu có pending recurring resize
                                         if let e = pendingSystemChange, !e.isSystemEvent {
-                                            activeAlert = .recurringDurationChange(e, pendingMinutes)
+                                            pendingRecurringResize = (e, pendingMinutes)
+                                            showRecurringResizeDialog = true
                                             pendingSystemChange = nil
                                         }
                                     }
@@ -670,97 +675,106 @@ struct TimelineView: View {
                         secondaryButton: .cancel()
                     )
                     
-                case .systemEventChange(let event, let minutes):
-                    
-                    return Alert(
-                        title: Text("Change System Event"),
-                        message: Text("Apply this change to all days or only today?"),
-                        
-                        // Trong primaryButton "All Days":
-                        primaryButton: .default(Text("All Days")) {
-                            
-                            if event.systemType == .wake {
-                                // Không cho set wake sau sleep
-                                let newWake = min(minutes, store.sleepMinutes - 30)
-                                store.updateSystemEvents(
-                                    wakeMinutes: newWake,
-                                    sleepMinutes: store.sleepMinutes
-                                )
-                            } else if event.systemType == .sleep {
-                                // Không cho set sleep trước wake
-                                let newSleep = max(minutes, store.wakeMinutes + 30)
-                                store.updateSystemEvents(
-                                    wakeMinutes: store.wakeMinutes,
-                                    sleepMinutes: newSleep
-                                )
-                            }
-                            
-                            // Xóa override của ngày hôm nay vì đã apply vào template
-                            store.overrides.removeAll {
-                                $0.templateID == event.id &&
-                                $0.dateKey == store.key(for: calendar.selectedDate)
-                            }
-                            
-                            store.rebuildIndex()
-                            store.invalidateCache()
-                            store.save()
-                            reloadTimeline()
-                        },
-                        
-                        // Trong secondaryButton "Only Today":
-                        secondaryButton: .default(Text("Only Today")) {
-                            guard !isPastDate() else { return }
-
-                            store.overrideEvent(
-                                templateID: event.id,
-                                date: calendar.selectedDate,
-                                minutes: minutes
-                            )
-
-                            // 👇 Reschedule chỉ ngày hôm nay
-                            NotificationManager.shared.cancel(templateID: event.id, date: calendar.selectedDate)
-                            if let template = store.templates.first(where: { $0.id == event.id }) {
-                                NotificationManager.shared.schedule(
-                                    templateID: event.id,
-                                    title: template.title,
-                                    icon: template.icon,
-                                    minutes: minutes,
-                                    date: calendar.selectedDate,
-                                    isHabit: false
-                                )
-                            }
-
-                            reloadTimeline()
+            
+                }
+            }
+            .confirmationDialog("Move event", isPresented: $showRecurringDragDialog, titleVisibility: .visible) {
+                Button("All Days") {
+                    if let (event, minutes) = pendingRecurringDrag {
+                        store.updateEventTime(templateID: event.id, minutes: minutes)
+                    }
+                    reloadTimeline()
+                    pendingRecurringDrag = nil
+                }
+                Button("Only Today") {
+                    reloadTimeline()
+                    pendingRecurringDrag = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    // tap ngoài cũng vào đây → revert
+                    if let (event, _) = pendingRecurringDrag {
+                        store.overrides.removeAll {
+                            $0.templateID == event.id &&
+                            $0.dateKey == store.key(for: calendar.selectedDate)
                         }
-                    )
-                    
-                case .recurringTimeChange(let event, let minutes):
-                    return Alert(
-                        title: Text("Move event"),
-                        message: Text(recurringMessage(event)),
-                        primaryButton: .default(Text("All Days")) {
-                            store.updateEventTime(templateID: event.id, minutes: minutes)
-                            reloadTimeline()
-                        },
-                        secondaryButton: .default(Text("Only Today")) {
-                            // Already saved as override, nothing to do
-                            reloadTimeline()
+                        store.save()
+                    }
+                    reloadTimeline()
+                    pendingRecurringDrag = nil
+                }
+            } message: {
+                if let (event, _) = pendingRecurringDrag {
+                    Text(recurringMessage(event))
+                }
+            }
+
+            .confirmationDialog("Change System Event", isPresented: $showSystemEventDialog, titleVisibility: .visible) {
+                Button("All Days") {
+                    guard let event = pendingSystemChange else { return }
+                    if event.systemType == .wake {
+                        store.updateSystemEvents(wakeMinutes: min(pendingMinutes, store.sleepMinutes - 30), sleepMinutes: store.sleepMinutes)
+                    } else if event.systemType == .sleep {
+                        store.updateSystemEvents(wakeMinutes: store.wakeMinutes, sleepMinutes: max(pendingMinutes, store.wakeMinutes + 30))
+                    }
+                    store.overrides.removeAll {
+                        $0.templateID == event.id &&
+                        $0.dateKey == store.key(for: calendar.selectedDate)
+                    }
+                    store.rebuildIndex(); store.invalidateCache(); store.save()
+                    reloadTimeline()
+                    pendingSystemChange = nil
+                }
+                Button("Only Today") {
+                    guard let event = pendingSystemChange, !isPastDate() else { return }
+                    store.overrideEvent(templateID: event.id, date: calendar.selectedDate, minutes: pendingMinutes)
+                    NotificationManager.shared.cancel(templateID: event.id, date: calendar.selectedDate)
+                    if let template = store.templates.first(where: { $0.id == event.id }) {
+                        NotificationManager.shared.schedule(templateID: event.id, title: template.title, icon: template.icon, minutes: pendingMinutes, date: calendar.selectedDate, isHabit: false)
+                    }
+                    reloadTimeline()
+                    pendingSystemChange = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    // tap ngoài cũng vào đây → revert
+                    if let event = pendingSystemChange {
+                        store.overrides.removeAll {
+                            $0.templateID == event.id &&
+                            $0.dateKey == store.key(for: calendar.selectedDate)
                         }
-                    )
-                    
-                case .recurringDurationChange(let event, let duration):
-                    return Alert(
-                        title: Text("Change duration"),
-                        message: Text(recurringMessage(event)),
-                        primaryButton: .default(Text("All Days")) {
-                            store.updateEventDuration(templateID: event.id, duration: duration)
-                            reloadTimeline()
-                        },
-                        secondaryButton: .default(Text("Only Today")) {
-                            reloadTimeline()
+                        store.save()
+                    }
+                    reloadTimeline()
+                    pendingSystemChange = nil
+                }
+            } message: {
+                Text("Apply this change to all days or only today?")
+            }
+            .confirmationDialog("Change duration", isPresented: $showRecurringResizeDialog, titleVisibility: .visible) {
+                Button("All Days") {
+                    if let (event, duration) = pendingRecurringResize {
+                        store.updateEventDuration(templateID: event.id, duration: duration)
+                    }
+                    reloadTimeline()
+                    pendingRecurringResize = nil
+                }
+                Button("Only Today") {
+                    reloadTimeline()
+                    pendingRecurringResize = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    if let (event, _) = pendingRecurringResize {
+                        store.overrides.removeAll {
+                            $0.templateID == event.id &&
+                            $0.dateKey == store.key(for: calendar.selectedDate)
                         }
-                    )
-                    
+                        store.save()
+                    }
+                    reloadTimeline()
+                    pendingRecurringResize = nil
+                }
+            } message: {
+                if let (event, _) = pendingRecurringResize {
+                    Text(recurringMessage(event))
                 }
             }
             
@@ -1636,6 +1650,8 @@ struct TimelineView: View {
                         .foregroundStyle(.primary)
                         .opacity(isNowNearStartTime() ? 0 : 1)
                         .animation(.easeInOut(duration: 0.2), value: isNowNearStartTime())
+                        .allowsHitTesting(false)
+                    
                     
                     // End time — BOTTOM
                     if let endTime {
@@ -1690,8 +1706,32 @@ struct TimelineView: View {
                 
                 VStack(alignment: .leading, spacing: 2) {
                     
-                    // Title + recurrence badge cùng hàng
-                    HStack(alignment: .center, spacing: 6) {
+                    // Title + recurrence badge
+                    if kind == .habit {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(title)
+                                .font(isPad ? .title3.weight(.semibold) : .headline)
+                                .opacity(durationPreview != nil ? 0.7 : 1)
+                                .opacity(isCompleted ? 0.45 : 1)
+                                .overlay(
+                                    Rectangle()
+                                        .fill(Color.primary)
+                                        .frame(height: 1.5)
+                                        .scaleEffect(x: isCompleted ? 1 : 0, anchor: .leading)
+                                        .animation(.easeOut(duration: 0.25), value: isCompleted),
+                                    alignment: .center
+                                )
+
+                            Text(recurrenceLabel)
+                                .font(.system(size: isPad ? 12 : 10, weight: .semibold))
+                                .foregroundStyle(color)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Capsule().fill(color.opacity(0.12)))
+                                .fixedSize()
+                                .opacity(isCompleted ? 0.45 : 1)
+                        }
+                    } else {
                         Text(title)
                             .font(isPad ? .title3.weight(.semibold) : .headline)
                             .opacity(durationPreview != nil ? 0.7 : 1)
@@ -1704,17 +1744,6 @@ struct TimelineView: View {
                                     .animation(.easeOut(duration: 0.25), value: isCompleted),
                                 alignment: .center
                             )
-                        
-                        if kind == .habit {
-                            Text(recurrenceLabel)
-                                .font(.system(size: isPad ? 12 : 10, weight: .semibold))
-                                .foregroundStyle(color)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Capsule().fill(color.opacity(0.12)))
-                                .fixedSize()
-                                .opacity(isCompleted ? 0.45 : 1)
-                        }
                     }
                     
                     if kind == .event {

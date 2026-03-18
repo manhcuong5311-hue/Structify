@@ -23,14 +23,40 @@ class PremiumStore: ObservableObject {
     @Published private(set) var isPremium: Bool = false
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
-
+    private var transactionListener: Task<Void, Never>? = nil
+    
+    
     private let premiumKey = "structify_is_premium"
     private let productID = "com.structify.premium.lifetime"
 
     init() {
         isPremium = UserDefaults.standard.bool(forKey: premiumKey)
+        transactionListener = listenForTransactions()
         Task { await refreshPurchaseStatus() }
     }
+    
+    func listenForTransactions() -> Task<Void, Never> {
+        Task.detached {
+            for await result in Transaction.updates {
+                switch result {
+                case .verified(let transaction):
+                    if transaction.productID == self.productID {
+                        await MainActor.run { self.unlock() }
+                    }
+                    await transaction.finish()
+                case .unverified:
+                    break
+                }
+            }
+        }
+    }
+
+    // THÊM deinit để cancel task khi deallocate:
+    deinit {
+        transactionListener?.cancel()
+    }
+    
+    
 
     // MARK: - Purchase
     func purchase() async {
