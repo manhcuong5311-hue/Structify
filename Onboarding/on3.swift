@@ -34,7 +34,7 @@ struct OnboardingFocusPage: View {
                     Spacer().frame(height: 28)
 
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("One task.\nOne moment.")
+                        Text(String(localized: "onboarding.focus.title"))
                             .font(.system(size: isPad ? 48 : 38, weight: .bold, design: .serif))
                             .minimumScaleFactor(0.75)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -42,7 +42,7 @@ struct OnboardingFocusPage: View {
                             .opacity(appeared ? 1 : 0)
                             .animation(.spring(response: 0.5, dampingFraction: 0.8).delay(0.1), value: appeared)
 
-                        Text("Structify shows only what matters right now — the event you're in, and the time you have left.")
+                        Text(String(localized: "onboarding.focus.subtitle"))
                             .font(isPad ? .title3 : .body)
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -69,33 +69,50 @@ struct OnboardingFocusPage: View {
                             columns: [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)],
                             spacing: 12
                         ) {
-                            featurePill(icon: "lock.fill",         text: "Past events are locked — no accidental edits", delay: 0.55)
-                            featurePill(icon: "waveform.path.ecg", text: "Running events show live progress bar",        delay: 0.65)
-                            featurePill(icon: "bell.slash.fill",   text: "Smart notifications at the right moment",     delay: 0.75)
+                            featurePill(
+                                icon: "lock.fill",
+                                text: String(localized: "feature.lock_past_events"),
+                                delay: 0.55
+                            )
+
+                            featurePill(
+                                icon: "waveform.path.ecg",
+                                text: String(localized: "feature.live_progress"),
+                                delay: 0.65
+                            )
+
+                            featurePill(
+                                icon: "bell.slash.fill",
+                                text: String(localized: "feature.smart_notifications"),
+                                delay: 0.75
+                            )
                         }
                         .padding(.horizontal, 48)
                     } else {
                         VStack(spacing: 10) {
-                            featurePill(icon: "lock.fill",         text: "Past events are locked — no accidental edits", delay: 0.55)
-                            featurePill(icon: "waveform.path.ecg", text: "Running events show live progress bar",        delay: 0.65)
-                            featurePill(icon: "bell.slash.fill",   text: "Smart notifications at the right moment",     delay: 0.75)
+                            featurePill(
+                                icon: "lock.fill",
+                                text: String(localized: "feature.lock_past_events"),
+                                delay: 0.55
+                            )
+
+                            featurePill(
+                                icon: "waveform.path.ecg",
+                                text: String(localized: "feature.live_progress"),
+                                delay: 0.65
+                            )
+
+                            featurePill(
+                                icon: "bell.slash.fill",
+                                text: String(localized: "feature.smart_notifications"),
+                                delay: 0.75
+                            )
                         }
                         .padding(.horizontal, 24)
                     }
 
                     Spacer()
 
-                    VStack(spacing: 6) {
-                        Image(systemName: "chevron.right.2")
-                            .font(.system(size: isPad ? 18 : 14, weight: .semibold))
-                            .foregroundStyle(.secondary)
-                        Text("Swipe to continue")
-                            .font(isPad ? .subheadline : .caption)
-                            .foregroundStyle(.tertiary)
-                    }
-                    .opacity(appeared ? 1 : 0)
-                    .animation(.easeIn(duration: 0.4).delay(1.0), value: appeared)
-                    .padding(.bottom, geo.size.height * 0.05)
                 }
             }
         }
@@ -115,7 +132,7 @@ struct OnboardingFocusPage: View {
 
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("NOW RUNNING")
+                    Text(String(localized: "timeline.now_running"))
                         .font(.system(size: isPad ? 12 : 10, weight: .bold))
                         .foregroundStyle(.white.opacity(0.6))
                         .tracking(1.2)
@@ -131,7 +148,7 @@ struct OnboardingFocusPage: View {
                         .frame(width: 7, height: 7)
                         .scaleEffect(pulseRing ? 1.3 : 1.0)
                         .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: pulseRing)
-                    Text("Live")
+                    Text(String(localized: "timeline.live"))
                         .font(.system(size: isPad ? 14 : 12, weight: .semibold))
                         .foregroundStyle(.white.opacity(0.8))
                 }
@@ -156,10 +173,10 @@ struct OnboardingFocusPage: View {
                 }
 
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("Deep Work")
+                    Text(String(localized: "demo.event.deep_work"))
                         .font(.system(size: isPad ? 22 : 18, weight: .bold))
                         .foregroundStyle(.white)
-                    Text("38 min left")
+                    Text(String(localized: "timeline.time_left_example"))
                         .font(.system(size: isPad ? 15 : 13, weight: .medium))
                         .foregroundStyle(.white.opacity(0.55))
                 }
@@ -223,14 +240,14 @@ struct OnboardingFocusPage: View {
             Divider().background(Color.white.opacity(0.08))
 
             HStack(spacing: 12) {
-                Text("UP NEXT")
+                Text(String(localized: "timeline.up_next"))
                     .font(.system(size: isPad ? 11 : 9, weight: .bold))
                     .foregroundStyle(.white.opacity(0.4))
                     .tracking(1.2)
                 Image(systemName: "cup.and.saucer.fill")
                     .font(.system(size: isPad ? 14 : 12))
                     .foregroundStyle(Color(red:0.75,green:0.55,blue:0.35).opacity(0.8))
-                Text("Coffee Break  ·  09:30")
+                Text(String(localized: "demo.event.coffee_break_next"))
                     .font(.system(size: isPad ? 14 : 12, weight: .medium))
                     .foregroundStyle(.white.opacity(0.45))
                 Spacer()

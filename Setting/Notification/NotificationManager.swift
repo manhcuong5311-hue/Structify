@@ -48,10 +48,13 @@ struct NotificationManager {
         guard fireDate > Date() else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = isHabit ? "Habit Reminder" : "Upcoming Event"
+        content.title = isHabit
+            ? String(localized: "notif_habit_title")
+            : String(localized: "notif_event_title")
         content.body = isHabit
-            ? "\(title) — time to start!"
-            : "\(title) starts in \(leadMinutes) minutes"
+            ? String(localized: "notif_habit_body \(title)")
+            : String(localized: "notif_event_body \(title) \(leadMinutes)")
+
         content.sound = .default
         content.userInfo = ["templateID": templateID.uuidString]
 
@@ -130,8 +133,8 @@ struct NotificationManager {
         cancelMorningBriefing()
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
-        content.title = "Good morning ☀️"
-        content.body = "Here's your plan for today"
+        content.title = String(localized: "notif_morning_title")
+        content.body = String(localized: "notif_morning_plan")
         content.sound = .default
 
         var comps = DateComponents()
@@ -151,8 +154,8 @@ struct NotificationManager {
         cancelEveningReview()
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
-        content.title = "Evening check-in 🌙"
-        content.body = "How did your day go? Review your progress."
+        content.title = String(localized: "notif_evening_title")
+        content.body = String(localized: "notif_evening_review")
         content.sound = .default
 
         var comps = DateComponents()
@@ -194,8 +197,9 @@ struct NotificationManager {
                 second: 0, of: date
             ), wakeDate > Date() {
                 let content = UNMutableNotificationContent()
-                content.title = "Good morning ☀️"
-                content.body = "Your day starts in 5 minutes"
+                content.title = String(localized: "notif_morning_title")
+                content.body = String(localized: "notif_day_start_soon")
+
                 content.sound = .default
 
                 let components = cal.dateComponents([.year,.month,.day,.hour,.minute], from: wakeDate)
@@ -211,8 +215,8 @@ struct NotificationManager {
                 second: 0, of: date
             ), sleepDate > Date() {
                 let content = UNMutableNotificationContent()
-                content.title = "Wind down 🌙"
-                content.body = "Time to wrap up your day"
+                content.title = String(localized: "notif_winddown_title")
+                content.body = String(localized: "notif_winddown_body")
                 content.sound = .default
 
                 let components = cal.dateComponents([.year,.month,.day,.hour,.minute], from: sleepDate)

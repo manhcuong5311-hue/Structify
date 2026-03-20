@@ -27,12 +27,24 @@ struct MoodEntry: Identifiable, Codable {
 }
 
 enum MoodLevel: String, CaseIterable {
-    case rough   = "Rough"
-    case low     = "Low"
-    case okay    = "Okay"
-    case good    = "Good"
-    case amazing = "Amazing"
+    case rough
+    case low
+    case okay
+    case good
+    case amazing
 
+    // MARK: - Localized
+    var title: String {
+        switch self {
+        case .rough:   return String(localized: "mood.rough")
+        case .low:     return String(localized: "mood.low")
+        case .okay:    return String(localized: "mood.okay")
+        case .good:    return String(localized: "mood.good")
+        case .amazing: return String(localized: "mood.amazing")
+        }
+    }
+
+    // MARK: - Icon
     var icon: String {
         switch self {
         case .rough:   return "😞"
@@ -43,6 +55,7 @@ enum MoodLevel: String, CaseIterable {
         }
     }
 
+    // MARK: - Color
     var color: Color {
         switch self {
         case .rough:   return Color(red:0.80,green:0.35,blue:0.40)
@@ -53,6 +66,7 @@ enum MoodLevel: String, CaseIterable {
         }
     }
 }
+
 
 // MARK: - MoodStore
 class MoodStore: ObservableObject {
@@ -137,7 +151,7 @@ struct MoodSheet: View {
         VStack(spacing: 0) {
             // Title bar
             HStack {
-                Text("Mood Tracker")
+                Text(String(localized: "mood_tracker.title"))
                     .font(.system(size: 17, weight: .semibold))
                 Spacer()
                 Button { dismiss() } label: {
@@ -177,11 +191,11 @@ struct MoodSheet: View {
             // Slider
             VStack(spacing: 8) {
                 HStack {
-                    Text("LOW")
+                    Text(String(localized: "mood.level.low"))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(.secondary)
                     Spacer()
-                    Text("High")
+                    Text(String(localized: "mood.level.high"))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(.secondary)
                 }
@@ -211,7 +225,7 @@ struct MoodSheet: View {
 
             // Note
             VStack(alignment: .leading, spacing: 8) {
-                Text("Add a note")
+                Text(String(localized: "mood.add_note"))
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(.secondary)
 
@@ -221,7 +235,7 @@ struct MoodSheet: View {
                         .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
 
                     if note.isEmpty {
-                        Text("How was your day?")
+                        Text(String(localized: "mood.prompt.day"))
                             .font(.system(size: 15))
                             .foregroundStyle(Color(.placeholderText))
                             .padding(14)
@@ -246,7 +260,7 @@ struct MoodSheet: View {
                 UINotificationFeedbackGenerator().notificationOccurred(.success)
                 dismiss()
             } label: {
-                Text("Submit")
+                Text(String(localized: "common.submit"))
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
@@ -359,7 +373,7 @@ struct MoodLogView: View {
                     // Recent entries list
                     if !moodStore.entries.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Recent")
+                            Text(String(localized: "common.recent"))
                                 .font(.system(size: 16, weight: .semibold))
                                 .padding(.horizontal, 4)
 
@@ -407,7 +421,9 @@ struct MoodLogView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { dismiss() }
+                    Button(String(localized: "common.done")) {
+                        dismiss()
+                    }
                 }
             }
         }
@@ -479,13 +495,14 @@ struct MoodLogCard: View {
         GlassCard {
             HStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Mood")
+                    Text(String(localized: "mood.title"))
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
 
-                    Text(todayEntry == nil
-                         ? "Set your feeling for the day"
-                         : todayEntry!.mood.dailyMessage()
+                    Text(
+                        todayEntry == nil
+                        ? String(localized: "mood.empty.prompt")
+                        : todayEntry!.mood.dailyMessage()
                     )
                     .font(.system(size: 13))
                     .foregroundStyle(.white.opacity(0.65))
@@ -493,7 +510,11 @@ struct MoodLogCard: View {
                     Button {
                         showMoodSheet = true
                     } label: {
-                        Text(todayEntry == nil ? "Add mood" : "Edit")
+                        Text(
+                            todayEntry == nil
+                            ? String(localized: "mood.action.add")
+                            : String(localized: "mood.action.edit")
+                        )
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(Color(red:0.45,green:0.78,blue:1.0))
                     }

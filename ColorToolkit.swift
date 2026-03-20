@@ -260,7 +260,7 @@ extension ColorPickerSheet {
 
         HStack {
 
-            Text("Choose a color")
+            Text(String(localized: "choose_color"))
                 .font(.title2.bold())
 
             Spacer()
@@ -363,7 +363,8 @@ extension ColorPickerSheet {
 
             HStack {
 
-                Text("Presets")
+                Text(String(localized: "presets"))
+
                     .font(.title3.bold())
 
                 Spacer()
@@ -372,7 +373,10 @@ extension ColorPickerSheet {
                     editingPresets.toggle()
                 } label: {
 
-                    Label("Edit", systemImage: "pencil")
+                    Label(
+                        String(localized: "edit"),
+                        systemImage: "pencil"
+                    )
                         .padding(.horizontal,12)
                         .padding(.vertical,6)
                         .background(.thinMaterial)

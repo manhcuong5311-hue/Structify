@@ -49,10 +49,10 @@ private extension OnboardingSleepTimePage {
 
         VStack(alignment: .leading, spacing: 12) {
 
-            Text("When do you go to sleep?")
+            Text(String(localized: "onboarding.sleep.title"))
                 .font(.system(size: 42, weight: .bold, design: .serif))
 
-            Text("We'll end your daily timeline around this time.")
+            Text(String(localized: "onboarding.sleep.subtitle"))
                 .foregroundStyle(.secondary)
 
         }
@@ -214,15 +214,15 @@ private extension OnboardingSleepTimePage {
 
                 HStack {
 
-                    Text("6 PM")
+                    Text(String(localized: "time.six_pm"))
 
                     Spacer()
 
-                    Text("9 PM")
+                    Text(String(localized: "time.nine_pm"))
 
                     Spacer()
 
-                    Text("12 AM")
+                    Text(String(localized: "time.midnight"))
 
                 }
                 .font(.caption)

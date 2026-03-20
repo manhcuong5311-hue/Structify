@@ -145,11 +145,11 @@ struct PremiumView: View {
             .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(0.1), value: appear)
 
             VStack(spacing: 8) {
-                Text("Structify Premium")
+                Text(String(localized: "premium_title"))
                     .font(.system(size: 30, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
 
-                Text("Unlock your full potential.\nNo limits. No compromises.")
+                Text(String(localized: "premium_subtitle"))
                     .font(.system(size: 15, weight: .regular))
                     .foregroundStyle(.white.opacity(0.6))
                     .multilineTextAlignment(.center)
@@ -160,7 +160,7 @@ struct PremiumView: View {
             .animation(.easeOut(duration: 0.5).delay(0.2), value: appear)
 
             // Price badge
-            Text("One-time purchase · $4.99")
+            Text(String(localized: "premium_price"))
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(Color(red: 0.95, green: 0.78, blue: 0.25))
                 .padding(.horizontal, 16)
@@ -181,12 +181,29 @@ struct PremiumView: View {
 
     // MARK: - Features
     let features: [(icon: String, color: Color, title: String, desc: String)] = [
-        ("infinity",           Color(red: 0.95, green: 0.78, blue: 0.25), "Unlimited Events & Habits",   "No 3-item cap. Add as many as you need."),
-        ("paintpalette.fill",  Color(red: 0.6, green: 0.4, blue: 0.95),   "Full Customization",          "All accent colors, timeline densities, drag snap."),
-        ("bell.badge.fill",    Color(red: 1.0, green: 0.4, blue: 0.4),    "Smart Notifications",         "Morning briefing, evening review & more."),
-        ("flame.fill",         Color(red: 1.0, green: 0.5, blue: 0.2),    "Advanced Stats",              "Streak threshold, 90-day history & trends."),
-        ("externaldrive.fill", Color(red: 0.3, green: 0.7, blue: 0.5),    "Backup & Export",             "Full JSON backup, CSV export, restore anytime."),
-        ("square.grid.2x2.fill", Color(red: 0.3, green: 0.65, blue: 1.0), "All Icons",                   "Access to every icon in all categories.")
+        ("infinity", Color(red: 0.95, green: 0.78, blue: 0.25),
+         String(localized: "feature_unlimited_title"),
+         String(localized: "feature_unlimited_desc")),
+        
+        ("paintpalette.fill", Color(red: 0.6, green: 0.4, blue: 0.95),
+         String(localized: "feature_customization_title"),
+         String(localized: "feature_customization_desc")),
+        
+        ("bell.badge.fill", Color(red: 1.0, green: 0.4, blue: 0.4),
+         String(localized: "feature_notifications_title"),
+         String(localized: "feature_notifications_desc")),
+        
+        ("flame.fill", Color(red: 1.0, green: 0.5, blue: 0.2),
+         String(localized: "feature_stats_title"),
+         String(localized: "feature_stats_desc")),
+        
+        ("externaldrive.fill", Color(red: 0.3, green: 0.7, blue: 0.5),
+         String(localized: "feature_backup_title"),
+         String(localized: "feature_backup_desc")),
+        
+        ("square.grid.2x2.fill", Color(red: 0.3, green: 0.65, blue: 1.0),
+         String(localized: "feature_icons_title"),
+         String(localized: "feature_icons_desc"))
     ]
 
     var featuresSection: some View {
@@ -242,15 +259,15 @@ struct PremiumView: View {
         VStack(spacing: 0) {
             // Header
             HStack {
-                Text("Feature")
+                Text(String(localized: "compare_feature"))
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.4))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("Free")
+                Text(String(localized: "compare_free"))
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.4))
                     .frame(width: 60, alignment: .center)
-                Text("Premium")
+                Text(String(localized: "compare_premium"))
                     .font(.system(size: 12, weight: .bold))
                     .foregroundStyle(Color(red: 0.95, green: 0.78, blue: 0.25))
                     .frame(width: 70, alignment: .center)
@@ -259,13 +276,19 @@ struct PremiumView: View {
             .padding(.vertical, 10)
 
             let rows: [(String, String, String)] = [
-                ("Events per day",   "3",   "∞"),
-                ("Habits",           "3",   "∞"),
-                ("Icons per category", "5", "∞"),
-                ("Stats history",    "7d",  "90d"),
-                ("Accent colors",    "3",   "∞"),
-                ("Notifications",    "Basic", "Full"),
-                ("Backup & Export",  "✗",   "✓"),
+                (String(localized: "row_events"), String(localized: "row_events_free"), String(localized: "row_events_premium")),
+                
+                (String(localized: "row_habits"), String(localized: "row_habits_free"), String(localized: "row_habits_premium")),
+                
+                (String(localized: "row_icons"), String(localized: "row_icons_free"), String(localized: "row_icons_premium")),
+                
+                (String(localized: "row_stats"), String(localized: "row_stats_free"), String(localized: "row_stats_premium")),
+                
+                (String(localized: "row_colors"), String(localized: "row_colors_free"), String(localized: "row_colors_premium")),
+                
+                (String(localized: "row_notifications"), String(localized: "row_notifications_free"), String(localized: "row_notifications_premium")),
+                
+                (String(localized: "row_backup"), String(localized: "row_backup_free"), String(localized: "row_backup_premium")),
             ]
 
             ForEach(Array(rows.enumerated()), id: \.offset) { idx, row in
@@ -327,7 +350,7 @@ struct PremiumView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "crown.fill")
                                 .font(.system(size: 16, weight: .bold))
-                            Text("Unlock Premium — $4.99")
+                            Text(String(localized: "premium_unlock_button"))
                                 .font(.system(size: 17, weight: .bold, design: .rounded))
                         }
                         .foregroundStyle(.black)
@@ -359,7 +382,7 @@ struct PremiumView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.seal.fill")
                         .foregroundStyle(Color(red: 0.95, green: 0.78, blue: 0.25))
-                    Text("You have Premium — enjoy all features!")
+                    Text(String(localized: "premium_owned_message"))
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.white)
                 }
@@ -378,7 +401,10 @@ struct PremiumView: View {
             Button {
                 Task { await premium.restore() }
             } label: {
-                Text(premium.isLoading ? "Restoring..." : "Restore Purchase")
+                Text(premium.isLoading
+                     ? String(localized: "premium_restoring")
+                     : String(localized: "premium_restore_button"))
+
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(.white.opacity(0.45))
             }
@@ -392,12 +418,12 @@ struct PremiumView: View {
 
             // Purchase description
             VStack(spacing: 6) {
-                Text("Structify Premium is a one-time purchase of $4.99 USD.")
+                Text(String(localized: "premium_price_note"))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(.white.opacity(0.35))
                     .multilineTextAlignment(.center)
 
-                Text("Payment will be charged to your Apple ID. No subscription, no recurring charges. Purchase can be restored on any device signed in with the same Apple ID.")
+                Text(String(localized: "premium_payment_note"))
                     .font(.system(size: 10))
                     .foregroundStyle(.white.opacity(0.22))
                     .multilineTextAlignment(.center)
@@ -412,7 +438,7 @@ struct PremiumView: View {
                         UIApplication.shared.open(url)
                     }
                 } label: {
-                    Text("Privacy Policy")
+                    Text(String(localized: "privacy_policy"))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(.white.opacity(0.35))
                         .underline()
@@ -427,7 +453,7 @@ struct PremiumView: View {
                         UIApplication.shared.open(url)
                     }
                 } label: {
-                    Text("Terms of Use")
+                    Text(String(localized: "terms_of_use"))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(.white.opacity(0.35))
                         .underline()

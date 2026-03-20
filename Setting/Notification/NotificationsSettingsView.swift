@@ -86,17 +86,16 @@ struct NotificationsSettingsView: View {
                         // Per-event toggles
                         if !events.isEmpty {
                             templateSection(
-                                title: "Events",
+                                title: String(localized: "notif_section_events"),
                                 icon: "calendar",
                                 iconColor: .blue,
                                 templates: events
                             )
                         }
 
-                        // Per-habit toggles
                         if !habits.isEmpty {
                             templateSection(
-                                title: "Habits",
+                                title: String(localized: "notif_section_habits"),
                                 icon: "repeat.circle.fill",
                                 iconColor: .green,
                                 templates: habits
@@ -116,21 +115,22 @@ struct NotificationsSettingsView: View {
                 .padding(.top, 16)
             }
         }
-        .navigationTitle("Notifications")
+        .navigationTitle(String(localized: "notif_screen_title"))
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
             loadSettings()
             checkPermission()
         }
-        .alert("Enable Notifications", isPresented: $showPermissionAlert) {
-            Button("Open Settings") {
+        .alert(String(localized: "notif_permission_title"), isPresented: $showPermissionAlert) {
+            Button(String(localized: "open_settings")) {
                 if let url = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(url)
                 }
             }
-            Button("Cancel", role: .cancel) {}
+            Button(String(localized: "cancel"), role: .cancel) {}
+
         } message: {
-            Text("Notifications are disabled. Go to Settings → Structify to enable them.")
+            Text(String(localized: "notif_permission_message"))
         }
     }
 
@@ -148,10 +148,10 @@ struct NotificationsSettingsView: View {
             }
 
             VStack(alignment: .leading, spacing: 3) {
-                Text("Notifications Disabled")
+                Text(String(localized: "notif_disabled_title"))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.primary)
-                Text("Tap to open Settings and enable them.")
+                Text(String(localized: "notif_disabled_subtitle"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -191,9 +191,12 @@ struct NotificationsSettingsView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("All Notifications")
+                    Text(String(localized: "notif_all_title"))
                         .font(.body.weight(.semibold))
-                    Text(globalEnabled ? "Reminders are active" : "All reminders paused")
+                    Text(globalEnabled
+                         ? String(localized: "notif_active_status")
+                         : String(localized: "notif_paused_status"))
+
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -221,7 +224,8 @@ struct NotificationsSettingsView: View {
 
     var leadTimeSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            sectionLabel("Event Reminders")
+            sectionLabel(String(localized: "notif_event_section"))
+
 
             VStack(spacing: 0) {
                 HStack(spacing: 14) {
@@ -233,7 +237,8 @@ struct NotificationsSettingsView: View {
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(.white)
                     }
-                    Text("Remind me before")
+                    Text(String(localized: "notif_remind_before"))
+
                         .font(.body)
                     Spacer()
                     Picker("", selection: $eventLeadTime) {
@@ -265,7 +270,7 @@ struct NotificationsSettingsView: View {
 
     var habitTimingSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            sectionLabel("Habit Reminders")
+            sectionLabel(String(localized: "notif_habit_section"))
 
             VStack(spacing: 0) {
                 HStack(spacing: 14) {
@@ -278,9 +283,9 @@ struct NotificationsSettingsView: View {
                             .foregroundStyle(.white)
                     }
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Notify at habit time")
+                        Text(String(localized: "notif_habit_time_title"))
                             .font(.body)
-                        Text("Remind exactly when the habit starts")
+                        Text(String(localized: "notif_habit_time_desc"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -366,10 +371,10 @@ struct NotificationsSettingsView: View {
             Image(systemName: "bell.badge.slash")
                 .font(.system(size: 36, weight: .light))
                 .foregroundStyle(.tertiary)
-            Text("No events or habits yet")
+            Text(String(localized: "notif_empty_title"))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
-            Text("Add events and habits to manage their notifications here.")
+            Text(String(localized: "notif_empty_subtitle"))
                 .font(.caption)
                 .foregroundStyle(.tertiary)
                 .multilineTextAlignment(.center)
@@ -394,10 +399,15 @@ struct NotificationsSettingsView: View {
 
     func timeLabel(for template: EventTemplate) -> String {
         let t = TimelineEngine.formatTime(template.minutes)
+
         if template.kind == .event {
-            return "Reminder \(eventLeadTime)m before · \(t)"
+            return String(
+                localized: "notif_event_time_label \(eventLeadTime) \(t)"
+            )
         } else {
-            return "Reminder at \(t)"
+            return String(
+                localized: "notif_habit_time_label \(t)"
+            )
         }
     }
 

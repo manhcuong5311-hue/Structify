@@ -22,7 +22,7 @@ struct OnboardingWelcomePage: View {
 
                     // Title
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Welcome to\nStructify")
+                        Text(String(localized: "onboarding.welcome_title"))
                             .font(.system(size: isPad ? 48 : 30, weight: .bold, design: .serif))
                             .minimumScaleFactor(0.75)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -30,7 +30,7 @@ struct OnboardingWelcomePage: View {
                             .opacity(appeared ? 1 : 0)
                             .animation(.spring(response: 0.5, dampingFraction: 0.8).delay(0.25), value: appeared)
 
-                        Text("Plan your day visually. Build habits that stick. See your life take shape.")
+                        Text(String(localized: "onboarding.welcome_subtitle"))
                             .font(isPad ? .title3 : .body)
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -45,40 +45,98 @@ struct OnboardingWelcomePage: View {
                     // Feature pills — 2 column trên iPad
                     if isPad {
                         LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
-                            featureRow(icon: "timeline.selection",  title: "Visual Timeline",  subtitle: "Drag, drop and shape your day",          delay: 0.45)
-                            featureRow(icon: "repeat.circle.fill",  title: "Habit Tracking",   subtitle: "Build consistency day by day",           delay: 0.55)
-                            featureRow(icon: "chart.bar.fill",      title: "Progress Stats",   subtitle: "See how far you've come",                delay: 0.65)
-                            featureRow(icon: "face.smiling.fill",   title: "Mood Journal",     subtitle: "Log how you feel, every day",            delay: 0.75)
-                            featureRow(icon: "square.grid.2x2.fill",title: "200+ Icons",       subtitle: "Pick the perfect icon for every event",  delay: 0.85)
-                            featureRow(icon: "paintpalette.fill",   title: "Custom Colors",    subtitle: "Make your timeline uniquely yours",      delay: 0.95)
+                            featureRow(
+                                   icon: "timeline.selection",
+                                   title: String(localized: "onboarding.feature.timeline.title"),
+                                   subtitle: String(localized: "onboarding.feature.timeline.subtitle"),
+                                   delay: 0.45
+                               )
+
+                               featureRow(
+                                   icon: "repeat.circle.fill",
+                                   title: String(localized: "onboarding.feature.habit.title"),
+                                   subtitle: String(localized: "onboarding.feature.habit.subtitle"),
+                                   delay: 0.55
+                               )
+
+                               featureRow(
+                                   icon: "chart.bar.fill",
+                                   title: String(localized: "onboarding.feature.stats.title"),
+                                   subtitle: String(localized: "onboarding.feature.stats.subtitle"),
+                                   delay: 0.65
+                               )
+
+                               featureRow(
+                                   icon: "face.smiling.fill",
+                                   title: String(localized: "onboarding.feature.mood.title"),
+                                   subtitle: String(localized: "onboarding.feature.mood.subtitle"),
+                                   delay: 0.75
+                               )
+
+                               featureRow(
+                                   icon: "square.grid.2x2.fill",
+                                   title: String(localized: "onboarding.feature.icons.title"),
+                                   subtitle: String(localized: "onboarding.feature.icons.subtitle"),
+                                   delay: 0.85
+                               )
+
+                               featureRow(
+                                   icon: "paintpalette.fill",
+                                   title: String(localized: "onboarding.feature.colors.title"),
+                                   subtitle: String(localized: "onboarding.feature.colors.subtitle"),
+                                   delay: 0.95
+                               )
                         }
                         .padding(.horizontal, 48)
                     } else {
                         VStack(spacing: 14) {
-                            featureRow(icon: "timeline.selection",  title: "Visual Timeline",  subtitle: "Drag, drop and shape your day",          delay: 0.45)
-                            featureRow(icon: "repeat.circle.fill",  title: "Habit Tracking",   subtitle: "Build consistency day by day",           delay: 0.55)
-                            featureRow(icon: "chart.bar.fill",      title: "Progress Stats",   subtitle: "See how far you've come",                delay: 0.65)
-                            featureRow(icon: "face.smiling.fill",   title: "Mood Journal",     subtitle: "Log how you feel, every day",            delay: 0.75)
-                            featureRow(icon: "square.grid.2x2.fill",title: "200+ Icons",       subtitle: "Pick the perfect icon for every event",  delay: 0.85)
-                            featureRow(icon: "paintpalette.fill",   title: "Custom Colors",    subtitle: "Make your timeline uniquely yours",      delay: 0.95)
+                            featureRow(
+                                   icon: "timeline.selection",
+                                   title: String(localized: "onboarding.feature.timeline.title"),
+                                   subtitle: String(localized: "onboarding.feature.timeline.subtitle"),
+                                   delay: 0.45
+                               )
+
+                               featureRow(
+                                   icon: "repeat.circle.fill",
+                                   title: String(localized: "onboarding.feature.habit.title"),
+                                   subtitle: String(localized: "onboarding.feature.habit.subtitle"),
+                                   delay: 0.55
+                               )
+
+                               featureRow(
+                                   icon: "chart.bar.fill",
+                                   title: String(localized: "onboarding.feature.stats.title"),
+                                   subtitle: String(localized: "onboarding.feature.stats.subtitle"),
+                                   delay: 0.65
+                               )
+
+                               featureRow(
+                                   icon: "face.smiling.fill",
+                                   title: String(localized: "onboarding.feature.mood.title"),
+                                   subtitle: String(localized: "onboarding.feature.mood.subtitle"),
+                                   delay: 0.75
+                               )
+
+                               featureRow(
+                                   icon: "square.grid.2x2.fill",
+                                   title: String(localized: "onboarding.feature.icons.title"),
+                                   subtitle: String(localized: "onboarding.feature.icons.subtitle"),
+                                   delay: 0.85
+                               )
+
+                               featureRow(
+                                   icon: "paintpalette.fill",
+                                   title: String(localized: "onboarding.feature.colors.title"),
+                                   subtitle: String(localized: "onboarding.feature.colors.subtitle"),
+                                   delay: 0.95
+                               )
                         }
                         .padding(.horizontal, 24)
                     }
 
                     Spacer()
 
-                    // Swipe hint
-                    VStack(spacing: 6) {
-                        Image(systemName: "chevron.right.2")
-                            .font(.system(size: isPad ? 18 : 14, weight: .semibold))
-                            .foregroundStyle(.secondary)
-                        Text("Swipe to get started")
-                            .font(isPad ? .subheadline : .caption)
-                            .foregroundStyle(.tertiary)
-                    }
-                    .opacity(appeared ? 1 : 0)
-                    .animation(.easeIn(duration: 0.4).delay(0.9), value: appeared)
-                    .padding(.bottom, geo.size.height * 0.06)
                 }
             }
         }

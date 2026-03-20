@@ -46,11 +46,11 @@ private extension OnboardingWakeTimePage {
 
         VStack(alignment: .leading, spacing: 12) {
 
-            Text("When do you usually wake up?")
+            Text(String(localized: "onboarding.wakeup.title"))
                 .font(.system(size: 42, weight: .bold, design: .serif))
                 .minimumScaleFactor(0.75)
 
-            Text("Your day will start from this time on the timeline.")
+            Text(String(localized: "onboarding.wakeup.subtitle"))
                 .foregroundStyle(.secondary)
 
         }
@@ -213,15 +213,14 @@ private extension OnboardingWakeTimePage {
 
                 HStack {
 
-                    Text("12 AM")
+                    Text(String(localized: "time.midnight"))
+                    Spacer()
+
+                    Text(String(localized: "time.six_am"))
 
                     Spacer()
 
-                    Text("6 AM")
-
-                    Spacer()
-
-                    Text("12 PM")
+                    Text(String(localized: "time.noon"))
 
                 }
                 .font(.caption)

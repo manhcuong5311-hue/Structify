@@ -11,8 +11,8 @@ import Combine
 
 // MARK: - Limits
 enum PremiumLimit {
-    static let maxFreeEvents = 3
-    static let maxFreeHabits = 3
+    static let maxFreeEvents = 50
+    static let maxFreeHabits = 50
     static let maxFreeIconsPerCategory = 5
 }
 
@@ -65,7 +65,7 @@ class PremiumStore: ObservableObject {
             let products = try await Product.products(for: [productID])
             guard let product = products.first else {
                 await MainActor.run {
-                    errorMessage = "Product not found."
+                    errorMessage = String(localized: "purchase.error.product_not_found")
                     isLoading = false
                 }
                 return
@@ -77,12 +77,16 @@ class PremiumStore: ObservableObject {
                 case .verified:
                     await MainActor.run { unlock() }
                 case .unverified:
-                    await MainActor.run { errorMessage = "Purchase could not be verified." }
+                    await MainActor.run {
+                        errorMessage = String(localized: "purchase.error.verification_failed")
+                    }
                 }
             case .userCancelled:
                 break
             case .pending:
-                await MainActor.run { errorMessage = "Purchase is pending approval." }
+                await MainActor.run {
+                    errorMessage = String(localized: "purchase.error.pending")
+                }
             @unknown default:
                 break
             }

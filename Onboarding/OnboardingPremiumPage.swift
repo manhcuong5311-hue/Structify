@@ -119,16 +119,16 @@ struct OnboardingPremiumPage: View {
             .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(0.1), value: appear)
 
             VStack(spacing: 6) {
-                Text("One last thing")
+                Text(String(localized: "onboarding.paywall.title"))
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.4))
                     .tracking(1.5)
 
-                Text("Unlock everything.")
+                Text(String(localized: "onboarding.paywall.unlock"))
                     .font(.system(size: 28, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
 
-                Text("Start free, upgrade anytime.")
+                Text(String(localized: "onboarding.paywall.subtitle"))
                     .font(.system(size: 14))
                     .foregroundStyle(.white.opacity(0.5))
             }
@@ -139,10 +139,30 @@ struct OnboardingPremiumPage: View {
 
     // MARK: - Features
     let features: [(String, Color, String, String)] = [
-        ("infinity",           Color(red: 0.95, green: 0.78, blue: 0.25), "Unlimited Events & Habits", "No caps on what you plan"),
-        ("paintpalette.fill",  Color(red: 0.6,  green: 0.4,  blue: 0.95), "Full Customization",         "Colors, density, snap step"),
-        ("bell.badge.fill",    Color(red: 1.0,  green: 0.4,  blue: 0.4),  "Smart Notifications",        "Briefing, review & more"),
-        ("externaldrive.fill", Color(red: 0.3,  green: 0.7,  blue: 0.5),  "Backup & Export",            "Never lose your data"),
+        (
+            "infinity",
+            Color(red: 0.95, green: 0.78, blue: 0.25),
+            String(localized: "premium.feature.unlimited.title"),
+            String(localized: "premium.feature.unlimited.subtitle")
+        ),
+        (
+            "paintpalette.fill",
+            Color(red: 0.6, green: 0.4, blue: 0.95),
+            String(localized: "premium.feature.customization.title"),
+            String(localized: "premium.feature.customization.subtitle")
+        ),
+        (
+            "bell.badge.fill",
+            Color(red: 1.0, green: 0.4, blue: 0.4),
+            String(localized: "premium.feature.notifications.title"),
+            String(localized: "premium.feature.notifications.subtitle")
+        ),
+        (
+            "externaldrive.fill",
+            Color(red: 0.3, green: 0.7, blue: 0.5),
+            String(localized: "premium.feature.backup.title"),
+            String(localized: "premium.feature.backup.subtitle")
+        )
     ]
 
     var featuresSection: some View {
@@ -189,14 +209,20 @@ struct OnboardingPremiumPage: View {
         HStack(spacing: 0) {
             // Free column
             VStack(spacing: 0) {
-                Text("Free")
+                Text(String(localized: "premium.free.title"))
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.white.opacity(0.4))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(Color.white.opacity(0.04))
 
-                ForEach(["3 events", "3 habits", "5 icons", "7d stats"], id: \.self) { val in
+                ForEach([
+                    String(localized: "premium.free.limit.events"),
+                    String(localized: "premium.free.limit.habits"),
+                    String(localized: "premium.free.limit.icons"),
+                    String(localized: "premium.free.limit.stats")
+                ], id: \.self) { val in
+
                     Text(val)
                         .font(.system(size: 12))
                         .foregroundStyle(.white.opacity(0.3))
@@ -212,14 +238,19 @@ struct OnboardingPremiumPage: View {
 
             // Premium column
             VStack(spacing: 0) {
-                Text("Premium")
+                Text(String(localized: "premium.title"))
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(Color(red: 0.95, green: 0.78, blue: 0.25))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 10)
                     .background(Color(red: 0.95, green: 0.78, blue: 0.25).opacity(0.08))
 
-                ForEach(["∞ events", "∞ habits", "∞ icons", "90d stats"], id: \.self) { val in
+                ForEach([
+                    String(localized: "premium.feature.events"),
+                    String(localized: "premium.feature.habits"),
+                    String(localized: "premium.feature.icons"),
+                    String(localized: "premium.feature.stats")
+                ], id: \.self) { val in
                     Text(val)
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(Color(red: 0.95, green: 0.78, blue: 0.25))
@@ -265,7 +296,7 @@ struct OnboardingPremiumPage: View {
                         HStack(spacing: 8) {
                             Image(systemName: "crown.fill")
                                 .font(.system(size: 15, weight: .bold))
-                            Text("Unlock Premium — $4.99")
+                            Text(String(localized: "premium.unlock_price"))
                                 .font(.system(size: 16, weight: .bold, design: .rounded))
                         }
                         .foregroundStyle(.black)
@@ -290,7 +321,7 @@ struct OnboardingPremiumPage: View {
             Button {
                 onFinish()
             } label: {
-                Text("Maybe later")
+                Text(String(localized: "premium.later"))
                     .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(.white.opacity(0.4))
                     .frame(maxWidth: .infinity)
@@ -301,7 +332,7 @@ struct OnboardingPremiumPage: View {
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.seal.fill")
                         .foregroundStyle(Color(red: 0.95, green: 0.78, blue: 0.25))
-                    Text("Premium unlocked!")
+                    Text(String(localized: "premium.unlocked"))
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.white)
                 }
@@ -322,7 +353,9 @@ struct OnboardingPremiumPage: View {
             Button {
                 Task { await premium.restore() }
             } label: {
-                Text(premium.isLoading ? "Restoring..." : "Restore Purchase")
+                Text(premium.isLoading
+                     ? String(localized: "premium.restoring")
+                     : String(localized: "premium.restore"))
                     .font(.system(size: 12))
                     .foregroundStyle(.white.opacity(0.3))
             }
@@ -335,12 +368,12 @@ struct OnboardingPremiumPage: View {
 
             // Purchase description
             VStack(spacing: 5) {
-                Text("Structify Premium is a one-time purchase of $4.99 USD.")
+                Text(String(localized: "premium.purchase_description"))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(.white.opacity(0.3))
                     .multilineTextAlignment(.center)
 
-                Text("Payment charged to your Apple ID. No subscription, no recurring charges. Restore on any device with the same Apple ID.")
+                Text(String(localized: "premium.purchase_details"))
                     .font(.system(size: 10))
                     .foregroundStyle(.white.opacity(0.18))
                     .multilineTextAlignment(.center)
@@ -355,7 +388,7 @@ struct OnboardingPremiumPage: View {
                         UIApplication.shared.open(url)
                     }
                 } label: {
-                    Text("Privacy Policy")
+                    Text(String(localized: "legal.privacy_policy"))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(.white.opacity(0.3))
                         .underline()
@@ -370,7 +403,7 @@ struct OnboardingPremiumPage: View {
                         UIApplication.shared.open(url)
                     }
                 } label: {
-                    Text("Terms of Use")
+                    Text(String(localized: "legal.terms_of_use"))
                         .font(.system(size: 11, weight: .medium))
                         .foregroundStyle(.white.opacity(0.3))
                         .underline()

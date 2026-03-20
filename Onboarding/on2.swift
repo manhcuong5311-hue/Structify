@@ -5,13 +5,14 @@ struct OnboardingTimelinePage: View {
     @State private var appeared = false
     @State private var animateEvents = false
     @Environment(\.colorScheme) private var scheme
+    
     let demoEvents: [(String, String, Color, String, Bool)] = [
-        ("06:30", "sun.max.fill",    Color(red:1.0,green:0.75,blue:0.25), "Morning Start",  false),
-        ("08:00", "briefcase.fill",  Color(red:0.35,green:0.55,blue:0.90), "Deep Work",     true),
-        ("10:30", "cup.and.saucer.fill", Color(red:0.65,green:0.45,blue:0.30), "Coffee Break", false),
-        ("12:00", "fork.knife",      Color(red:0.90,green:0.45,blue:0.35), "Lunch",         true),
-        ("14:00", "figure.run",      Color(red:0.35,green:0.80,blue:0.55), "Workout",       true),
-        ("22:00", "moon.stars.fill", Color(red:0.40,green:0.35,blue:0.75), "Wind Down",     false),
+        ("06:30", "sun.max.fill", Color(red:1.0,green:0.75,blue:0.25), String(localized: "demo.event.morning_start"), false),
+        ("08:00", "briefcase.fill", Color(red:0.35,green:0.55,blue:0.90), String(localized: "demo.event.deep_work"), true),
+        ("10:30", "cup.and.saucer.fill", Color(red:0.65,green:0.45,blue:0.30), String(localized: "demo.event.coffee_break"), false),
+        ("12:00", "fork.knife", Color(red:0.90,green:0.45,blue:0.35), String(localized: "demo.event.lunch"), true),
+        ("14:00", "figure.run", Color(red:0.35,green:0.80,blue:0.55), String(localized: "demo.event.workout"), true),
+        ("22:00", "moon.stars.fill", Color(red:0.40,green:0.35,blue:0.75), String(localized: "demo.event.wind_down"), false),
     ]
     
     private var isPad: Bool {
@@ -36,7 +37,7 @@ struct OnboardingTimelinePage: View {
 
                     // Title
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Your day,\nas a timeline")
+                        Text(String(localized: "onboarding.timeline.title"))
                             .font(.system(size: isPad ? 48 : 38, weight: .bold, design: .serif))
                             .minimumScaleFactor(0.75)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -44,7 +45,8 @@ struct OnboardingTimelinePage: View {
                             .opacity(appeared ? 1 : 0)
                             .animation(.spring(response: 0.5, dampingFraction: 0.8).delay(0.1), value: appeared)
 
-                        Text("Every event and habit lives on your timeline. Drag to reschedule, tap to track.")
+                        Text(String(localized: "onboarding.timeline.subtitle"))
+
                             .font(isPad ? .title3 : .body)
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -100,18 +102,6 @@ struct OnboardingTimelinePage: View {
                     )
                     Spacer()
 
-                    // Swipe hint
-                    VStack(spacing: 6) {
-                        Image(systemName: "chevron.right.2")
-                            .font(.system(size: isPad ? 18 : 14, weight: .semibold))
-                            .foregroundStyle(.secondary)
-                        Text("Swipe to continue")
-                            .font(isPad ? .subheadline : .caption)
-                            .foregroundStyle(.tertiary)
-                    }
-                    .opacity(appeared ? 1 : 0)
-                    .animation(.easeIn(duration: 0.4).delay(0.9), value: appeared)
-                    .padding(.bottom, geo.size.height * 0.05)
                 }
             }
         }
@@ -164,7 +154,7 @@ struct OnboardingTimelinePage: View {
                     .font(.system(size: isPad ? 17 : 15, weight: .semibold))
 
                 if hasDuration {
-                    Text("1h 30m")
+                    Text(String(localized: "common.duration_example"))
                          .font(.system(size: isPad ? 13 : 11))
                         .foregroundStyle(.tertiary)
                 }

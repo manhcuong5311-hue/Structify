@@ -65,7 +65,7 @@ struct OnboardingView: View {
                         withAnimation(.easeInOut) { page += 1 }
                     }
                 } label: {
-                    Text("Continue")
+                    Text(String(localized: "common.continue"))
                         .font(.system(size: 17, weight: .semibold))
                         .frame(maxWidth: .infinity)
                         .frame(height: 60)

@@ -114,26 +114,29 @@ struct LifetimeDetailView: View {
                             icon: "checkmark.circle.fill",
                             color: Color(red:0.45,green:0.90,blue:0.65),
                             value: totalEventsCompleted,
-                            label: "Events done"
+                            label: String(localized: "stats_events_done")
                         )
                         lifetimeSummaryCard(
                             icon: "repeat.circle.fill",
                             color: Color(red:1.0,green:0.72,blue:0.35),
                             value: totalHabitsCompleted,
-                            label: "Habits done"
+                            label: String(localized: "stats_habits_done")
                         )
                         lifetimeSummaryCard(
                             icon: "chart.bar.fill",
                             color: Color(red:0.55,green:0.75,blue:1.0),
                             value: totalAccumulativeCompleted,
-                            label: "Accumulated"
+                            label: String(localized: "stats_accumulated")
                         )
                     }
 
                     // MARK: Habits breakdown
                     if !habitStats.isEmpty {
-                        sectionHeader("Habit History", icon: "repeat.circle.fill",
-                                      color: Color(red:1.0,green:0.72,blue:0.35))
+                        sectionHeader(
+                            String(localized: "stats_habit_history"),
+                            icon: "repeat.circle.fill",
+                            color: Color(red:1.0,green:0.72,blue:0.35)
+                        )
 
                         VStack(spacing: 10) {
                             ForEach(habitStats) { stat in
@@ -144,8 +147,12 @@ struct LifetimeDetailView: View {
 
                     // MARK: Events breakdown
                     if !regularEventStats.isEmpty {
-                        sectionHeader("Event History", icon: "calendar.circle.fill",
-                                      color: Color(red:0.45,green:0.90,blue:0.65))
+                        sectionHeader(
+                            String(localized: "stats_event_history"),
+                            icon: "calendar.circle.fill",
+                            color: Color(red:0.45,green:0.90,blue:0.65)
+                        )
+
 
                         VStack(spacing: 10) {
                             ForEach(regularEventStats) { stat in
@@ -159,10 +166,10 @@ struct LifetimeDetailView: View {
                             Image(systemName: "chart.bar.xaxis")
                                 .font(.system(size: 44))
                                 .foregroundStyle(.secondary)
-                            Text("No completed activities yet")
+                            Text(String(localized: "stats_empty_title"))
                                 .font(.system(size: 16, weight: .medium))
                                 .foregroundStyle(.secondary)
-                            Text("Start completing events and habits to see your lifetime stats here.")
+                            Text(String(localized: "stats_empty_subtitle"))
                                 .font(.system(size: 13))
                                 .foregroundStyle(.tertiary)
                                 .multilineTextAlignment(.center)
@@ -176,11 +183,13 @@ struct LifetimeDetailView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
             }
-            .navigationTitle("Lifetime Stats")
+            .navigationTitle(String(localized: "stats_lifetime_title"))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { dismiss() }
+                    Button(String(localized: "common_done")) {
+                        dismiss()
+                    }
                 }
             }
         }
@@ -235,11 +244,16 @@ struct LifetimeRowView: View {
     }
 
     var badgeText: String {
-        if stat.habitType == .accumulative { return "Accumulative" }
-        if stat.kind == .habit { return "Habit" }
-        return "Event"
+        if stat.habitType == .accumulative {
+            return String(localized: "badge.accumulative")
+        }
+        if stat.kind == .habit {
+            return String(localized: "badge.habit")
+        }
+        return String(localized: "badge.event")
     }
-
+    
+    
     var badgeColor: Color {
         if stat.habitType == .accumulative { return Color(red:0.55,green:0.75,blue:1.0) }
         if stat.kind == .habit { return Color(red:1.0,green:0.72,blue:0.35) }
@@ -296,7 +310,7 @@ struct LifetimeRowView: View {
                 Text("\(stat.completedCount)")
                     .font(.system(size: 22, weight: .bold, design: .rounded))
                     .foregroundStyle(.primary)
-                Text("times")
+                Text(String(localized: "times"))
                     .font(.system(size: 11))
                     .foregroundStyle(.secondary)
             }

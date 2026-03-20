@@ -46,36 +46,37 @@ struct SettingsView: View {
                 premiumCard
 
                 // MARK: - Sections
-                settingsGroup(title: "Manage", items: [
-                    .init(icon: "bell.badge.fill",  label: "Notifications", color: .red)  { showNotifications = true },
-                    .init(icon: "gearshape.2.fill", label: "Preferences",   color: .gray) { showPreferences = true }
+                settingsGroup(title: String(localized: "settings_manage_title"), items: [
+                    .init(icon: "bell.badge.fill",  label: String(localized: "settings_notifications"), color: .red)  { showNotifications = true },
+                    .init(icon: "gearshape.2.fill", label: String(localized: "settings_preferences"),   color: .gray) { showPreferences = true }
                 ])
 
-                settingsGroup(title: "Support", items: [
-                    .init(icon: "envelope.fill",         label: "Contact Us",    color: .teal)   { contactSupport() },
-                    .init(icon: "questionmark.bubble.fill", label: "FAQ", color: .indigo) {
+                settingsGroup(title: String(localized: "settings_support_title"), items: [
+                    .init(icon: "envelope.fill", label: String(localized: "settings_contact_us"), color: .teal) { contactSupport() },
+                    .init(icon: "questionmark.bubble.fill", label: String(localized: "settings_faq"), color: .indigo) {
                         showFAQ = true
                     },
-                    .init(icon: "square.and.arrow.up.fill", label: "Share App",   color: .orange) { shareApp() },
-                    .init(icon: "star.fill",             label: "Rate App",      color: .yellow) { rateApp() }
+                    .init(icon: "square.and.arrow.up.fill", label: String(localized: "settings_share_app"), color: .orange) { shareApp() },
+                    .init(icon: "star.fill", label: String(localized: "settings_rate_app"), color: .yellow) { rateApp() }
                 ])
 
-                settingsGroup(title: "Account", items: [
-                    .init(icon: "creditcard.fill",       label: "Subscription",  color: .purple) { openSubscriptions() },
-                    .init(icon: "arrow.clockwise",       label: "Restore Purchase", color: .green) { restorePurchases() }
+                settingsGroup(title: String(localized: "settings_account_title"), items: [
+                    .init(icon: "creditcard.fill", label: String(localized: "settings_subscription"), color: .purple) { openSubscriptions() },
+                    .init(icon: "arrow.clockwise", label: String(localized: "settings_restore_purchase"), color: .green) { restorePurchases() }
                 ])
 
-                settingsGroup(title: "Legal", items: [
-                    .init(icon: "lock.shield.fill", label: "Privacy Policy", color: .cyan) {
+                settingsGroup(title: String(localized: "settings_legal_title"), items: [
+                    .init(icon: "lock.shield.fill", label: String(localized: "settings_privacy_policy"), color: .cyan) {
                         showPrivacy = true
                     },
-                    .init(icon: "doc.text.fill", label: "Terms of Use", color: .mint) {
+                    .init(icon: "doc.text.fill", label: String(localized: "settings_terms"), color: .mint) {
                         showTerms = true
                     }
                 ])
+                
                 // TÌM dòng text vừa thêm, ĐỔI THÀNH:
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Structify provides general wellness and productivity information for personal planning purposes. It is not intended as medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional for medical concerns.")
+                    Text(String(localized: "settings_disclaimer"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.leading)
@@ -88,7 +89,7 @@ struct SettingsView: View {
                         HStack(spacing: 4) {
                             Image(systemName: "link")
                                 .font(.system(size: 11))
-                            Text("Source: World Health Organization")
+                            Text(String(localized: "settings_source_who"))
                                 .font(.caption)
                                 .underline()
                         }
@@ -106,7 +107,7 @@ struct SettingsView: View {
             .padding(.bottom, 120)
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle("Settings")
+        .navigationTitle(String(localized: "settings_title"))
         .navigationBarTitleDisplayMode(.large)
         .navigationDestination(isPresented: $showNotifications) {  // 👈 thêm
                   NotificationsSettingsView()
@@ -209,12 +210,15 @@ extension SettingsView {
 
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 6) {
-                        Text(isPremium ? "Structify Premium" : "Upgrade to Premium")
+                        Text(isPremium
+                             ? String(localized: "settings_premium_title")
+                             : String(localized: "settings_upgrade_title")
+                        )
                             .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(.white)
 
                         if isPremium {
-                            Text("ACTIVE")
+                            Text(String(localized: "settings_active"))
                                 .font(.system(size: 9, weight: .black))
                                 .foregroundStyle(Color(red: 0.95, green: 0.78, blue: 0.25))
                                 .padding(.horizontal, 6)
@@ -231,8 +235,8 @@ extension SettingsView {
                     }
 
                     Text(isPremium
-                        ? "Thank you for your support ♥"
-                        : "Unlock all features, no subscription"
+                         ? String(localized: "settings_premium_thanks")
+                         : String(localized: "settings_premium_cta")
                     )
                     .font(.system(size: 12))
                     .foregroundStyle(.white.opacity(isPremium ? 0.65 : 0.6))

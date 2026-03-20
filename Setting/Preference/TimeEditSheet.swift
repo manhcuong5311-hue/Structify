@@ -29,7 +29,7 @@ struct TimeEditSheet: View {
         self.limitMinutes = limitMinutes
         self.brand = brand
         self.onSave = onSave
-        self.isSleep = title == "Night Reset"
+        self.isSleep = title == String(localized: "night_reset")
         _selectedDate = State(initialValue: minutesToDate(initialMinutes))
     }
 
@@ -46,8 +46,8 @@ struct TimeEditSheet: View {
 
     var validationMessage: String {
         isSleep
-        ? "Must be after Morning Start"
-        : "Must be before Night Reset"
+        ? String(localized: "must_be_after_morning_start")
+        : String(localized: "must_be_before_night_reset")
     }
 
     var body: some View {
@@ -103,7 +103,7 @@ struct TimeEditSheet: View {
                     onSave(selectedMinutes)
                     dismiss()
                 } label: {
-                    Text("Save")
+                    Text(String(localized: "save"))
                         .font(.title3.bold())
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -119,7 +119,9 @@ struct TimeEditSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") { dismiss() }
+                    Button(String(localized: "cancel")) {
+                        dismiss()
+                    }
                         .foregroundStyle(.secondary)
                 }
             }

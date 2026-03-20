@@ -39,15 +39,26 @@ class PreferencesStore: ObservableObject {
 }
 
 enum TimelineDensity: String, CaseIterable {
-    case compact     = "Compact"
-    case normal      = "Normal"
-    case comfortable = "Comfortable"
+    case compact
+    case normal
+    case comfortable
 
     var hourHeight: CGFloat {
         switch self {
         case .compact:     return 28
         case .normal:      return 36
         case .comfortable: return 48
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .compact:
+            return String(localized: "timeline_density_compact")
+        case .normal:
+            return String(localized: "timeline_density_normal")
+        case .comfortable:
+            return String(localized: "timeline_density_comfortable")
         }
     }
 }
@@ -173,7 +184,7 @@ struct PreferencesView: View {
 
                         // MARK: Section 1 — Schedule
                         prefSection(
-                            title: "Schedule",
+                            title: String(localized: "settings_schedule"),
                             icon: "calendar",
                             iconColor: brand
                         ) {
@@ -182,7 +193,7 @@ struct PreferencesView: View {
 
                         // MARK: Section 2 — Appearance
                         prefSection(
-                            title: "Appearance",
+                            title: String(localized: "settings_appearance"),
                             icon: "paintbrush.fill",
                             iconColor: .purple
                         ) {
@@ -191,7 +202,7 @@ struct PreferencesView: View {
 
                         // MARK: Section 3 — Productivity
                         prefSection(
-                            title: "Productivity",
+                            title: String(localized: "settings_productivity"),
                             icon: "bolt.fill",
                             iconColor: .orange
                         ) {
@@ -200,7 +211,7 @@ struct PreferencesView: View {
 
                         // MARK: Section 4 — Notifications
                         prefSection(
-                            title: "Notifications",
+                            title: String(localized: "settings_notifications"),
                             icon: "bell.fill",
                             iconColor: .red
                         ) {
@@ -209,7 +220,7 @@ struct PreferencesView: View {
 
                         // MARK: Section 5 — Stats & Data
                         prefSection(
-                            title: "Stats & Data",
+                            title: String(localized: "settings_stats_data"),
                             icon: "chart.bar.fill",
                             iconColor: .green
                         ) {
@@ -229,11 +240,11 @@ struct PreferencesView: View {
                     .padding(.top, 8)
                 }
             }
-            .navigationTitle("Preferences")
+            .navigationTitle(String(localized: "prefs_title"))
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button(String(localized: "done")) {
                         // Notify các view cần refresh
                         NotificationCenter.default.post(name: .preferencesDidChange, object: nil)
                         dismiss()
@@ -245,7 +256,7 @@ struct PreferencesView: View {
             .onAppear { syncTimeDates() }
             .sheet(isPresented: $showWakePicker) {
                 TimeEditSheet(
-                    title: "Morning Start",
+                    title: String(localized: "prefs_morning_start"),
                     icon: "sunrise.fill",
                     iconColor: Color(red: 0.96, green: 0.63, blue: 0.38),
                     initialMinutes: store.wakeMinutes,
@@ -260,7 +271,7 @@ struct PreferencesView: View {
             }
             .sheet(isPresented: $showSleepPicker) {
                 TimeEditSheet(
-                    title: "Night Reset",
+                    title: String(localized: "prefs_night_reset"),
                     icon: "moon.stars.fill",
                     iconColor: Color(red: 0.42, green: 0.48, blue: 0.65),
                     initialMinutes: store.sleepMinutes,
@@ -273,14 +284,17 @@ struct PreferencesView: View {
                     )
                 }
             }
-            .alert("Reset All Data", isPresented: $showResetAlert) {
-                Button("Reset Everything", role: .destructive) {
+            .alert(String(localized: "reset_data_title"), isPresented: $showResetAlert) {
+
+                Button(String(localized: "reset_everything"), role: .destructive) {
                     store.resetAllData()
                     NotificationCenter.default.post(name: .preferencesDidChange, object: nil)
                 }
-                Button("Cancel", role: .cancel) {}
+
+                Button(String(localized: "cancel"), role: .cancel) {}
+
             } message: {
-                Text("This will permanently delete all events, habits, and completion history. This cannot be undone.")
+                Text(String(localized: "reset_data_message"))
             }
             .sheet(isPresented: $showShareSheet) {
                 if let url = csvURL {
@@ -319,17 +333,17 @@ struct PreferencesView: View {
             }
 
             // Success alert
-            .alert("Restore Successful", isPresented: $showRestoreSuccessAlert) {
-                Button("OK", role: .cancel) {}
+            .alert(String(localized: "restore_success_title"), isPresented: $showRestoreSuccessAlert) {
+                Button(String(localized: "ok"), role: .cancel) {}
             } message: {
-                Text("Your data has been restored. The app will refresh automatically.")
+                Text(String(localized: "restore_success_message"))
             }
 
             // Error alert
-            .alert("Restore Failed", isPresented: $showRestoreErrorAlert) {
-                Button("OK", role: .cancel) {}
+            .alert(String(localized: "restore_failed_title"), isPresented: $showRestoreErrorAlert) {
+                Button(String(localized: "ok"), role: .cancel) {}
             } message: {
-                Text("Could not read the backup file. Make sure it's a valid Structify backup.")
+                Text(String(localized: "restore_failed_message"))
             }
             
             
@@ -383,7 +397,7 @@ struct PreferencesView: View {
                 prefRow(
                     icon: "sunrise.fill",
                     iconBg: Color(red: 0.96, green: 0.63, blue: 0.38),
-                    label: "Morning Start",
+                    label: String(localized: "prefs_morning_start"),
                     value: formatMinutes(store.wakeMinutes)
                 ) {
                     Image(systemName: "chevron.right")
@@ -399,7 +413,7 @@ struct PreferencesView: View {
                 prefRow(
                     icon: "moon.stars.fill",
                     iconBg: Color(red: 0.42, green: 0.48, blue: 0.65),
-                    label: "Night Reset",
+                    label: String(localized: "prefs_night_reset"),
                     value: formatMinutes(store.sleepMinutes)
                 ) {
                     Image(systemName: "chevron.right")
@@ -415,7 +429,7 @@ struct PreferencesView: View {
             VStack(spacing: 0) {
                 HStack {
                     rowIcon("calendar.badge.clock", bg: .blue)
-                    Text("Week starts on")
+                    Text(String(localized: "prefs_week_start"))
                         .font(.body)
                         .foregroundStyle(.primary)
                     Spacer()
@@ -424,7 +438,15 @@ struct PreferencesView: View {
                 .padding(.top, 12)
 
                 HStack(spacing: 8) {
-                    ForEach([(1,"Sun"),(2,"Mon"),(3,"Tue"),(4,"Wed"),(5,"Thu"),(6,"Fri"),(7,"Sat")], id: \.0) { day in
+                    ForEach([
+                        (1, String(localized: "weekday_sun")),
+                        (2, String(localized: "weekday_mon")),
+                        (3, String(localized: "weekday_tue")),
+                        (4, String(localized: "weekday_wed")),
+                        (5, String(localized: "weekday_thu")),
+                        (6, String(localized: "weekday_fri")),
+                        (7, String(localized: "weekday_sat"))
+                    ], id: \.0) { day in
                         Button {
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                                 prefs.firstWeekday = day.0
@@ -456,7 +478,7 @@ struct PreferencesView: View {
             VStack(spacing: 0) {
                 HStack {
                     rowIcon("paintpalette.fill", bg: tempAccentColor)
-                    Text("Accent Color")
+                    Text(String(localized: "prefs_accent_color"))
                         .font(.body)
                         .foregroundStyle(.primary)
                     Spacer()
@@ -512,7 +534,7 @@ struct PreferencesView: View {
             VStack(spacing: 0) {
                 HStack {
                     rowIcon("rectangle.compress.vertical", bg: .indigo)
-                    Text("Timeline Density")
+                    Text(String(localized: "timeline_density"))
                         .font(.body)
                         .foregroundStyle(.primary)
                     Spacer()
@@ -583,8 +605,8 @@ struct PreferencesView: View {
             prefToggleRow(
                 icon: "checkmark.circle.fill",
                 iconBg: .green,
-                label: "Hide Completed Events",
-                sublabel: "Completed events fade from timeline",
+                label: String(localized: "hide_completed_events"),
+                sublabel: String(localized: "completed_events_fade"),
                 binding: $prefs.hideCompleted
             )
         }
@@ -598,7 +620,7 @@ struct PreferencesView: View {
             VStack(spacing: 0) {
                 HStack {
                     rowIcon("timer", bg: .orange)
-                    Text("Default Duration")
+                    Text(String(localized: "default_duration"))
                         .font(.body)
                         .foregroundStyle(.primary)
                     Spacer()
@@ -640,11 +662,11 @@ struct PreferencesView: View {
             VStack(spacing: 0) {
                 HStack {
                     rowIcon("arrow.left.and.right", bg: Color(red: 0.9, green: 0.5, blue: 0.2))
-                    Text("Drag Snap")
+                    Text(String(localized: "drag_snap"))
                         .font(.body)
                         .foregroundStyle(.primary)
                     Spacer()
-                    Text("Every \(prefs.snapStep) min")
+                    Text(String(localized: "every_minutes \(prefs.snapStep)"))
                         .font(.body)
                         .foregroundStyle(.secondary)
                 }
@@ -679,8 +701,8 @@ struct PreferencesView: View {
             prefToggleRow(
                 icon: "wand.and.stars",
                 iconBg: Color(red: 0.55, green: 0.35, blue: 0.85),
-                label: "Auto-suggest Free Slot",
-                sublabel: "Finds the best gap when creating events",
+                label: String(localized: "auto_suggest_slot"),
+                sublabel: String(localized: "auto_suggest_slot_desc"),
                 binding: $prefs.autoSuggestSlot
             )
         }
@@ -696,8 +718,11 @@ struct PreferencesView: View {
                 prefToggleRow(
                     icon: "sun.horizon.fill",
                     iconBg: Color(red: 1.0, green: 0.7, blue: 0.2),
-                    label: "Morning Briefing",
-                    sublabel: isPremium ? "Daily plan reminder at wake time" : "Premium feature",
+                    label: String(localized: "morning_briefing"),
+                    sublabel: isPremium
+                        ? String(localized: "morning_briefing_desc")
+                        : String(localized: "premium_feature"),
+
                     binding: Binding(
                         get: { prefs.morningBriefing },
                         set: { val in
@@ -761,8 +786,10 @@ struct PreferencesView: View {
                 prefToggleRow(
                     icon: "moon.haze.fill",
                     iconBg: Color(red: 0.35, green: 0.35, blue: 0.75),
-                    label: "Evening Review",
-                    sublabel: isPremium ? "Completion check-in reminder" : "Premium feature",
+                    label: String(localized: "evening_review"),
+                    sublabel: isPremium
+                        ? String(localized: "evening_review_desc")
+                        : String(localized: "premium_feature"),
                     binding: Binding(
                         get: { prefs.eveningReview },
                         set: { val in
@@ -823,8 +850,8 @@ struct PreferencesView: View {
             prefToggleRow(
                 icon: "bell.badge.fill",
                 iconBg: .red,
-                label: "Habit Reminders",
-                sublabel: "Notify at each habit's scheduled time",
+                label: String(localized: "habit_reminders"),
+                sublabel: String(localized: "habit_reminders_desc"),
                 binding: Binding(
                     get: { prefs.habitReminders },
                     set: { val in
@@ -849,10 +876,10 @@ struct PreferencesView: View {
                 HStack {
                     rowIcon("flame.fill", bg: Color(red: 1.0, green: 0.45, blue: 0.2))
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Streak Threshold")
+                        Text(String(localized: "streak_threshold"))
                             .font(.body)
                             .foregroundStyle(.primary)
-                        Text("Min % of habits to count a day")
+                        Text(String(localized: "min_percent_habits"))
                             .font(.caption)
                             .foregroundStyle(.tertiary)
                     }
@@ -904,7 +931,7 @@ struct PreferencesView: View {
             } label: {
                 HStack {
                     rowIcon("square.and.arrow.up", bg: .teal)
-                    Text("Export Data (CSV)")
+                    Text(String(localized: "export_data_csv"))
                         .font(.body)
                         .foregroundStyle(.primary)
                     Spacer()
@@ -933,10 +960,10 @@ struct PreferencesView: View {
                 HStack {
                     rowIcon("externaldrive.fill", bg: .blue)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Backup Data")
+                        Text(String(localized: "backup_data"))
                             .font(.body)
                             .foregroundStyle(.primary)
-                        Text("Export full backup to Files or AirDrop")
+                        Text(String(localized: "backup_data_desc"))
                             .font(.caption)
                             .foregroundStyle(.tertiary)
                     }
@@ -963,10 +990,10 @@ struct PreferencesView: View {
                 HStack {
                     rowIcon("externaldrive.badge.plus", bg: Color(red: 0.2, green: 0.6, blue: 0.4))
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Restore Backup")
+                        Text(String(localized: "restore_backup"))
                             .font(.body)
                             .foregroundStyle(.primary)
-                        Text("Import from a .json backup file")
+                        Text(String(localized: "restore_backup_desc"))
                             .font(.caption)
                             .foregroundStyle(.tertiary)
                     }
@@ -996,7 +1023,7 @@ struct PreferencesView: View {
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundStyle(.white)
                 }
-                Text("DANGER ZONE")
+                Text(String(localized: "danger_zone"))
                     .font(.system(size: 12, weight: .bold))
                     .foregroundStyle(.secondary)
                     .tracking(0.8)
@@ -1008,7 +1035,7 @@ struct PreferencesView: View {
                 HStack(spacing: 10) {
                     Image(systemName: "trash.fill")
                         .font(.system(size: 14, weight: .semibold))
-                    Text("Reset All Data")
+                    Text(String(localized: "reset_all_data"))
                         .font(.body.weight(.semibold))
                     Spacer()
                 }
