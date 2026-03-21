@@ -40,17 +40,29 @@ struct EventDetailSheet: View {
 
     var recurrenceScopeMessage: String {
         guard let t = template else { return "" }
+
         switch t.recurrence {
-        case .daily:    return "This event repeats every day."
-        case .weekdays: return "This event repeats Mon–Fri."
+        case .daily:
+            return String(localized: "recurrence_scope_daily")
+
+        case .weekdays:
+            return String(localized: "recurrence_scope_weekdays")
+
         case .specific(let days):
             let s = Calendar.current.shortWeekdaySymbols
             let names = days.sorted().map { s[$0 - 1] }.joined(separator: ", ")
-            return "This event repeats on \(names)."
-        case .once: return ""
+            return String(localized: "recurrence_scope_specific \(names)")
+
+        case .once:
+            return ""
+
         case .dateRange(let start, let end):
-            let f = DateFormatter(); f.dateFormat = "d MMM"
-            return "This repeats from \(f.string(from: start)) to \(f.string(from: end))."
+            let f = DateFormatter()
+            f.dateFormat = "d MMM"
+            let startStr = f.string(from: start)
+            let endStr = f.string(from: end)
+
+            return String(localized: "recurrence_scope_range \(startStr) \(endStr)")
         }
     }
 
@@ -59,30 +71,55 @@ struct EventDetailSheet: View {
     }
 
     var recurrenceText: String {
-        guard let t = template else { return "–" }
+        guard let t = template else {
+            return String(localized: "dash_placeholder")
+        }
+
         switch t.recurrence {
-        case .daily:         return "Every day"
-        case .weekdays:      return "Mon – Fri"
+        case .daily:
+            return String(localized: "recurrence_text_daily")
+
+        case .weekdays:
+            return String(localized: "recurrence_text_weekdays")
+
         case .specific(let days):
             let s = Calendar.current.shortWeekdaySymbols
             return days.sorted().map { s[$0 - 1] }.joined(separator: ", ")
+
         case .once(let d):
-            let f = DateFormatter(); f.dateFormat = "d MMM yyyy"
+            let f = DateFormatter()
+            f.dateFormat = "d MMM yyyy"
             return f.string(from: d)
+
         case .dateRange(let start, let end):
-            let f = DateFormatter(); f.dateFormat = "d MMM"
-            return "\(f.string(from: start)) – \(f.string(from: end))"
+            let f = DateFormatter()
+            f.dateFormat = "d MMM"
+            return String(
+                localized: "recurrence_text_range \(f.string(from: start)) \(f.string(from: end))"
+            )
         }
     }
 
     var recurrenceIcon: String {
-        guard let t = template else { return "repeat" }
+        guard let t = template else {
+            return "arrow.clockwise" // fallback hợp lý hơn "repeat"
+        }
+
         switch t.recurrence {
-        case .daily:    return "arrow.clockwise"
-        case .weekdays: return "briefcase"
-        case .specific: return "calendar.badge.checkmark"
-        case .once:      return "1.circle"
-        case .dateRange: return "calendar.badge.clock"
+        case .daily:
+            return "arrow.clockwise"
+
+        case .weekdays:
+            return "calendar.badge.clock" // thay vì briefcase (logic thời gian rõ hơn)
+
+        case .specific:
+            return "calendar.badge.checkmark"
+
+        case .once:
+            return "calendar" // Apple style: single event = calendar
+
+        case .dateRange:
+            return "calendar.badge.clock"
         }
     }
 
@@ -91,22 +128,37 @@ struct EventDetailSheet: View {
     }
 
     var durationText: String {
-        guard let d = event.duration, d != 1440 else { return "All Day" }
-        let h = d / 60; let m = d % 60
-        if h > 0 && m > 0 { return "\(h)h \(m)m" }
-        return h > 0 ? "\(h)h" : "\(m)m"
+        guard let d = event.duration, d != 1440 else {
+            return String(localized: "all_day")
+        }
+
+        let h = d / 60
+        let m = d % 60
+
+        if h > 0 && m > 0 {
+            return String(localized: "duration_h_m \(h) \(m)")
+        } else if h > 0 {
+            return String(localized: "duration_h \(h)")
+        } else {
+            return String(localized: "duration_m \(m)")
+        }
     }
 
     var dateText: String {
         let f = DateFormatter()
-        f.dateFormat = "EEEE, d MMMM yyyy"
-        f.locale = Locale(identifier: "en")
+        f.setLocalizedDateFormatFromTemplate("EEEE d MMMM yyyy")
         return f.string(from: calendar.selectedDate)
     }
 
     var timeText: String {
-        guard event.duration != 1440 else { return "All Day" }
-        if let end = event.endTime { return "\(event.time) – \(end)" }
+        guard event.duration != 1440 else {
+            return String(localized: "all_day")
+        }
+
+        if let end = event.endTime {
+            return String(localized: "time_range \(event.time) \(end)")
+        }
+
         return event.time
     }
 
@@ -144,12 +196,14 @@ struct EventDetailSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text(event.kind == .habit ? "Habit" : "Event")
+                    Text(event.kind == .habit
+                         ? String(localized: "kind_habit")
+                         : String(localized: "kind_event"))
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.secondary)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button(String(localized: "done")) {
                         let clean = editTitle.trimmingCharacters(in: .whitespacesAndNewlines)
                         let titleChanged = clean != event.title
                         let iconChanged  = editIcon != event.icon
@@ -196,37 +250,53 @@ struct EventDetailSheet: View {
             }
             
             .alert(
-                "Delete \(event.kind == .habit ? "Habit" : "Event")",
+                event.kind == .habit
+                ? "delete_title_habit"
+                : "delete_title_event",
                 isPresented: $showDeleteAlert
             ) {
-                Button("Delete", role: .destructive) { onDelete(); dismiss() }
-                Button("Cancel", role: .cancel) {}
+                Button("delete", role: .destructive) {
+                    onDelete()
+                    dismiss()
+                }
+
+                Button("cancel", role: .cancel) {}
             } message: {
-                Text("\"\(event.title)\" will be removed from your schedule.")
+                Text("delete_message \(event.title)")
             }
 
             // Alert 2: recurring — hỏi scope
             .alert(
-                "Delete \(event.kind == .habit ? "Habit" : "Event")",
+                String(
+                    localized: event.kind == .habit
+                    ? "delete_title_habit"
+                    : "delete_title_event"
+                ),
                 isPresented: $showDeleteScopeAlert
             ) {
-                Button("Only Today", role: .destructive) {
-                    // Chỉ xóa ngày này
+                Button(String(localized: "delete_only_today"), role: .destructive) {
                     onDelete()
                     dismiss()
                 }
-                Button("All Scheduled Days", role: .destructive) {
-                    // Xóa toàn bộ template + overrides + logs
+
+                Button(String(localized: "delete_all_scheduled"), role: .destructive) {
                     store.deleteTemplate(event.id)
                     dismiss()
                 }
-                Button("Cancel", role: .cancel) {}
+
+                Button(String(localized: "cancel"), role: .cancel) {}
+
             } message: {
-                Text("\(recurrenceScopeMessage)\n\nDelete only today or all scheduled days?")
+                Text(
+                    String(
+                        localized: "delete_scope_message \(recurrenceScopeMessage)"
+                    )
+                )
             }
             
-            .alert("Apply changes to", isPresented: $showScopeAlert) {
-                Button("All Days") {
+            .alert(String(localized: "apply_changes_title"), isPresented: $showScopeAlert) {
+
+                Button(String(localized: "apply_all_days")) {
                     let clean = editTitle.trimmingCharacters(in: .whitespacesAndNewlines)
                     guard !clean.isEmpty else { return }
                     store.updateEvent(
@@ -238,7 +308,8 @@ struct EventDetailSheet: View {
                     saveNotes()
                     dismiss()
                 }
-                Button("Only Today") {
+                
+                Button(String(localized: "apply_only_today")) {
                     let clean = editTitle.trimmingCharacters(in: .whitespacesAndNewlines)
                     guard !clean.isEmpty else { return }
                     store.overrideEventAppearance(
@@ -251,7 +322,7 @@ struct EventDetailSheet: View {
                     saveNotes()
                     dismiss()
                 }
-                Button("Cancel", role: .cancel) {}
+                Button(String(localized: "cancel"), role: .cancel) {}
             } message: {
                 Text(recurrenceScopeMessage)
             }
@@ -303,7 +374,7 @@ struct EventDetailSheet: View {
                     VStack(spacing: 8) {
                         // Title — tap để edit
                         if isEditingTitle {
-                            TextField("Event name", text: $editTitle)
+                            TextField(String(localized: "event_name_placeholder"), text: $editTitle)
                                 .font(.system(size: 20, weight: .bold, design: .rounded))
                                 .multilineTextAlignment(.center)
                                 .focused($titleFocused)
@@ -355,8 +426,9 @@ struct EventDetailSheet: View {
         HStack(spacing: 5) {
             Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle.dotted")
                 .font(.system(size: 13, weight: .semibold))
-            Text(isCompleted ? "Completed" : "Not yet completed")
-                .font(.system(size: 13, weight: .semibold))
+            Text(isCompleted
+                 ? String(localized: "status_completed")
+                 : String(localized: "status_not_completed"))
         }
         .foregroundStyle(isCompleted ? Color.green : Color.secondary)
         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isCompleted)
@@ -376,24 +448,25 @@ struct EventDetailSheet: View {
 
     var quickStatsRow: some View {
         HStack(spacing: 12) {
+
             statChip(
                 value: event.time,
-                label: "Start",
+                label: String(localized: "stat_start"),
                 icon: "clock.fill"
             )
 
             if event.duration != 1440 {
                 statChip(
                     value: durationText,
-                    label: "Duration",
+                    label: String(localized: "stat_duration"),
                     icon: "timer"
                 )
             }
 
             statChip(
-                value: event.kind == .habit ? "Habit" : "Event",
-                label: "Type",
-                icon: event.kind == .habit ? "repeat" : "calendar"
+                value: event.kind.localizedName,
+                label: String(localized: "stat_type"),
+                icon: event.kind.iconName
             )
         }
         .padding(.horizontal, 20)
@@ -428,18 +501,37 @@ struct EventDetailSheet: View {
 
     var infoSection: some View {
         VStack(spacing: 0) {
-            sectionHeader("Details")
-
+            sectionHeader(String(localized: "section.details"))
+            
             VStack(spacing: 0) {
-                infoRow(icon: "calendar", iconBg: .blue, label: "Date", value: dateText)
+                infoRow(
+                    icon: "calendar",
+                    iconBg: .blue,
+                    label: String(localized: "label.date"),
+                    value: dateText
+                )
+                
                 rowDivider
 
                 if event.duration != 1440 {
-                    infoRow(icon: "clock", iconBg: editColor, label: "Time", value: timeText, valueColor: editColor)
+                    infoRow(
+                        icon: "clock",
+                        iconBg: editColor,
+                        label: String(localized: "label.time"),
+                        value: timeText,
+                        valueColor: editColor
+                    )
+                    
                     rowDivider
                 }
 
-                infoRow(icon: recurrenceIcon, iconBg: .orange, label: "Repeats", value: recurrenceText)
+                infoRow(
+                    icon: recurrenceIcon,
+                    iconBg: .orange,
+                    label: String(localized: "label.repeats"),
+                    value: recurrenceText
+                )
+                
             }
             .background(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
@@ -503,7 +595,7 @@ struct EventDetailSheet: View {
 
     var notesSection: some View {
         VStack(spacing: 0) {
-            sectionHeader("Notes")
+            sectionHeader(String(localized: "section.notes"))
 
             VStack(alignment: .leading, spacing: 0) {
                 if isEditingNotes {
@@ -517,7 +609,8 @@ struct EventDetailSheet: View {
                         .padding(14)
                         .overlay(alignment: .topLeading) {
                             if notesText.isEmpty {
-                                Text("Add notes...")
+                                Text(String(localized: "placeholder.add_notes"))
+
                                     .font(.body)
                                     .foregroundStyle(.tertiary)
                                     .padding(.top, 22)
@@ -536,7 +629,7 @@ struct EventDetailSheet: View {
                             notesFocused = false
                         }
                     } label: {
-                        Text("Done")
+                        Text(String(localized: "action.done"))
                             .font(.subheadline.weight(.semibold))
                             .foregroundStyle(editColor)
                             .frame(maxWidth: .infinity, alignment: .trailing)
@@ -553,7 +646,7 @@ struct EventDetailSheet: View {
                     } label: {
                         HStack {
                             if notesText.isEmpty {
-                                Text("Tap to add notes…")
+                                Text(String(localized: "placeholder.tap_to_add_notes"))
                                     .font(.body)
                                     .foregroundStyle(.tertiary)
                             } else {
@@ -590,8 +683,8 @@ struct EventDetailSheet: View {
     // MARK: - Delete
 
     var deleteSection: some View {
+        
         Button(role: .destructive) {
-            // Nếu recurring → hỏi scope trước
             if isRecurringEvent {
                 showDeleteScopeAlert = true
             } else {
@@ -601,7 +694,8 @@ struct EventDetailSheet: View {
             HStack(spacing: 8) {
                 Image(systemName: "trash")
                     .font(.system(size: 14, weight: .semibold))
-                Text("Delete \(event.kind == .habit ? "Habit" : "Event")")
+                
+                Text("action.delete_item_format \(Text(event.kind.localizedKey))")
                     .font(.body.weight(.semibold))
             }
             .foregroundStyle(.red)
@@ -620,5 +714,47 @@ struct EventDetailSheet: View {
         .padding(.top, 4)
     }
     
+    private var deleteTitle: String {
+        let type = String(localized: event.kind == .habit ? "type.habit" : "type.event")
+        
+        return String(format: String(localized: "action.delete_item_format"), type)
+    }
     
+    
+}
+
+extension EventKind {
+
+    var localizedName: String {
+        switch self {
+        case .habit:
+            return String(localized: "kind_habit")
+        case .event:
+            return String(localized: "kind_event")
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .habit:
+            return "repeat"
+        case .event:
+            return "calendar"
+        }
+    }
+}
+
+extension EventKind {
+    
+    var localizedKey: String {
+        switch self {
+        case .habit: return "type.habit"
+        case .event: return "type.event"
+        }
+    }
+}
+
+enum L10n {
+    static let habit: LocalizedStringResource = "type.habit"
+    static let event: LocalizedStringResource = "type.event"
 }

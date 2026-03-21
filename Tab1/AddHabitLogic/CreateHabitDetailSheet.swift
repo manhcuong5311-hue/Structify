@@ -1,10 +1,25 @@
 import SwiftUI
 
 enum HabitRepeat: String, CaseIterable {
-    case oneDay   = "1 Day"
-    case week     = "1 Week"
-    case month    = "1 Month"
-    case everyday = "Everyday"
+    case oneDay
+    case week
+    case month
+    case everyday
+}
+
+extension HabitRepeat {
+    var localized: String {
+        switch self {
+        case .oneDay:
+            return String(localized: "habit_repeat_one_day")
+        case .week:
+            return String(localized: "habit_repeat_week")
+        case .month:
+            return String(localized: "habit_repeat_month")
+        case .everyday:
+            return String(localized: "habit_repeat_everyday")
+        }
+    }
 }
 
 enum HabitType: String, Codable {
@@ -349,7 +364,7 @@ extension CreateHabitDetailSheet {
                             updateDateForRepeatMode()
                         }
                     } label: {
-                        Text(mode.rawValue)
+                        Text(mode.localized)
                             .font(.subheadline.weight(.semibold))
                             .padding(.horizontal, 14).padding(.vertical, 8)
                             .background(repeatMode == mode ? color : Color.gray.opacity(0.15))
@@ -669,40 +684,68 @@ extension CreateHabitDetailSheet {
         }
     }
 
+    private static let timeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "HH:mm"
+        return f
+    }()
+
     var timeText: String {
-        let f = DateFormatter(); f.dateFormat = "HH:mm"
-        return f.string(from: habitTime)
+        Self.timeFormatter.string(from: habitTime)
     }
+
+    private static let fullDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "E, d MMM yyyy"
+        f.locale = .current
+        return f
+    }()
 
     var dateText: String {
-        let f = DateFormatter(); f.dateFormat = "E, d MMM yyyy"; f.locale = Locale(identifier: "en")
-        return f.string(from: date)
+        Self.fullDateFormatter.string(from: date)
     }
-
     var dateRangeText: String {
         let cal = Calendar.current
+
         switch repeatMode {
         case .oneDay:
-            return cal.isDateInToday(date) ? "Today" : formattedDate(date)
+            return cal.isDateInToday(date)
+            ? String(localized: "date_today")
+            : formattedDate(date)
+
         case .everyday:
-            return "Every day"
+            return String(localized: "date_every_day")
+
         case .week:
             guard let end = cal.date(byAdding: .day, value: 6, to: date) else { return "" }
             return "\(shortDate(date)) – \(shortDate(end))"
+
         case .month:
             guard let end = cal.date(byAdding: .day, value: 29, to: date) else { return "" }
             return "\(shortDate(date)) – \(shortDate(end))"
         }
     }
 
+    private static let formattedDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "E, d MMM"
+        f.locale = .current
+        return f
+    }()
+
     func formattedDate(_ d: Date) -> String {
-        let f = DateFormatter(); f.dateFormat = "E, d MMM"; f.locale = Locale(identifier: "en")
-        return f.string(from: d)
+        Self.formattedDateFormatter.string(from: d)
     }
 
+    private static let shortDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "d MMM"
+        f.locale = .current
+        return f
+    }()
+
     func shortDate(_ d: Date) -> String {
-        let f = DateFormatter(); f.dateFormat = "d MMM"; f.locale = Locale(identifier: "en")
-        return f.string(from: d)
+        Self.shortDateFormatter.string(from: d)
     }
 
    

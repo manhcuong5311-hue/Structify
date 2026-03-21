@@ -93,16 +93,30 @@ struct TimelineView: View {
     
     func recurringMessage(_ event: EventItem) -> String {
         guard let t = store.templates.first(where: { $0.id == event.id }) else { return "" }
+
         switch t.recurrence {
-        case .daily:    return "This event repeats every day."
-        case .weekdays: return "This event repeats Mon–Fri."
+        case .daily:
+            return String(localized: "event_repeat_daily")
+
+        case .weekdays:
+            return String(localized: "event_repeat_weekdays")
+
         case .specific(let days):
             let s = Calendar.current.shortWeekdaySymbols
-            return "Repeats on " + days.sorted().map { s[$0-1] }.joined(separator: ", ")
-        case .once: return ""
+            let daysText = days.sorted().map { s[$0-1] }.joined(separator: ", ")
+            return String(
+                localized: "event_repeat_specific \(daysText)"
+            )
+
+        case .once:
+            return ""
+
         case .dateRange(let start, let end):
-            let f = DateFormatter(); f.dateFormat = "d MMM"
-            return "Repeats \(f.string(from: start)) – \(f.string(from: end))."
+            let f = DateFormatter()
+            f.dateFormat = "d MMM"
+            return String(
+                localized: "event_repeat_range \(f.string(from: start)) \(f.string(from: end))"
+            )
         }
     }
     
@@ -200,25 +214,25 @@ struct TimelineView: View {
         case ..<60:
             return nil
         case 60..<120:
-            return "A quiet hour — worth filling"
+            return String(localized: "gap_1h")
         case 120..<180:
-            return "Two hours with nowhere to be"
+            return String(localized: "gap_2h")
         case 180..<240:
-            return "Three hours, no excuses"
+            return String(localized: "gap_3h")
         case 240..<360:
-            return "A good chunk of the day"
+            return String(localized: "gap_chunk")
         case 360..<480:
-            return "Half a workday, unspoken for"
+            return String(localized: "gap_half_workday")
         case 480..<600:
-            return "The better part of a morning"
+            return String(localized: "gap_morning")
         case 600..<720:
-            return "Ten hours of open road"
+            return String(localized: "gap_long_block")
         case 720..<840:
-            return "Nearly half a day, untouched"
+            return String(localized: "gap_half_day")
         case 840..<960:
-            return "A generous stretch of nothing"
+            return String(localized: "gap_long_free")
         case 960...:
-            return "The whole day is yours"
+            return String(localized: "gap_full_day")
         default:
             return nil
         }
@@ -657,9 +671,9 @@ struct TimelineView: View {
                 case .deleteEvent(let event):
                     
                     return Alert(
-                        title: Text("Delete Event"),
-                        message: Text("This action cannot be undone."),
-                        primaryButton: .destructive(Text("Delete")) {
+                        title: Text(String(localized: "delete_event_title")),
+                        message: Text(String(localized: "delete_event_message")),
+                        primaryButton: .destructive(Text(String(localized: "delete_event_confirm"))) {
                             
                             guard !event.isSystemEvent else { return }
                             
@@ -678,19 +692,20 @@ struct TimelineView: View {
             
                 }
             }
-            .confirmationDialog("Move event", isPresented: $showRecurringDragDialog, titleVisibility: .visible) {
-                Button("All Days") {
+            .confirmationDialog(String(localized: "move_event_title"),
+                                isPresented: $showRecurringDragDialog, titleVisibility: .visible) {
+                Button(String(localized: "move_event_all_days")) {
                     if let (event, minutes) = pendingRecurringDrag {
                         store.updateEventTime(templateID: event.id, minutes: minutes)
                     }
                     reloadTimeline()
                     pendingRecurringDrag = nil
                 }
-                Button("Only Today") {
+                Button(String(localized: "move_event_today_only")) {
                     reloadTimeline()
                     pendingRecurringDrag = nil
                 }
-                Button("Cancel", role: .cancel) {
+                Button(String(localized: "cancel"), role: .cancel) {
                     // tap ngoài cũng vào đây → revert
                     if let (event, _) = pendingRecurringDrag {
                         store.overrides.removeAll {
@@ -708,8 +723,11 @@ struct TimelineView: View {
                 }
             }
 
-            .confirmationDialog("Change System Event", isPresented: $showSystemEventDialog, titleVisibility: .visible) {
-                Button("All Days") {
+            .confirmationDialog(
+                String(localized: "system_event_change_title"),
+                                
+                            isPresented: $showSystemEventDialog, titleVisibility: .visible) {
+                Button(String(localized: "move_event_all_days")) {
                     guard let event = pendingSystemChange else { return }
                     if event.systemType == .wake {
                         store.updateSystemEvents(wakeMinutes: min(pendingMinutes, store.sleepMinutes - 30), sleepMinutes: store.sleepMinutes)
@@ -724,7 +742,7 @@ struct TimelineView: View {
                     reloadTimeline()
                     pendingSystemChange = nil
                 }
-                Button("Only Today") {
+                Button(String(localized: "apply_only_today")) {
                     guard let event = pendingSystemChange, !isPastDate() else { return }
                     store.overrideEvent(templateID: event.id, date: calendar.selectedDate, minutes: pendingMinutes)
                     NotificationManager.shared.cancel(templateID: event.id, date: calendar.selectedDate)
@@ -734,7 +752,7 @@ struct TimelineView: View {
                     reloadTimeline()
                     pendingSystemChange = nil
                 }
-                Button("Cancel", role: .cancel) {
+                Button(String(localized: "cancel"), role: .cancel) {
                     // tap ngoài cũng vào đây → revert
                     if let event = pendingSystemChange {
                         store.overrides.removeAll {
@@ -747,21 +765,24 @@ struct TimelineView: View {
                     pendingSystemChange = nil
                 }
             } message: {
-                Text("Apply this change to all days or only today?")
+                Text(String(localized: "recurring_change_scope_message"))
             }
-            .confirmationDialog("Change duration", isPresented: $showRecurringResizeDialog, titleVisibility: .visible) {
-                Button("All Days") {
+            .confirmationDialog(
+                String(localized: "change_duration_title"),
+                                
+                                isPresented: $showRecurringResizeDialog, titleVisibility: .visible) {
+            Button(String(localized: "apply_all_days")) {
                     if let (event, duration) = pendingRecurringResize {
                         store.updateEventDuration(templateID: event.id, duration: duration)
                     }
                     reloadTimeline()
                     pendingRecurringResize = nil
                 }
-                Button("Only Today") {
+            Button(String(localized: "apply_only_today")) {
                     reloadTimeline()
                     pendingRecurringResize = nil
                 }
-                Button("Cancel", role: .cancel) {
+            Button(String(localized: "cancel"), role: .cancel) {
                     if let (event, _) = pendingRecurringResize {
                         store.overrides.removeAll {
                             $0.templateID == event.id &&
@@ -912,22 +933,41 @@ struct TimelineView: View {
         
         func recurrenceLabel(for event: EventItem) -> String {
             guard let t = store.templates.first(where: { $0.id == event.id }) else {
-                return "Habit"
+                return String(localized: "recurrence_habit")
             }
+
             switch t.recurrence {
-            case .daily:     return "Everyday"
-            case .weekdays:  return "Weekdays"
+            case .daily:
+                return String(localized: "recurrence_daily")
+
+            case .weekdays:
+                return String(localized: "recurrence_weekdays")
+
             case .specific(let days):
                 let s = Calendar.current.shortWeekdaySymbols
                 return days.sorted().map { s[$0-1] }.joined(separator: ", ")
-            case .once:      return "1 Day"
+
+            case .once:
+                return String(localized: "recurrence_once")
+
             case .dateRange(let start, let end):
                 let cal = Calendar.current
                 let days = cal.dateComponents([.day], from: start, to: end).day ?? 0
-                if days <= 6  { return "1 Week" }   // 👈 sửa 7 → 6
-                if days <= 31 { return "1 Month" }
-                let f = DateFormatter(); f.dateFormat = "d MMM"
-                return "\(f.string(from: start)) – \(f.string(from: end))"
+
+                if days <= 6 {
+                    return String(localized: "recurrence_week")
+                }
+
+                if days <= 31 {
+                    return String(localized: "recurrence_month")
+                }
+
+                let f = DateFormatter()
+                f.dateFormat = "d MMM"
+
+                return String(
+                    localized: "recurrence_range \(f.string(from: start))–\(f.string(from: end))"
+                )
             }
         }
         
@@ -1022,7 +1062,7 @@ struct TimelineView: View {
             TimelineEventRow(
                 time: event.time,
                 endTime: event.endTime,
-                title: event.title,
+                title: event.title.localized,
                 icon: event.icon,
                 color: event.color,
                 kind: event.kind,
@@ -2176,3 +2216,10 @@ struct TimelineView: View {
     }
 
 
+
+
+extension String {
+    var localized: String {
+        NSLocalizedString(self, comment: "")
+    }
+}

@@ -13,7 +13,7 @@ struct AddEventButton: View {
                 
                 Image(systemName: "plus.circle.fill")
                 
-                Text("Add Event")
+                Text(String(localized: "event.add"))
             }
             .font(.caption.weight(.semibold))
             .padding(.horizontal,12)
@@ -77,10 +77,18 @@ struct CreateEventDetailSheet: View {
     
     @State private var isAllDay = false
     
-    enum RepeatRule: String, CaseIterable {
-        case none = "None"
-        case weekly = "Weekly"
-        case specificWeek = "Week"
+    enum RepeatRule: CaseIterable {
+        case none
+        case weekly
+        case specificWeek
+
+        var title: String {
+            switch self {
+            case .none: return String(localized: "repeat.none")
+            case .weekly: return String(localized: "repeat.weekly")
+            case .specificWeek: return String(localized: "repeat.specific_week")
+            }
+        }
     }
 
     @State private var repeatRule: RepeatRule = .none
@@ -100,17 +108,41 @@ struct CreateEventDetailSheet: View {
     }
     
     
-    enum TimeWarning: String {
-        case past        = "⏰ This time has already passed"
-        case overlap     = "⚡ Another event is already scheduled here"
-        case pastSleep   = "🌙 Start time is past Night Reset"
-        case beforeWake  = "🌅 Start time is before Morning Start"
+    enum TimeWarning {
+        case past
+        case overlap
+        case pastSleep
+        case beforeWake
+
+        var message: String {
+            switch self {
+            case .past:
+                return String(localized: "warning.time.past")
+            case .overlap:
+                return String(localized: "warning.time.overlap")
+            case .pastSleep:
+                return String(localized: "warning.time.past_sleep")
+            case .beforeWake:
+                return String(localized: "warning.time.before_wake")
+            }
+        }
     }
 
-    enum DurationWarning: String {
-        case exceedsSleep  = "🌙 Duration runs past Night Reset — will be trimmed"
-        case tooShort      = "⚡ Minimum duration is 5 minutes"
-        case noTimeLeft    = "🚫 No time left before Night Reset"
+    enum DurationWarning {
+        case exceedsSleep
+        case tooShort
+        case noTimeLeft
+
+        var message: String {
+            switch self {
+            case .exceedsSleep:
+                return String(localized: "warning.duration.exceeds_sleep")
+            case .tooShort:
+                return String(localized: "warning.duration.too_short")
+            case .noTimeLeft:
+                return String(localized: "warning.duration.no_time_left")
+            }
+        }
     }
     
     
@@ -244,7 +276,7 @@ struct CreateEventDetailSheet: View {
     var timeRangeText: String {
 
         if isAllDay {
-            return "All Day"
+            return String(localized: "time.all_day")
         }
 
         let sh = startMinutes / 60
@@ -332,7 +364,7 @@ struct CreateEventDetailSheet: View {
     var repeatSummaryText: String {
 
         if repeatRule == .none {
-            return "Does not repeat"
+            return String(localized: "repeat.none")
         }
 
         let symbols = Calendar.current.shortWeekdaySymbols
@@ -341,7 +373,12 @@ struct CreateEventDetailSheet: View {
 
         let names = sorted.map { symbols[$0 - 1] }
 
-        return "Every " + names.joined(separator: ", ")
+        let days = names.joined(separator: ", ")
+
+        return String(
+            format: String(localized: "repeat.every"),
+            days
+        )
     }
     
     var weekdayChips: some View {
@@ -492,7 +529,7 @@ extension CreateEventDetailSheet {
 
                     } label: {
 
-                        Text("Add Habit")
+                        Text(String(localized: "habit.add"))
                             .font(.subheadline.weight(.semibold))
                             .padding(.horizontal,14)
                             .padding(.vertical,8)
@@ -565,7 +602,10 @@ extension CreateEventDetailSheet {
                         ZStack(alignment: .leading) {
 
                             // TÌM TextField "Tên sự kiện", thêm overlay border đỏ khi empty + đã tap:
-                            TextField("Event name", text: $title)
+                            TextField(
+                                String(localized: "event.name.placeholder"),
+                                text: $title
+                            )
                                 .font(.title3.weight(.semibold))
                                 .foregroundStyle(.white)
                                 .padding(.vertical, 8)
@@ -731,12 +771,13 @@ extension CreateEventDetailSheet {
     }
 
     var dateText: String {
-
-        let formatter = DateFormatter()
-        formatter.dateFormat = "E, d MMM yyyy"
-        formatter.locale = Locale(identifier: "vi")
-
-        return formatter.string(from: date)
+        date.formatted(
+            .dateTime
+                .weekday(.abbreviated)
+                .day()
+                .month(.abbreviated)
+                .year()
+        )
     }
     
     
@@ -764,7 +805,7 @@ extension CreateEventDetailSheet {
 
             // Header với remaining time hint
             HStack {
-                Text("Start time")
+                Text(String(localized: "time.start"))
                     .font(.title3.bold())
 
                 Spacer()
@@ -877,7 +918,7 @@ extension CreateEventDetailSheet {
                         validateDuration()
                     }
                 } label: {
-                    Text("All Day")
+                    Text(String(localized: "time.all_day"))
                         .font(.subheadline.weight(.semibold))
                         .padding(.horizontal, 14)
                         .padding(.vertical, 8)
@@ -888,32 +929,54 @@ extension CreateEventDetailSheet {
             }
 
             if let w = timeWarning {
-                warningBanner(w.rawValue, color: .orange)
+                warningBanner(w.message, color: .orange)
             }
         }
-        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: timeWarning?.rawValue)
+        .animation(
+            .spring(response: 0.3, dampingFraction: 0.8),
+            value: timeWarning?.message
+        )
     }
     var remainingTimeText: String {
-        // Future date: tính từ startMinutes đến sleep
-        // Today: tính từ max(startMinutes, currentMinutes) đến sleep
+
         let effectiveStart = isToday ? max(startMinutes, currentMinutes) : startMinutes
         let remaining = sleepMinutes - effectiveStart
-        if remaining <= 0 { return "No time left" }
+
+        if remaining <= 0 {
+            return String(localized: "time.no_time_left")
+        }
+
         let h = remaining / 60
         let m = remaining % 60
-        if h > 0 && m > 0 { return "\(h)h \(m)m left" }
-        if h > 0 { return "\(h)h left" }
-        return "\(m)m left"
+
+        if h > 0 && m > 0 {
+            return String(
+                format: String(localized: "time.remaining.full"),
+                h, m
+            )
+        }
+
+        if h > 0 {
+            return String(
+                format: String(localized: "time.remaining.hours"),
+                h
+            )
+        }
+
+        return String(
+            format: String(localized: "time.remaining.minutes"),
+            m
+        )
     }
     
     var repeatSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Repeat")
+            Text(String(localized: "repeat.title"))
                 .font(.title3.bold())
 
             Picker("", selection: $repeatRule) {
                 ForEach(RepeatRule.allCases, id: \.self) {
-                    Text($0.rawValue).tag($0)
+                    Text($0.title).tag($0)
                 }
             }
             .pickerStyle(.segmented)
@@ -930,38 +993,38 @@ extension CreateEventDetailSheet {
     
     var weekdayPicker: some View {
 
-        let days = [
-            (1,"S"),
-            (2,"M"),
-            (3,"T"),
-            (4,"W"),
-            (5,"T"),
-            (6,"F"),
-            (7,"S")
-        ]
+        let calendar = Calendar.current
+        let symbols = calendar.shortWeekdaySymbols
 
-        return HStack(spacing:10) {
+        // reorder theo firstWeekday (rất quan trọng)
+        let firstWeekday = calendar.firstWeekday - 1
+        let orderedDays = Array(symbols[firstWeekday...] + symbols[..<firstWeekday])
 
-            ForEach(days, id:\.0) { day in
+        return HStack(spacing: 10) {
 
-                let isSelected = selectedWeekdays.contains(day.0)
-                let isPast = isPastWeekday(day.0)
+            ForEach(Array(orderedDays.enumerated()), id: \.offset) { index, symbol in
+
+                // map lại về weekday chuẩn (1...7)
+                let weekday = ((index + firstWeekday) % 7) + 1
+
+                let isSelected = selectedWeekdays.contains(weekday)
+                let isPast = isPastWeekday(weekday)
 
                 Button {
 
                     if isPast { return }
 
                     if isSelected {
-                        selectedWeekdays.remove(day.0)
+                        selectedWeekdays.remove(weekday)
                     } else {
-                        selectedWeekdays.insert(day.0)
+                        selectedWeekdays.insert(weekday)
                     }
 
                 } label: {
 
-                    Text(day.1)
+                    Text(symbol)
                         .font(.subheadline.bold())
-                        .frame(width:36,height:36)
+                        .frame(width: 36, height: 36)
                         .background(
                             isSelected
                             ? Color.orange
@@ -1026,22 +1089,33 @@ extension CreateEventDetailSheet {
 
     @ViewBuilder
     func specificWeekDayChip(date: Date) -> some View {
+
         let cal = Calendar.current
         let isPast = isDatePast(date)
         let key = cal.startOfDay(for: date)
         let isSelected = selectedWeekDates.contains(key)
-        let dayLetters = ["S","M","T","W","T","F","S"]
-        let dayLetter = dayLetters[cal.component(.weekday, from: date) - 1]
+
+        let weekdayIndex = cal.component(.weekday, from: date) - 1
+        let dayLetter = cal.veryShortWeekdaySymbols[weekdayIndex]
+
         let dayNum = cal.component(.day, from: date)
 
         Button {
             guard !isPast else { return }
-            if isSelected { selectedWeekDates.remove(key) }
-            else { selectedWeekDates.insert(key) }
+
+            if isSelected {
+                selectedWeekDates.remove(key)
+            } else {
+                selectedWeekDates.insert(key)
+            }
+
         } label: {
+
             VStack(spacing: 3) {
+
                 Text(dayLetter)
                     .font(.system(size: 10, weight: .bold))
+
                 Text("\(dayNum)")
                     .font(.system(size: 13, weight: .semibold))
             }
@@ -1065,7 +1139,6 @@ extension CreateEventDetailSheet {
     
     
     
-    
 }
 
 
@@ -1082,7 +1155,7 @@ extension CreateEventDetailSheet {
 
                 // Thay "Thời lượng" header thành:
                 HStack {
-                    Text("Duration")
+                    Text(String(localized: "duration"))
                         .font(.title3.bold())
 
                     Spacer()
@@ -1092,7 +1165,7 @@ extension CreateEventDetailSheet {
                         let currentDur = Int(duration * 60)
                         let isNearLimit = currentDur > maxMins - 30
 
-                        Text("max \(maxDurationText)")
+                        Text(String(localized: "max_duration_format \(maxDurationText)"))
                             .font(.caption.weight(.medium))
                             .foregroundStyle(isNearLimit ? .orange : .secondary)
                             .padding(.horizontal, 8)
@@ -1160,7 +1233,7 @@ extension CreateEventDetailSheet {
                 .disabled(isAllDay || isPastTime)
                 .opacity(isAllDay || isPastTime ? 0.4 : 1)
                 if let w = durationWarning {
-                    warningBanner(w.rawValue, color: .purple)
+                    warningBanner(w.message, color: .purple)
                 }
             }
         }
@@ -1259,11 +1332,15 @@ extension CreateEventDetailSheet {
 
     func weekHeaderLabel(offset: Int) -> String {
         switch offset {
-        case 0: return "This week"
-        case 1: return "Next week"
-        default: return "In \(offset) weeks"
+        case 0:
+            return String(localized: "week_this")
+        case 1:
+            return String(localized: "week_next")
+        default:
+            return String(localized: "week_in_format \(offset)")
         }
     }
+
 
     func weekDateRange(offset: Int) -> String {
         let dates = datesOfWeek(offset: offset)
@@ -1287,18 +1364,19 @@ extension CreateEventDetailSheet {
 
             // Hint text phía trên nút khi có vấn đề
             if title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                Text("✏️ Enter a title to continue")
+                Text(String(localized: "enter_title_to_continue"))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
                     .transition(.opacity)
             } else if (repeatRule == .weekly && selectedWeekdays.isEmpty) ||
                       (repeatRule == .specificWeek && selectedWeekDates.isEmpty) {
-                Text("📅 Pick at least one day")
+                Text(String(localized: "pick_at_least_one_day"))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
                     .transition(.opacity)
             } else if isFormBlocked {
-                Text("Fix the issues above to continue")
+                Text(String(localized: "fix_issues_to_continue"))
+
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
                     .transition(.opacity)
@@ -1309,7 +1387,9 @@ extension CreateEventDetailSheet {
 
                 // Show title warning instead of silent fail
                 if cleanTitle.isEmpty {
-                    withAnimation { titleWarning = "✏️ Please enter a title" }
+                    withAnimation {
+                        titleWarning = String(localized: "warning_enter_title")
+                    }
                     return
                 }
 
@@ -1349,7 +1429,7 @@ extension CreateEventDetailSheet {
                              || (repeatRule == .weekly && selectedWeekdays.isEmpty)
                              || (repeatRule == .specificWeek && selectedWeekDates.isEmpty)  // ← thêm
 
-                Text("Create event")
+                Text(String(localized:"create_event"))
                     .font(.title3.bold())
                     .frame(maxWidth: .infinity)
                     .padding()

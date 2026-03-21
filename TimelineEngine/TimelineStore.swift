@@ -2,6 +2,11 @@ import SwiftUI
 import WidgetKit
 import Combine
 
+enum EventTitleKey: String {
+    case morningStart = "event_morning_start"
+    case nightReset = "event_night_reset"
+}
+
 struct EventItem: Identifiable, Codable, Equatable {
 
     // ID phải là templateID
@@ -241,7 +246,7 @@ class TimelineStore: ObservableObject {
 
                 EventTemplate(
                     minutes: wakeMinutes,
-                    title: "Morning Start",
+                    title: EventTitleKey.morningStart.rawValue,
                     icon: "sunrise.fill",
                     colorHex: "#F4A261",
                     recurrence: .daily,
@@ -251,7 +256,7 @@ class TimelineStore: ObservableObject {
 
                 EventTemplate(
                     minutes: sleepMinutes,
-                    title: "Night Reset",
+                    title: EventTitleKey.nightReset.rawValue,
                     icon: "moon.stars.fill",
                     colorHex: "#6C7AA6",
                     recurrence: .daily,

@@ -182,7 +182,7 @@ struct MoodSheet: View {
             .animation(.spring(response: 0.4, dampingFraction: 0.7), value: currentMood.color)
 
             // Mood label
-            Text(currentMood.rawValue)
+            Text(currentMood.title)
                 .font(.system(size: 34, weight: .bold))
                 .foregroundStyle(.primary)
                 .padding(.top, 8)
@@ -390,7 +390,7 @@ struct MoodLogView: View {
 
                                     VStack(alignment: .leading, spacing: 3) {
                                         HStack {
-                                            Text(entry.mood.rawValue)
+                                            Text(entry.mood.title)
                                                 .font(.system(size: 15, weight: .semibold))
                                             Spacer()
                                             Text(entry.date, style: .date)
@@ -461,7 +461,7 @@ struct MoodDetailView: View {
             }
             .frame(height: 160)
 
-            Text(entry.mood.rawValue)
+            Text(entry.mood.title)
                 .font(.system(size: 28, weight: .bold))
 
             Text(entry.date, style: .date)

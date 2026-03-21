@@ -19,7 +19,7 @@ struct AddItemButton: View {
 
                 Image(systemName: "plus.circle.fill")
 
-                Text("Add")
+                Text(String(localized:"add"))
             }
             .font(.caption.weight(.semibold))
             .padding(.horizontal,12)

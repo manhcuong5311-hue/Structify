@@ -158,7 +158,7 @@ struct FloatingTabBar: View {
                     VStack(alignment: .trailing, spacing: 12) {
                         miniAction(
                             icon: "repeat.circle.fill",
-                            label: "Add Habit",
+                            label: String(localized: "action_add_habit"),
                             show: isExpanded,
                             delay: 0.05
                         ) {
@@ -168,7 +168,7 @@ struct FloatingTabBar: View {
 
                         miniAction(
                             icon: "calendar.badge.plus",
-                            label: "Add Event",
+                            label: String(localized: "action_add_event"),
                             show: isExpanded,
                             delay: 0
                         ) {
