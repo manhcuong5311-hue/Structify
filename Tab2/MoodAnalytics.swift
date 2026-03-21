@@ -70,9 +70,9 @@ struct MoodAnalytics {
         let avgLow  = lowMoodRates.reduce(0, +)  / Double(lowMoodRates.count)
 
         if avgGood - avgLow > 0.15 {
-            return "You're more productive on good mood days 😊"
+            return String(localized: "insight_productive_good_mood")
         } else if avgLow - avgGood > 0.15 {
-            return "You push through even on tough days 💪"
+            return String(localized: "insight_resilient_tough_days")
         }
         return nil
     }

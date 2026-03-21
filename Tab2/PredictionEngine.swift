@@ -42,14 +42,25 @@ struct PredictionEngine {
         let pct = Int(projectedMonthCompletion * 100)
         switch trend {
         case .up:
-            onTrackMessage = "On track for ~\(pct)% this month"
-            trendIcon      = "chart.line.uptrend.xyaxis"
+            onTrackMessage = String(
+                format: String(localized: "prediction.on_track"),
+                pct
+            )
+            trendIcon = "chart.line.uptrend.xyaxis"
+
         case .down:
-            onTrackMessage = "Projected ~\(pct)% this month"
-            trendIcon      = "chart.line.downtrend.xyaxis"
+            onTrackMessage = String(
+                format: String(localized: "prediction.projected"),
+                pct
+            )
+            trendIcon = "chart.line.downtrend.xyaxis"
+
         case .stable:
-            onTrackMessage = "On track for ~\(pct)% this month"
-            trendIcon      = "chart.xyaxis.line"
+            onTrackMessage = String(
+                format: String(localized: "prediction.on_track"),
+                pct
+            )
+            trendIcon = "chart.xyaxis.line"
         }
     }
 }

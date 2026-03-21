@@ -168,7 +168,7 @@ struct StatsView: View {
                                         ? Color(red:0.55,green:0.75,blue:1.0)
                                         : .blue
                                     )
-                                Text("View Lifetime Stats")
+                                Text(String(localized: "stats.lifetime"))
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundStyle(skyEnabled ? .white : .primary)
                                 Spacer()
@@ -223,7 +223,7 @@ struct StatsView: View {
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(skyEnabled ? .white.opacity(0.85) : .secondary)
                     .shadow(color: skyEnabled ? .black.opacity(0.4) : .clear, radius: 4, y: 1)
-                Text("Your Progress")
+                Text(String(localized: "stats.progress"))
                     .font(.system(size: 28, weight: .bold, design: .rounded))
                     .foregroundStyle(skyEnabled ? .white : .primary)
                     .shadow(color: skyEnabled ? .black.opacity(0.4) : .clear, radius: 6, y: 2)
@@ -256,10 +256,14 @@ struct StatsView: View {
 
     var greetingText: String {
         switch currentHour {
-        case 0..<5:   return "Working late 🌙"
-        case 5..<12:  return "Good morning ☀️"
-        case 12..<18: return "Good afternoon 🌤"
-        default:      return "Good evening 🌆"
+        case 0..<5:
+            return String(localized: "greeting.late")
+        case 5..<12:
+            return String(localized: "greeting.morning")
+        case 12..<18:
+            return String(localized: "greeting.afternoon")
+        default:
+            return String(localized: "greeting.evening")
         }
     }
 
@@ -294,7 +298,7 @@ struct StatsView: View {
                         Text("\(Int(statsSnapshot.todayCompletion * 100))%")
                             .font(.system(size: 16, weight: .bold, design: .rounded))
                             .foregroundStyle(adaptiveWhite())
-                        Text("today")
+                        Text(String(localized: "time.today"))
                             .font(.system(size: 9, weight: .medium))
                             .foregroundStyle(adaptiveSecondary())
                     }
@@ -304,21 +308,23 @@ struct StatsView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     ringLabel(
                         color: Color(red:0.45,green:0.90,blue:0.65),
-                        label: "Today",
+                        label: String(localized: "range.today"),
                         value: statsSnapshot.todayCompletion,
                         count: "\(statsSnapshot.completedEventsToday)/\(statsSnapshot.totalEventsToday)",
                         delta: nil
                     )
+
                     ringLabel(
                         color: Color(red:1.0,green:0.72,blue:0.35),
-                        label: "This Week",
+                        label: String(localized: "range.week"),
                         value: statsSnapshot.weekCompletion,
                         count: nil,
                         delta: statsSnapshot.weekDelta
                     )
+
                     ringLabel(
                         color: Color(red:0.55,green:0.75,blue:1.0),
-                        label: "This Month",
+                        label: String(localized: "range.month"),
                         value: statsSnapshot.monthCompletion,
                         count: nil,
                         delta: nil
@@ -374,12 +380,12 @@ struct StatsView: View {
                         .foregroundStyle(statsSnapshot.isStreakAtRisk
                             ? Color(red:1.0,green:0.65,blue:0.20)
                             : Color(red:1.0,green:0.55,blue:0.20))
-                    Text("Streak")
+                    Text(String(localized: "stats.streak"))
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(adaptiveSecondary())
                     Spacer()
                     if statsSnapshot.isStreakAtRisk {
-                        Text("at risk")
+                        Text(String(localized: "stats.at_risk"))
                             .font(.system(size: 9, weight: .bold))
                             .foregroundStyle(Color(red:1.0,green:0.65,blue:0.20))
                             .padding(.horizontal, 6).padding(.vertical, 2)
@@ -391,11 +397,21 @@ struct StatsView: View {
                     .font(.system(size: 40, weight: .bold, design: .rounded))
                     .foregroundStyle(adaptiveWhite())
                 HStack(spacing: 4) {
-                    Text(statsSnapshot.currentStreak == 1 ? "day" : "days")
+                    Text(
+                        String.localizedStringWithFormat(
+                            NSLocalizedString("streak.day_count", comment: ""),
+                            statsSnapshot.currentStreak
+                        )
+                    )
                         .font(.system(size: 12))
                         .foregroundStyle(adaptiveSecondary())
                     if statsSnapshot.bestStreak > 1 {
-                        Text("· best \(statsSnapshot.bestStreak)")
+                        Text(
+                            String(
+                                format: String(localized: "stats.best_streak"),
+                                statsSnapshot.bestStreak
+                            )
+                        )
                             .font(.system(size: 11))
                             .foregroundStyle(adaptiveSecondary().opacity(0.65))
                     }
@@ -413,7 +429,7 @@ struct StatsView: View {
                 HStack {
                     Image(systemName: "clock.fill")
                         .foregroundStyle(Color(red:0.55,green:0.75,blue:1.0))
-                    Text("Wake → Sleep")
+                    Text(String(localized: "time.wake_sleep"))
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(adaptiveSecondary())
                 }
@@ -422,7 +438,7 @@ struct StatsView: View {
                 Text("\(hours)h\(mins > 0 ? " \(mins)m" : "")")
                     .font(.system(size: 32, weight: .bold, design: .rounded))
                     .foregroundStyle(adaptiveWhite())
-                Text("active window")
+                Text(String(localized: "time.active_window"))
                     .font(.system(size: 12))
                     .foregroundStyle(adaptiveSecondary())
             }
@@ -451,11 +467,16 @@ struct StatsView: View {
 
                     Group {
                         if let timeDesc = timeAnalytics.bestHourDescription {
-                            Text("Most productive around \(timeDesc)")
+                            Text(
+                                String(
+                                    format: String(localized: "insight.best_time"),
+                                    timeDesc
+                                )
+                            )
                         } else if let corr = moodAnalytics.correlationInsight {
-                            Text(corr)
+                            Text(corr) // cái này assume đã localized từ trước
                         } else {
-                            Text("Keep your current pace")
+                            Text(String(localized: "insight.keep_pace"))
                         }
                     }
                     .font(.system(size: 12))

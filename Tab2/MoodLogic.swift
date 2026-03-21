@@ -307,7 +307,7 @@ struct MoodLogView: View {
     @State private var selectedEntry: MoodEntry? = nil
 
     let columns = Array(repeating: GridItem(.flexible(), spacing: 6), count: 7)
-    let weekdays = ["S","M","T","W","T","F","S"]
+    let weekdays = Calendar.current.shortStandaloneWeekdaySymbols
 
     var calendarDays: [Date?] {
         let cal = Calendar.current
@@ -602,121 +602,146 @@ extension MoodLevel {
         switch self {
 
         case .rough:
-            let validation: [String] = [
-                "Today feels heavy. That's enough information.",
-                "You don't need to fix it today.",
-                "It's okay to just get through this one.",
-                "Rest is doing something."
-            ]
-            let grounding: [String] = [
-                "One task today is enough.",
-                "Start wherever you can.",
-                "Take it one hour at a time.",
-                "Small and slow is still forward."
-            ]
-            let streakSafe: [String] = [
-                "Your streak will still be there when you're ready.",
-                "Missing a day doesn't erase everything you've built.",
-                "One rough day doesn't define the pattern."
-            ]
+            
+            let validation = [
+                "mood.rough.validation.1",
+                "mood.rough.validation.2",
+                "mood.rough.validation.3",
+                "mood.rough.validation.4"
+            ].map { String(localized: $0) }
+            
+            let grounding = [
+                "mood.rough.grounding.1",
+                "mood.rough.grounding.2",
+                "mood.rough.grounding.3",
+                "mood.rough.grounding.4"
+            ].map { String(localized: $0) }
+            
+            let streakSafe = [
+                "mood.rough.streak_safe.1",
+                "mood.rough.streak_safe.2",
+                "mood.rough.streak_safe.3"
+            ].map { String(localized: $0) }
+            
             if hasStreak { return streakSafe[day % streakSafe.count] }
             if isMorning  { return grounding[day % grounding.count] }
             return validation[day % validation.count]
 
         case .low:
-            let validation: [String] = [
-                "Low energy doesn't mean low value.",
-                "You're allowed to be quieter today.",
-                "Not every day needs to be full.",
-                "Slow days are still days."
-            ]
-            let gentle: [String] = [
-                "One small thing is all it takes.",
-                "Show up in whatever way you can.",
-                "Even a little counts.",
-                "Check in with yourself — what do you need?"
-            ]
-            let recovery: [String] = [
-                "You've come back from days like this before.",
-                "Low is not your direction — just your current position.",
-                "It's a low day, not a low life."
-            ]
+            
+            let validation = [
+                "mood.low.validation.1",
+                "mood.low.validation.2",
+                "mood.low.validation.3",
+                "mood.low.validation.4"
+            ].map { String(localized: $0) }
+
+            let gentle = [
+                "mood.low.gentle.1",
+                "mood.low.gentle.2",
+                "mood.low.gentle.3",
+                "mood.low.gentle.4"
+            ].map { String(localized: $0) }
+
+            let recovery = [
+                "mood.low.recovery.1",
+                "mood.low.recovery.2",
+                "mood.low.recovery.3"
+            ].map { String(localized: $0) }
+            
             if declining    { return recovery[day % recovery.count] }
             if isEvening    { return validation[day % validation.count] }
             return gentle[day % gentle.count]
 
         case .okay:
-            let steady: [String] = [
-                "Steady is underrated.",
-                "You're doing the invisible work.",
-                "This is what consistency looks like.",
-                "Okay days are the foundation of everything."
-            ]
-            let momentum: [String] = [
-                "One more day stacks up.",
-                "Keep the rhythm going.",
-                "Consistency beats intensity every time.",
-                "You're building something — it just takes time."
-            ]
-            let improving_: [String] = [
-                "You've been building toward this.",
-                "Things are moving in the right direction.",
-                "The trend is yours to keep."
-            ]
+            
+            let steady = [
+                "mood.okay.steady.1",
+                "mood.okay.steady.2",
+                "mood.okay.steady.3",
+                "mood.okay.steady.4"
+            ].map { String(localized: $0) }
+
+            let momentum = [
+                "mood.okay.momentum.1",
+                "mood.okay.momentum.2",
+                "mood.okay.momentum.3",
+                "mood.okay.momentum.4"
+            ].map { String(localized: $0) }
+
+            let improving_ = [
+                "mood.okay.improving.1",
+                "mood.okay.improving.2",
+                "mood.okay.improving.3"
+            ].map { String(localized: $0) }
+            
             if improving { return improving_[day % improving_.count] }
             if hasStreak { return momentum[day % momentum.count] }
             return steady[day % steady.count]
 
         case .good:
-            let affirmation: [String] = [
-                "You've found your rhythm.",
-                "This kind of day is worth holding onto.",
-                "Your effort is visible now.",
-                "You earned this."
-            ]
-            let identity: [String] = [
-                "Consistent people feel like this.",
-                "This is who you're becoming.",
-                "Good days don't happen by accident.",
-                "You built this version of yourself."
-            ]
+            
+            let affirmation = [
+                "mood.good.affirmation.1",
+                "mood.good.affirmation.2",
+                "mood.good.affirmation.3",
+                "mood.good.affirmation.4"
+            ].map { String(localized: $0) }
+
+            let identity = [
+                "mood.good.identity.1",
+                "mood.good.identity.2",
+                "mood.good.identity.3",
+                "mood.good.identity.4"
+            ].map { String(localized: $0) }
+
             let timeAware: [String] = isMorning ? [
-                "Strong start — make the most of it.",
-                "Morning momentum is yours today."
-            ] : isEvening ? [
-                "Carry this into tomorrow.",
-                "Good day. Let it close well."
-            ] : [
-                "You're in your element.",
-                "Ride it — this is working."
-            ]
+                "mood.good.time.morning.1",
+                "mood.good.time.morning.2"
+            ].map { String(localized: $0) }
+            : isEvening ? [
+                "mood.good.time.evening.1",
+                "mood.good.time.evening.2"
+            ].map { String(localized: $0) }
+            : [
+                "mood.good.time.neutral.1",
+                "mood.good.time.neutral.2"
+            ].map { String(localized: $0) }
+            
             if cameFromLow { return affirmation[day % affirmation.count] }
             if improving   { return identity[day % identity.count] }
             return timeAware[day % timeAware.count]
 
         case .amazing:
-            let celebration: [String] = [
-                "You're at full capacity today.",
-                "Everything feels clear for a reason.",
-                "This is your natural state — remember it.",
-                "You didn't just show up. You arrived."
-            ]
-            let identity: [String] = [
-                "People who feel this way show up every day.",
-                "You built this version of yourself.",
-                "This is what disciplined people feel.",
-                "Future you will thank today you."
-            ]
+            
+            let celebration = [
+                "mood.amazing.celebration.1",
+                "mood.amazing.celebration.2",
+                "mood.amazing.celebration.3",
+                "mood.amazing.celebration.4"
+            ].map { String(localized: $0) }
+
+            let identity = [
+                "mood.amazing.identity.1",
+                "mood.amazing.identity.2",
+                "mood.amazing.identity.3",
+                "mood.amazing.identity.4"
+            ].map { String(localized: $0) }
+
             let timeAware: [String] = isMorning ? [
-                "Rare energy — use it well.",
-                "The day is yours."
-            ] : isEvening ? [
-                "Rare day. Let it land.",
-                "Carry this forward."
-            ] : [
-                "Everything is working.",
-                "Soak it in — you created this."
-            ]
+                "mood.amazing.time.morning.1",
+                "mood.amazing.time.morning.2"
+            ].map { String(localized: $0) }
+            : isEvening ? [
+                "mood.amazing.time.evening.1",
+                "mood.amazing.time.evening.2"
+            ].map { String(localized: $0) }
+            : [
+                "mood.amazing.time.neutral.1",
+                "mood.amazing.time.neutral.2"
+            ].map { String(localized: $0) }
+            
+            
             if improving { return identity[day % identity.count] }
             return day % 2 == 0
                 ? celebration[day % celebration.count]
@@ -730,69 +755,73 @@ extension MoodLevel {
         switch self {
         case .rough:
             return [
-                "Today feels heavy. That's enough information.",
-                "You don't need to fix it today.",
-                "Rest is doing something.",
-                "It's okay to just get through this one.",
-                "One task today is enough.",
-                "Take it one hour at a time.",
-                "Your feelings are valid.",
-                "Be gentle with yourself.",
-                "You've come back from days like this before.",
-                "This is temporary."
+                String(localized: "mood.rough.1"),
+                String(localized: "mood.rough.2"),
+                String(localized: "mood.rough.3"),
+                String(localized: "mood.rough.4"),
+                String(localized: "mood.rough.5"),
+                String(localized: "mood.rough.6"),
+                String(localized: "mood.rough.7"),
+                String(localized: "mood.rough.8"),
+                String(localized: "mood.rough.9"),
+                String(localized: "mood.rough.10")
             ]
         case .low:
             return [
-                "Low energy doesn't mean low value.",
-                "You're allowed to be quieter today.",
-                "Slow days are still days.",
-                "One small thing is all it takes.",
-                "Show up in whatever way you can.",
-                "Check in with yourself — what do you need?",
-                "Not every day needs to be full.",
-                "It's a low day, not a low life.",
-                "You've handled this before.",
-                "Rest, then continue."
+                String(localized: "mood.low.1"),
+                String(localized: "mood.low.2"),
+                String(localized: "mood.low.3"),
+                String(localized: "mood.low.4"),
+                String(localized: "mood.low.5"),
+                String(localized: "mood.low.6"),
+                String(localized: "mood.low.7"),
+                String(localized: "mood.low.8"),
+                String(localized: "mood.low.9"),
+                String(localized: "mood.low.10")
             ]
+            
         case .okay:
             return [
-                "Steady is underrated.",
-                "This is what consistency looks like.",
-                "Okay days are the foundation of everything.",
-                "Keep the rhythm going.",
-                "Consistency beats intensity every time.",
-                "You're doing the invisible work.",
-                "One more day stacks up.",
-                "You're building something.",
-                "Calm and consistent wins.",
-                "The compound effect is working."
+                String(localized: "mood.okay.1"),
+                String(localized: "mood.okay.2"),
+                String(localized: "mood.okay.3"),
+                String(localized: "mood.okay.4"),
+                String(localized: "mood.okay.5"),
+                String(localized: "mood.okay.6"),
+                String(localized: "mood.okay.7"),
+                String(localized: "mood.okay.8"),
+                String(localized: "mood.okay.9"),
+                String(localized: "mood.okay.10")
             ]
+            
         case .good:
             return [
-                "You've found your rhythm.",
-                "Your effort is visible now.",
-                "Good days don't happen by accident.",
-                "You earned this.",
-                "This is who you're becoming.",
-                "Ride it — this is working.",
-                "You're in your element.",
-                "Consistent people feel like this.",
-                "Keep this as your reference point.",
-                "You built this version of yourself."
+                String(localized: "mood.good.1"),
+                String(localized: "mood.good.2"),
+                String(localized: "mood.good.3"),
+                String(localized: "mood.good.4"),
+                String(localized: "mood.good.5"),
+                String(localized: "mood.good.6"),
+                String(localized: "mood.good.7"),
+                String(localized: "mood.good.8"),
+                String(localized: "mood.good.9"),
+                String(localized: "mood.good.10")
             ]
+
         case .amazing:
             return [
-                "You're at full capacity today.",
-                "Everything feels clear for a reason.",
-                "This is your natural state — remember it.",
-                "You didn't just show up. You arrived.",
-                "People who feel this way show up every day.",
-                "Future you will thank today you.",
-                "This is what disciplined people feel.",
-                "Everything is working.",
-                "Soak it in — you created this.",
-                "Rare day. Let it land."
+                String(localized: "mood.amazing.1"),
+                String(localized: "mood.amazing.2"),
+                String(localized: "mood.amazing.3"),
+                String(localized: "mood.amazing.4"),
+                String(localized: "mood.amazing.5"),
+                String(localized: "mood.amazing.6"),
+                String(localized: "mood.amazing.7"),
+                String(localized: "mood.amazing.8"),
+                String(localized: "mood.amazing.9"),
+                String(localized: "mood.amazing.10")
             ]
+            
         }
     }
 

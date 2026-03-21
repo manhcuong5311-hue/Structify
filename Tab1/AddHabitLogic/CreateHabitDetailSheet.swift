@@ -52,11 +52,25 @@ struct CreateHabitDetailSheet: View {
     // MARK: - Habit config
     @State private var habitType: HabitType = .binary
     @State private var targetValue: Double   = 10
-    @State private var targetUnit: String    = "times"
+    @State private var targetUnit: TargetUnit = .times
     @State private var incrementValue: Double = 1
     @State private var previewProgress: Double = 0
 
-    let targetUnits = ["times", "km", "ml", "L", "min", "pages", "steps"]
+    enum TargetUnit: String, CaseIterable {
+        case times, km, ml, l, min, pages, steps
+
+        var localized: String {
+            switch self {
+            case .times: return String(localized: "unit_times")
+            case .km: return String(localized: "unit_km")
+            case .ml: return String(localized: "unit_ml")
+            case .l: return String(localized: "unit_l")
+            case .min: return String(localized: "unit_min")
+            case .pages: return String(localized: "unit_pages")
+            case .steps: return String(localized: "unit_steps")
+            }
+        }
+    }
 
     // MARK: - Validation
     @State private var titleWarning: String?   = nil
@@ -486,7 +500,9 @@ extension CreateHabitDetailSheet {
                 .background(RoundedRectangle(cornerRadius: 12).fill(Color.gray.opacity(0.12)))
 
                 Picker("", selection: $targetUnit) {
-                    ForEach(targetUnits, id: \.self) { Text($0) }
+                    ForEach(TargetUnit.allCases, id: \.self) { unit in
+                        Text(unit.localized).tag(unit)
+                    }
                 }
                 .pickerStyle(.menu)
                 .font(.subheadline.weight(.semibold))
@@ -572,7 +588,7 @@ extension CreateHabitDetailSheet {
                 .padding(.vertical, 4).padding(.horizontal, 4)
                 .background(RoundedRectangle(cornerRadius: 12).fill(Color.gray.opacity(0.12)))
 
-                Text(targetUnit)
+                Text(targetUnit.localized)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
 
@@ -626,7 +642,7 @@ extension CreateHabitDetailSheet {
                 onCreate(
                     cleanTitle, icon, color.toHex(), date, habitType,   // 👈 thêm color.toHex()
                     habitType == .accumulative ? targetValue : nil,
-                    habitType == .accumulative ? targetUnit : nil,
+                    habitType == .accumulative ? targetUnit.rawValue : nil,
                     minutes,
                     habitType == .accumulative ? incrementValue : nil,
                     repeatMode

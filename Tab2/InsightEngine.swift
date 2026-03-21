@@ -87,119 +87,217 @@ struct InsightEngine {
 
     private static func streakRiskInsight(streak: Int) -> Insight {
         Insight(
-            title: "\(streak)-day streak at risk ⚠️",
-            subtitle: "One habit is all it takes to keep it going.",
+            title: String(
+                format: String(localized: "insight_streak_risk_title"),
+                streak
+            ),
+            subtitle: String(
+                localized: "insight_streak_risk_subtitle"
+            ),
             type: .warning
         )
     }
 
     private static func improvementInsight(delta: Double, streak: Int) -> Insight {
         let pct = Int(delta * 100)
+
         if streak > 3 {
             return Insight(
-                title: "Up \(pct)% this week 📈",
-                subtitle: "Your rhythm is building on itself.",
+                title: String(
+                    format: String(localized: "insight_improvement_strong_title"),
+                    pct
+                ),
+                subtitle: String(
+                    localized: "insight_improvement_strong_subtitle"
+                ),
                 type: .positive
             )
         }
+
         return Insight(
-            title: "You're moving in the right direction",
-            subtitle: "Up \(pct)% compared to last week.",
+            title: String(
+                localized: "insight_improvement_normal_title"
+            ),
+            subtitle: String(
+                format: String(localized: "insight_improvement_normal_subtitle"),
+                pct
+            ),
             type: .positive
         )
     }
 
     private static func bestStreakInsight(streak: Int) -> Insight {
         Insight(
-            title: "Your best streak ever — \(streak) days 🏆",
-            subtitle: "This is what discipline actually looks like.",
+            title: String(
+                format: String(localized: "insight_best_streak_title"),
+                streak
+            ),
+            subtitle: String(
+                localized: "insight_best_streak_subtitle"
+            ),
             type: .identity
         )
     }
 
     private static func identityInsight(streak: Int) -> Insight {
         let titles = [
-            "You've shown up \(streak) days in a row",
-            "\(streak) days of not giving up",
-            "Day \(streak). Still here."
+            String(format: String(localized: "insight_identity_title_1"), streak),
+            String(format: String(localized: "insight_identity_title_2"), streak),
+            String(format: String(localized: "insight_identity_title_3"), streak)
         ]
+
         let subtitles = [
-            "You're becoming someone who doesn't quit.",
-            "Consistent people do exactly this.",
-            "Small numbers add up to something real."
+            String(localized: "insight_identity_subtitle_1"),
+            String(localized: "insight_identity_subtitle_2"),
+            String(localized: "insight_identity_subtitle_3")
         ]
+
         let i = streak % titles.count
-        return Insight(title: titles[i], subtitle: subtitles[i], type: .identity)
+
+        return Insight(
+            title: titles[i],
+            subtitle: subtitles[i],
+            type: .identity
+        )
     }
 
     private static func recoveryInsight() -> Insight {
         let day = Calendar.current.component(.day, from: Date())
-        let options: [(String, String)] = [
-            ("It's okay to reset", "Every comeback starts with one day."),
-            ("Quiet weeks happen", "What matters is what you do next."),
-            ("You're still in it", "One day at a time is enough.")
+
+        let titles = [
+            String(localized: "insight_recovery_title_1"),
+            String(localized: "insight_recovery_title_2"),
+            String(localized: "insight_recovery_title_3")
         ]
-        let pick = options[day % options.count]
-        return Insight(title: pick.0, subtitle: pick.1, type: .recovery)
+
+        let subtitles = [
+            String(localized: "insight_recovery_subtitle_1"),
+            String(localized: "insight_recovery_subtitle_2"),
+            String(localized: "insight_recovery_subtitle_3")
+        ]
+
+        let i = day % titles.count
+
+        return Insight(
+            title: titles[i],
+            subtitle: subtitles[i],
+            type: .recovery
+        )
     }
 
     private static func moodSupportInsight() -> Insight {
         let day = Calendar.current.component(.day, from: Date())
-        let options: [(String, String?)] = [
-            ("Tough days are part of the process", "Be gentle with yourself today."),
-            ("You don't have to be at full capacity", nil),
-            ("It's okay to go slower today", "Small steps still count.")
+
+        let titles = [
+            String(localized: "insight_mood_support_title_1"),
+            String(localized: "insight_mood_support_title_2"),
+            String(localized: "insight_mood_support_title_3")
         ]
-        let pick = options[day % options.count]
-        return Insight(title: pick.0, subtitle: pick.1, type: .recovery)
+
+        let subtitles: [String?] = [
+            String(localized: "insight_mood_support_subtitle_1"),
+            nil,
+            String(localized: "insight_mood_support_subtitle_3")
+        ]
+
+        let i = day % titles.count
+
+        return Insight(
+            title: titles[i],
+            subtitle: subtitles[i],
+            type: .recovery
+        )
     }
 
     private static func moodProductivityInsight() -> Insight {
         Insight(
-            title: "You perform well on days like this 😊",
-            subtitle: "Good mood, good output — use it.",
+            title: String(localized: "insight_mood_productivity_title"),
+            subtitle: String(localized: "insight_mood_productivity_subtitle"),
             type: .positive
         )
     }
 
     private static func consistencyInsight(score: Double) -> Insight {
         let pct = Int(score * 100)
+
         return Insight(
-            title: "\(pct)% consistent this month",
-            subtitle: "Consistency is the only strategy that compounds.",
+            title: String(
+                format: String(localized: "insight_consistency_title"),
+                pct
+            ),
+            subtitle: String(
+                localized: "insight_consistency_subtitle"
+            ),
             type: .identity
         )
     }
 
     private static func timeInsight(hour: Int, completion: Double) -> Insight {
         switch hour {
+
         case 5..<9:
             return Insight(
-                title: "Morning energy is your edge",
-                subtitle: completion > 0.3 ? "You're already ahead." : "Use the quiet before the noise.",
+                title: String(localized: "insight_time_morning_early_title"),
+                subtitle: completion > 0.3
+                    ? String(localized: "insight_time_morning_early_subtitle_ahead")
+                    : String(localized: "insight_time_morning_early_subtitle_focus"),
                 type: .positive
             )
+
         case 9..<12:
             if completion > 0.4 {
-                return Insight(title: "Strong start this morning", subtitle: nil, type: .positive)
+                return Insight(
+                    title: String(localized: "insight_time_morning_strong_title"),
+                    subtitle: nil,
+                    type: .positive
+                )
             }
-            return Insight(title: "The morning window is open", subtitle: nil, type: .neutral)
-        case 12..<15:
-            let sub = completion > 0.4 ? "You're ahead of pace." : "Still time to build momentum."
-            return Insight(title: "Midday check-in", subtitle: sub, type: completion > 0.4 ? .positive : .neutral)
-        case 15..<19:
             return Insight(
-                title: "Afternoon is often the most productive",
+                title: String(localized: "insight_time_morning_open_title"),
                 subtitle: nil,
                 type: .neutral
             )
+
+        case 12..<15:
+            let isAhead = completion > 0.4
+            return Insight(
+                title: String(localized: "insight_time_midday_title"),
+                subtitle: isAhead
+                    ? String(localized: "insight_time_midday_subtitle_ahead")
+                    : String(localized: "insight_time_midday_subtitle_build"),
+                type: isAhead ? .positive : .neutral
+            )
+
+        case 15..<19:
+            return Insight(
+                title: String(localized: "insight_time_afternoon_title"),
+                subtitle: nil,
+                type: .neutral
+            )
+
         case 19..<24:
             if completion > 0.65 {
-                return Insight(title: "Solid day ✓", subtitle: "You can close it out well.", type: .positive)
+                return Insight(
+                    title: String(localized: "insight_time_evening_good_title"),
+                    subtitle: String(localized: "insight_time_evening_good_subtitle"),
+                    type: .positive
+                )
             }
-            return Insight(title: "Wind down with intention", subtitle: nil, type: .neutral)
+            return Insight(
+                title: String(localized: "insight_time_evening_winddown_title"),
+                subtitle: nil,
+                type: .neutral
+            )
+
         default:
-            return Insight(title: "Every day is a new page", subtitle: nil, type: .neutral)
+            return Insight(
+                title: String(localized: "insight_time_default_title"),
+                subtitle: nil,
+                type: .neutral
+            )
         }
     }
+    
+    
+    
 }

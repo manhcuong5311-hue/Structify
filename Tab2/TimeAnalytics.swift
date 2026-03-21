@@ -2,10 +2,23 @@ import Foundation
 
 // MARK: - Time Period
 
-enum TimePeriod: String, CaseIterable {
-    case morning   = "Morning"    // 06–12
-    case afternoon = "Afternoon"  // 12–17
-    case evening   = "Evening"    // 17–22
+enum TimePeriod: CaseIterable {
+    case morning
+    case afternoon
+    case evening
+}
+
+extension TimePeriod {
+    var localized: String {
+        switch self {
+        case .morning:
+            return String(localized: "time.morning")
+        case .afternoon:
+            return String(localized: "time.afternoon")
+        case .evening:
+            return String(localized: "time.evening")
+        }
+    }
 }
 
 // MARK: - Time Analytics
