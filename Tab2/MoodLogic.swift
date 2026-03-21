@@ -8,6 +8,22 @@
 import SwiftUI
 import Combine
 
+// MARK: - Mood Trend (shared with InsightEngine, MoodAnalytics)
+
+enum MoodTrend {
+    case improving, declining, stable
+}
+
+// MARK: - Mood Context
+
+struct MoodContext {
+    let level: MoodLevel
+    let hour: Int
+    let streak: Int
+    let trend: MoodTrend
+    let previousMood: MoodLevel?
+}
+
 // MARK: - MoodEntry Model
 struct MoodEntry: Identifiable, Codable {
     let id: UUID
@@ -484,12 +500,18 @@ struct MoodDetailView: View {
 // MARK: - Mood Card (dùng trong StatsView)
 struct MoodLogCard: View {
     @ObservedObject var moodStore: MoodStore
+    var moodContext: MoodContext? = nil
+
     @State private var showMoodSheet = false
     @State private var showMoodLog = false
 
     var todayEntry: MoodEntry? { moodStore.todayEntry() }
-    
-   
+
+    var messageText: String {
+        guard let entry = todayEntry else { return String(localized: "mood.empty.prompt") }
+        if let ctx = moodContext { return entry.mood.contextualMessage(context: ctx) }
+        return entry.mood.dailyMessage()
+    }
 
     var body: some View {
         GlassCard {
@@ -499,11 +521,7 @@ struct MoodLogCard: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)
 
-                    Text(
-                        todayEntry == nil
-                        ? String(localized: "mood.empty.prompt")
-                        : todayEntry!.mood.dailyMessage()
-                    )
+                    Text(messageText)
                     .font(.system(size: 13))
                     .foregroundStyle(.white.opacity(0.65))
                     
@@ -568,184 +586,216 @@ struct MoodLogCard: View {
 }
 
 extension MoodLevel {
+
+    // MARK: - Context-Aware Message (primary API)
+
+    func contextualMessage(context: MoodContext) -> String {
+        let day  = Calendar.current.component(.day, from: Date())
+        let hour = context.hour
+        let isMorning   = hour >= 5  && hour < 12
+        let isEvening   = hour >= 18 && hour < 24
+        let hasStreak   = context.streak >= 3
+        let improving   = context.trend == .improving
+        let declining   = context.trend == .declining
+        let cameFromLow = context.previousMood == .rough || context.previousMood == .low
+
+        switch self {
+
+        case .rough:
+            let validation: [String] = [
+                "Today feels heavy. That's enough information.",
+                "You don't need to fix it today.",
+                "It's okay to just get through this one.",
+                "Rest is doing something."
+            ]
+            let grounding: [String] = [
+                "One task today is enough.",
+                "Start wherever you can.",
+                "Take it one hour at a time.",
+                "Small and slow is still forward."
+            ]
+            let streakSafe: [String] = [
+                "Your streak will still be there when you're ready.",
+                "Missing a day doesn't erase everything you've built.",
+                "One rough day doesn't define the pattern."
+            ]
+            if hasStreak { return streakSafe[day % streakSafe.count] }
+            if isMorning  { return grounding[day % grounding.count] }
+            return validation[day % validation.count]
+
+        case .low:
+            let validation: [String] = [
+                "Low energy doesn't mean low value.",
+                "You're allowed to be quieter today.",
+                "Not every day needs to be full.",
+                "Slow days are still days."
+            ]
+            let gentle: [String] = [
+                "One small thing is all it takes.",
+                "Show up in whatever way you can.",
+                "Even a little counts.",
+                "Check in with yourself — what do you need?"
+            ]
+            let recovery: [String] = [
+                "You've come back from days like this before.",
+                "Low is not your direction — just your current position.",
+                "It's a low day, not a low life."
+            ]
+            if declining    { return recovery[day % recovery.count] }
+            if isEvening    { return validation[day % validation.count] }
+            return gentle[day % gentle.count]
+
+        case .okay:
+            let steady: [String] = [
+                "Steady is underrated.",
+                "You're doing the invisible work.",
+                "This is what consistency looks like.",
+                "Okay days are the foundation of everything."
+            ]
+            let momentum: [String] = [
+                "One more day stacks up.",
+                "Keep the rhythm going.",
+                "Consistency beats intensity every time.",
+                "You're building something — it just takes time."
+            ]
+            let improving_: [String] = [
+                "You've been building toward this.",
+                "Things are moving in the right direction.",
+                "The trend is yours to keep."
+            ]
+            if improving { return improving_[day % improving_.count] }
+            if hasStreak { return momentum[day % momentum.count] }
+            return steady[day % steady.count]
+
+        case .good:
+            let affirmation: [String] = [
+                "You've found your rhythm.",
+                "This kind of day is worth holding onto.",
+                "Your effort is visible now.",
+                "You earned this."
+            ]
+            let identity: [String] = [
+                "Consistent people feel like this.",
+                "This is who you're becoming.",
+                "Good days don't happen by accident.",
+                "You built this version of yourself."
+            ]
+            let timeAware: [String] = isMorning ? [
+                "Strong start — make the most of it.",
+                "Morning momentum is yours today."
+            ] : isEvening ? [
+                "Carry this into tomorrow.",
+                "Good day. Let it close well."
+            ] : [
+                "You're in your element.",
+                "Ride it — this is working."
+            ]
+            if cameFromLow { return affirmation[day % affirmation.count] }
+            if improving   { return identity[day % identity.count] }
+            return timeAware[day % timeAware.count]
+
+        case .amazing:
+            let celebration: [String] = [
+                "You're at full capacity today.",
+                "Everything feels clear for a reason.",
+                "This is your natural state — remember it.",
+                "You didn't just show up. You arrived."
+            ]
+            let identity: [String] = [
+                "People who feel this way show up every day.",
+                "You built this version of yourself.",
+                "This is what disciplined people feel.",
+                "Future you will thank today you."
+            ]
+            let timeAware: [String] = isMorning ? [
+                "Rare energy — use it well.",
+                "The day is yours."
+            ] : isEvening ? [
+                "Rare day. Let it land.",
+                "Carry this forward."
+            ] : [
+                "Everything is working.",
+                "Soak it in — you created this."
+            ]
+            if improving { return identity[day % identity.count] }
+            return day % 2 == 0
+                ? celebration[day % celebration.count]
+                : timeAware[day % timeAware.count]
+        }
+    }
+
+    // MARK: - Fallback (deterministic, day-based)
+
     var messages: [String] {
         switch self {
         case .rough:
             return [
-                "Tough days don't last forever 🌧",
-                "It's okay to not be okay right now",
-                "Rest up — tomorrow is a fresh start",
-                "You're stronger than this moment",
-                "Every storm runs out of rain",
-                "Give yourself permission to feel this",
-                "One hard day doesn't define your journey",
-                "You showed up today — that already counts",
-                "Take it one breath at a time",
-                "You're not alone in this",
-                "The lowest points often precede the biggest growth",
-                "Be gentle with yourself today",
-                "This feeling is temporary, your strength is not",
-                "Even on hard days, you're still moving forward",
-                "Rest is productive too",
-                "You've survived every hard day so far",
-                "It's okay to slow down",
-                "Your feelings are valid, all of them",
-                "Tomorrow holds new possibilities",
-                "You don't have to have it all together today",
-                "Small steps still count as progress",
-                "Breathe. You've got this.",
-                "Hard days build the strongest people",
-                "You matter more than you know",
-                "This chapter is hard, but it's not the last",
-                "Reach out to someone you trust today",
-                "Healing isn't linear — and that's okay",
-                "You are enough, even on your worst days",
-                "The sun will rise again tomorrow",
-                "One day at a time is perfectly fine"
+                "Today feels heavy. That's enough information.",
+                "You don't need to fix it today.",
+                "Rest is doing something.",
+                "It's okay to just get through this one.",
+                "One task today is enough.",
+                "Take it one hour at a time.",
+                "Your feelings are valid.",
+                "Be gentle with yourself.",
+                "You've come back from days like this before.",
+                "This is temporary."
             ]
-
         case .low:
             return [
-                "A low day is still a day you showed up",
-                "You're doing better than you think",
-                "Energy ebbs and flows — this will pass",
-                "Even quiet days have value",
-                "Small wins still count today",
-                "Take care of yourself first",
-                "A little progress is still progress",
-                "It's okay to have an off day",
-                "Your worth isn't measured by your output",
-                "Recharge — you've earned it",
-                "Tomorrow you might surprise yourself",
-                "Slow and steady still gets there",
-                "You don't have to be at 100% every day",
-                "Be kind to yourself right now",
-                "Even a small step forward matters",
-                "Low energy doesn't mean low value",
-                "Rest today, rise tomorrow",
-                "You're allowed to take it easy",
-                "Some days are for recovery",
-                "You're still in the game",
+                "Low energy doesn't mean low value.",
+                "You're allowed to be quieter today.",
+                "Slow days are still days.",
+                "One small thing is all it takes.",
+                "Show up in whatever way you can.",
                 "Check in with yourself — what do you need?",
-                "Your best looks different every day",
-                "Give yourself grace today",
-                "You've handled tough days before",
-                "A quiet day can be a healing day",
-                "Don't compare today to your best day",
-                "You're human — this is normal",
-                "Nourish yourself today",
-                "It's a low day, not a bad life",
-                "You'll find your rhythm again soon"
+                "Not every day needs to be full.",
+                "It's a low day, not a low life.",
+                "You've handled this before.",
+                "Rest, then continue."
             ]
-
         case .okay:
             return [
-                "Steady and solid — keep it up 🌤",
-                "Okay is a perfectly good place to be",
-                "You're holding it together well",
-                "Consistent effort compounds over time",
-                "Middle ground is still ground worth standing on",
-                "Not every day needs to be extraordinary",
-                "You're building something meaningful",
-                "Steady days create lasting progress",
-                "Keep showing up like this",
-                "An okay day is a foundation for a great one",
-                "You're on track — trust the process",
-                "Balance is a skill you're mastering",
-                "Normal days are the backbone of big wins",
-                "You're exactly where you need to be",
-                "One more okay day stacks up to something great",
-                "Consistency beats intensity every time",
-                "You're doing the quiet work — it shows",
-                "Grounded and moving — that's a win",
-                "Not all heroes feel amazing every day",
-                "You're reliable, and that's powerful",
-                "Today's effort is tomorrow's momentum",
-                "Steady is underrated",
-                "You're more capable than you realize",
-                "Keep your rhythm going",
-                "Every okay day is a step toward great",
-                "You showed up — that's half the battle",
-                "Progress doesn't always feel dramatic",
-                "The compound effect is working in your favor",
-                "You're building a solid foundation",
-                "Calm and consistent wins the race"
+                "Steady is underrated.",
+                "This is what consistency looks like.",
+                "Okay days are the foundation of everything.",
+                "Keep the rhythm going.",
+                "Consistency beats intensity every time.",
+                "You're doing the invisible work.",
+                "One more day stacks up.",
+                "You're building something.",
+                "Calm and consistent wins.",
+                "The compound effect is working."
             ]
-
         case .good:
             return [
-                "You're in a great flow today 😊",
-                "Ride this energy — it's working",
-                "Good days are worth celebrating",
-                "You earned this feeling",
-                "Keep building on this momentum",
-                "This is what consistency looks like",
-                "You're firing on all cylinders",
-                "Today is proof you're on the right path",
-                "Channel this energy into something big",
-                "You're in your element right now",
-                "Good vibes, good work — keep going",
-                "This version of you is unstoppable",
-                "You're making it look easy",
-                "Great things are happening for you",
-                "Your hard work is paying off",
-                "Savor this — you created it",
-                "You're exactly where you want to be",
-                "Use this momentum wisely",
-                "Success has a way of building on itself",
-                "Today you're setting the pace",
-                "You're the energy in the room today",
-                "Own this day completely",
-                "Good days like this don't happen by accident",
-                "You're growing and it shows",
-                "Keep this feeling as your reference point",
-                "You're proving what's possible",
-                "The best is still ahead of you",
-                "You're on a roll — don't stop now",
-                "This is the version of you to remember",
-                "Enjoy every moment of this"
+                "You've found your rhythm.",
+                "Your effort is visible now.",
+                "Good days don't happen by accident.",
+                "You earned this.",
+                "This is who you're becoming.",
+                "Ride it — this is working.",
+                "You're in your element.",
+                "Consistent people feel like this.",
+                "Keep this as your reference point.",
+                "You built this version of yourself."
             ]
-
         case .amazing:
             return [
-                "You're absolutely on fire today 🤩",
-                "This is peak you — soak it in",
-                "The world better watch out",
-                "You're operating at a whole new level",
-                "Days like this are what dreams are made of",
-                "You didn't just show up — you dominated",
-                "This energy? Bottled and stored forever",
-                "You are the momentum",
-                "Unstoppable. Undeniable. That's you.",
-                "Everything you've worked for is showing up today",
-                "You're writing your best chapter right now",
-                "This is what winning feels like",
-                "You are the highlight reel today",
-                "Pure excellence — keep going",
-                "You're inspiring everyone around you",
-                "Future you will thank today you",
-                "You turned up and turned it all the way on",
-                "This is your natural state — remember it",
-                "You're making the impossible look easy",
-                "Legendary effort, legendary result",
-                "You've tapped into something special",
-                "The universe is clearly on your side today",
-                "You're radiating greatness",
-                "Today you set the standard",
-                "You belong exactly where you are right now",
-                "Nothing can stop you in this state",
-                "You're proof that amazing is achievable",
-                "This is the energy that changes everything",
-                "You're not just doing well — you're thriving",
-                "Keep being this version of yourself"
+                "You're at full capacity today.",
+                "Everything feels clear for a reason.",
+                "This is your natural state — remember it.",
+                "You didn't just show up. You arrived.",
+                "People who feel this way show up every day.",
+                "Future you will thank today you.",
+                "This is what disciplined people feel.",
+                "Everything is working.",
+                "Soak it in — you created this.",
+                "Rare day. Let it land."
             ]
         }
     }
 
-    func randomMessage() -> String {
-        messages.randomElement() ?? messages[0]
-    }
-    
     func dailyMessage() -> String {
         let day = Calendar.current.component(.day, from: Date())
         return messages[day % messages.count]
