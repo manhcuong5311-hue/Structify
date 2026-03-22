@@ -259,6 +259,8 @@ struct LifetimeRowView: View {
         if stat.kind == .habit { return Color(red:1.0,green:0.72,blue:0.35) }
         return Color(red:0.45,green:0.90,blue:0.65)
     }
+    
+    
 
     var body: some View {
         HStack(spacing: 14) {
@@ -275,7 +277,7 @@ struct LifetimeRowView: View {
             // Info
             VStack(alignment: .leading, spacing: 6) {
                 HStack(alignment: .center, spacing: 6) {
-                    Text(stat.title)
+                    Text(NSLocalizedString(stat.title, comment: ""))
                         .font(.system(size: 15, weight: .semibold))
                         .lineLimit(1)
 
@@ -322,3 +324,4 @@ struct LifetimeRowView: View {
         )
     }
 }
+

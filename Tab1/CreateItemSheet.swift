@@ -28,9 +28,13 @@ struct CreateItemSheet: View {
 
                 // Segmented picker
                 Picker("", selection: $kind) {
-                    Text("Event").tag(EventKind.event)
-                    Text("Habit").tag(EventKind.habit)
+                    Text(String(localized: "event_type_event"))
+                        .tag(EventKind.event)
+                    
+                    Text(String(localized: "event_type_habit"))
+                        .tag(EventKind.habit)
                 }
+
                 .pickerStyle(.segmented)
 
                 Spacer()
@@ -42,7 +46,7 @@ struct CreateItemSheet: View {
 
                 } label: {
 
-                    Text("Continue")
+                    Text(String(localized: "continue"))
                         .font(.headline)
                         .frame(maxWidth:.infinity)
                         .padding()
@@ -53,13 +57,15 @@ struct CreateItemSheet: View {
 
             }
             .padding(24)
-            .navigationTitle("New Item")
+            .navigationTitle(String(localized: "new_item_title"))
             .navigationBarTitleDisplayMode(.inline)
 
             .toolbar {
 
                 ToolbarItem(placement:.topBarLeading) {
-                    Button("Cancel") { dismiss() }
+                    Button(String(localized: "cancel")) {
+                        dismiss()
+                    }
                 }
             }
         }

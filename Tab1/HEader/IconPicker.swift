@@ -52,15 +52,18 @@ struct IconPicker: View {
                     }
                 }
             }
-            .navigationTitle("Choose Icon")
+            .navigationTitle(String(localized: "choose_icon_title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") { dismiss() }
+                    Button(String(localized: "cancel")) {
+                        dismiss()
+                    }
+
                         .foregroundStyle(.secondary)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button(String(localized: "done")) {
                         // Chỉ sync về binding 1 lần khi Done
                         icon = selectedIcon
                         color = selectedColor
@@ -227,7 +230,7 @@ extension IconPicker {
             // Recent
             if !recentIcons.isEmpty {
                 VStack(alignment: .leading, spacing: 10) {
-                    sectionLabel("Recent")
+                    sectionLabel(String(localized: "recent_section"))
 
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 10) {
@@ -369,7 +372,7 @@ struct IconCategoryCatalog {
 
     static let categories: [IconCategory] = [
 
-        IconCategory(title: "Work", icons: [
+        IconCategory(title: String(localized: "icon_category_work"), icons: [
             EventIcon(symbol: "briefcase.fill",                    name: "Work"),
             EventIcon(symbol: "calendar",                          name: "Schedule"),
             EventIcon(symbol: "doc.text.fill",                     name: "Document"),
@@ -396,7 +399,7 @@ struct IconCategoryCatalog {
             EventIcon(symbol: "list.clipboard.fill",               name: "Checklist")
         ]),
 
-        IconCategory(title: "Study", icons: [
+        IconCategory(title: String(localized: "icon_category_study"), icons: [
             EventIcon(symbol: "book.fill",                         name: "Study"),
             EventIcon(symbol: "books.vertical.fill",               name: "Library"),
             EventIcon(symbol: "graduationcap.fill",                name: "Learning"),
@@ -423,7 +426,7 @@ struct IconCategoryCatalog {
             EventIcon(symbol: "flame.fill",                        name: "Streak")
         ]),
 
-        IconCategory(title: "Health & Fitness", icons: [
+        IconCategory(title: String(localized: "icon_category_health_fitness"), icons: [
             EventIcon(symbol: "heart.fill",                        name: "Health"),
             EventIcon(symbol: "figure.walk",                       name: "Walk"),
             EventIcon(symbol: "figure.run",                        name: "Run"),
@@ -450,7 +453,7 @@ struct IconCategoryCatalog {
             EventIcon(symbol: "allergens.fill",                    name: "Nutrition")
         ]),
 
-        IconCategory(title: "Life", icons: [
+        IconCategory(title: String(localized: "icon_category_life"), icons: [
             EventIcon(symbol: "house.fill",                        name: "Home"),
             EventIcon(symbol: "cup.and.saucer.fill",               name: "Coffee"),
             EventIcon(symbol: "fork.knife",                        name: "Food"),
@@ -477,7 +480,7 @@ struct IconCategoryCatalog {
             EventIcon(symbol: "dollarsign.arrow.circlepath",       name: "Budget")
         ]),
 
-        IconCategory(title: "Creative", icons: [
+        IconCategory(title: String(localized: "icon_category_creative"), icons: [
             EventIcon(symbol: "paintpalette.fill",                 name: "Art"),
             EventIcon(symbol: "camera.fill",                       name: "Photo"),
             EventIcon(symbol: "video.fill",                        name: "Video"),
@@ -500,7 +503,7 @@ struct IconCategoryCatalog {
             EventIcon(symbol: "party.popper.fill",                 name: "Celebrate")
         ]),
 
-        IconCategory(title: "Tech", icons: [
+        IconCategory(title: String(localized: "icon_category_tech"), icons: [
             EventIcon(symbol: "laptopcomputer",                    name: "Laptop"),
             EventIcon(symbol: "desktopcomputer",                   name: "Desktop"),
             EventIcon(symbol: "iphone",                            name: "Phone"),
@@ -527,7 +530,7 @@ struct IconCategoryCatalog {
             EventIcon(symbol: "scanner.fill",                      name: "Scan")
         ]),
 
-        IconCategory(title: "Travel", icons: [
+        IconCategory(title: String(localized: "icon_category_travel"), icons: [
             EventIcon(symbol: "airplane",                          name: "Flight"),
             EventIcon(symbol: "car.fill",                          name: "Drive"),
             EventIcon(symbol: "tram.fill",                         name: "Transit"),
@@ -550,7 +553,7 @@ struct IconCategoryCatalog {
             EventIcon(symbol: "fork.knife",                        name: "Restaurant")
         ]),
 
-        IconCategory(title: "Mindset & Goals", icons: [
+        IconCategory(title: String(localized: "icon_category_mindset_goals"), icons: [
             EventIcon(symbol: "target",                            name: "Target"),
             EventIcon(symbol: "trophy.fill",                       name: "Win"),
             EventIcon(symbol: "medal.fill",                        name: "Medal"),
@@ -573,7 +576,7 @@ struct IconCategoryCatalog {
             EventIcon(symbol: "leaf.circle.fill",                  name: "Balance")
         ]),
 
-        IconCategory(title: "Finance", icons: [
+        IconCategory(title: String(localized: "icon_category_finance"), icons: [
             EventIcon(symbol: "dollarsign.circle.fill",            name: "Money"),
             EventIcon(symbol: "creditcard.fill",                   name: "Card"),
             EventIcon(symbol: "banknote.fill",                     name: "Cash"),

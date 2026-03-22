@@ -568,6 +568,7 @@ class TimelineStore: ObservableObject {
         templates.append(new)
 
         invalidateCache()
+        objectWillChange.send()
         save()
         
         NotificationManager.shared.scheduleRecurring(template: new)
@@ -1000,6 +1001,7 @@ class TimelineStore: ObservableObject {
         
         templates.append(new)
         invalidateCache()
+        objectWillChange.send()
         save()
         
         NotificationManager.shared.scheduleRecurring(template: new)

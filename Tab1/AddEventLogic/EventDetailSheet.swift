@@ -695,7 +695,7 @@ struct EventDetailSheet: View {
                 Image(systemName: "trash")
                     .font(.system(size: 14, weight: .semibold))
                 
-                Text("action.delete_item_format \(Text(event.kind.localizedKey))")
+                Text(deleteTitle)
                     .font(.body.weight(.semibold))
             }
             .foregroundStyle(.red)

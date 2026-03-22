@@ -557,7 +557,7 @@ struct PreferencesView: View {
                             // TÌM HStack(spacing: 3) trong density button label, ĐỔI THÀNH:
                             VStack(spacing: 4) {
                                 densityPreviewIcon(density)
-                                Text(density.rawValue)
+                                Text(density.title)
                                     .font(.system(size: 11, weight: .semibold))
                             }
                             .frame(maxWidth: .infinity)

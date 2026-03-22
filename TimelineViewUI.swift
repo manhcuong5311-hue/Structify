@@ -624,6 +624,7 @@ struct TimelineView: View {
                     .adaptiveSheet()
                     .onDisappear {
                         suggestedMinutes = nil
+                        reloadTimeline()
                     }
                     
                     // ĐỔI THÀNH — chỉ cần onDelete:
@@ -858,7 +859,9 @@ struct TimelineView: View {
                 )
                 .environmentObject(store)
                 .adaptiveSheet()
-                
+                .onDisappear {
+                    reloadTimeline()        // ← thêm dòng này
+                }
             }
             
             

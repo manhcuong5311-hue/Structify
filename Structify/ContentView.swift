@@ -18,7 +18,9 @@ struct ContentView: View {
 
     @State private var selectedTab: AppTab = .schedule
     @State private var showEventSheet = false
+    @State private var isTabBarHidden = false
     @State private var showHabitSheet = false
+    
 
     @EnvironmentObject var store: TimelineStore
     @EnvironmentObject var calendar: CalendarState
@@ -35,15 +37,24 @@ struct ContentView: View {
                 }
             }
 
-            FloatingTabBar(
-                selectedTab: $selectedTab,
-                onAddEvent: { showEventSheet = true },
-                onAddHabit: { showHabitSheet = true }
-            )
+            if !isTabBarHidden {
+                FloatingTabBar(
+                    selectedTab: $selectedTab,
+                    onAddEvent: { showEventSheet = true },
+                    onAddHabit: { showHabitSheet = true }
+                )
+                .transition(.opacity.combined(with: .move(edge: .bottom)))
+            }
         }
         .ignoresSafeArea(edges: .bottom)
         .onTapGesture { hideKeyboard() }
-
+        .onReceive(
+            NotificationCenter.default.publisher(for: .setTabBarHidden)
+        ) { notif in
+            withAnimation(.easeInOut(duration: 0.2)) {
+                isTabBarHidden = notif.object as? Bool ?? false
+            }
+        }
         .sheet(isPresented: $showEventSheet) {
             let suggested = store.suggestFreeSlot(date: calendar.selectedDate, duration: 60)
             CreateEventDetailSheet(
@@ -263,4 +274,9 @@ extension View {
             to: nil, from: nil, for: nil
         )
     }
+}
+
+// Thêm extension này cuối file ContentView.swift (cạnh .cancelTimelineHold)
+extension Notification.Name {
+    static let setTabBarHidden = Notification.Name("setTabBarHidden")
 }

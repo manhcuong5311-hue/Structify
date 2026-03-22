@@ -116,6 +116,12 @@ struct SettingsView: View {
         .navigationDestination(isPresented: $showFAQ) {
             FAQView()
         }
+        .onChange(of: showNotifications) { _, val in
+            NotificationCenter.default.post(name: .setTabBarHidden, object: val)
+        }
+        .onChange(of: showFAQ) { _, val in
+            NotificationCenter.default.post(name: .setTabBarHidden, object: val)
+        }
         // Thêm sheet trong màn hình chính của bạn:
         .sheet(isPresented: $showPreferences) {
             PreferencesView()

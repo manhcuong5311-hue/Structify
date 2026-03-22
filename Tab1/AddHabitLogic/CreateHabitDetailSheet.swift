@@ -104,40 +104,49 @@ struct CreateHabitDetailSheet: View {
     func validateTime() {
         guard !isAnytime else { timeWarning = nil; return }
         let mins = selectedMinutes
+
         if isToday && mins < currentMinutes {
-            timeWarning = "⏰ This time has already passed"
+            timeWarning = String(localized: "time_error_passed")
             return
         }
+
         if mins < store.wakeMinutes {
-            timeWarning = "🌅 Before Morning Start"
+            timeWarning = String(localized: "time_error_before_wake")
             return
         }
+
         if mins >= store.sleepMinutes {
-            timeWarning = "🌙 After Night Reset"
+            timeWarning = String(localized: "time_error_after_sleep")
             return
         }
+
         if store.hasOverlap(minutes: mins, duration: 30, date: date) {
-            timeWarning = "⚡ Overlaps with an existing event"
+            timeWarning = String(localized: "time_error_overlap")
             return
         }
+
         timeWarning = nil
     }
 
     func validateTarget() {
         if habitType == .accumulative {
+
             if targetValue <= 0 {
-                targetWarning = "Target must be greater than 0"
+                targetWarning = String(localized: "target_error_invalid")
                 return
             }
+
             if incrementValue <= 0 {
-                targetWarning = "Increment must be greater than 0"
+                targetWarning = String(localized: "increment_error_invalid")
                 return
             }
+
             if incrementValue > targetValue {
-                targetWarning = "Increment can't exceed target"
+                targetWarning = String(localized: "increment_error_exceed")
                 return
             }
         }
+
         targetWarning = nil
     }
 
@@ -244,7 +253,7 @@ extension CreateHabitDetailSheet {
                         dismiss()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { onOpenEvent?() }
                     } label: {
-                        Text("Add Event")
+                        Text(String(localized: "add_event"))
                             .font(.subheadline.weight(.semibold))
                             .padding(.horizontal, 14).padding(.vertical, 8)
                             .background(Color.white.opacity(0.6))
@@ -276,7 +285,8 @@ extension CreateHabitDetailSheet {
                         }
 
                         // Title field with validation highlight
-                        TextField("Habit name", text: $title)
+                        TextField(String(localized: "habit_name_placeholder"), text: $title)
+
                             .font(.title3.weight(.semibold))
                             .foregroundStyle(.white)
                             .padding(.vertical, 8).padding(.horizontal, 12)
@@ -362,8 +372,12 @@ extension CreateHabitDetailSheet {
 
             // 👈 thêm warning
             if isPastDate {
-                warningBanner("📅 Can't add habits to past dates", color: .red)
+                warningBanner(
+                    String(localized: "date_error_past_habit"),
+                    color: .red
+                )
             }
+
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isPastDate)
     }
@@ -393,7 +407,8 @@ extension CreateHabitDetailSheet {
 
     var habitTimeSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Time of day").font(.title3.bold())
+            Text(String(localized: "time_of_day"))
+                .font(.title3.bold())
 
             HStack {
                 if !isAnytime {
@@ -407,7 +422,7 @@ extension CreateHabitDetailSheet {
                     if isAnytime { timeWarning = nil }
                     else { validateTime() }
                 } label: {
-                    Text("Anytime")
+                    Text(String(localized: "anytime"))
                         .font(.subheadline.weight(.semibold))
                         .padding(.horizontal, 14).padding(.vertical, 8)
                         .background(isAnytime ? color : Color.gray.opacity(0.15))
@@ -426,7 +441,8 @@ extension CreateHabitDetailSheet {
 
     var habitTypeSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Habit type").font(.title3.bold())
+            Text(String(localized: "habit_type"))
+                .font(.title3.bold())
             HStack(spacing: 12) {
                 habitTypeButton(.binary, icon: "checkmark.circle")
                 habitTypeButton(.accumulative, icon: "chart.bar")
@@ -437,8 +453,8 @@ extension CreateHabitDetailSheet {
     // MARK: Target section — với suggested chips
     var accumulativeTargetSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Target").font(.title3.bold())
-
+            Text(String(localized: "target"))
+                .font(.title3.bold())
             // Suggested chips
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
@@ -521,13 +537,23 @@ extension CreateHabitDetailSheet {
     var incrementSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text("Per tap").font(.title3.bold())
+                Text(String(localized: "per_tap"))
+                    .font(.title3.bold())
+
                 Spacer()
-                // Preview: bao nhiêu tap để xong
-                let taps = targetValue > 0 ? Int(ceil(targetValue / max(incrementValue, 0.01))) : 0
-                Text("\(taps) tap\(taps == 1 ? "" : "s") to complete")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+
+                let taps = targetValue > 0
+                    ? Int(ceil(targetValue / max(incrementValue, 0.01)))
+                    : 0
+
+                Text(
+                    String.localizedStringWithFormat(
+                        NSLocalizedString("tap_to_complete_format", comment: ""),
+                        taps
+                    )
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
 
             // Suggested chips
@@ -605,22 +631,22 @@ extension CreateHabitDetailSheet {
         VStack(spacing: 8) {
             // Hint text
             if title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                Text("✏️ Enter a title to continue")
+                Text(String(localized: "hint_enter_title"))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
                     .transition(.opacity)
             } else if timeWarning != nil {
-                Text("Fix the time issue above")
+                Text(String(localized: "hint_fix_time"))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
                     .transition(.opacity)
             } else if targetWarning != nil {
-                Text("Fix the target issue above")
+                Text(String(localized: "hint_fix_target"))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
                     .transition(.opacity)
             } else if isPastDate {
-                Text("📅 Can't create habits for past dates")
+                Text(String(localized: "date_error_create_past"))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.red.opacity(0.8))
                     .transition(.opacity)
@@ -630,7 +656,9 @@ extension CreateHabitDetailSheet {
                 let cleanTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
 
                 guard !cleanTitle.isEmpty else {
-                    withAnimation { titleWarning = "Please enter a title" }
+                    withAnimation {
+                        titleWarning = String(localized: "error_enter_title")
+                    }
                     return
                 }
                 guard timeWarning == nil, targetWarning == nil else { return }
@@ -650,7 +678,7 @@ extension CreateHabitDetailSheet {
                 dismiss()
 
             } label: {
-                Text("Create Habit")
+                Text(String(localized: "create_habit"))
                     .font(.title3.bold())
                     .frame(maxWidth: .infinity)
                     .padding()

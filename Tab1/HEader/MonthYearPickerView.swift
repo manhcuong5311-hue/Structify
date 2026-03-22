@@ -117,16 +117,21 @@ struct MonthYearPickerView: View {
                 Spacer()
             }
             .background(Color(.systemGroupedBackground).ignoresSafeArea())
-            .navigationTitle("Select Month")
+            .navigationTitle(String(localized: "select_month_title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { onDismiss() }
+                    Button(String(localized: "done")) {
+                        onDismiss()
+                    }
+
                         .fontWeight(.semibold)
                         .foregroundStyle(brand)
                 }
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Today") { jumpToToday() }
+                    Button(String(localized: "today")) {
+                        jumpToToday()
+                    }
                         .foregroundStyle(brand)
                 }
             }
