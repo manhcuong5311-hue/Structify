@@ -9,11 +9,12 @@ import WidgetKit
 import AppIntents
 
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
-    static var title: LocalizedStringResource { "Configuration" }
-    static var description: IntentDescription { "This is an example widget." }
+    static var title: LocalizedStringResource { "intent_config_title" }
+      static var description: IntentDescription { "intent_config_desc" }
+
 
     // An example configurable parameter.
-    @Parameter(title: "Favorite Emoji", default: "😃")
+    @Parameter(title: "intent_favorite_emoji", default: "😃")
     var favoriteEmoji: String
 }
 
@@ -22,9 +23,9 @@ import AppIntents
 import WidgetKit
 
 struct ToggleHabitIntent: AppIntent {
-    static var title: LocalizedStringResource = "Toggle Habit"
+    static var title: LocalizedStringResource = "intent_toggle_habit_title"
 
-    @Parameter(title: "Template ID")
+    @Parameter(title: "intent_template_id")
     var templateID: String
 
     init() {}

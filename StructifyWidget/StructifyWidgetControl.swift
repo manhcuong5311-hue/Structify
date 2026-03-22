@@ -18,15 +18,18 @@ struct StructifyWidgetControl: ControlWidget {
             provider: Provider()
         ) { value in
             ControlWidgetToggle(
-                "Start Timer",
+                "start_timer_button",
                 isOn: value.isRunning,
                 action: StartTimerIntent(value.name)
             ) { isRunning in
-                Label(isRunning ? "On" : "Off", systemImage: "timer")
+                Label(
+                     isRunning ? "timer_on" : "timer_off",
+                     systemImage: "timer"
+                 )
             }
         }
-        .displayName("Timer")
-        .description("A an example control that runs a timer.")
+        .displayName("widget_timer_title")
+        .description("widget_timer_description")
     }
 }
 
@@ -49,20 +52,20 @@ extension StructifyWidgetControl {
 }
 
 struct TimerConfiguration: ControlConfigurationIntent {
-    static let title: LocalizedStringResource = "Timer Name Configuration"
+    static let title: LocalizedStringResource = "timer_config_title"
 
-    @Parameter(title: "Timer Name", default: "Timer")
-    var timerName: String
+     @Parameter(title: "timer_name_param", default: "Timer")
+     var timerName: String
 }
 
 struct StartTimerIntent: SetValueIntent {
-    static let title: LocalizedStringResource = "Start a timer"
+    static let title: LocalizedStringResource = "start_timer_intent_title"
 
-    @Parameter(title: "Timer Name")
-    var name: String
+      @Parameter(title: "timer_name_param")
+      var name: String
 
-    @Parameter(title: "Timer is running")
-    var value: Bool
+      @Parameter(title: "timer_running_param")
+      var value: Bool
 
     init() {}
 

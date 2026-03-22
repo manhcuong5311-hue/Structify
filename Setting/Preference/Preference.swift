@@ -1125,7 +1125,7 @@ struct PreferencesView: View {
     }
 
     var comingSoonBadge: some View {
-        Text("Soon")
+        Text(String(localized:"soon"))
             .font(.system(size: 10, weight: .bold))
             .foregroundStyle(.secondary)
             .padding(.horizontal, 7)

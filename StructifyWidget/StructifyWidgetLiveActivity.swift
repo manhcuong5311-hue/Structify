@@ -24,7 +24,7 @@ struct StructifyWidgetLiveActivity: Widget {
         ActivityConfiguration(for: StructifyWidgetAttributes.self) { context in
             // Lock screen/banner UI goes here
             VStack {
-                Text("Hello \(context.state.emoji)")
+                Text("live_activity_hello \(context.state.emoji)")
             }
             .activityBackgroundTint(Color.cyan)
             .activitySystemActionForegroundColor(Color.black)
@@ -34,19 +34,20 @@ struct StructifyWidgetLiveActivity: Widget {
                 // Expanded UI goes here.  Compose the expanded UI through
                 // various regions, like leading/trailing/center/bottom
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    Text("live_activity_leading")
                 }
+
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    Text("live_activity_trailing")
                 }
+
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
-                    // more content
+                    Text("live_activity_bottom \(context.state.emoji)")
                 }
             } compactLeading: {
-                Text("L")
+                Text("live_activity_compact_leading")
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Text("live_activity_compact_trailing \(context.state.emoji)")
             } minimal: {
                 Text(context.state.emoji)
             }

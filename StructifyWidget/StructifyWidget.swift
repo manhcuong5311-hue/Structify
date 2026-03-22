@@ -47,10 +47,10 @@ struct StructifyWidgetEntryView : View {
 
     var body: some View {
         VStack {
-            Text("Time:")
+            Text("label_time")
             Text(entry.date, style: .time)
 
-            Text("Favorite Emoji:")
+            Text("label_favorite_emoji")
             Text(entry.configuration.favoriteEmoji)
         }
     }
@@ -399,6 +399,7 @@ struct StructifyProvider: TimelineProvider {
             WidgetEventItem(id: "3", title: "Read", icon: "book.fill", colorHex: "#34C759", minutes: 840, duration: nil, isSystemEvent: false, kind: "habit"),
         ]
     }
+    
 }
 
 // MARK: - Color Extension
@@ -447,13 +448,13 @@ struct SmallWidgetView: View {
                                 Circle()
                                     .fill(.green)
                                     .frame(width: 6, height: 6)
-                                Text("NOW")
+                                Text("widget_now")
                                     .font(.system(size: 9, weight: .bold, design: .rounded))
                                     .foregroundStyle(.green)
                                     .tracking(1)
                             }
                         } else {
-                            Text("NEXT")
+                            Text("widget_next")
                                 .font(.system(size: 9, weight: .bold, design: .rounded))
                                 .foregroundStyle(.secondary)
                                 .tracking(1.2)
@@ -523,7 +524,10 @@ struct SmallWidgetView: View {
                                     .font(.system(size: 10))
                                     .foregroundStyle(event.color)
                                 let remaining = (event.minutes + dur) - nowMins
-                                Text("\(remaining)m left")
+                                Text(String.localizedStringWithFormat(
+                                    NSLocalizedString("widget_minutes_left", comment: ""),
+                                    remaining
+                                ))
                                     .font(.system(size: 12, weight: .semibold, design: .rounded))
                                     .foregroundStyle(event.color)
                             }
@@ -563,10 +567,10 @@ struct SmallWidgetView: View {
                     Image(systemName: "moon.stars.fill")
                         .font(.system(size: 28))
                         .foregroundStyle(.indigo.opacity(0.7))
-                    Text("All clear")
+                    Text("widget_all_clear")
                         .font(.system(size: 14, weight: .semibold, design: .rounded))
                         .foregroundStyle(.secondary)
-                    Text("No more events today")
+                    Text("widget_no_more_events_today")
                         .font(.system(size: 11, design: .rounded))
                         .foregroundStyle(.tertiary)
                         .multilineTextAlignment(.center)
@@ -673,14 +677,14 @@ struct MediumWidgetView: View {
 
     var eventList: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("TODAY")
+            Text("widget_today")
                 .font(.system(size: 9, weight: .bold, design: .rounded))
                 .foregroundStyle(.secondary)
                 .tracking(1.2)
                 .padding(.bottom, 6)
 
             if userEvents.isEmpty {
-                Text("No events")
+                Text("widget_no_events")
                     .font(.system(size: 13, design: .rounded))
                     .foregroundStyle(.tertiary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -690,7 +694,10 @@ struct MediumWidgetView: View {
                         eventRow(event)
                     }
                     if userEvents.count > 4 {
-                        Text("+\(userEvents.count - 4) more")
+                        Text(String.localizedStringWithFormat(
+                            NSLocalizedString("widget_more_count", comment: ""),
+                            userEvents.count - 4
+                        ))
                             .font(.system(size: 10, design: .rounded))
                             .foregroundStyle(.secondary)
                             .padding(.top, 2)
@@ -738,7 +745,7 @@ struct MediumWidgetView: View {
                 // Running indicator
                 HStack(spacing: 3) {
                     Circle().fill(.green).frame(width: 5, height: 5)
-                    Text("NOW")
+                    Text("widget_now")
                         .font(.system(size: 8, weight: .bold, design: .rounded))
                         .foregroundStyle(.green)
                 }
@@ -807,7 +814,7 @@ struct LargeWidgetView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.system(size: 32))
                             .foregroundStyle(.green.opacity(0.6))
-                        Text("Free day")
+                        Text("widget_free_day")
                             .font(.system(size: 15, weight: .semibold, design: .rounded))
                             .foregroundStyle(.secondary)
                     }
@@ -820,7 +827,10 @@ struct LargeWidgetView: View {
                         if userEvents.count > 7 {
                             HStack {
                                 Spacer()
-                                Text("+\(userEvents.count - 7) more events")
+                                Text(String.localizedStringWithFormat(
+                                    NSLocalizedString("widget_more_events_count", comment: ""),
+                                    userEvents.count - 7
+                                ))
                                     .font(.system(size: 11, design: .rounded))
                                     .foregroundStyle(.secondary)
                                 Spacer()
@@ -907,7 +917,10 @@ struct LargeWidgetView: View {
                         // Nếu đang chạy hiện "Xm left"
                         if isCurrent {
                             let remaining = (event.minutes + dur) - nowMins
-                            Text("\(remaining)m left")
+                            Text(String.localizedStringWithFormat(
+                                NSLocalizedString("widget_minutes_left", comment: ""),
+                                remaining
+                            ))
                                 .font(.system(size: 11, weight: .medium, design: .rounded))
                                 .foregroundStyle(.green)
                         } else {
@@ -943,7 +956,7 @@ struct LargeWidgetView: View {
                 }
                 .buttonStyle(.plain)
             } else if isCurrent {
-                Text("NOW")
+                Text("widget_now")
                     .font(.system(size: 9, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 6)
@@ -977,8 +990,9 @@ struct NextEventWidget: Widget {
             SmallWidgetView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("Next Event")
-        .description("See your next upcoming event.")
+        .configurationDisplayName("widget_next_event_title")
+        .description("widget_next_event_desc")
+
         .supportedFamilies([.systemSmall])
     }
 }
@@ -990,8 +1004,9 @@ struct TimelineWidget: Widget {
             MediumWidgetView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("Today's Timeline")
-        .description("A visual overview of your day.")
+        .configurationDisplayName("widget_today_timeline_title")
+        .description("widget_today_timeline_desc")
+
         .supportedFamilies([.systemMedium])
     }
 }
@@ -1003,8 +1018,8 @@ struct FullDayWidget: Widget {
             LargeWidgetView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("Full Day")
-        .description("All your events and habits for today.")
+        .configurationDisplayName("widget_full_day_title")
+        .description("widget_full_day_desc")
         .supportedFamilies([.systemLarge])
     }
 }
@@ -1029,7 +1044,11 @@ struct InlineLockScreenView: View {
             Label {
                 if isRunning, let dur = event.duration {
                     let remaining = (event.minutes + dur) - nowMins
-                    Text("\(event.title) · \(remaining)m left")
+                    Text(String.localizedStringWithFormat(
+                        NSLocalizedString("widget_event_remaining", comment: ""),
+                        event.title,
+                        remaining
+                    ))
                 } else {
                     Text("\(event.title) \(event.time)")
                 }
@@ -1037,7 +1056,7 @@ struct InlineLockScreenView: View {
                 Image(systemName: validIcon(event.icon))
             }
         } else {
-            Label("All clear", systemImage: "moon.stars.fill")
+            Label("widget_all_clear", systemImage: "moon.stars.fill")
         }
     }
 }
@@ -1120,7 +1139,7 @@ struct RectangularLockScreenView: View {
                     Image(systemName: "moon.stars.fill")
                         .font(.system(size: 12))
                         .widgetAccentable()
-                    Text("No more events today")
+                    Text("widget_no_more_events_today")
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                 }
                 .opacity(0.7)
@@ -1188,8 +1207,8 @@ struct LockScreenInlineWidget: Widget {
             InlineLockScreenView(entry: entry)
                 .containerBackground(.clear, for: .widget)
         }
-        .configurationDisplayName("Next Event")
-        .description("Quick glance at your next event.")
+        .configurationDisplayName("widget_next_event_title")
+        .description("widget_next_event_desc_short")
         .supportedFamilies([.accessoryInline])
     }
 }
@@ -1201,8 +1220,8 @@ struct LockScreenCircularWidget: Widget {
             CircularLockScreenView(entry: entry)
                 .containerBackground(.clear, for: .widget)
         }
-        .configurationDisplayName("Event Icon")
-        .description("Current or next event icon with progress.")
+        .configurationDisplayName("widget_event_icon_title")
+        .description("widget_event_icon_desc")
         .supportedFamilies([.accessoryCircular])
     }
 }
@@ -1214,8 +1233,8 @@ struct LockScreenRectangularWidget: Widget {
             RectangularLockScreenView(entry: entry)
                 .containerBackground(.clear, for: .widget)
         }
-        .configurationDisplayName("Today's Schedule")
-        .description("Upcoming events with habit tick.")
+        .configurationDisplayName("widget_today_schedule_title")
+        .description("widget_today_schedule_desc")
         .supportedFamilies([.accessoryRectangular])
     }
 }

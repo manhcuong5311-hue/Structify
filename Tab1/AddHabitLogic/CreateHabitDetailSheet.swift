@@ -717,7 +717,7 @@ extension CreateHabitDetailSheet {
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: icon)
-                Text(type.rawValue)
+                Text(type.localized)
             }
             .font(.subheadline.weight(.semibold))
             .frame(maxWidth: .infinity)
@@ -798,6 +798,18 @@ extension CreateHabitDetailSheet {
         switch repeatMode {
         case .oneDay: break
         default: date = today   
+        }
+    }
+}
+
+
+extension HabitType {
+    var localized: String {
+        switch self {
+        case .binary:
+            return String(localized: "habit_type_binary")
+        case .accumulative:
+            return String(localized: "habit_type_accumulative")
         }
     }
 }
