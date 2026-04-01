@@ -343,14 +343,36 @@ struct WeekStripView: View {
     }
 }
 
+//
+//  WeekTimelineView.swift
+//  Structify
+//
+//  Updated to match pill + circle timeline mockup
+//
+
+import SwiftUI
+import Combine
+
+// MARK: - WeekTimelineView
+
+//
+//  WeekTimelineView.swift
+//  Structify
+//
+//  Updated: collision-avoidance layout — circles no longer overlap
+//
+
+import SwiftUI
+import Combine
+
+// MARK: - WeekTimelineView
+
 struct WeekTimelineView: View {
 
     @EnvironmentObject var store: TimelineStore
     @EnvironmentObject var calendar: CalendarState
     @Environment(\.colorScheme) private var scheme
 
-    // Fixed constants — không dùng GeometryReader nữa
-    private let hourHeight: CGFloat = 40
     private let iconSize: CGFloat = 32
     private var pillWidth: CGFloat {
         UIDevice.current.userInterfaceIdiom == .pad ? 70 : 50
@@ -372,13 +394,13 @@ struct WeekTimelineView: View {
 
     var body: some View {
         GeometryReader { geo in
-            let maxH = geo.size.height * 0.5         // 👈 tăng từ 0.45 → 0.60 để dài ra
+            let maxH = geo.size.height * 0.55
             let isIpad = UIDevice.current.userInterfaceIdiom == .pad
-            let targetHourH = isIpad
+            let targetHourH: CGFloat = isIpad
                 ? max((maxH - iconSize * 2 - 16) / CGFloat(max(sleepHour - wakeHour, 1)), 20)
                 : min(
                     max((maxH - iconSize * 2 - 16) / CGFloat(max(sleepHour - wakeHour, 1)), 20),
-                    35  // 👈 tăng từ hourHeight(40) → 52
+                    40
                   )
 
             HStack(alignment: .top, spacing: 0) {
@@ -387,7 +409,7 @@ struct WeekTimelineView: View {
                         date: date,
                         wakeHour: wakeHour,
                         sleepHour: sleepHour,
-                        hourHeight: targetHourH,        // 👈 dynamic theo screen
+                        hourHeight: targetHourH,
                         pillWidth: pillWidth,
                         lineWidth: lineWidth,
                         iconSize: iconSize
@@ -395,14 +417,26 @@ struct WeekTimelineView: View {
                     .frame(maxWidth: .infinity)
                 }
             }
-            .padding(.top, UIDevice.current.userInterfaceIdiom == .pad ? 48 : 4)  // 👈 dịch xuống trên iPad
-                   .padding(.bottom, 8)
+            .padding(.top, isIpad ? 48 : 4)
+            .padding(.bottom, 8)
             .frame(maxWidth: .infinity)
         }
     }
 }
 
-// MARK: - Compact Day Column
+// MARK: - PlacedEvent (layout result)
+
+/// Kết quả sau khi chạy layout pass — Y đã điều chỉnh tránh overlap
+private struct PlacedEvent {
+    let event: EventItem
+    /// Y tính từ top của timeline zone.
+    /// Với circle: top-edge của circle frame.
+    /// Với pill: top-edge của pill.
+    let topY: CGFloat
+    let isCircle: Bool
+}
+
+// MARK: - CompactDayColumn
 
 struct CompactDayColumn: View {
 
@@ -418,193 +452,123 @@ struct CompactDayColumn: View {
     @EnvironmentObject var calendar: CalendarState
     @Environment(\.colorScheme) private var scheme
 
+    /// Events có duration <= ngưỡng này → hình tròn; còn lại → pill
+    private let circleThreshold = 35   // phút
+
+    /// Khoảng trống tối thiểu giữa hai events sau khi layout
+    private let minEventGap: CGFloat = 3
+
     private var isSelected: Bool {
         Calendar.current.isDate(date, inSameDayAs: calendar.selectedDate)
     }
-    private var isToday: Bool { Calendar.current.isDateInToday(date) }
+    private var isToday: Bool  { Calendar.current.isDateInToday(date) }
     private var isPast: Bool {
         Calendar.current.startOfDay(for: date) < Calendar.current.startOfDay(for: Date())
     }
 
-    private var totalHours: Int { max(sleepHour - wakeHour, 1) }
+    private var totalHours: Int        { max(sleepHour - wakeHour, 1) }
     private var timelineHeight: CGFloat { CGFloat(totalHours) * hourHeight }
 
-    private var allEvents: [EventItem] {
-        store.events(for: date).filter { $0.duration != 1440 }
-    }
-    private var wakeEvent: EventItem? { allEvents.first { $0.systemType == .wake } }
+    private var allEvents: [EventItem] { store.events(for: date).filter { $0.duration != 1440 } }
+    private var wakeEvent:  EventItem? { allEvents.first { $0.systemType == .wake  } }
     private var sleepEvent: EventItem? { allEvents.first { $0.systemType == .sleep } }
     private var userEvents: [EventItem] { allEvents.filter { !$0.isSystemEvent } }
 
     private var nowMinutes: Int {
-        Calendar.current.component(.hour, from: Date()) * 60 +
+        Calendar.current.component(.hour,   from: Date()) * 60 +
         Calendar.current.component(.minute, from: Date())
     }
 
     var brand: Color { Color(hex: PreferencesStore().accentHex) }
-    // Pixel Y từ top của timeline (tính từ ngay dưới wake icon)
+
+    // MARK: Helpers
+
     private func yInTimeline(minutes: Int) -> CGFloat {
         CGFloat(minutes - wakeHour * 60) / 60.0 * hourHeight
     }
-    
-    struct PillLayout {
-        let event: EventItem
-        let xOffset: CGFloat
+
+    func safeIcon(_ name: String) -> String {
+        guard !name.isEmpty, UIImage(systemName: name) != nil else { return "checkmark.circle.fill" }
+        return name
     }
 
-    func layoutPills(_ events: [EventItem]) -> [PillLayout] {
-        let sorted = events.sorted { $0.minutes < $1.minutes }
-        var result: [PillLayout] = []
-        let slotW = pillWidth * 0.75 + 2  // width mỗi slot + gap
+    // MARK: - Layout pass — tránh overlap
+
+    /// Duyệt qua tất cả user events theo thứ tự thời gian.
+    /// Mỗi event được gán topY sao cho không trùng với event trước.
+    ///
+    /// Quy tắc:
+    /// - Circle: idealTop = centerY - iconSize/2. Nếu bị block bởi event trước → đẩy xuống.
+    /// - Pill:   idealTop = yInTimeline(startMin).   Nếu bị block bởi circle/pill trước → đẩy xuống.
+    private func computeLayout() -> [PlacedEvent] {
+        let sorted = userEvents.sorted { $0.minutes < $1.minutes }
+        var result: [PlacedEvent] = []
+
+        // bottom-edge của event cuối đã được đặt
+        var nextFreeY: CGFloat = -9999
 
         for event in sorted {
+            let duration = event.duration ?? 60
             let startMin = max(event.minutes, wakeHour * 60)
-            let endMin   = min(event.minutes + (event.duration ?? 30), sleepHour * 60)
-            guard endMin > startMin else {
-                result.append(PillLayout(event: event, xOffset: 0))
-                continue
-            }
+            guard startMin < sleepHour * 60 else { continue }
 
-            // Tìm slot ngang không overlap
-            var slot = 0
-            while true {
-                let xOff = CGFloat(slot) * slotW - CGFloat(slot) * slotW / 2
-                let overlaps = result.contains { placed in
-                    let ps = max(placed.event.minutes, wakeHour * 60)
-                    let pe = min(placed.event.minutes + (placed.event.duration ?? 30), sleepHour * 60)
-                    let overlap = ps < endMin && pe > startMin
-                    let sameCol = placed.xOffset == xOff
-                    return overlap && sameCol
-                }
-                if !overlaps {
-                    result.append(PillLayout(event: event, xOffset: xOff))
-                    break
-                }
-                slot += 1
-                if slot > 3 { // max 4 columns
-                    result.append(PillLayout(event: event, xOffset: 0))
-                    break
-                }
+            let isCircle = duration <= circleThreshold
+
+            if isCircle {
+                // ── Circle ──────────────────────────────────────────
+                let idealCenterY = yInTimeline(minutes: startMin)
+                let idealTop     = idealCenterY - iconSize / 2
+
+                let adjustedTop  = max(idealTop, nextFreeY + minEventGap)
+                let clampedTop   = min(adjustedTop, max(0, timelineHeight - iconSize))
+
+                nextFreeY = clampedTop + iconSize
+                result.append(PlacedEvent(event: event, topY: clampedTop, isCircle: true))
+
+            } else {
+                // ── Pill ─────────────────────────────────────────────
+                let endMin  = min(event.minutes + duration, sleepHour * 60)
+                let rawH    = max(CGFloat(endMin - startMin) / 60.0 * hourHeight, 30)
+                let idealTop = yInTimeline(minutes: startMin)
+
+                let adjustedTop = max(idealTop, nextFreeY + minEventGap)
+                let clampedTop  = min(adjustedTop, max(0, timelineHeight - rawH))
+
+                nextFreeY = clampedTop + rawH
+                result.append(PlacedEvent(event: event, topY: clampedTop, isCircle: false))
             }
         }
+
         return result
     }
 
-    @ViewBuilder
-    func eventPillPositioned(_ event: EventItem, xOffset: CGFloat) -> some View {
-        let startMin = max(event.minutes, wakeHour * 60)
-        let endMin   = min(event.minutes + (event.duration ?? 30), sleepHour * 60)
+    // MARK: - Body
 
-        if endMin > startMin {
-            let rawH      = CGFloat(endMin - startMin) / 60.0 * hourHeight
-            let pillH     = max(rawH, 22)
-            let safePillH = min(pillH, timelineHeight - yInTimeline(minutes: startMin))
-            let yStart    = yInTimeline(minutes: startMin)
-            let w         = pillWidth * 0.75
-
-            ZStack {
-                RoundedRectangle(cornerRadius: min(w / 2, safePillH / 2), style: .continuous)
-                    .fill(event.color)
-                    .shadow(color: event.color.opacity(0.2), radius: 2, y: 1)
-                if safePillH > 18 {
-                    Image(systemName: safeIcon(event.icon))
-                        .font(.system(size: safePillH > 40 ? 11 : 8, weight: .semibold))
-                        .foregroundStyle(.white)
-                }
-            }
-            .frame(width: w, height: max(safePillH, 0))
-            .offset(x: xOffset, y: yStart)
-        }
-    }
-    
-    @ViewBuilder
-    func eventPillCentered(_ event: EventItem) -> some View {
-        let isHabit = event.duration == nil
-        // Habit hiển thị pill cố định 30pt thay vì theo duration
-        let displayDuration = event.duration ?? 60
-        
-        let startMin = max(event.minutes, wakeHour * 60)
-        let endMin   = min(event.minutes + displayDuration, sleepHour * 60)
-
-        if endMin > startMin {
-            let rawH      = CGFloat(endMin - startMin) / 60.0 * hourHeight
-            // Habit: min height lớn hơn để icon luôn hiện
-            let minHeight: CGFloat = isHabit ? 36 : 22
-            let pillH     = max(rawH, minHeight)
-            let safePillH = min(pillH, timelineHeight - yInTimeline(minutes: startMin))
-            let yStart    = yInTimeline(minutes: startMin)
-            let w         = pillWidth * 0.85
-
-            ZStack {
-                RoundedRectangle(cornerRadius: min(w / 2, safePillH / 2), style: .continuous)
-                    .fill(
-                        isHabit
-                        ? event.color.opacity(0.85)          // habit: màu đặc hơn
-                        : event.color
-                    )
-                    .overlay(
-                        // Habit: thêm viền repeat để phân biệt
-                        isHabit ?
-                        RoundedRectangle(cornerRadius: min(w / 2, safePillH / 2))
-                            .stroke(Color.white.opacity(0.4), lineWidth: 1)
-                        : nil
-                    )
-                    .shadow(color: event.color.opacity(0.2), radius: 2, y: 1)
-
-                // Icon — luôn hiện, dùng safeIcon
-                let isPad = UIDevice.current.userInterfaceIdiom == .pad
-                Image(systemName: safeIcon(event.icon))
-                    .font(.system(size: safePillH > 46 ? (isPad ? 25 : 19) : (isPad ? 19 : 17), weight: .semibold))
-                    .foregroundStyle(.white)
-            }
-            .frame(width: w, height: max(safePillH, minHeight))
-            .frame(maxWidth: .infinity, alignment: .center)
-            .offset(y: yStart)
-        }
-    }
-    
-    func safeIcon(_ name: String) -> String {
-        let fallback = "checkmark.circle.fill"
-        guard !name.isEmpty else { return fallback }
-        // UIImage check — nếu không tìm thấy SF Symbol thì dùng fallback
-        if UIImage(systemName: name) == nil { return fallback }
-        return name
-    }
-    
-    
-    
-    
-    
-    
     var body: some View {
-        // Dùng VStack + overlay thay vì ZStack + offset
         VStack(spacing: 4) {
 
-            // Wake icon — top
+            // ── Wake icon ─────────────────────────────────────────────
             iconCircle(
-                icon: wakeEvent?.icon ?? "sunrise.fill",
+                icon:  wakeEvent?.icon  ?? "sunrise.fill",
                 color: wakeEvent?.color ?? .orange
             )
 
-            // Timeline zone — fixed height
+            // ── Timeline zone ─────────────────────────────────────────
             ZStack(alignment: .top) {
 
-                // Background line
+                // Đường dọc nền
                 Capsule()
-                    .fill(Color.primary.opacity(isSelected ? 0.18 : 0.08))
+                    .fill(Color.primary.opacity(isSelected ? 0.18 : 0.07))
                     .frame(width: lineWidth)
                     .frame(maxWidth: .infinity)
 
-                // Past fill on today
+                // Past-fill gradient (today only)
                 if isToday {
-                    let pastH = max(
-                        min(yInTimeline(minutes: nowMinutes), timelineHeight),
-                        0
-                    )
+                    let pastH = max(min(yInTimeline(minutes: nowMinutes), timelineHeight), 0)
                     Capsule()
                         .fill(
                             LinearGradient(
-                                colors: [brand.opacity(0.5), brand.opacity(0.15)],
+                                colors: [brand.opacity(0.55), brand.opacity(0.18)],
                                 startPoint: .top, endPoint: .bottom
                             )
                         )
@@ -612,17 +576,23 @@ struct CompactDayColumn: View {
                         .frame(maxWidth: .infinity, alignment: .top)
                 }
 
-                // User event pills
-                
-                ForEach(userEvents) { event in
-                    eventPillCentered(event)
+                // ── Events — đã qua layout pass ──────────────────────
+                let placements = computeLayout()
+                ForEach(placements, id: \.event.id) { p in
+                    if p.isCircle {
+                        renderedCircle(p.event, topY: p.topY)
+                    } else {
+                        renderedPill(p.event, topY: p.topY)
+                    }
                 }
 
                 // Now dot
-                if isToday && nowMinutes >= wakeHour * 60 && nowMinutes <= sleepHour * 60 {
+                if isToday,
+                   nowMinutes >= wakeHour * 60,
+                   nowMinutes <= sleepHour * 60 {
                     ZStack {
-                        Circle().fill(Color.white).frame(width: 9, height: 9)
-                        Circle().fill(brand).frame(width: 6, height: 6)
+                        Circle().fill(Color.white).frame(width: 9,  height: 9)
+                        Circle().fill(brand)      .frame(width: 6,  height: 6)
                     }
                     .frame(maxWidth: .infinity)
                     .offset(y: yInTimeline(minutes: nowMinutes) - 4.5)
@@ -630,15 +600,15 @@ struct CompactDayColumn: View {
                 }
             }
             .frame(height: timelineHeight)
-           
-            // Sleep icon — bottom
+
+            // ── Sleep icon ────────────────────────────────────────────
             iconCircle(
-                icon: sleepEvent?.icon ?? "moon.stars.fill",
+                icon:  sleepEvent?.icon  ?? "moon.stars.fill",
                 color: sleepEvent?.color ?? .indigo
             )
         }
         .frame(maxWidth: .infinity)
-        .opacity(isPast ? 0.4 : 1)
+        .opacity(isPast ? 0.38 : 1)
         .onTapGesture {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                 calendar.select(date)
@@ -646,48 +616,75 @@ struct CompactDayColumn: View {
         }
     }
 
-    // Icon tròn cố định — không dùng offset
+    // MARK: - Circle renderer
+
+    @ViewBuilder
+    private func renderedCircle(_ event: EventItem, topY: CGFloat) -> some View {
+        ZStack {
+            Circle()
+                .fill(event.color)
+                .shadow(color: event.color.opacity(0.28), radius: 4, y: 2)
+            Image(systemName: safeIcon(event.icon))
+                .font(.system(size: iconSize * 0.42, weight: .semibold))
+                .foregroundStyle(.white)
+        }
+        .frame(width: iconSize, height: iconSize)
+        .frame(maxWidth: .infinity)
+        .offset(y: topY)   // topY = top-edge của frame (ZStack alignment: .top)
+    }
+
+    // MARK: - Pill renderer
+
+    @ViewBuilder
+    private func renderedPill(_ event: EventItem, topY: CGFloat) -> some View {
+        let displayDuration = event.duration ?? 60
+        let startMin = max(event.minutes, wakeHour * 60)
+        let endMin   = min(event.minutes + displayDuration, sleepHour * 60)
+
+        if endMin > startMin {
+            let rawH      = CGFloat(endMin - startMin) / 60.0 * hourHeight
+            let minH: CGFloat = 30
+            let pillH     = max(rawH, minH)
+            let safePillH = min(pillH, max(0, timelineHeight - topY))
+            let w         = pillWidth * 0.85
+            let isPad     = UIDevice.current.userInterfaceIdiom == .pad
+
+            ZStack {
+                RoundedRectangle(cornerRadius: min(w / 2, safePillH / 2), style: .continuous)
+                    .fill(event.color)
+                    .shadow(color: event.color.opacity(0.22), radius: 4, y: 2)
+
+                Image(systemName: safeIcon(event.icon))
+                    .font(.system(
+                        size: safePillH > 48
+                            ? (isPad ? 24 : 18)
+                            : (isPad ? 18 : 13),
+                        weight: .semibold
+                    ))
+                    .foregroundStyle(.white)
+            }
+            .frame(width: w, height: max(safePillH, minH))
+            .frame(maxWidth: .infinity, alignment: .center)
+            .offset(y: topY)
+        }
+    }
+
+    // MARK: - Wake / Sleep icon circle
+
     func iconCircle(icon: String, color: Color) -> some View {
         ZStack {
             Circle()
                 .fill(color)
                 .frame(width: iconSize, height: iconSize)
-                .shadow(color: color.opacity(0.3), radius: 4, y: 2)
+                .shadow(color: color.opacity(0.30), radius: 4, y: 2)
             Image(systemName: icon)
                 .font(.system(size: iconSize * 0.42, weight: .semibold))
                 .foregroundStyle(.white)
         }
         .frame(maxWidth: .infinity)
     }
-
-    @ViewBuilder
-    func eventPill(_ event: EventItem) -> some View {
-        let startMin = max(event.minutes, wakeHour * 60)
-        let endMin   = min(event.minutes + (event.duration ?? 30), sleepHour * 60)
-
-        if endMin > startMin {
-            let rawH   = CGFloat(endMin - startMin) / 60.0 * hourHeight
-            let pillH  = max(rawH, 22)
-            let yStart = yInTimeline(minutes: startMin)
-            // Clamp để không vượt quá timeline
-            let safePillH = min(pillH, timelineHeight - yStart)
-
-            ZStack {
-                RoundedRectangle(cornerRadius: min(pillWidth / 2, safePillH / 2), style: .continuous)
-                    .fill(event.color)
-                    .shadow(color: event.color.opacity(0.2), radius: 2, y: 1)
-                if safePillH > 18 {
-                    Image(systemName: event.icon)
-                        .font(.system(size: safePillH > 40 ? 12 : 9, weight: .semibold))
-                        .foregroundStyle(.white)
-                }
-            }
-            .frame(width: pillWidth * 0.75, height: safePillH)
-            .frame(maxWidth: .infinity)
-            .offset(y: yStart)
-        }
-    }
 }
+
 // MARK: - Day Column
 
 struct WeekDayColumn: View {
