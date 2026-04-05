@@ -23,7 +23,6 @@ struct ScheduleView: View {
                     .frame(height: 110)
                 // Week timeline nằm dưới strip, visible khi FloatingCard kéo xuống
                 WeekTimelineView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 Spacer(minLength: 0)
             }
 
