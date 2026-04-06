@@ -397,9 +397,10 @@ struct WeekTimelineView: View {
     @Environment(\.colorScheme) private var scheme
     @Environment(\.horizontalSizeClass) private var hSize
 
-    private let badgeSize: CGFloat = 26
+    private let badgeSize: CGFloat = 28          // ↑ tăng từ 26 → 28
     private let badgeGap: CGFloat = 3
-    private let maxStripHeight: CGFloat = 260
+    private let maxStripHeight: CGFloat = 280    // ↑ tăng nhẹ để phù hợp badge lớn hơn
+    private let periodHeaderHeight: CGFloat = 28 // ↑ tăng từ 24 → 28
 
     private var brand: Color { Color(hex: PreferencesStore().accentHex) }
 
@@ -425,63 +426,42 @@ struct WeekTimelineView: View {
         return map
     }
 
-    private var hasAnyEvents: Bool {
-        weekEventsMap.values.contains { !$0.isEmpty }
-    }
-
-    private var activePeriods: [WeekStripPeriod] {
-        let allEvents = weekEventsMap.values.flatMap { $0 }
-        return WeekStripPeriod.allCases.filter { period in
-            allEvents.contains { period.contains(minutes: $0.minutes) }
-        }
-    }
+    // Luôn hiện cả 3 period, bất kể có event hay không
+    private var allPeriods: [WeekStripPeriod] { WeekStripPeriod.allCases }
 
     private func events(for date: Date, period: WeekStripPeriod) -> [EventItem] {
         (weekEventsMap[date] ?? []).filter { period.contains(minutes: $0.minutes) }
     }
 
     private func maxBadgeCount(for period: WeekStripPeriod) -> Int {
-        var maxCount = 0
-        for date in weekDates {
-            maxCount = max(maxCount, events(for: date, period: period).count)
-        }
-        return max(maxCount, 1)
-    }
-
-    private func nowMinutes() -> Int {
-        let c = Calendar.current.dateComponents([.hour, .minute], from: Date())
-        return (c.hour ?? 0) * 60 + (c.minute ?? 0)
+        weekDates.reduce(0) { max($0, events(for: $1, period: period).count) }
     }
 
     // MARK: - Body
 
     var body: some View {
-        if !hasAnyEvents {
-            EmptyView()
-        } else {
-            let periods = activePeriods
-            // header row height + event rows per period + spacing
-            let totalHeight = periods.reduce(CGFloat(0)) { acc, period in
-                let rows = CGFloat(maxBadgeCount(for: period))
-                let headerH: CGFloat = 24
-                let eventsH = rows * badgeSize + max(rows - 1, 0) * badgeGap
-                return acc + headerH + 2 + eventsH
-            } + CGFloat(max(periods.count - 1, 0)) * 8
+        let periods = allPeriods
+        let totalHeight = periods.reduce(CGFloat(0)) { acc, period in
+            let rows = CGFloat(max(maxBadgeCount(for: period), 0))
+            let eventsH = rows > 0
+                ? rows * badgeSize + max(rows - 1, 0) * badgeGap
+                : 0
+            return acc + periodHeaderHeight + 2 + eventsH
+        } + CGFloat(max(periods.count - 1, 0)) * 8
 
-            Group {
-                if totalHeight > maxStripHeight {
-                    ScrollView(.vertical, showsIndicators: false) {
-                        stripContent(periods: periods)
-                    }
-                    .frame(maxHeight: maxStripHeight)
-                } else {
+        Group {
+            if totalHeight > maxStripHeight {
+                ScrollView(.vertical, showsIndicators: false) {
                     stripContent(periods: periods)
                 }
+                .frame(maxHeight: maxStripHeight)
+            } else {
+                stripContent(periods: periods)
             }
-            .padding(.horizontal, 8)
-            .padding(.top, 2)
-            .padding(.bottom, 4)
         }
+        .padding(.horizontal, 8)
+        .padding(.top, 2)
+        .padding(.bottom, 4)
     }
 
     // MARK: - Strip content
@@ -489,67 +469,55 @@ struct WeekTimelineView: View {
     @ViewBuilder
     private func stripContent(periods: [WeekStripPeriod]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            ForEach(periods, id: \WeekStripPeriod.rawValue) { period in
+            ForEach(periods, id: \.rawValue) { period in
                 periodSection(period: period)
             }
         }
     }
 
-    // MARK: - Period section: header label row + event grid rows
+    // MARK: - Period section
 
     @ViewBuilder
     private func periodSection(period: WeekStripPeriod) -> some View {
         let rowCount = maxBadgeCount(for: period)
-        let now = nowMinutes()
-        let isNowPeriod = period.contains(minutes: now)
 
         VStack(alignment: .leading, spacing: 2) {
-            // ── Period header: icon + label ──
-            HStack(spacing: 5) {
+            // ── Period header: icon + label (size tăng) ──
+            HStack(spacing: 6) {
                 Image(systemName: period.icon)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(size: 15, weight: .semibold))  // ↑ tăng từ 13 → 15
                     .foregroundStyle(period.color)
 
                 Text(period.label)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.system(size: 15, weight: .semibold))  // ↑ tăng từ 13 → 15
                     .foregroundStyle(period.color)
             }
             .padding(.leading, 2)
             .padding(.vertical, 3)
-            .frame(height: 24)
+            .frame(height: periodHeaderHeight)
 
-            // ── Event grid rows ──
-            // Each row: 7 columns aligned with day cells
-            ForEach(0..<rowCount, id: \.self) { rowIndex in
-                HStack(spacing: 0) {
-                    ForEach(Array(weekDates.enumerated()), id: \.offset) { _, date in
-                        let dayEvents = events(for: date, period: period)
-                        let isPast = Calendar.current.startOfDay(for: date) <
-                            Calendar.current.startOfDay(for: Date())
-                        let isDayToday = Calendar.current.isDateInToday(date)
+            // ── Event grid rows (chỉ render nếu có event) ──
+            if rowCount > 0 {
+                ForEach(0..<rowCount, id: \.self) { rowIndex in
+                    HStack(spacing: 0) {
+                        ForEach(Array(weekDates.enumerated()), id: \.offset) { _, date in
+                            let dayEvents = events(for: date, period: period)
+                            let isPast = Calendar.current.startOfDay(for: date) <
+                                Calendar.current.startOfDay(for: Date())
 
-                        ZStack {
-                            if rowIndex < dayEvents.count {
-                                badgeView(event: dayEvents[rowIndex])
+                            ZStack {
+                                if rowIndex < dayEvents.count {
+                                    badgeView(event: dayEvents[rowIndex])
+                                }
+                                // ← Now dot đã được xoá
                             }
-
-                            // Now dot on first row of today's column
-                            if isDayToday && isNowPeriod && rowIndex == 0 {
-                                Circle()
-                                    .fill(brand)
-                                    .frame(width: 5, height: 5)
-                                    .shadow(color: brand.opacity(0.5), radius: 2)
-                                    .frame(maxWidth: .infinity, maxHeight: .infinity,
-                                           alignment: .topTrailing)
-                                    .padding(.trailing, 2)
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                        .frame(height: badgeSize)
-                        .opacity(isPast ? 0.35 : 1)
-                        .onTapGesture {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                calendar.select(date)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: badgeSize)
+                            .opacity(isPast ? 0.35 : 1)
+                            .onTapGesture {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                    calendar.select(date)
+                                }
                             }
                         }
                     }
