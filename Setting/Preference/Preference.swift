@@ -231,7 +231,7 @@ struct PreferencesView: View {
                         dangerSection
 
                         // App version
-                        Text("Structify • v1.0")
+                        Text("Line • v1.0")
                             .font(.caption)
                             .foregroundStyle(.tertiary)
                             .padding(.bottom, 32)

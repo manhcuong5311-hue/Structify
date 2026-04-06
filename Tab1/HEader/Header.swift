@@ -453,10 +453,12 @@ struct WeekTimelineView: View {
             if totalHeight > maxStripHeight {
                 ScrollView(.vertical, showsIndicators: false) {
                     stripContent(periods: periods)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
                 }
                 .frame(maxHeight: maxStripHeight)
             } else {
                 stripContent(periods: periods)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         }
         .padding(.horizontal, 8)

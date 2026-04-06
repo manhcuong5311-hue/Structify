@@ -124,7 +124,7 @@ struct RootView: View {
                 .opacity(logoOpacity)
 
                 VStack(spacing: 6) {
-                    Text("Structify")
+                    Text("Line")
                         .font(.system(size: 32, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
 

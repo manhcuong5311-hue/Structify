@@ -176,7 +176,7 @@ extension SettingsView {
             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             .shadow(color: Color(hex: "#4F46E5").opacity(0.3), radius: 10, y: 4)
 
-            Text("Structify")
+            Text("Line")
                 .font(.title3.bold())
 
             Spacer()
@@ -391,7 +391,7 @@ struct SettingsRowButtonStyle: ButtonStyle {
 extension SettingsView {
     var footer: some View {
         VStack(spacing: 6) {
-            Text("Made with ♥ by Structify")
+            Text("Made with ♥ by Line")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
 
