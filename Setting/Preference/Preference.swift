@@ -11,6 +11,13 @@ import UniformTypeIdentifiers
 // MARK: - PreferencesStore
 class PreferencesStore: ObservableObject {
 
+    /// App-wide singleton. Use `PreferencesStore.shared` instead of ad-hoc `PreferencesStore()`.
+    /// Ad-hoc instantiation creates orphan ObservableObjects whose @Published changes
+    /// don't reach SwiftUI views — leading to stale UI when prefs change elsewhere.
+    static let shared = PreferencesStore()
+
+    private init() {}
+
     // Schedule
     @AppStorage("pref_first_weekday") var firstWeekday: Int = 2  // 1=Sun, 2=Mon
 
@@ -89,7 +96,7 @@ extension StreakThreshold: Codable {}
 struct PreferencesView: View {
 
     @EnvironmentObject var store: TimelineStore
-    @StateObject var prefs = PreferencesStore()
+    @StateObject var prefs = PreferencesStore.shared
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var scheme
 
@@ -1104,6 +1111,10 @@ struct PreferencesView: View {
             Toggle("", isOn: binding)
                 .labelsHidden()
                 .tint(brand)
+                .accessibilityLabel(Text(label))
+                .accessibilityValue(Text(binding.wrappedValue
+                    ? String(localized: "a11y_value_on")
+                    : String(localized: "a11y_value_off")))
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)

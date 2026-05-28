@@ -31,8 +31,38 @@ struct HabitDetailSheet: View {
     @State private var editMinutes: Int = 0
     @State private var editIncrement: Double = 1
     @State private var editUnit: String = "times"
+    @State private var editCustomUnitText: String = ""
+    @FocusState private var editCustomUnitFocused: Bool
     @State private var isEditingTarget = false
     @State private var targetWarning: String? = nil
+
+    /// Set of raw values of built-in TargetUnit cases (excluding `.custom`),
+    /// used to decide whether a persisted `unit` string is a built-in or a
+    /// user-typed custom unit.
+    static let builtInUnitRawValues: Set<String> = {
+        Set(CreateHabitDetailSheet.TargetUnit.allCases
+            .filter { $0 != .custom }
+            .map(\.rawValue))
+    }()
+
+    /// Display label for the unit anywhere outside the chip picker — falls back
+    /// to the localized "Custom" label when the user has cleared the text.
+    var editEffectiveUnitLabel: String {
+        if editUnit == CreateHabitDetailSheet.TargetUnit.custom.rawValue {
+            let trimmed = editCustomUnitText.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? String(localized: "unit_custom") : trimmed
+        }
+        return CreateHabitDetailSheet.TargetUnit(rawValue: editUnit)?.localized ?? editUnit
+    }
+
+    /// Value persisted back to the habit — raw enum value for built-ins, the
+    /// user-typed text for `.custom`.
+    var editUnitForPersistence: String {
+        if editUnit == CreateHabitDetailSheet.TargetUnit.custom.rawValue {
+            return editCustomUnitText.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        return editUnit
+    }
 
     // MARK: - Notes
     @State private var notesText: String = ""
@@ -44,15 +74,6 @@ struct HabitDetailSheet: View {
     @State private var showScopeAlert = false
     @State private var showResetAlert = false
 
-    let targetUnits = [
-        String(localized: "unit_times"),
-        String(localized: "unit_km"),
-        String(localized: "unit_ml"),
-        String(localized: "unit_l"),
-        String(localized: "unit_min"),
-        String(localized: "unit_pages"),
-        String(localized: "unit_steps")
-    ]
     // MARK: - Computed
 
     var template: EventTemplate? {
@@ -251,7 +272,18 @@ struct HabitDetailSheet: View {
                 editColor       = event.color
                 notesText       = template?.notes ?? ""
                 editTargetValue = template?.targetValue ?? 1
-                editUnit        = template?.unit ?? "times"
+                // Persisted unit can be a built-in raw value (e.g. "times")
+                // or a user-typed custom string (e.g. "cups"). Split into the
+                // chip selection (`editUnit`) and the custom text so the edit UI
+                // can round-trip both without dropping the value.
+                let storedUnit = template?.unit ?? "times"
+                if Self.builtInUnitRawValues.contains(storedUnit) {
+                    editUnit = storedUnit
+                    editCustomUnitText = ""
+                } else {
+                    editUnit = CreateHabitDetailSheet.TargetUnit.custom.rawValue
+                    editCustomUnitText = storedUnit
+                }
                 editIncrement   = template?.increment ?? 1   // 👈 thêm
                 editMinutes     = event.minutes
             }
@@ -824,13 +856,63 @@ struct HabitDetailSheet: View {
                     }
                     .background(RoundedRectangle(cornerRadius: 10).fill(Color.primary.opacity(0.06)))
 
+                    // Unit picker — full enum incl. `.custom`. Tagging by raw value
+                    // keeps `editUnit` round-trippable with the persisted string.
                     Picker("", selection: $editUnit) {
-                        ForEach(targetUnits, id: \.self) { Text($0) }
+                        ForEach(CreateHabitDetailSheet.TargetUnit.allCases, id: \.rawValue) { u in
+                            Text(u.localized).tag(u.rawValue)
+                        }
                     }
                     .pickerStyle(.menu)
                     .font(.subheadline.weight(.semibold))
+                    .onChange(of: editUnit) {
+                        if editUnit == CreateHabitDetailSheet.TargetUnit.custom.rawValue {
+                            editCustomUnitFocused = true
+                        }
+                        validateTarget()
+                    }
                 }
                 .padding(.horizontal, 16)
+
+                // Inline custom unit input — appears only when the Custom option
+                // is selected. Mirrors the create-flow chip + clear control.
+                if editUnit == CreateHabitDetailSheet.TargetUnit.custom.rawValue {
+                    HStack(spacing: 10) {
+                        Image(systemName: "pencil.circle.fill")
+                            .font(.system(size: 18))
+                            .foregroundStyle(editColor)
+                        TextField(
+                            String(localized: "unit_custom_placeholder"),
+                            text: $editCustomUnitText
+                        )
+                        .focused($editCustomUnitFocused)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .submitLabel(.done)
+                        .font(.subheadline.weight(.medium))
+                        .onChange(of: editCustomUnitText) { validateTarget() }
+                        .onSubmit { editCustomUnitFocused = false }
+
+                        if !editCustomUnitText.isEmpty {
+                            Button {
+                                editCustomUnitText = ""
+                                validateTarget()
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.system(size: 16))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 12).padding(.vertical, 10)
+                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.gray.opacity(0.08)))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(editCustomUnitFocused ? editColor.opacity(0.55) : Color.clear, lineWidth: 1.5)
+                    )
+                    .padding(.horizontal, 16)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                }
 
                 if let w = targetWarning {
                     HStack(spacing: 8) {
@@ -975,6 +1057,10 @@ struct HabitDetailSheet: View {
         } else if editIncrement > editTargetValue {
             targetWarning = String(localized: "habit_error_increment_exceeds_target")
 
+        } else if editUnit == CreateHabitDetailSheet.TargetUnit.custom.rawValue &&
+                  editCustomUnitText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            targetWarning = String(localized: "unit_error_empty")
+
         } else {
             targetWarning = nil
         }
@@ -983,7 +1069,7 @@ struct HabitDetailSheet: View {
     func saveTargetEdits() {
         guard let idx = store.templates.firstIndex(where: { $0.id == event.id }) else { return }
         store.templates[idx].targetValue = editTargetValue
-        store.templates[idx].unit        = editUnit
+        store.templates[idx].unit        = editUnitForPersistence
         store.templates[idx].increment   = editIncrement   // 👈 thêm
         store.invalidateCache()
         store.save()

@@ -3,7 +3,7 @@ import Foundation
 
 struct TimelineEngine {
 
-    static var snapStep: Int { PreferencesStore().snapStep }
+    static var snapStep: Int { PreferencesStore.shared.snapStep }
     static let minMinute = 0
     static let maxMinute = 1440
     static let spacing = 5
@@ -135,9 +135,13 @@ struct TimelineEngine {
         return suggested
     }
     
+     /// `habitFootprint` lets callers treat habits as occupying a fixed slot
+     /// (e.g. 30 min) so the gap-finder doesn't pile new items on top of scheduled
+     /// habits. Pass 0 to keep the original habit-blind behavior.
      static func smartSlotMinutes(
         events: [EventItem],
-        duration: Int = 0
+        duration: Int = 0,
+        habitFootprint: Int = 0
     ) -> Int {
 
         let dayStart = minMinute
@@ -174,7 +178,9 @@ struct TimelineEngine {
                 bestStart = start
             }
 
-            previousEnd = max(previousEnd, event.minutes + (event.duration ?? 0))
+            let effectiveDuration = event.duration
+                ?? (event.isHabit ? habitFootprint : 0)
+            previousEnd = max(previousEnd, event.minutes + effectiveDuration)
         }
 
         let finalGap = dayEnd - previousEnd

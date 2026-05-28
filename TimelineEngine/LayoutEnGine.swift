@@ -13,7 +13,7 @@ struct TimelineLayoutEngine {
     
     
     static var minHeight: CGFloat {
-        switch PreferencesStore().timelineDensity {
+        switch PreferencesStore.shared.timelineDensity {
         case .compact:     return 38
         case .normal:      return 50
         case .comfortable: return 64
@@ -21,7 +21,7 @@ struct TimelineLayoutEngine {
     }
 
     static var maxHeight: CGFloat {
-        switch PreferencesStore().timelineDensity {
+        switch PreferencesStore.shared.timelineDensity {
         case .compact:     return 60
         case .normal:      return 85
         case .comfortable: return 120
@@ -55,7 +55,7 @@ struct TimelineLayoutEngine {
         let safeDiff = max(diff, 0)
 
         var base: CGFloat = {
-            switch PreferencesStore().timelineDensity {
+            switch PreferencesStore.shared.timelineDensity {
             case .compact:     return 12
             case .normal:      return 20
             case .comfortable: return 32
@@ -91,7 +91,7 @@ struct TimelineLayoutEngine {
     
     // Thêm vào TimelineLayoutEngine:
     static func updateDensity() {
-        _cachedPixelsPerMinute = PreferencesStore().timelineDensity.hourHeight / 60.0
+        _cachedPixelsPerMinute = PreferencesStore.shared.timelineDensity.hourHeight / 60.0
     }
 
     private static var _cachedPixelsPerMinute: CGFloat = -1  // -1 = chưa init

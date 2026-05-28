@@ -56,6 +56,7 @@ struct OnboardingPremiumPage: View {
                             .background(Color.white.opacity(0.12))
                             .clipShape(Circle())
                     }
+                    .accessibilityLabel(Text(String(localized: "a11y_label_skip_onboarding")))
                     .padding(.top, 16)
                     .padding(.trailing, 20)
                 }

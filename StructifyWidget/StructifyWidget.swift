@@ -218,22 +218,19 @@ struct WidgetDataReader {
         guard let defaults = UserDefaults(suiteName: suiteName),
               let data = defaults.data(forKey: "completionLogs") else { return false }
 
-        // completionLogs dùng Codable trong app, widget dùng JSONSerialization cho đơn giản
-        if let logs = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] {
-            return logs.contains {
-                ($0["templateID"] as? String) == templateID &&
-                ($0["dateKey"] as? Int) == dateKey &&
-                ($0["completed"] as? Bool) == true
-            }
-        }
-
-        // Fallback: dùng Codable decoder
-        struct Log: Codable {
-            let templateID: String  // sẽ fail vì app lưu UUID
+        struct CompletionLog: Codable {
+            let templateID: UUID
             let dateKey: Int
             let completed: Bool?
+            let value: Double?
         }
-        return false
+
+        guard let logs = try? JSONDecoder().decode([CompletionLog].self, from: data) else { return false }
+        return logs.contains {
+            $0.templateID.uuidString == templateID &&
+            $0.dateKey == dateKey &&
+            $0.completed == true
+        }
     }
 
     static func todayDateKey() -> Int {
@@ -317,7 +314,7 @@ struct WidgetTemplate: Codable {
         days = rc.recurrence.days
         onceDate = rc.recurrence.type == "once" ? rc.recurrence.date : nil
         rangeStart = rc.recurrence.type == "dateRange" ? rc.recurrence.date : nil
-        rangeEnd = rc.recurrence.date != nil ? rc.recurrence.endDate : nil
+        rangeEnd = rc.recurrence.type == "dateRange" ? rc.recurrence.endDate : nil
     }
 
     func encode(to encoder: Encoder) throws {}
@@ -503,6 +500,11 @@ struct SmallWidgetView: View {
                                 }
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel(Text(event.title))
+                            .accessibilityValue(Text(isCompleted
+                                ? String(localized: "a11y_value_completed")
+                                : String(localized: "a11y_value_not_completed")))
+                            .accessibilityHint(Text(String(localized: "a11y_hint_toggle_habit")))
                         }
                     }
                     .padding(.bottom, 8)

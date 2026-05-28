@@ -94,7 +94,7 @@ struct RootView: View {
                 ZStack {
                     // Glow — tách riêng, không ảnh hưởng icon
                     RoundedRectangle(cornerRadius: 26, style: .continuous)
-                        .fill(Color(hex: PreferencesStore().accentHex).opacity(0.3))
+                        .fill(Color(hex: PreferencesStore.shared.accentHex).opacity(0.3))
                         .frame(width: 108, height: 108)
                         .blur(radius: 24)
                         .allowsHitTesting(false)
@@ -110,7 +110,7 @@ struct RootView: View {
                     } else {
                         // Fallback nếu không đọc được icon
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(Color(hex: PreferencesStore().accentHex))
+                            .fill(Color(hex: PreferencesStore.shared.accentHex))
                             .frame(width: 88, height: 88)
                             .overlay(
                                 Image(systemName: "checkmark.circle.fill")

@@ -209,6 +209,16 @@ private extension OnboardingSleepTimePage {
                             }
                         }
                 )
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text(String(localized: "onboarding.sleep.title")))
+                .accessibilityValue(Text(formattedTime(from: minutes, startHour: 18)))
+                .accessibilityAdjustableAction { direction in
+                    switch direction {
+                    case .increment: minutes = min(360, minutes + 5)
+                    case .decrement: minutes = max(0, minutes - 5)
+                    @unknown default: break
+                    }
+                }
 
                 tickMarks
 

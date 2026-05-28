@@ -24,6 +24,7 @@ struct AddEventButton: View {
 struct CreateEventDetailSheet: View {
 
     @EnvironmentObject var store: TimelineStore
+    @ObservedObject private var premium = PremiumStore.shared
 
     // MARK: State — Event Data
     @State private var title: String = ""
@@ -39,12 +40,16 @@ struct CreateEventDetailSheet: View {
     var onOpenHabit: (() -> Void)?
     let suggestedStart: Int
 
+    /// Fired whenever title/icon/color change. The parent (e.g. `CreateItemSheet`)
+    /// uses this to keep its own copy in sync so it can re-inject the values when
+    /// the user toggles Habit ↔ Event mid-flow. Standalone presentations pass nil.
+    var onCommonFieldsChange: ((_ title: String, _ icon: String, _ colorHex: String) -> Void)?
+
     // MARK: State — UI
     @State private var selectedDate = Date()
     @State private var startTime = Date()
     @State private var durationMinutes: Int = 60
     @State private var showIconPicker = false
-    @State private var showHabitSheet = false
 
     // MARK: State — Time
     @State private var startMinutes: Int = 20 * 60
@@ -85,6 +90,14 @@ struct CreateEventDetailSheet: View {
     @State private var timeRowExpanded = true
     @State private var durationRowExpanded = true
 
+    // MARK: State — Presets + Smart suggest
+    @State private var selectedPresetCategory: EventCategory? = nil
+    @State private var appliedPresetID: UUID? = nil
+    /// Tracks whether the user (or a preset) has explicitly set the icon. While
+    /// false, the keyword auto-suggester is allowed to swap icon/color as the
+    /// user types the title. Any manual touch latches this to `true`.
+    @State private var iconWasManuallySet: Bool = false
+
     enum TimeWarning {
         case past, overlap, pastSleep, beforeWake
         var message: String {
@@ -124,14 +137,19 @@ struct CreateEventDetailSheet: View {
     init(
         suggestedStart: Int,
         initialDate: Date = Date(),
+        initialTitle: String = "",
+        initialIcon: String? = nil,
+        initialColorHex: String? = nil,
         onOpenHabit: (() -> Void)? = nil,
+        onCommonFieldsChange: ((_ title: String, _ icon: String, _ colorHex: String) -> Void)? = nil,
         onCreate: @escaping (String, String, Int, Int, String, Recurrence) -> Void
     ) {
-        self.suggestedStart = suggestedStart
-        self.onCreate       = onCreate
-        self.onOpenHabit    = onOpenHabit
+        self.suggestedStart        = suggestedStart
+        self.onCreate              = onCreate
+        self.onOpenHabit           = onOpenHabit
+        self.onCommonFieldsChange  = onCommonFieldsChange
 
-        let defaultDur = PreferencesStore().defaultDuration
+        let defaultDur = PreferencesStore.shared.defaultDuration
 
         _date                = State(initialValue: initialDate)
         _startMinutes        = State(initialValue: suggestedStart)
@@ -141,6 +159,14 @@ struct CreateEventDetailSheet: View {
         _durationHours       = State(initialValue: defaultDur / 60)
         _durationMinutesOnly = State(initialValue: defaultDur % 60)
         _startTime           = State(initialValue: TimelineEngine.dateFrom(minutes: suggestedStart, base: Date()))
+
+        // Restore preserved fields from the container. An explicit icon from the
+        // caller is treated as a manual pick, so keyword auto-suggest stays out
+        // of the way (won't overwrite a deliberate choice carried across modes).
+        _title = State(initialValue: initialTitle)
+        if let i = initialIcon { _icon = State(initialValue: i) }
+        if let c = initialColorHex { _color = State(initialValue: Color(hex: c)) }
+        _iconWasManuallySet = State(initialValue: initialIcon != nil)
     }
 
     // MARK: — BODY (NEW LAYOUT)
@@ -166,6 +192,7 @@ struct CreateEventDetailSheet: View {
                 VStack(spacing: 0) {
                     topNavigationBar
                     heroPoster
+                    presetsRow
                     frostedFormPanel
                 }
             }
@@ -182,6 +209,11 @@ struct CreateEventDetailSheet: View {
             if !isPastWeekday(weekday) { selectedWeekdays.insert(weekday) }
             validateAndClampTime()
             validateDuration()
+            // Catch the case where title was seeded from a mode-toggle: SwiftUI's
+            // .onChange(of: title) doesn't fire on init, so keyword smart-suggest
+            // would only kick in after the next keystroke. Run it once here so the
+            // icon swaps immediately on appear.
+            applyKeywordSuggestion()
         }
         .onChange(of: date) { _, newDate in
             let weekday = Calendar.current.component(.weekday, from: newDate)
@@ -189,6 +221,9 @@ struct CreateEventDetailSheet: View {
             validateAndClampTime()
             validateDuration()
         }
+        .onChange(of: title) { onCommonFieldsChange?(title, icon, color.toHex()) }
+        .onChange(of: icon)  { onCommonFieldsChange?(title, icon, color.toHex()) }
+        .onChange(of: color) { onCommonFieldsChange?(title, icon, color.toHex()) }
         .sheet(isPresented: $showIconPicker) {
             IconPicker(icon: $icon, color: $color)
                 .presentationBackground(Color.paper)
@@ -196,25 +231,6 @@ struct CreateEventDetailSheet: View {
                 .presentationDragIndicator(.visible)
                 .presentationCornerRadius(32)
                 .ifPad { $0.presentationSizing(.page) }
-        }
-        .sheet(isPresented: $showHabitSheet) {
-            CreateHabitDetailSheet(
-                onCreate: { title, icon, colorHex, _, type, target, unit, minutes, increment, _ in
-                    store.addHabit(
-                        title: title, icon: icon, colorHex: colorHex,
-                        minutes: minutes ?? 540, habitType: type,
-                        targetValue: target, unit: unit, increment: increment
-                    )
-                },
-                onOpenEvent: {
-                    showHabitSheet = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { onOpenHabit?() }
-                }
-            )
-            .presentationDetents([.large])
-            .presentationDragIndicator(.visible)
-            .presentationCornerRadius(32)
-            .ifPad { $0.presentationSizing(.page) }
         }
     }
 }
@@ -276,10 +292,14 @@ extension CreateEventDetailSheet {
             Spacer()
 
 
-            // Add Habit
+            // Add Habit — toggle mode via parent CreateItemSheet; falls back to dismiss
+            // only when this sheet is presented standalone (no container wired up).
             Button {
-                dismiss()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { onOpenHabit?() }
+                if let onOpenHabit {
+                    onOpenHabit()
+                } else {
+                    dismiss()
+                }
             } label: {
                 Text(String(localized: "habit.add"))
                     .font(.subheadline.weight(.semibold))
@@ -309,7 +329,7 @@ extension CreateEventDetailSheet {
 
                 // Icon column: circle + hint label below
                 VStack(spacing: 5) {
-                    Button { showIconPicker = true } label: {
+                    Button { showIconPicker = true; iconWasManuallySet = true } label: {
                         ZStack {
                             Circle().fill(.white.opacity(0.18))
                             Circle().stroke(.white.opacity(0.28), lineWidth: 1)
@@ -324,7 +344,7 @@ extension CreateEventDetailSheet {
                     .buttonStyle(.plain)
 
                     // Hint button — open picker
-                    Button { showIconPicker = true } label: {
+                    Button { showIconPicker = true; iconWasManuallySet = true } label: {
                         HStack(spacing: 3) {
                             Image(systemName: "pencil")
                                 .font(.system(size: 8, weight: .bold))
@@ -375,6 +395,7 @@ extension CreateEventDetailSheet {
                     if !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                         titleWarning = nil
                     }
+                    applyKeywordSuggestion()
                 }
                 // Done button trên keyboard toolbar
                 .toolbar {
@@ -447,6 +468,136 @@ extension CreateEventDetailSheet {
                     .foregroundStyle(.white)
             }
         }
+    }
+}
+
+// MARK: - Presets Row  (event templates carousel)
+
+extension CreateEventDetailSheet {
+
+    var presetsRow: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // Category filter pills
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    presetCategoryPill(nil, label: String(localized: "event_category_all"), icon: "sparkles")
+                    ForEach(EventCategory.allCases) { cat in
+                        presetCategoryPill(cat, label: cat.localized, icon: cat.icon)
+                    }
+                }
+                .padding(.horizontal, 20)
+            }
+
+            // Preset cards
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(EventPresetCatalog.filtered(by: selectedPresetCategory)) { preset in
+                        presetCard(preset)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 14)
+            }
+        }
+        .padding(.top, 4)
+    }
+
+    @ViewBuilder
+    private func presetCategoryPill(_ cat: EventCategory?, label: String, icon: String) -> some View {
+        let selected = selectedPresetCategory == cat
+        Button {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
+                selectedPresetCategory = cat
+            }
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        } label: {
+            HStack(spacing: 5) {
+                Image(systemName: icon)
+                    .font(.system(size: 10, weight: .semibold))
+                Text(label)
+                    .font(.system(size: 12, weight: .semibold))
+            }
+            .padding(.horizontal, 11).padding(.vertical, 6)
+            .background(selected ? Color.white.opacity(0.28) : Color.white.opacity(0.10))
+            .foregroundStyle(.white)
+            .clipShape(Capsule())
+            .overlay(
+                Capsule().stroke(Color.white.opacity(selected ? 0.45 : 0.16), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(label))
+        .accessibilityAddTraits(selected ? [.isSelected, .isButton] : .isButton)
+    }
+
+    @ViewBuilder
+    private func presetCard(_ preset: EventPreset) -> some View {
+        let isApplied = appliedPresetID == preset.id
+        let presetColor = Color(hex: preset.colorHex)
+        Button {
+            apply(preset: preset)
+        } label: {
+            VStack(spacing: 8) {
+                ZStack {
+                    Circle()
+                        .fill(presetColor)
+                        .frame(width: 44, height: 44)
+                        .shadow(color: presetColor.opacity(0.45), radius: 6, y: 3)
+                    Image(systemName: preset.icon)
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
+                Text(String(localized: String.LocalizationValue(preset.titleKey)))
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                    .frame(maxWidth: 76)
+            }
+            .padding(.horizontal, 10).padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(.ultraThinMaterial)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(
+                        isApplied ? presetColor : Color.primary.opacity(0.08),
+                        lineWidth: isApplied ? 2 : 1
+                    )
+            )
+        }
+        .buttonStyle(PressFeedbackButtonStyle(scale: 0.94))
+        .accessibilityLabel(Text(String(localized: String.LocalizationValue(preset.titleKey))))
+        .accessibilityAddTraits(isApplied ? [.isSelected, .isButton] : .isButton)
+    }
+
+    // Pre-fills title/icon/color/duration. Time-of-day is set only when the
+    // preset has a `suggestedMinutes` — otherwise we keep whatever the caller
+    // gave us (gap-finder result).
+    func apply(preset: EventPreset) {
+        withAnimation(.spring(response: 0.32, dampingFraction: 0.78)) {
+            title = String(localized: String.LocalizationValue(preset.titleKey))
+            titleWarning = nil
+            icon  = preset.icon
+            color = Color(hex: preset.colorHex)
+
+            if let mins = preset.suggestedMinutes {
+                startHour    = mins / 60
+                startMinute  = mins % 60
+                startMinutes = mins
+            }
+
+            durationHours       = preset.durationMinutes / 60
+            durationMinutesOnly = preset.durationMinutes % 60
+            updateDurationFromPicker()
+
+            appliedPresetID    = preset.id
+            iconWasManuallySet = true
+
+            validateAndClampTime()
+            validateDuration()
+        }
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
     }
 }
 
@@ -666,7 +817,7 @@ extension CreateEventDetailSheet {
             startHour   = suggestedStart / 60
             startMinute = suggestedStart % 60
             startMinutes = suggestedStart
-            let d = PreferencesStore().defaultDuration
+            let d = PreferencesStore.shared.defaultDuration
             durationHours = d / 60; durationMinutesOnly = d % 60
             updateEndTimeFromDuration()
             validateAndClampTime(); validateDuration()
@@ -888,21 +1039,43 @@ extension CreateEventDetailSheet {
         }
     }
 
-    private var createButtonView: some View {
-        let isBlocked = title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                     || isFormBlocked
-                     || (repeatRule == .weekly       && selectedWeekdays.isEmpty)
-                     || (repeatRule == .specificWeek && selectedWeekDates.isEmpty)
+    private var currentEventCount: Int {
+        store.templates.filter { !$0.isSystemEvent && $0.kind == .event }.count
+    }
 
-        return Button { handleCreateTap() } label: {
-            Text(String(localized: "create_event"))
-                .font(.title3.bold())
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(isBlocked ? Color.gray.opacity(0.35) : Color(.label))
-                .foregroundStyle(Color(.systemBackground))
-                .clipShape(Capsule())
-                .animation(.easeInOut(duration: 0.2), value: isBlocked)
+    private var isAtFreeLimit: Bool {
+        !premium.isPremium && currentEventCount >= PremiumLimit.maxFreeEvents
+    }
+
+    @ViewBuilder
+    private var createButtonView: some View {
+        if isAtFreeLimit {
+            PremiumLimitPill(
+                message: String(
+                    format: String(localized: "premium_limit_events %lld"),
+                    PremiumLimit.maxFreeEvents
+                ),
+                onTap: {
+                    NotificationCenter.default.post(name: .showPremiumPaywall, object: nil)
+                    dismiss()
+                }
+            )
+        } else {
+            let isBlocked = title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                         || isFormBlocked
+                         || (repeatRule == .weekly       && selectedWeekdays.isEmpty)
+                         || (repeatRule == .specificWeek && selectedWeekDates.isEmpty)
+
+            Button { handleCreateTap() } label: {
+                Text(String(localized: "create_event"))
+                    .font(.title3.bold())
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(isBlocked ? Color.gray.opacity(0.35) : Color(.label))
+                    .foregroundStyle(Color(.systemBackground))
+                    .clipShape(Capsule())
+                    .animation(.easeInOut(duration: 0.2), value: isBlocked)
+            }
         }
     }
 
@@ -925,13 +1098,13 @@ extension CreateEventDetailSheet {
         if repeatRule == .specificWeek {
             guard !selectedWeekDates.isEmpty else { return }
             for weekDate in selectedWeekDates.sorted() {
-                guard !store.hasOverlap(minutes: startMinutes, duration: dur, date: weekDate) else { continue }
+                guard !store.hasOverlap(minutes: startMinutes, duration: dur, date: weekDate, includeHabits: true) else { continue }
                 onCreate(cleanTitle, icon, startMinutes, dur, color.toHex(), .once(weekDate))
             }
             dismiss(); return
         }
 
-        guard !store.hasOverlap(minutes: startMinutes, duration: dur, date: date) else { return }
+        guard !store.hasOverlap(minutes: startMinutes, duration: dur, date: date, includeHabits: true) else { return }
         onCreate(cleanTitle, icon, startMinutes, dur, color.toHex(), buildRecurrence())
         dismiss()
     }
@@ -978,6 +1151,23 @@ extension CreateEventDetailSheet {
     }
 }
 
+// MARK: - Keyword Smart Suggest
+
+extension CreateEventDetailSheet {
+
+    /// Updates icon/color from a keyword match in the current title. Skips when
+    /// the user (or a preset) has explicitly chosen an icon — once latched, the
+    /// suggester goes quiet so it never overwrites a deliberate pick.
+    func applyKeywordSuggestion() {
+        guard !iconWasManuallySet else { return }
+        guard let match = KeywordIconMap.match(title) else { return }
+        withAnimation(.spring(response: 0.28, dampingFraction: 0.8)) {
+            icon  = match.icon
+            color = Color(hex: match.colorHex)
+        }
+    }
+}
+
 // MARK: - Time / Duration Logic  (all logic unchanged)
 
 extension CreateEventDetailSheet {
@@ -1021,7 +1211,7 @@ extension CreateEventDetailSheet {
             startHour = startMinutes / 60; startMinute = startMinutes % 60
             updateEndTimeFromDuration(); return
         }
-        if store.hasOverlap(minutes: total, duration: Int(duration * 60), date: date) {
+        if store.hasOverlap(minutes: total, duration: Int(duration * 60), date: date, includeHabits: true) {
             timeWarning = .overlap; return
         }
         timeWarning = nil

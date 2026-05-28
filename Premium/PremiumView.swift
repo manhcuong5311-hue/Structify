@@ -63,6 +63,7 @@ struct PremiumView: View {
                             .background(Color.white.opacity(0.12))
                             .clipShape(Circle())
                     }
+                    .accessibilityLabel(Text(String(localized: "a11y_label_close")))
                     .padding(.top, 16)
                     .padding(.trailing, 20)
                 }
@@ -350,6 +351,7 @@ struct PremiumView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "crown.fill")
                                 .font(.system(size: 16, weight: .bold))
+                                .accessibilityHidden(true)
                             Text(String(localized: "premium_unlock_button"))
                                 .font(.system(size: 17, weight: .bold, design: .rounded))
                         }
@@ -374,6 +376,7 @@ struct PremiumView: View {
             .disabled(premium.isLoading || premium.isPremium)
             .scaleEffect(premium.isLoading ? 0.97 : 1)
             .animation(.spring(response: 0.3, dampingFraction: 0.8), value: premium.isLoading)
+            .sensoryFeedback(.success, trigger: premium.isPremium)
             .offset(y: appear ? 0 : 16)
             .opacity(appear ? 1 : 0)
             .animation(.easeOut(duration: 0.5).delay(0.7), value: appear)

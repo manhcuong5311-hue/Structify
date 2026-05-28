@@ -18,6 +18,7 @@ struct AddItemButton: View {
             HStack(spacing:6) {
 
                 Image(systemName: "plus.circle.fill")
+                    .accessibilityHidden(true)
 
                 Text(String(localized:"add"))
             }
@@ -27,5 +28,9 @@ struct AddItemButton: View {
             .background(.thinMaterial)
             .clipShape(Capsule())
         }
+        .buttonStyle(PressFeedbackButtonStyle())
+        .sensoryFeedback(.impact(weight: .light), trigger: false)
+        .accessibilityLabel(Text(String(localized: "a11y_label_add_item")))
+        .accessibilityHint(Text(String(localized: "a11y_hint_add_item")))
     }
 }

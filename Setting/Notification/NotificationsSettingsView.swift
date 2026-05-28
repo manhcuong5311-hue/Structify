@@ -173,6 +173,9 @@ struct NotificationsSettingsView: View {
         )
         .onTapGesture { showPermissionAlert = true }
         .transition(.move(edge: .top).combined(with: .opacity))
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isButton)
+        .accessibilityHint(Text(String(localized: "a11y_hint_open_notification_settings")))
     }
 
     // MARK: - Global Section
@@ -206,6 +209,7 @@ struct NotificationsSettingsView: View {
                 Toggle("", isOn: $globalEnabled)
                     .labelsHidden()
                     .tint(.indigo)
+                    .accessibilityLabel(Text(String(localized: "notif_all_title")))
                     .onChange(of: globalEnabled) {
                         saveSettings()
                         rescheduleAll()
@@ -293,6 +297,7 @@ struct NotificationsSettingsView: View {
                     Toggle("", isOn: $habitOnTime)
                         .labelsHidden()
                         .tint(.green)
+                        .accessibilityLabel(Text(String(localized: "notif_habit_time_title")))
                         .onChange(of: habitOnTime) {
                             saveSettings()
                             rescheduleAll()
@@ -346,6 +351,7 @@ struct NotificationsSettingsView: View {
                         Toggle("", isOn: toggleBinding(for: template.id))
                             .labelsHidden()
                             .tint(Color(hex: template.colorHex))
+                            .accessibilityLabel(Text(template.title))
                     }
                     .padding(.horizontal, 14)
                     .padding(.vertical, 11)

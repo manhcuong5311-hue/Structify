@@ -212,11 +212,15 @@ struct ColorSwatch: View {
                     Image(systemName: "checkmark")
                         .font(.system(size: 10, weight: .bold))
                         .foregroundStyle(.white)
+                        .accessibilityHidden(true)
                 }
             }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressFeedbackButtonStyle(scale: 0.85))
         .animation(.spring(response: 0.25, dampingFraction: 0.7), value: isSelected)
+        .sensoryFeedback(.selection, trigger: isSelected)
+        .accessibilityLabel(Text(String(localized: "a11y_label_color_swatch")))
+        .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)
     }
 }
 
@@ -325,6 +329,14 @@ struct IconCell: View {
 
     @Environment(\.colorScheme) var colorScheme
 
+    private var readableLabel: String {
+        symbol
+            .replacingOccurrences(of: ".fill", with: "")
+            .replacingOccurrences(of: ".circle", with: "")
+            .replacingOccurrences(of: ".", with: " ")
+            .replacingOccurrences(of: "_", with: " ")
+    }
+
     var body: some View {
         Button(action: onTap) {
             ZStack {
@@ -344,11 +356,15 @@ struct IconCell: View {
                     .symbolRenderingMode(.hierarchical)
                     .font(.system(size: 20, weight: .medium))
                     .foregroundStyle(isSelected ? accentColor : .primary)
+                    .accessibilityHidden(true)
             }
             .frame(width: 52, height: 52)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressFeedbackButtonStyle(scale: 0.92))
         .animation(.spring(response: 0.2, dampingFraction: 0.7), value: isSelected)
+        .sensoryFeedback(.selection, trigger: isSelected)
+        .accessibilityLabel(Text(readableLabel))
+        .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)
     }
 }
 

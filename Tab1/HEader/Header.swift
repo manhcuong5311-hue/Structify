@@ -18,7 +18,7 @@ class CalendarState: ObservableObject {
     
     
     var weekDates: [Date] {
-        let prefs = PreferencesStore()
+        let prefs = PreferencesStore.shared
         var cal = calendar
         cal.firstWeekday = prefs.firstWeekday  // 1=Sun, 2=Mon
         let startOfWeek = cal.dateInterval(of: .weekOfYear, for: selectedDate)?.start ?? selectedDate
@@ -28,13 +28,15 @@ class CalendarState: ObservableObject {
     }
 
     func nextWeek() {
-        selectedDate =
-        calendar.date(byAdding: .day, value: 7, to: selectedDate)!
+        if let next = calendar.date(byAdding: .day, value: 7, to: selectedDate) {
+            selectedDate = next
+        }
     }
 
     func previousWeek() {
-        selectedDate =
-        calendar.date(byAdding: .day, value: -7, to: selectedDate)!
+        if let prev = calendar.date(byAdding: .day, value: -7, to: selectedDate) {
+            selectedDate = prev
+        }
     }
 
     func select(_ date: Date) {
@@ -62,7 +64,10 @@ class CalendarState: ObservableObject {
 struct HeaderDateView: View {
 
     @EnvironmentObject var calendar: CalendarState
-    var brand: Color { Color(hex: PreferencesStore().accentHex) }
+    // @AppStorage makes the view re-render when accent changes in Settings — using
+    // PreferencesStore.shared directly here wouldn't subscribe to UserDefaults.
+    @AppStorage("pref_accent_hex") private var accentHex: String = "#4A70A6"
+    var brand: Color { Color(hex: accentHex) }
     @Environment(\.colorScheme) private var scheme
     @State private var showMonthPicker = false   // ← THÊM
 
@@ -78,6 +83,8 @@ struct HeaderDateView: View {
                     Text(calendar.selectedDate,
                          format: .dateTime.day())
                         .font(.system(size: 32, weight: .bold))
+                        .contentTransition(.numericText(value: Double(Calendar.current.component(.day, from: calendar.selectedDate))))
+                        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: calendar.selectedDate)
 
                     Text(calendar.selectedDate,
                          format: .dateTime.month(.abbreviated))
@@ -96,9 +103,13 @@ struct HeaderDateView: View {
                             .spring(response: 0.35, dampingFraction: 0.75),
                             value: showMonthPicker
                         )
+                        .accessibilityHidden(true)
                 }
             }
             .buttonStyle(.plain)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(Text(calendar.selectedDate, format: .dateTime.day().month().year()))
+            .accessibilityHint(Text(String(localized: "a11y_hint_open_month_picker")))
 
             Spacer()
         }
@@ -135,7 +146,10 @@ struct WeekStripView: View {
     @Environment(\.colorScheme) private var scheme
 
     @Namespace private var dayAnim
-    var brand: Color { Color(hex: PreferencesStore().accentHex) }
+    // @AppStorage makes the view re-render when accent changes in Settings — using
+    // PreferencesStore.shared directly here wouldn't subscribe to UserDefaults.
+    @AppStorage("pref_accent_hex") private var accentHex: String = "#4A70A6"
+    var brand: Color { Color(hex: accentHex) }
 
     // MARK: Drag state
     @State private var dragOffset: CGFloat = 0
@@ -221,11 +235,11 @@ struct WeekStripView: View {
             byAdding: .weekOfYear,
             value: offsetWeeks,
             to: calendar.selectedDate
-        )!
+        ) ?? calendar.selectedDate
 
         var cal = Calendar.current
-        cal.firstWeekday = PreferencesStore().firstWeekday
-        let startOfWeek = cal.dateInterval(of: .weekOfYear, for: baseDate)!.start
+        cal.firstWeekday = PreferencesStore.shared.firstWeekday
+        let startOfWeek = cal.dateInterval(of: .weekOfYear, for: baseDate)?.start ?? baseDate
 
         let dates = (0..<7).compactMap {
             Calendar.current.date(byAdding: .day, value: $0, to: startOfWeek)
@@ -291,6 +305,12 @@ struct WeekStripView: View {
                 calendar.select(date)
             }
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text(date, format: .dateTime.weekday(.wide).day().month()))
+        .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)
+        .accessibilityHint(Text(isToday
+            ? String(localized: "a11y_hint_select_today")
+            : String(localized: "a11y_hint_select_day")))
     }
 
     // MARK: Icon Row (giữ nguyên logic cũ)
@@ -402,11 +422,11 @@ struct WeekTimelineView: View {
     private let maxStripHeight: CGFloat = 280    // ↑ tăng nhẹ để phù hợp badge lớn hơn
     private let periodHeaderHeight: CGFloat = 28 // ↑ tăng từ 24 → 28
 
-    private var brand: Color { Color(hex: PreferencesStore().accentHex) }
+    private var brand: Color { Color(hex: PreferencesStore.shared.accentHex) }
 
     private var weekDates: [Date] {
         var cal = Calendar.current
-        cal.firstWeekday = PreferencesStore().firstWeekday
+        cal.firstWeekday = PreferencesStore.shared.firstWeekday
         let start = cal.dateInterval(of: .weekOfYear, for: calendar.selectedDate)?.start
             ?? calendar.selectedDate
         return (0..<7).compactMap {

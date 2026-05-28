@@ -16,7 +16,7 @@ struct MonthYearPickerView: View {
     @State private var pickerYear: Int = Calendar.current.component(.year, from: Date())
 
     private let months = Calendar.current.shortMonthSymbols
-    private var brand: Color { Color(hex: PreferencesStore().accentHex) }
+    private var brand: Color { Color(hex: PreferencesStore.shared.accentHex) }
 
     private var currentMonth: Int {
         Calendar.current.component(.month, from: selectedDate) - 1

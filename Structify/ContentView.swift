@@ -17,10 +17,12 @@ enum AppTab {
 struct ContentView: View {
 
     @State private var selectedTab: AppTab = .schedule
-    @State private var showEventSheet = false
     @State private var isTabBarHidden = false
-    @State private var showHabitSheet = false
-    
+
+    /// Unified create flow. When nil the sheet is dismissed; otherwise the value
+    /// is the initial mode (event or habit). `CreateItemSheet` handles in-flow
+    /// toggling internally — no dismiss/re-present dance.
+    @State private var createMode: EventKind? = nil
 
     @EnvironmentObject var store: TimelineStore
     @EnvironmentObject var calendar: CalendarState
@@ -40,8 +42,8 @@ struct ContentView: View {
             if !isTabBarHidden {
                 FloatingTabBar(
                     selectedTab: $selectedTab,
-                    onAddEvent: { showEventSheet = true },
-                    onAddHabit: { showHabitSheet = true }
+                    onAddEvent: { createMode = .event },
+                    onAddHabit: { createMode = .habit }
                 )
                 .transition(.opacity.combined(with: .move(edge: .bottom)))
             }
@@ -55,58 +57,27 @@ struct ContentView: View {
                 isTabBarHidden = notif.object as? Bool ?? false
             }
         }
-        .sheet(isPresented: $showEventSheet) {
-            let suggested = store.suggestFreeSlot(date: calendar.selectedDate, duration: 60)
-            CreateEventDetailSheet(
-                suggestedStart: suggested,
+        .sheet(item: $createMode) { mode in
+            let suggested = store.suggestFreeSlot(
+                date: calendar.selectedDate,
+                duration: PreferencesStore.shared.defaultDuration,
+                includeHabits: true
+            )
+            CreateItemSheet(
+                suggestedMinutes: suggested,
                 initialDate: calendar.selectedDate,
-                onOpenHabit: {
-                    showEventSheet = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                        showHabitSheet = true
-                    }
-                }
-            ) { title, icon, minutes, duration, colorHex, recurrence in
-                store.addEvent(title: title, icon: icon, minutes: minutes,
-                               duration: duration, colorHex: colorHex, recurrence: recurrence)
-            }
-            .adaptiveSheet()
-        }
-
-        .sheet(isPresented: $showHabitSheet) {
-            CreateHabitDetailSheet(
-                onCreate: { title, icon, colorHex, date, type, target, unit, minutes, increment, repeatMode in
-                    let recurrence: Recurrence = {
-                        let cal = Calendar.current
-                        switch repeatMode {
-                        case .everyday: return .daily
-                        case .oneDay: return .once(date)
-                        case .week:
-                            let start = cal.startOfDay(for: date)
-                            let end = cal.startOfDay(for: cal.date(byAdding: .day, value: 6, to: start) ?? start)
-                            return .dateRange(start, end)
-                        case .month:
-                            let start = cal.startOfDay(for: date)
-                            let end = cal.startOfDay(for: cal.date(byAdding: .day, value: 29, to: start) ?? start)
-                            return .dateRange(start, end)
-                        }
-                    }()
-                    store.addHabit(title: title, icon: icon, colorHex: colorHex,
-                                   minutes: minutes ?? store.suggestFreeSlot(date: date, duration: 0),
-                                   habitType: type, targetValue: target, unit: unit,
-                                   increment: increment, recurrence: recurrence)
-                },
-                onOpenEvent: {
-                    showHabitSheet = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                        showEventSheet = true
-                    }
-                }
+                initialMode: mode
             )
             .environmentObject(store)
             .adaptiveSheet()
         }
     }
+}
+
+// Lets EventKind drive `.sheet(item:)` so the FloatingTabBar can pick an initial
+// mode without juggling two separate Bool flags.
+extension EventKind: Identifiable {
+    public var id: String { rawValue }
 }
 
 

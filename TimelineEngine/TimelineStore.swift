@@ -201,8 +201,75 @@ class TimelineStore: ObservableObject {
     
     @Published var completionLogs: [CompletionLog] = []
     private var completionIndex: [Int: [CompletionLog]] = [:]
-    
+
     private let sharedDefaults = UserDefaults(suiteName: "group.com.samcorp.structify") ?? .standard
+
+    // MARK: - Undo
+
+    struct PendingUndo: Identifiable {
+        enum Kind {
+            /// Single-day "hide" override added by deleteEvent.
+            case singleDayDelete(templateID: UUID, dateKey: Int, date: Date)
+            /// Full template removal — snapshot what was deleted so we can restore.
+            case templateDelete(template: EventTemplate, overrides: [EventOverride], logs: [CompletionLog])
+        }
+        let id = UUID()
+        let kind: Kind
+        let title: String
+    }
+
+    @Published var pendingUndo: PendingUndo?
+    private var undoExpiryTimer: Timer?
+
+    private func setPendingUndo(_ undo: PendingUndo) {
+        pendingUndo = undo
+        undoExpiryTimer?.invalidate()
+        undoExpiryTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                if self.pendingUndo?.id == undo.id { self.pendingUndo = nil }
+            }
+        }
+    }
+
+    func clearPendingUndo() {
+        pendingUndo = nil
+        undoExpiryTimer?.invalidate()
+    }
+
+    func performUndo() {
+        guard let undo = pendingUndo else { return }
+        switch undo.kind {
+        case .singleDayDelete(let templateID, let dateKey, let date):
+            overrides.removeAll {
+                $0.templateID == templateID && $0.dateKey == dateKey && $0.minutes == -1
+            }
+            rebuildIndex()
+            invalidateCache()
+            save()
+            // Re-schedule the day's notification if we can locate the template.
+            if let t = templates.first(where: { $0.id == templateID }) {
+                NotificationManager.shared.schedule(
+                    templateID: t.id,
+                    title: t.title,
+                    icon: t.icon,
+                    minutes: t.minutes,
+                    date: date,
+                    isHabit: t.kind == .habit
+                )
+            }
+        case .templateDelete(let template, let savedOverrides, let savedLogs):
+            templates.append(template)
+            overrides.append(contentsOf: savedOverrides)
+            completionLogs.append(contentsOf: savedLogs)
+            rebuildIndex()
+            rebuildCompletionIndex()
+            invalidateCache()
+            objectWillChange.send()
+            save()
+        }
+        clearPendingUndo()
+    }
     
     
     
@@ -217,13 +284,8 @@ class TimelineStore: ObservableObject {
     }
     
     func cleanupCompletionLogs() {
-        let cutoff = key(
-            for: Calendar.current.date(
-                byAdding: .year,
-                value: -1,
-                to: Date()
-            )!
-        )
+        guard let cutoffDate = Calendar.current.date(byAdding: .year, value: -1, to: Date()) else { return }
+        let cutoff = key(for: cutoffDate)
         completionLogs.removeAll { $0.dateKey < cutoff }
         rebuildCompletionIndex()
         invalidateCache()
@@ -512,10 +574,8 @@ class TimelineStore: ObservableObject {
     }
     
     func cleanupOverrides() {
-
         let calendar = Calendar.current
-        let cutoff = calendar.date(byAdding: .year, value: -1, to: Date())!
-
+        guard let cutoff = calendar.date(byAdding: .year, value: -1, to: Date()) else { return }
         let cutoffKey = key(for: cutoff)
 
         overrides.removeAll { $0.dateKey < cutoffKey }
@@ -552,9 +612,12 @@ class TimelineStore: ObservableObject {
             }
         }
 
+        let clampedMinutes = max(wakeMinutes, min(minutes, sleepMinutes - 5))
+        let clampedDuration = clampDuration(duration, start: clampedMinutes)
+
         var new = EventTemplate(
-            minutes: minutes,
-            duration: duration,
+            minutes: clampedMinutes,
+            duration: clampedDuration,
             title: title,
             icon: icon,
             colorHex: colorHex,
@@ -570,8 +633,19 @@ class TimelineStore: ObservableObject {
         invalidateCache()
         objectWillChange.send()
         save()
-        
+
         NotificationManager.shared.scheduleRecurring(template: new)
+    }
+
+    // Clamp duration so event never crosses sleep time or midnight.
+    // Returns nil if no room left (caller should treat as invalid).
+    // All-day events (duration == 1440) pass through unchanged.
+    private func clampDuration(_ duration: Int?, start minutes: Int) -> Int? {
+        guard let d = duration else { return nil }
+        if d == 1440 { return 1440 }
+        let cap = sleepMinutes - minutes
+        guard cap >= 5 else { return nil }
+        return max(5, min(d, cap))
     }
     
     func currentMinutesToday() -> Int {
@@ -582,11 +656,20 @@ class TimelineStore: ObservableObject {
     }
     
     
-    // TÌM hàm hasOverlap, sửa vòng for:
+    /// Footprint a habit occupies on the timeline for overlap-detection purposes.
+    /// Habits have `duration == nil` in storage; we treat them as a fixed slot so
+    /// event creation can warn when colliding with a scheduled habit.
+    static let habitOverlapFootprint: Int = 30
+
+    /// `includeHabits` controls whether habits (duration == nil) count toward overlap.
+    /// Pass `true` from event-creation flows so events warn when colliding with a
+    /// scheduled habit; pass `false` from habit-creation flows so habits can stack
+    /// on each other freely (the original product behavior).
     func hasOverlap(
         minutes: Int,
         duration: Int,
-        date: Date
+        date: Date,
+        includeHabits: Bool = false
     ) -> Bool {
         let newStart = minutes
         let newEnd = minutes + duration
@@ -594,10 +677,15 @@ class TimelineStore: ObservableObject {
         let dayEvents = events(for: date)
 
         for e in dayEvents {
-            guard let d = e.duration else { continue }
-            
-            // Bỏ qua all-day events
-            if d == 1440 { continue }
+            let d: Int
+            if let eventDur = e.duration {
+                if eventDur == 1440 { continue }   // all-day events don't block
+                d = eventDur
+            } else if includeHabits && e.isHabit {
+                d = Self.habitOverlapFootprint
+            } else {
+                continue
+            }
 
             let start = e.minutes
             let end = e.minutes + d
@@ -609,11 +697,14 @@ class TimelineStore: ObservableObject {
 
         return false
     }
-    
-    
+
+
+    /// `includeHabits: true` makes the slot finder skip over habits as well, so an
+    /// anytime habit / event won't land on top of a scheduled habit on display.
     func suggestFreeSlot(
         date: Date,
-        duration: Int
+        duration: Int,
+        includeHabits: Bool = false
     ) -> Int {
 
         let dayEvents = events(for: date)
@@ -625,7 +716,14 @@ class TimelineStore: ObservableObject {
 
         for i in 0..<dayEvents.count {
 
-            guard let d = dayEvents[i].duration else { continue }
+            let d: Int
+            if let eventDur = dayEvents[i].duration {
+                d = eventDur
+            } else if includeHabits && dayEvents[i].isHabit {
+                d = Self.habitOverlapFootprint
+            } else {
+                continue
+            }
 
             let end = dayEvents[i].minutes + d
 
@@ -639,7 +737,10 @@ class TimelineStore: ObservableObject {
             }
         }
 
-        return dayEvents.last!.minutes + (dayEvents.last!.duration ?? 0)
+        let last = dayEvents.last!
+        let lastDuration: Int = last.duration
+            ?? (includeHabits && last.isHabit ? Self.habitOverlapFootprint : 0)
+        return last.minutes + lastDuration
     }
     
     func buildEventsFresh(date: Date) -> [EventItem] {
@@ -899,7 +1000,8 @@ class TimelineStore: ObservableObject {
     // Update template duration cho "All Days"
     func updateEventDuration(templateID: UUID, duration: Int) {
         guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
-        templates[idx].duration = duration
+        guard let clamped = clampDuration(duration, start: templates[idx].minutes) else { return }
+        templates[idx].duration = clamped
         // Xóa override duration cho tất cả ngày
         for i in overrides.indices {
             if overrides[i].templateID == templateID {
@@ -1131,10 +1233,11 @@ class TimelineStore: ObservableObject {
 
     // Xóa habit/event đúng cách — xóa cả overrides và completion logs
     func deleteEvent(templateID: UUID, date: Date) {
-        
+
         NotificationManager.shared.cancel(templateID: templateID, date: date)
-        
+
         let k = key(for: date)
+        let title = templates.first(where: { $0.id == templateID })?.title ?? ""
 
         overrides.removeAll {
             $0.templateID == templateID && $0.dateKey == k
@@ -1150,12 +1253,22 @@ class TimelineStore: ObservableObject {
         rebuildIndex()
         invalidateCache()
         save()
+
+        setPendingUndo(PendingUndo(
+            kind: .singleDayDelete(templateID: templateID, dateKey: k, date: date),
+            title: title
+        ))
     }
 
     func deleteTemplate(_ id: UUID) {
-        
+
         NotificationManager.shared.cancelAll(templateID: id)
-        
+
+        // Snapshot for undo BEFORE we remove anything.
+        let snapshotTemplate = templates.first(where: { $0.id == id })
+        let snapshotOverrides = overrides.filter { $0.templateID == id }
+        let snapshotLogs = completionLogs.filter { $0.templateID == id }
+
         templates.removeAll { $0.id == id }
         overrides.removeAll { $0.templateID == id }      // 👈 xóa overrides
         completionLogs.removeAll { $0.templateID == id } // 👈 xóa completion logs
@@ -1164,6 +1277,13 @@ class TimelineStore: ObservableObject {
         invalidateCache()
         objectWillChange.send()
         save()
+
+        if let template = snapshotTemplate {
+            setPendingUndo(PendingUndo(
+                kind: .templateDelete(template: template, overrides: snapshotOverrides, logs: snapshotLogs),
+                title: template.title
+            ))
+        }
     }
 
     // From-today variants cho recurring changes
@@ -1189,6 +1309,7 @@ class TimelineStore: ObservableObject {
 
     func updateEventDurationFromToday(templateID: UUID, duration: Int) {
         guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
+        guard let clamped = clampDuration(duration, start: templates[idx].minutes) else { return }
         let todayKey = key(for: Calendar.current.startOfDay(for: Date()))
 
         for i in overrides.indices {
@@ -1197,7 +1318,7 @@ class TimelineStore: ObservableObject {
             }
         }
 
-        templates[idx].duration = duration
+        templates[idx].duration = clamped
         rebuildIndex()
         invalidateCache()
         objectWillChange.send()
@@ -1220,8 +1341,9 @@ class TimelineStore: ObservableObject {
         let cal = Calendar.current
         let today = cal.startOfDay(for: Date())
         let f = DateFormatter()
-        f.dateFormat = "dd/MM/yyyy"
-        
+        f.dateStyle = .short
+        f.timeStyle = .none
+
         var rows = ["Date,Title,Type,Start,Duration,Completed"]
         
         for dayOffset in stride(from: -90, through: 0, by: 1) {

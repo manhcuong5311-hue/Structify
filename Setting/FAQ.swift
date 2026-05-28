@@ -357,6 +357,7 @@ struct FAQView: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
 
             TextField(String(localized: "faq_search_placeholder"), text: $searchText)
 
@@ -373,6 +374,7 @@ struct FAQView: View {
                         .font(.system(size: 16))
                         .foregroundStyle(.secondary)
                 }
+                .accessibilityLabel(Text(String(localized: "a11y_label_clear_search")))
             }
         }
         .padding(.horizontal, 14)
@@ -540,6 +542,7 @@ struct FAQView: View {
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundStyle(.teal)
                     }
+                    .accessibilityHidden(true)
 
                     VStack(alignment: .leading, spacing: 2) {
                         Text(String(localized: "faq_contact_support"))
@@ -555,6 +558,7 @@ struct FAQView: View {
                     Image(systemName: "arrow.up.right")
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(.secondary)
+                        .accessibilityHidden(true)
                 }
                 .padding(14)
                 .background(
@@ -567,6 +571,9 @@ struct FAQView: View {
                 )
             }
             .buttonStyle(.plain)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(Text(String(localized: "faq_contact_support")))
+            .accessibilityHint(Text(String(localized: "a11y_hint_open_email")))
         }
     }
 }
@@ -594,6 +601,7 @@ struct FAQRowView: View {
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(item.color)
                     }
+                    .accessibilityHidden(true)
 
                     Text(item.question)
                         .font(.system(size: 15, weight: .medium))
@@ -606,12 +614,19 @@ struct FAQRowView: View {
                         .foregroundStyle(.tertiary)
                         .rotationEffect(.degrees(isExpanded ? 180 : 0))
                         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isExpanded)
+                        .accessibilityHidden(true)
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 14)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(Text(item.question))
+            .accessibilityHint(Text(isExpanded
+                ? String(localized: "a11y_hint_collapse_answer")
+                : String(localized: "a11y_hint_expand_answer")))
+            .sensoryFeedback(.selection, trigger: isExpanded)
 
             if isExpanded {
                 HStack(alignment: .top, spacing: 12) {

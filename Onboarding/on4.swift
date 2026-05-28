@@ -208,6 +208,16 @@ private extension OnboardingWakeTimePage {
                             }
                         }
                 )
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text(String(localized: "onboarding.wakeup.title")))
+                .accessibilityValue(Text(formattedTime(from: minutes, startHour: 0)))
+                .accessibilityAdjustableAction { direction in
+                    switch direction {
+                    case .increment: minutes = min(720, minutes + 5)
+                    case .decrement: minutes = max(0, minutes - 5)
+                    @unknown default: break
+                    }
+                }
 
                 tickMarks
 

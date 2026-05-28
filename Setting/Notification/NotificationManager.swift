@@ -79,22 +79,29 @@ struct NotificationManager {
 
     // MARK: - Cancel tất cả ngày của 1 template
     func cancelAll(templateID: UUID) {
-        UNUserNotificationCenter.current()
-            .getPendingNotificationRequests { requests in
-                let ids = requests
-                    .filter { $0.identifier.hasPrefix(templateID.uuidString) }
-                    .map { $0.identifier }
-                UNUserNotificationCenter.current()
-                    .removePendingNotificationRequests(withIdentifiers: ids)
-            }
+        Task { await cancelAllAsync(templateID: templateID) }
+    }
+
+    private func cancelAllAsync(templateID: UUID) async {
+        let center = UNUserNotificationCenter.current()
+        let requests = await center.pendingNotificationRequests()
+        let ids = requests
+            .filter { $0.identifier.hasPrefix(templateID.uuidString) }
+            .map { $0.identifier }
+        center.removePendingNotificationRequests(withIdentifiers: ids)
     }
 
     // MARK: - Schedule cho nhiều ngày (recurring)
-    // iOS giới hạn 64 pending notifications — schedule 30 ngày tới
+    // iOS giới hạn 64 pending notifications — schedule tối đa 30 ngày tới,
+    // nhưng clamp theo recurrence end (once/dateRange) để không phí slot.
     func scheduleRecurring(template: EventTemplate, from startDate: Date = Date()) {
-        cancelAll(templateID: template.id)
+        Task {
+            await cancelAllAsync(templateID: template.id)
+            scheduleRecurringAfterCancel(template: template, from: startDate)
+        }
+    }
 
-        // 👇 đọc settings từ UserDefaults
+    private func scheduleRecurringAfterCancel(template: EventTemplate, from startDate: Date) {
         let leadMinutes  = UserDefaults.standard.object(forKey: "notif_event_lead_minutes") as? Int ?? 5
         let habitOnTime  = UserDefaults.standard.object(forKey: "notif_habit_ontime") as? Bool ?? true
         let globalEnabled = UserDefaults.standard.object(forKey: "notif_global_enabled") as? Bool ?? true
@@ -102,7 +109,6 @@ struct NotificationManager {
         guard globalEnabled else { return }
         if template.kind == .habit && !habitOnTime { return }
 
-        // 👇 check per-template toggle
         if let data = UserDefaults.standard.data(forKey: "notif_template_toggles"),
            let decoded = try? JSONDecoder().decode([String: Bool].self, from: data) {
             let isEnabled = decoded[template.id.uuidString] ?? true
@@ -110,7 +116,10 @@ struct NotificationManager {
         }
 
         let cal = Calendar.current
-        for dayOffset in 0..<30 {
+        let maxOffset = maxDayOffset(for: template.recurrence, from: startDate, cap: 30)
+        guard maxOffset > 0 else { return }
+
+        for dayOffset in 0..<maxOffset {
             guard let date = cal.date(
                 byAdding: .day, value: dayOffset, to: cal.startOfDay(for: startDate)
             ) else { continue }
@@ -123,8 +132,26 @@ struct NotificationManager {
                 minutes: template.minutes,
                 date: date,
                 isHabit: template.kind == .habit,
-                leadMinutes: leadMinutes  // 👈 truyền vào
+                leadMinutes: leadMinutes
             )
+        }
+    }
+
+    // Số ngày cần schedule, clamp theo recurrence type.
+    private func maxDayOffset(for recurrence: Recurrence, from startDate: Date, cap: Int) -> Int {
+        let cal = Calendar.current
+        let from = cal.startOfDay(for: startDate)
+        switch recurrence {
+        case .once(let d):
+            let day = cal.startOfDay(for: d)
+            guard let diff = cal.dateComponents([.day], from: from, to: day).day, diff >= 0 else { return 0 }
+            return min(diff + 1, cap)
+        case .dateRange(_, let end):
+            let endDay = cal.startOfDay(for: end)
+            guard let diff = cal.dateComponents([.day], from: from, to: endDay).day, diff >= 0 else { return 0 }
+            return min(diff + 1, cap)
+        case .daily, .weekdays, .specific:
+            return cap
         }
     }
 

@@ -59,7 +59,6 @@ struct OnboardingView: View {
             if page < totalPages - 1 {
                 Button {
                     if page == totalPages - 2 {
-                        // Trang cuối trước premium → next
                         withAnimation(.easeInOut) { page += 1 }
                     } else {
                         withAnimation(.easeInOut) { page += 1 }
@@ -76,8 +75,8 @@ struct OnboardingView: View {
                 }
                 .padding(.bottom, 10)
                 .ignoresSafeArea(.container, edges: .bottom)
+                .sensoryFeedback(.impact(weight: .light), trigger: page)
             }
-            // Trang premium tự có nút riêng → ẩn nút chung
         }
     }
 

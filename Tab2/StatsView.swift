@@ -58,7 +58,7 @@ struct StatsView: View {
     // MARK: - Engine Computed Properties
 
     var statsSnapshot: StatsSnapshot {
-        StatsEngine.snapshot(store: store, streakThreshold: PreferencesStore().streakThreshold.value)
+        StatsEngine.snapshot(store: store, streakThreshold: PreferencesStore.shared.streakThreshold.value)
     }
 
     var moodAnalytics: MoodAnalytics {
@@ -168,6 +168,7 @@ struct StatsView: View {
                                         ? Color(red:0.55,green:0.75,blue:1.0)
                                         : .blue
                                     )
+                                    .accessibilityHidden(true)
                                 Text(String(localized: "stats.lifetime"))
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundStyle(skyEnabled ? .white : .primary)
@@ -175,6 +176,7 @@ struct StatsView: View {
                                 Image(systemName: "chevron.right")
                                     .font(.system(size: 12))
                                     .foregroundStyle(skyEnabled ? .white.opacity(0.5) : .secondary)
+                                    .accessibilityHidden(true)
                             }
                             .padding(16)
                             .background(
@@ -195,6 +197,7 @@ struct StatsView: View {
                             )
                         }
                         .buttonStyle(.plain)
+                        .accessibilityHint(Text(String(localized: "a11y_hint_open_lifetime_stats")))
                         .sheet(isPresented: $showLifetime) {
                             LifetimeDetailView().environmentObject(store)
                         }
@@ -250,6 +253,10 @@ struct StatsView: View {
             }
             .buttonStyle(.plain)
             .animation(.easeInOut(duration: 1), value: celestialIcon)
+            .accessibilityLabel(Text(String(localized: "a11y_label_toggle_sky_theme")))
+            .accessibilityValue(Text(skyEnabled
+                ? String(localized: "a11y_value_on")
+                : String(localized: "a11y_value_off")))
         }
         .padding(.top, 8)
     }
@@ -298,6 +305,8 @@ struct StatsView: View {
                         Text("\(Int(statsSnapshot.todayCompletion * 100))%")
                             .font(.system(size: 16, weight: .bold, design: .rounded))
                             .foregroundStyle(adaptiveWhite())
+                            .contentTransition(.numericText(value: statsSnapshot.todayCompletion))
+                            .animation(.spring(response: 0.5, dampingFraction: 0.8), value: statsSnapshot.todayCompletion)
                         Text(String(localized: "time.today"))
                             .font(.system(size: 9, weight: .medium))
                             .foregroundStyle(adaptiveSecondary())
@@ -380,6 +389,7 @@ struct StatsView: View {
                         .foregroundStyle(statsSnapshot.isStreakAtRisk
                             ? Color(red:1.0,green:0.65,blue:0.20)
                             : Color(red:1.0,green:0.55,blue:0.20))
+                        .accessibilityHidden(true)
                     Text(String(localized: "stats.streak"))
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(adaptiveSecondary())
@@ -396,6 +406,8 @@ struct StatsView: View {
                 Text("\(statsSnapshot.currentStreak)")
                     .font(.system(size: 40, weight: .bold, design: .rounded))
                     .foregroundStyle(adaptiveWhite())
+                    .contentTransition(.numericText(value: Double(statsSnapshot.currentStreak)))
+                    .animation(.spring(response: 0.4, dampingFraction: 0.7), value: statsSnapshot.currentStreak)
                 HStack(spacing: 4) {
                     Text(
                         String.localizedStringWithFormat(
@@ -419,6 +431,7 @@ struct StatsView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .accessibilityElement(children: .combine)
     }
 
     // MARK: - Best Time Card
@@ -429,6 +442,7 @@ struct StatsView: View {
                 HStack {
                     Image(systemName: "clock.fill")
                         .foregroundStyle(Color(red:0.55,green:0.75,blue:1.0))
+                        .accessibilityHidden(true)
                     Text(String(localized: "time.wake_sleep"))
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(adaptiveSecondary())
@@ -444,6 +458,7 @@ struct StatsView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .accessibilityElement(children: .combine)
     }
 
     // MARK: - Prediction Card

@@ -303,6 +303,14 @@ extension SettingsView {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text(isPremium
+            ? String(localized: "settings_premium_title")
+            : String(localized: "settings_upgrade_title")))
+        .accessibilityHint(Text(isPremium
+            ? String(localized: "a11y_hint_open_premium_status")
+            : String(localized: "a11y_hint_open_paywall")))
+        .sensoryFeedback(.impact(weight: .medium), trigger: showPremium)
     }
 }
 
@@ -330,6 +338,7 @@ extension SettingsView {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(.secondary)
                 .padding(.leading, 4)
+                .accessibilityAddTraits(.isHeader)
 
             VStack(spacing: 0) {
                 ForEach(Array(items.enumerated()), id: \.element.id) { idx, item in
@@ -343,6 +352,7 @@ extension SettingsView {
                                     .font(.system(size: 15, weight: .semibold))
                                     .foregroundStyle(item.color)
                             }
+                            .accessibilityHidden(true)
 
                             Text(item.label)
                                 .font(.body)
@@ -353,12 +363,14 @@ extension SettingsView {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundStyle(.tertiary)
+                                .accessibilityHidden(true)
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 12)
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(SettingsRowButtonStyle())
+                    .sensoryFeedback(.selection, trigger: idx)
 
                     if idx < items.count - 1 {
                         Divider()
@@ -383,7 +395,8 @@ struct SettingsRowButtonStyle: ButtonStyle {
                 ? Color(.systemFill)
                 : Color.clear
             )
-            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }
 

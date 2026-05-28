@@ -36,8 +36,9 @@ class PremiumStore: ObservableObject {
     }
     
     func listenForTransactions() -> Task<Void, Never> {
-        Task.detached {
+        Task.detached { [weak self] in
             for await result in Transaction.updates {
+                guard let self else { return }
                 switch result {
                 case .verified(let transaction):
                     if transaction.productID == self.productID {
@@ -91,7 +92,8 @@ class PremiumStore: ObservableObject {
                 break
             }
         } catch {
-            await MainActor.run { errorMessage = error.localizedDescription }
+            let message = Self.friendlyPurchaseError(error)
+            await MainActor.run { errorMessage = message }
         }
         await MainActor.run { isLoading = false }
     }
@@ -103,9 +105,39 @@ class PremiumStore: ObservableObject {
             try await AppStore.sync()
             await refreshPurchaseStatus()
         } catch {
-            await MainActor.run { errorMessage = error.localizedDescription }
+            let message = Self.friendlyPurchaseError(error)
+            await MainActor.run { errorMessage = message }
         }
         await MainActor.run { isLoading = false }
+    }
+
+    // Map StoreKit errors to user-facing strings.
+    // Network / availability errors get specific copy; everything else falls back
+    // to system-provided localizedDescription.
+    private static func friendlyPurchaseError(_ error: Error) -> String {
+        if let storeKitError = error as? StoreKitError {
+            switch storeKitError {
+            case .networkError:
+                return String(localized: "purchase.error.network")
+            case .notAvailableInStorefront:
+                return String(localized: "purchase.error.not_available")
+            case .userCancelled:
+                return ""
+            default:
+                break
+            }
+        }
+        if let purchaseError = error as? Product.PurchaseError {
+            switch purchaseError {
+            case .productUnavailable:
+                return String(localized: "purchase.error.not_available")
+            case .ineligibleForOffer:
+                return String(localized: "purchase.error.ineligible")
+            default:
+                break
+            }
+        }
+        return error.localizedDescription
     }
 
     // MARK: - Refresh
