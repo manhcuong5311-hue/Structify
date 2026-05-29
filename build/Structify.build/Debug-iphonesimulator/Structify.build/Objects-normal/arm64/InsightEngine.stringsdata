@@ -1,0 +1,344 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab2/InsightEngine.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "insight_streak_risk_title",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 91
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_streak_risk_subtitle",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 95
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_improvement_strong_title",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 107
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_improvement_strong_subtitle",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 111
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_improvement_normal_title",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 119
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_improvement_normal_subtitle",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 122
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_best_streak_title",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 132
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_best_streak_subtitle",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 136
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_identity_title_1",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 144
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_identity_title_2",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 145
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_identity_title_3",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 146
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_identity_subtitle_1",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 150
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_identity_subtitle_2",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 151
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_identity_subtitle_3",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 152
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_recovery_title_1",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 168
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_recovery_title_2",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 169
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_recovery_title_3",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 170
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_recovery_subtitle_1",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 174
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_recovery_subtitle_2",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 175
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_recovery_subtitle_3",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 176
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_mood_support_title_1",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 192
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_mood_support_title_2",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 193
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_mood_support_title_3",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 194
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_mood_support_subtitle_1",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 198
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_mood_support_subtitle_3",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 200
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_mood_productivity_title",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 214
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_mood_productivity_subtitle",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 215
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_consistency_title",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 225
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_consistency_subtitle",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 229
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_morning_early_title",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 240
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_morning_early_subtitle_ahead",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 242
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_morning_early_subtitle_focus",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 243
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_morning_strong_title",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 250
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_morning_open_title",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 256
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_midday_title",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 264
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_midday_subtitle_ahead",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 266
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_midday_subtitle_build",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 267
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_afternoon_title",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 273
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_evening_good_title",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 281
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_evening_good_subtitle",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 282
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_evening_winddown_title",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 287
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight_time_default_title",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 294
+        }
+      }
+    ]
+  },
+  "version": 1
+}

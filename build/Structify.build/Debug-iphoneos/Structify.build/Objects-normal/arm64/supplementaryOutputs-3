@@ -1,0 +1,44 @@
+{
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/LayoutEnGine.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineEngine.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineEventRow.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineSmallViews.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineStore.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineTicker.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.swiftdeps"
+  }
+}

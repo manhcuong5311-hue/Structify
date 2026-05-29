@@ -1,0 +1,64 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/DraggableEventRow.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "recurrence_daily",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 70
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_weekdays",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 73
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_once",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 80
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_week",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 87
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_month",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 91
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_range %@–%@",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 98
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_habit",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 65
+        }
+      }
+    ]
+  },
+  "version": 1
+}

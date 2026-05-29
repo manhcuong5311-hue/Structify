@@ -1,0 +1,1902 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>  ·  </key>
+	<string>  ·  </string>
+	<key>#</key>
+	<string>#</string>
+	<key>%lld</key>
+	<string>%lld</string>
+	<key>%lld min</key>
+	<string>%lld min</string>
+	<key>%lld%%</key>
+	<string>%lld%%</string>
+	<key>%lldh</key>
+	<string>%lldh</string>
+	<key>%lldm</key>
+	<string>%lldm</string>
+	<key>%lldp</key>
+	<string>%lldp</string>
+	<key>+%lld</key>
+	<string>+%lld</string>
+	<key>08:00</key>
+	<string>08:00</string>
+	<key>09:30</key>
+	<string>09:30</string>
+	<key>62%</key>
+	<string>62%</string>
+	<key>:</key>
+	<string>:</string>
+	<key>EULA</key>
+	<string>EULA</string>
+	<key>Made with ♥ by Structify</key>
+	<string>Made with ♥ by Line</string>
+	<key>Manhcuong531@gmail.com</key>
+	<string>Manhcuong531@gmail.com</string>
+	<key>a11y_hint_add_item</key>
+	<string>Opens a sheet to add a new event or habit.</string>
+	<key>a11y_hint_collapse_answer</key>
+	<string>Collapses the answer.</string>
+	<key>a11y_hint_expand_answer</key>
+	<string>Expands the answer.</string>
+	<key>a11y_hint_open_email</key>
+	<string>Opens your email app to contact support.</string>
+	<key>a11y_hint_open_lifetime_stats</key>
+	<string>Opens lifetime statistics.</string>
+	<key>a11y_hint_open_month_picker</key>
+	<string>Opens the month and year picker.</string>
+	<key>a11y_hint_open_notification_settings</key>
+	<string>Opens iOS notification settings.</string>
+	<key>a11y_hint_open_paywall</key>
+	<string>Opens the premium upgrade options.</string>
+	<key>a11y_hint_open_premium_status</key>
+	<string>Opens your premium subscription details.</string>
+	<key>a11y_hint_select_day</key>
+	<string>Selects this day.</string>
+	<key>a11y_hint_select_today</key>
+	<string>Today. Selects this day.</string>
+	<key>a11y_hint_toggle_habit</key>
+	<string>Toggles habit completion for today.</string>
+	<key>a11y_label_add_item</key>
+	<string>Add item</string>
+	<key>a11y_label_clear_search</key>
+	<string>Clear search</string>
+	<key>a11y_label_close</key>
+	<string>Close</string>
+	<key>a11y_label_color_swatch</key>
+	<string>Color</string>
+	<key>a11y_label_skip_onboarding</key>
+	<string>Skip onboarding</string>
+	<key>a11y_label_toggle_sky_theme</key>
+	<string>Toggle sky theme</string>
+	<key>a11y_value_completed</key>
+	<string>Completed</string>
+	<key>a11y_value_not_completed</key>
+	<string>Not completed</string>
+	<key>a11y_value_off</key>
+	<string>Off</string>
+	<key>a11y_value_on</key>
+	<string>On</string>
+	<key>action.delete_item_format</key>
+	<string>Delete</string>
+	<key>action.done</key>
+	<string>Done</string>
+	<key>action_add_event</key>
+	<string>Add Event</string>
+	<key>action_add_habit</key>
+	<string>Add Habit</string>
+	<key>add</key>
+	<string>Add</string>
+	<key>add_event</key>
+	<string>Add Event</string>
+	<key>all_day</key>
+	<string>All Day</string>
+	<key>anytime</key>
+	<string>Anytime</string>
+	<key>apply_all_days</key>
+	<string>All Days</string>
+	<key>apply_changes_title</key>
+	<string>Apply changes to</string>
+	<key>apply_only_today</key>
+	<string>Only Today</string>
+	<key>auto_suggest_slot</key>
+	<string>Auto-suggest Free Slot</string>
+	<key>auto_suggest_slot_desc</key>
+	<string>Finds the best gap when creating events</string>
+	<key>backup_data</key>
+	<string>Backup Data</string>
+	<key>backup_data_desc</key>
+	<string>Export full backup to Files or AirDrop</string>
+	<key>badge.accumulative</key>
+	<string>Accumulative</string>
+	<key>badge.event</key>
+	<string>Event</string>
+	<key>badge.habit</key>
+	<string>Habit</string>
+	<key>cancel</key>
+	<string>Cancel</string>
+	<key>change_duration_title</key>
+	<string>Thay đổi thời lượng</string>
+	<key>choose_color</key>
+	<string>Choose a color</string>
+	<key>choose_icon_title</key>
+	<string>Choose Icon</string>
+	<key>common.continue</key>
+	<string>Continue</string>
+	<key>common.done</key>
+	<string>Done</string>
+	<key>common.duration_example</key>
+	<string>1h 30m</string>
+	<key>common.recent</key>
+	<string>Recent</string>
+	<key>common.submit</key>
+	<string>Submit</string>
+	<key>common_cancel</key>
+	<string>Cancel</string>
+	<key>common_dash</key>
+	<string>–</string>
+	<key>common_done</key>
+	<string>Done</string>
+	<key>compare_feature</key>
+	<string>What you get</string>
+	<key>compare_free</key>
+	<string>Free</string>
+	<key>compare_premium</key>
+	<string>Premium</string>
+	<key>completed_events_fade</key>
+	<string>Completed events fade from timeline</string>
+	<key>continue</key>
+	<string>Continue</string>
+	<key>create_event</key>
+	<string>Create event</string>
+	<key>create_habit</key>
+	<string>Create Habit</string>
+	<key>danger_zone</key>
+	<string>Danger Zone</string>
+	<key>dash_placeholder</key>
+	<string>–</string>
+	<key>date_and_repeat</key>
+	<string>Date and repeat</string>
+	<key>date_error_create_past</key>
+	<string>📅 Can't create habits for past dates</string>
+	<key>date_error_past_habit</key>
+	<string>📅 Can't add habits to past dates</string>
+	<key>date_every_day</key>
+	<string>Every day</string>
+	<key>date_today</key>
+	<string>Today</string>
+	<key>date_weekdays</key>
+	<string>Mon–Fri</string>
+	<key>default_duration</key>
+	<string>Default Duration</string>
+	<key>delete</key>
+	<string>Delete</string>
+	<key>delete_all_scheduled</key>
+	<string>All Scheduled Days</string>
+	<key>delete_event_confirm</key>
+	<string>Delete</string>
+	<key>delete_event_message</key>
+	<string>This action cannot be undone.</string>
+	<key>delete_event_title</key>
+	<string>Delete Event</string>
+	<key>delete_message %@</key>
+	<string>“%@” will be removed from your schedule.</string>
+	<key>delete_only_today</key>
+	<string>Only Today</string>
+	<key>delete_scope_message %@</key>
+	<string>%@ Delete only today or all scheduled days?</string>
+	<key>delete_title_event</key>
+	<string>Delete Event</string>
+	<key>delete_title_habit</key>
+	<string>Delete Habit</string>
+	<key>demo.event.coffee_break</key>
+	<string>Coffee Break</string>
+	<key>demo.event.coffee_break_next</key>
+	<string>Coffee Break · 09:30</string>
+	<key>demo.event.deep_work</key>
+	<string>Deep Work</string>
+	<key>demo.event.lunch</key>
+	<string>Lunch</string>
+	<key>demo.event.morning_start</key>
+	<string>Morning Start</string>
+	<key>demo.event.wind_down</key>
+	<string>Wind Down</string>
+	<key>demo.event.workout</key>
+	<string>Workout</string>
+	<key>done</key>
+	<string>Done</string>
+	<key>drag_snap</key>
+	<string>Drag Snap</string>
+	<key>duration</key>
+	<string>Duration</string>
+	<key>duration_h %lld</key>
+	<string>%dh</string>
+	<key>duration_h_m %lld %lld</key>
+	<string>%dh %dm</string>
+	<key>duration_m %lld</key>
+	<string>%dm</string>
+	<key>edit</key>
+	<string>Edit</string>
+	<key>empty_add_event</key>
+	<string>Add Event</string>
+	<key>empty_add_habit</key>
+	<string>Add Habit</string>
+	<key>empty_timeline_subtitle</key>
+	<string>Add an event or habit to start shaping your day.</string>
+	<key>empty_timeline_title</key>
+	<string>Your day is wide open</string>
+	<key>enter_title_to_continue</key>
+	<string>✏️ Enter a title to continue</string>
+	<key>error_enter_title</key>
+	<string>Please enter a title</string>
+	<key>evening_review</key>
+	<string>Evening Review</string>
+	<key>evening_review_desc</key>
+	<string>Completion check-in reminder</string>
+	<key>event.add</key>
+	<string>Add Event</string>
+	<key>event.create</key>
+	<string>Create Event</string>
+	<key>event.name.placeholder</key>
+	<string>Event name</string>
+	<key>event_category_all</key>
+	<string>All</string>
+	<key>event_category_health</key>
+	<string>Health</string>
+	<key>event_category_learning</key>
+	<string>Learning</string>
+	<key>event_category_lifestyle</key>
+	<string>Lifestyle</string>
+	<key>event_category_personal</key>
+	<string>Personal</string>
+	<key>event_category_work</key>
+	<string>Work</string>
+	<key>event_morning_start</key>
+	<string>Morning Start</string>
+	<key>event_name_placeholder</key>
+	<string>Event name</string>
+	<key>event_night_reset</key>
+	<string>Night Reset</string>
+	<key>event_repeat_daily</key>
+	<string>This event repeats every day.</string>
+	<key>event_repeat_range %@ %@</key>
+	<string>Repeats %1$@ %2$@</string>
+	<key>event_repeat_specific %@</key>
+	<string>Repeats on %@.</string>
+	<key>event_repeat_weekdays</key>
+	<string>This event repeats Mon–Fri.</string>
+	<key>event_tpl_appointment</key>
+	<string>Appointment</string>
+	<key>event_tpl_break</key>
+	<string>Break</string>
+	<key>event_tpl_call</key>
+	<string>Call</string>
+	<key>event_tpl_class</key>
+	<string>Class</string>
+	<key>event_tpl_coffee</key>
+	<string>Coffee</string>
+	<key>event_tpl_commute</key>
+	<string>Commute</string>
+	<key>event_tpl_course</key>
+	<string>Course</string>
+	<key>event_tpl_date</key>
+	<string>Date</string>
+	<key>event_tpl_dinner</key>
+	<string>Dinner</string>
+	<key>event_tpl_doctor</key>
+	<string>Doctor</string>
+	<key>event_tpl_errands</key>
+	<string>Errands</string>
+	<key>event_tpl_family</key>
+	<string>Family time</string>
+	<key>event_tpl_focus_block</key>
+	<string>Focus block</string>
+	<key>event_tpl_gym</key>
+	<string>Gym</string>
+	<key>event_tpl_interview</key>
+	<string>Interview</string>
+	<key>event_tpl_lunch</key>
+	<string>Lunch</string>
+	<key>event_tpl_meeting</key>
+	<string>Meeting</string>
+	<key>event_tpl_presentation</key>
+	<string>Presentation</string>
+	<key>event_tpl_reading</key>
+	<string>Reading</string>
+	<key>event_tpl_review</key>
+	<string>Review</string>
+	<key>event_tpl_shopping</key>
+	<string>Shopping</string>
+	<key>event_tpl_sleep</key>
+	<string>Sleep</string>
+	<key>event_tpl_standup</key>
+	<string>Standup</string>
+	<key>event_tpl_study</key>
+	<string>Study</string>
+	<key>event_tpl_therapy</key>
+	<string>Therapy</string>
+	<key>event_tpl_travel</key>
+	<string>Travel</string>
+	<key>event_tpl_workout</key>
+	<string>Workout</string>
+	<key>event_tpl_yoga</key>
+	<string>Yoga</string>
+	<key>event_type_event</key>
+	<string>Event</string>
+	<key>event_type_habit</key>
+	<string>Habit</string>
+	<key>every_minutes %lld</key>
+	<string>Every %lld min</string>
+	<key>export_data_csv</key>
+	<string>Export Data (CSV)</string>
+	<key>faq_backup_how_answer</key>
+	<string>Go to Settings → Preferences → Stats &amp; Data → Export Backup. This creates a JSON file you can save to Files, iCloud Drive, or share anywhere. To restore, tap Restore Backup and select your backup file.</string>
+	<key>faq_backup_how_question</key>
+	<string>How do I back up my data?</string>
+	<key>faq_contact_support</key>
+	<string>Contact Support</string>
+	<key>faq_create_event_answer</key>
+	<string>Tap the + button at the bottom right of the main screen. You can create a timed Event (with a start time and duration) or a Habit (recurring daily task). Fill in the title, pick an icon and color, then tap Create.</string>
+	<key>faq_create_event_question</key>
+	<string>How do I create my first event?</string>
+	<key>faq_customization_accent_color_a</key>
+	<string>Go to Settings → Preferences → Appearance → Accent Color. Choose from the preset palette or use the color picker to set any custom color. The accent color applies to the timeline line, buttons, and highlights throughout the app.</string>
+	<key>faq_customization_accent_color_q</key>
+	<string>How do I change the app accent color?</string>
+	<key>faq_customization_density_a</key>
+	<string>Timeline Density controls how much vertical space is allocated between events. Compact fits more on screen, while Comfortable adds more breathing room. Adjust it in Settings → Preferences → Appearance.</string>
+	<key>faq_customization_density_q</key>
+	<string>What is Timeline Density?</string>
+	<key>faq_customization_event_icon_a</key>
+	<string>Nhấn vào một sự kiện để mở màn hình chi tiết. Nhấn vào icon ở phía trên để mở Icon &amp; Color picker. Bạn có thể tìm bất kỳ SF Symbol nào và chọn từ hàng trăm icon, sau đó chọn màu tùy chỉnh.</string>
+	<key>faq_customization_event_icon_q</key>
+	<string>How do I change an event's icon or color? </string>
+	<key>faq_customization_hide_completed_a</key>
+	<string>Yes. Go to Settings → Preferences → Productivity and toggle on Hide Completed Events. Completed events will be hidden from the timeline until you toggle it off again.</string>
+	<key>faq_customization_hide_completed_q</key>
+	<string>Can I hide completed events?</string>
+	<key>faq_customization_title</key>
+	<string>Customization</string>
+	<key>faq_data_backup_title</key>
+	<string>Data &amp; Backup</string>
+	<key>faq_data_where_answer</key>
+	<string>All your data is stored locally on your device. Line does not have any servers — your events, habits, and logs never leave your iPhone unless you choose to export them.</string>
+	<key>faq_data_where_question</key>
+	<string>Where is my data stored?</string>
+	<key>faq_delete_app_answer</key>
+	<string>All local data will be permanently deleted. We strongly recommend exporting a backup before uninstalling. If you have iCloud Backup enabled on your iPhone, some data may be included in your device backup.</string>
+	<key>faq_delete_app_question</key>
+	<string>What happens if I delete the app?</string>
+	<key>faq_event_vs_habit_answer</key>
+	<string>Events are one-off or recurring time blocks — like meetings, workouts, or study sessions. They have a start time and an optional duration. Habits are recurring tasks you want to build consistency with — they show a completion ring and track your streaks over time.</string>
+	<key>faq_event_vs_habit_question</key>
+	<string>What's the difference between an Event and a Habit?</string>
+	<key>faq_export_csv_answer</key>
+	<string>Yes — go to Settings → Preferences → Stats &amp; Data → Export CSV. This exports your last 90 days of events and habits with completion status into a CSV file that opens in Numbers, Excel, or Google Sheets.</string>
+	<key>faq_export_csv_question</key>
+	<string>Can I export my history to a spreadsheet?</string>
+	<key>faq_filter_all</key>
+	<string>All</string>
+	<key>faq_habits_accumulative_a</key>
+	<string>An accumulative habit has a numeric target — like drinking 2,000 ml of water or walking 10,000 steps. Each tap adds your increment (e.g. +250 ml). A progress ring fills as you go, completing when you hit your target.</string>
+	<key>faq_habits_accumulative_q</key>
+	<string>What is an Accumulative habit?</string>
+	<key>faq_habits_mark_done_a</key>
+	<string>Tap the circle button on the right side of any habit row. For binary habits it toggles complete/incomplete. For accumulative habits, each tap adds your set increment — keep tapping until you reach the target.</string>
+	<key>faq_habits_mark_done_q</key>
+	<string>How do I mark a habit as done?</string>
+	<key>faq_habits_repeat_options_a</key>
+	<string>You can set a habit to repeat Every Day, on Weekdays only, on specific days of the week, for a fixed range (1 week or 1 month), or just once on a single day.</string>
+	<key>faq_habits_repeat_options_q</key>
+	<string>What repeat options are available for habits?</string>
+	<key>faq_habits_streak_a</key>
+	<string>Yes — open the Stats tab (chart icon in the tab bar) to see your current streak, best streak, and a 30-day completion calendar for each habit. You can adjust the streak threshold in Settings → Preferences.</string>
+	<key>faq_habits_streak_q</key>
+	<string>Can I track my habit streaks?</string>
+	<key>faq_habits_title</key>
+	<string>Habits</string>
+	<key>faq_notifications_evening_review_a</key>
+	<string>Evening Review sends you a nightly reminder to reflect on your day and plan tomorrow. Set your preferred time in Settings → Preferences → Notifications → Evening Review. Premium feature.</string>
+	<key>faq_notifications_evening_review_q</key>
+	<string>What is Evening Review?</string>
+	<key>faq_notifications_event_setup_a</key>
+	<string>Go to Settings → Notifications and enable the global toggle. You can set a lead time (how many minutes before an event you're notified) and toggle notifications on or off for individual event types.</string>
+	<key>faq_notifications_event_setup_q</key>
+	<string>How do I set up notifications for events?</string>
+	<key>faq_notifications_morning_briefing_a</key>
+	<string>Morning Briefing sends you a notification each morning with a summary of your day's schedule. Set the time in Settings → Preferences → Notifications → Morning Briefing. Premium feature.</string>
+	<key>faq_notifications_morning_briefing_q</key>
+	<string>What is Morning Briefing?</string>
+	<key>faq_notifications_not_receiving_a</key>
+	<string>Make sure notifications are enabled in both Line (Settings → Notifications) and in iOS Settings → Line → Notifications. Also check that Focus modes aren't blocking the app.</string>
+	<key>faq_notifications_not_receiving_q</key>
+	<string>Why am I not receiving notifications?</string>
+	<key>faq_notifications_title</key>
+	<string>Notifications</string>
+	<key>faq_premium_refund_answer</key>
+	<string>Refunds are handled by Apple. Visit reportaproblem.apple.com, sign in with your Apple ID, find the Line purchase, and submit a refund request. Apple typically processes refunds within a few days.</string>
+	<key>faq_premium_refund_question</key>
+	<string>Can I get a refund?</string>
+	<key>faq_premium_restore_answer</key>
+	<string>Go to Settings → Account → Restore Purchase, or open the Premium screen and tap Restore Purchase at the bottom. As long as you're signed in with the same Apple ID, your purchase will be restored instantly.</string>
+	<key>faq_premium_restore_question</key>
+	<string>How do I restore my purchase on a new device?</string>
+	<key>faq_premium_subscription_answer</key>
+	<string>No — Line Premium is a one-time purchase of $4.99 USD. You pay once and own it forever. There are no monthly fees, no renewals, and no surprise charges.</string>
+	<key>faq_premium_subscription_question</key>
+	<string>Is Premium a subscription?</string>
+	<key>faq_premium_title</key>
+	<string>Premium</string>
+	<key>faq_premium_what_answer</key>
+	<string>Line Premium unlocks: unlimited events and habits (free is limited to 50 each), all accent colors, all icons, full notification features (Morning Briefing &amp; Evening Review), Backup &amp; Export, and 90-day stats history.</string>
+	<key>faq_premium_what_question</key>
+	<string>What do I get with Premium?</string>
+	<key>faq_search_placeholder</key>
+	<string>Search questions...</string>
+	<key>faq_still_questions</key>
+	<string>Still have questions?</string>
+	<key>faq_structify_answer</key>
+	<string>Line is a daily timeline and habit tracker that helps you visualize your entire day from wake to sleep. You can create timed events, build recurring habits, and see everything laid out on a single scrollable timeline — so you always know what's next.</string>
+	<key>faq_structify_question</key>
+	<string>What is Line?</string>
+	<key>faq_timeline_gap_a</key>
+	<string>When there's free time between two events, Line shows a subtle message like \"A quiet hour — worth filling\". Tap it to quickly create a new event in that gap, pre-filled with the right start time.</string>
+	<key>faq_timeline_gap_q</key>
+	<string>What does the gap message between events mean?</string>
+	<key>faq_timeline_morning_night_a</key>
+	<string>These are system events that define your day's boundaries. Morning Start is your wake time and Night Reset is your sleep time. All other events are constrained within this window. You can adjust both times in Settings → Preferences → Schedule.</string>
+	<key>faq_timeline_morning_night_q</key>
+	<string>What are Morning Start and Night Reset?</string>
+	<key>faq_timeline_move_event_a</key>
+	<string>Long press on any event until it lifts (you'll feel a haptic). Then drag it up or down to the new time slot. Release to drop it. For recurring events, you'll be asked whether to move just today or all days.</string>
+	<key>faq_timeline_move_event_q</key>
+	<string>How do I move an event on the timeline?</string>
+	<key>faq_timeline_resize_event_a</key>
+	<string>Long press an event to enter hold mode, then drag the end time (shown at the bottom of the event pill) up or down to adjust the duration. The duration preview updates in real time as you drag.</string>
+	<key>faq_timeline_resize_event_q</key>
+	<string>How do I resize an event?</string>
+	<key>faq_timeline_title</key>
+	<string>Timeline</string>
+	<key>faq_timeline_view_days_a</key>
+	<string>Use the week strip at the top of the screen to swipe between days. You can also tap the date header to jump to any date. Past days are shown with reduced opacity to indicate they're read-only.</string>
+	<key>faq_timeline_view_days_q</key>
+	<string>How do I view other days?</string>
+	<key>faq_try_search</key>
+	<string>Try a different search term</string>
+	<key>feature.live_progress</key>
+	<string>Running events show live progress bar</string>
+	<key>feature.lock_past_events</key>
+	<string>Past events are locked — no accidental edits</string>
+	<key>feature.smart_notifications</key>
+	<string>Smart notifications at the right moment</string>
+	<key>feature_backup_desc</key>
+	<string>Backup your data with JSON, export to CSV, and restore anytime.</string>
+	<key>feature_backup_title</key>
+	<string>Backup &amp; Export</string>
+	<key>feature_customization_desc</key>
+	<string>Unlock all accent colors, timeline densities, and drag-snap controls.</string>
+	<key>feature_customization_title</key>
+	<string>Full Customization</string>
+	<key>feature_icons_desc</key>
+	<string>Access every icon across all categories to personalize your timeline.</string>
+	<key>feature_icons_title</key>
+	<string>All Icons</string>
+	<key>feature_notifications_desc</key>
+	<string>Stay on track with morning briefings, evening reviews, and helpful reminders.</string>
+	<key>feature_notifications_title</key>
+	<string>Smart Notifications</string>
+	<key>feature_stats_desc</key>
+	<string>Track streaks, view 90-day history, and understand your productivity trends.</string>
+	<key>feature_stats_title</key>
+	<string>Advanced Stats</string>
+	<key>feature_unlimited_desc</key>
+	<string>Create as many events and habits as you want. No more 50-item limit.</string>
+	<key>feature_unlimited_title</key>
+	<string>Unlimited Events &amp; Habits</string>
+	<key>fix_issues_to_continue</key>
+	<string>Fix the issues above to continue</string>
+	<key>gap_1h</key>
+	<string>A quiet hour — worth filling</string>
+	<key>gap_2h</key>
+	<string>Two hours with nowhere to be</string>
+	<key>gap_3h</key>
+	<string>Three hours, no excuses</string>
+	<key>gap_chunk</key>
+	<string>A meaningful stretch of time</string>
+	<key>gap_full_day</key>
+	<string>The whole day is yours</string>
+	<key>gap_half_day</key>
+	<string>Nearly half a day, untouched</string>
+	<key>gap_half_workday</key>
+	<string>Half a workday, unspoken for</string>
+	<key>gap_long_block</key>
+	<string>120-minute gap</string>
+	<key>gap_long_free</key>
+	<string>A generous stretch of nothing</string>
+	<key>gap_morning</key>
+	<string>The better part of a morning</string>
+	<key>getting_started</key>
+	<string>Getting Started</string>
+	<key>greeting.afternoon</key>
+	<string>Good afternoon 🌤</string>
+	<key>greeting.evening</key>
+	<string>Good evening 🌆</string>
+	<key>greeting.late</key>
+	<string>Working late 🌙</string>
+	<key>greeting.morning</key>
+	<string>Good morning ☀️</string>
+	<key>habit.add</key>
+	<string>Add Habit</string>
+	<key>habit_apply_all_days</key>
+	<string>All Days</string>
+	<key>habit_apply_changes_title</key>
+	<string>Apply changes to</string>
+	<key>habit_apply_only_today</key>
+	<string>Only Today</string>
+	<key>habit_category_all</key>
+	<string>All</string>
+	<key>habit_category_creative</key>
+	<string>Creative</string>
+	<key>habit_category_health</key>
+	<string>Health</string>
+	<key>habit_category_learning</key>
+	<string>Learning</string>
+	<key>habit_category_lifestyle</key>
+	<string>Lifestyle</string>
+	<key>habit_category_mindfulness</key>
+	<string>Mindfulness</string>
+	<key>habit_category_productivity</key>
+	<string>Productivity</string>
+	<key>habit_category_social</key>
+	<string>Social</string>
+	<key>habit_daily_goal</key>
+	<string>Daily goal</string>
+	<key>habit_date_range %@ %@</key>
+	<string> %1$@ %2$@</string>
+	<key>habit_delete</key>
+	<string>Delete Habit</string>
+	<key>habit_delete_forever</key>
+	<string>Delete Forever</string>
+	<key>habit_delete_message %@</key>
+	<string>"%@" and all its history will be permanently removed. This cannot be undone.</string>
+	<key>habit_delete_title</key>
+	<string>Delete Habit</string>
+	<key>habit_error_increment_exceeds_target</key>
+	<string>Per tap can't exceed target</string>
+	<key>habit_error_increment_gt_zero</key>
+	<string>Per tap must be greater than 0</string>
+	<key>habit_error_target_gt_zero</key>
+	<string>Target must be greater than 0</string>
+	<key>habit_every_day</key>
+	<string>Every day</string>
+	<key>habit_future_checkin_blocked</key>
+	<string>Can't check in for future dates</string>
+	<key>habit_goal %@ %@</key>
+	<string>Goal: %1$@ %2$@</string>
+	<key>habit_mark_done</key>
+	<string>Mark as done</string>
+	<key>habit_mark_not_done</key>
+	<string>Mark as not done</string>
+	<key>habit_name_placeholder</key>
+	<string>Habit name</string>
+	<key>habit_per_tap</key>
+	<string>Per tap</string>
+	<key>habit_preview_label</key>
+	<string>Preview</string>
+	<key>habit_preview_placeholder_title</key>
+	<string>Your habit</string>
+	<key>habit_reminders</key>
+	<string>Habit Reminders</string>
+	<key>habit_reminders_desc</key>
+	<string>Notify at each habit's scheduled time</string>
+	<key>habit_repeat_daily</key>
+	<string>Daily</string>
+	<key>habit_repeat_everyday</key>
+	<string>Every day</string>
+	<key>habit_repeat_month</key>
+	<string>1 Month</string>
+	<key>habit_repeat_one_day</key>
+	<string>1 Day</string>
+	<key>habit_repeat_range %@ %@</key>
+	<string>This repeats from %@ to %@.</string>
+	<key>habit_repeat_specific %@</key>
+	<string>Repeats on %@</string>
+	<key>habit_repeat_week</key>
+	<string>1 Week</string>
+	<key>habit_repeat_weekdays</key>
+	<string>Weekdays</string>
+	<key>habit_reset_action</key>
+	<string>Reset</string>
+	<key>habit_reset_message</key>
+	<string>This will clear your progress for today only.</string>
+	<key>habit_reset_title</key>
+	<string>Reset today's progress?</string>
+	<key>habit_reset_today</key>
+	<string>Reset today</string>
+	<key>habit_save_target</key>
+	<string>Save target</string>
+	<key>habit_section_checkin</key>
+	<string>Check-in</string>
+	<key>habit_section_details</key>
+	<string>Details</string>
+	<key>habit_section_edit_target</key>
+	<string>Target</string>
+	<key>habit_section_progress</key>
+	<string>Progress</string>
+	<key>habit_stat_schedule</key>
+	<string>Schedule</string>
+	<key>habit_stat_streak</key>
+	<string>Streak</string>
+	<key>habit_stat_today</key>
+	<string>Today</string>
+	<key>habit_status_completed</key>
+	<string>Completed</string>
+	<key>habit_status_not_done</key>
+	<string>Not yet done</string>
+	<key>habit_status_upcoming</key>
+	<string>Upcoming</string>
+	<key>habit_taps_to_complete</key>
+	<string>tap</string>
+	<key>habit_target_label</key>
+	<string>Target</string>
+	<key>habit_target_value %@ %@</key>
+	<string> %1$@ %2$@</string>
+	<key>habit_time</key>
+	<string>Time</string>
+	<key>habit_title</key>
+	<string>Habit</string>
+	<key>habit_tpl_affirmations</key>
+	<string>Affirmations</string>
+	<key>habit_tpl_breathwork</key>
+	<string>Breathwork</string>
+	<key>habit_tpl_budget</key>
+	<string>Budget check</string>
+	<key>habit_tpl_call_family</key>
+	<string>Call family</string>
+	<key>habit_tpl_compliment</key>
+	<string>Compliment someone</string>
+	<key>habit_tpl_cook_home</key>
+	<string>Cook at home</string>
+	<key>habit_tpl_cook_new</key>
+	<string>Cook new dish</string>
+	<key>habit_tpl_course</key>
+	<string>Online course</string>
+	<key>habit_tpl_date_night</key>
+	<string>Date night</string>
+	<key>habit_tpl_deep_work</key>
+	<string>Deep work</string>
+	<key>habit_tpl_detox</key>
+	<string>Digital detox</string>
+	<key>habit_tpl_draw</key>
+	<string>Draw</string>
+	<key>habit_tpl_exercise</key>
+	<string>Exercise</string>
+	<key>habit_tpl_focus_session</key>
+	<string>Focus session</string>
+	<key>habit_tpl_fruit</key>
+	<string>Eat fruit</string>
+	<key>habit_tpl_gratitude</key>
+	<string>Gratitude</string>
+	<key>habit_tpl_groceries</key>
+	<string>Groceries</string>
+	<key>habit_tpl_healthy_meal</key>
+	<string>Healthy meal</string>
+	<key>habit_tpl_inbox_zero</key>
+	<string>Inbox zero</string>
+	<key>habit_tpl_journal</key>
+	<string>Journal</string>
+	<key>habit_tpl_language</key>
+	<string>Language</string>
+	<key>habit_tpl_laundry</key>
+	<string>Laundry</string>
+	<key>habit_tpl_make_bed</key>
+	<string>Make bed</string>
+	<key>habit_tpl_meditate</key>
+	<string>Meditate</string>
+	<key>habit_tpl_music</key>
+	<string>Music</string>
+	<key>habit_tpl_nature</key>
+	<string>Nature walk</string>
+	<key>habit_tpl_no_social</key>
+	<string>No social media</string>
+	<key>habit_tpl_no_sugar</key>
+	<string>No sugar</string>
+	<key>habit_tpl_notes</key>
+	<string>Take notes</string>
+	<key>habit_tpl_pet_walk</key>
+	<string>Walk pet</string>
+	<key>habit_tpl_photo</key>
+	<string>Photography</string>
+	<key>habit_tpl_plan_day</key>
+	<string>Plan day</string>
+	<key>habit_tpl_podcast</key>
+	<string>Podcast</string>
+	<key>habit_tpl_practice</key>
+	<string>Practice skill</string>
+	<key>habit_tpl_quality_time</key>
+	<string>Quality time</string>
+	<key>habit_tpl_read</key>
+	<string>Read</string>
+	<key>habit_tpl_review_week</key>
+	<string>Review week</string>
+	<key>habit_tpl_save_money</key>
+	<string>Save money</string>
+	<key>habit_tpl_skincare</key>
+	<string>Skincare</string>
+	<key>habit_tpl_sleep</key>
+	<string>Sleep early</string>
+	<key>habit_tpl_stretch</key>
+	<string>Stretch</string>
+	<key>habit_tpl_text_friend</key>
+	<string>Text friend</string>
+	<key>habit_tpl_tidy</key>
+	<string>Tidy room</string>
+	<key>habit_tpl_vitamins</key>
+	<string>Vitamins</string>
+	<key>habit_tpl_walk</key>
+	<string>Walk</string>
+	<key>habit_tpl_water</key>
+	<string>Drink water</string>
+	<key>habit_tpl_water_plants</key>
+	<string>Water plants</string>
+	<key>habit_tpl_write</key>
+	<string>Write</string>
+	<key>habit_tpl_yoga</key>
+	<string>Yoga</string>
+	<key>habit_type</key>
+	<string>Habit type</string>
+	<key>habit_type_accumulative</key>
+	<string>Accumulative</string>
+	<key>habit_type_accumulative_desc</key>
+	<string>Count toward a goal — e.g. drink 2L water</string>
+	<key>habit_type_binary</key>
+	<string>Binary</string>
+	<key>habit_type_binary_desc</key>
+	<string>Check off when done — e.g. meditate, journal</string>
+	<key>habit_type_label</key>
+	<string>Type</string>
+	<key>habit_weekdays</key>
+	<string>Mon – Fri</string>
+	<key>hide_completed_events</key>
+	<string>Hide Completed Events</string>
+	<key>hint_enter_title</key>
+	<string>✏️ Enter a title to continue</string>
+	<key>hint_fix_target</key>
+	<string>Fix the target issue above</string>
+	<key>hint_fix_time</key>
+	<string>Fix the time issue above</string>
+	<key>icon.change</key>
+	<string>Change icon</string>
+	<key>icon_category_creative</key>
+	<string>Creative</string>
+	<key>icon_category_finance</key>
+	<string>Finance</string>
+	<key>icon_category_health_fitness</key>
+	<string>Health &amp; Fitness</string>
+	<key>icon_category_life</key>
+	<string>Life</string>
+	<key>icon_category_mindset_goals</key>
+	<string>Mindset &amp; Goals</string>
+	<key>icon_category_study</key>
+	<string>Study</string>
+	<key>icon_category_tech</key>
+	<string>Tech</string>
+	<key>icon_category_travel</key>
+	<string>Travel</string>
+	<key>icon_category_work</key>
+	<string>Work</string>
+	<key>increment_error_exceed</key>
+	<string>Increment can't exceed target</string>
+	<key>increment_error_invalid</key>
+	<string>Increment must be greater than 0</string>
+	<key>insight.best_time</key>
+	<string>Most productive around %@</string>
+	<key>insight.keep_pace</key>
+	<string>Keep your current pace</string>
+	<key>insight_best_streak_subtitle</key>
+	<string>This is what discipline actually looks like.</string>
+	<key>insight_best_streak_title</key>
+	<string>Your best streak ever — %d days 🏆</string>
+	<key>insight_consistency_subtitle</key>
+	<string>Consistency is the only strategy that compounds.</string>
+	<key>insight_consistency_title</key>
+	<string>%d%% consistent this month</string>
+	<key>insight_identity_subtitle_1</key>
+	<string>You're becoming someone who doesn't quit.</string>
+	<key>insight_identity_subtitle_2</key>
+	<string>Consistent people do exactly this.</string>
+	<key>insight_identity_subtitle_3</key>
+	<string>Small numbers add up to something real.</string>
+	<key>insight_identity_title_1</key>
+	<string>You've shown up %d days in a row</string>
+	<key>insight_identity_title_2</key>
+	<string>%d days of not giving up</string>
+	<key>insight_identity_title_3</key>
+	<string>Day %d. Still here.</string>
+	<key>insight_improvement_normal_subtitle</key>
+	<string>Up %d%% compared to last week.</string>
+	<key>insight_improvement_normal_title</key>
+	<string>You're moving in the right direction</string>
+	<key>insight_improvement_strong_subtitle</key>
+	<string>Your rhythm is building on itself.</string>
+	<key>insight_improvement_strong_title</key>
+	<string>Up %d%% this week 📈</string>
+	<key>insight_mood_productivity_subtitle</key>
+	<string>Good mood, good output — use it.</string>
+	<key>insight_mood_productivity_title</key>
+	<string>You perform well on days like this 😊</string>
+	<key>insight_mood_support_subtitle_1</key>
+	<string>Be gentle with yourself today.</string>
+	<key>insight_mood_support_subtitle_3</key>
+	<string>Small steps still count.</string>
+	<key>insight_mood_support_title_1</key>
+	<string>Tough days are part of the process</string>
+	<key>insight_mood_support_title_2</key>
+	<string>You don't have to be at full capacity</string>
+	<key>insight_mood_support_title_3</key>
+	<string>It's okay to go slower today</string>
+	<key>insight_productive_good_mood</key>
+	<string>You're more productive on good mood days 😊</string>
+	<key>insight_recovery_subtitle_1</key>
+	<string>Every comeback starts with one day.</string>
+	<key>insight_recovery_subtitle_2</key>
+	<string>Điều quan trọng là bước tiếp theo bạn làm.</string>
+	<key>insight_recovery_subtitle_3</key>
+	<string>One day at a time is enough.</string>
+	<key>insight_recovery_title_1</key>
+	<string>Resetting is part of the process</string>
+	<key>insight_recovery_title_2</key>
+	<string>Quiet weeks happen</string>
+	<key>insight_recovery_title_3</key>
+	<string>You're still in it</string>
+	<key>insight_resilient_tough_days</key>
+	<string>You push through even on tough days 💪</string>
+	<key>insight_streak_risk_subtitle</key>
+	<string>One habit is all it takes to keep it going.</string>
+	<key>insight_streak_risk_title</key>
+	<string>%d-day streak at risk ⚠️</string>
+	<key>insight_time_afternoon_title</key>
+	<string>Afternoon is often the most productive</string>
+	<key>insight_time_default_title</key>
+	<string>Every day is a new page</string>
+	<key>insight_time_evening_good_subtitle</key>
+	<string>You can close it out well.</string>
+	<key>insight_time_evening_good_title</key>
+	<string>Solid day ✓</string>
+	<key>insight_time_evening_winddown_title</key>
+	<string>Wind down with intention</string>
+	<key>insight_time_midday_subtitle_ahead</key>
+	<string>You're ahead of pace.</string>
+	<key>insight_time_midday_subtitle_build</key>
+	<string>Still time to build momentum.</string>
+	<key>insight_time_midday_title</key>
+	<string>Midday check-in</string>
+	<key>insight_time_morning_early_subtitle_ahead</key>
+	<string>You're already ahead.</string>
+	<key>insight_time_morning_early_subtitle_focus</key>
+	<string>Use the quiet before the noise.</string>
+	<key>insight_time_morning_early_title</key>
+	<string>Morning energy is your edge</string>
+	<key>insight_time_morning_open_title</key>
+	<string>The morning window is open</string>
+	<key>insight_time_morning_strong_title</key>
+	<string>Strong start this morning</string>
+	<key>intent_config_desc</key>
+	<string>This is an example widget.</string>
+	<key>intent_config_title</key>
+	<string>Configuration</string>
+	<key>intent_favorite_emoji</key>
+	<string>Favorite Emoji</string>
+	<key>intent_template_id</key>
+	<string>Template ID</string>
+	<key>intent_toggle_habit_title</key>
+	<string>Toggle Habit</string>
+	<key>keyboard.done</key>
+	<string>Done</string>
+	<key>kind_event</key>
+	<string>Event</string>
+	<key>kind_habit</key>
+	<string>Habit</string>
+	<key>label.date</key>
+	<string>Date</string>
+	<key>label.next_occurrence</key>
+	<string>Next</string>
+	<key>label.repeats</key>
+	<string>Repeats</string>
+	<key>label.starts_from</key>
+	<string>Starts from</string>
+	<key>label.time</key>
+	<string>Time</string>
+	<key>label_favorite_emoji</key>
+	<string>Favorite Emoji:</string>
+	<key>label_time</key>
+	<string>Time:</string>
+	<key>legal.privacy_policy</key>
+	<string>Privacy Policy</string>
+	<key>legal.terms_of_use</key>
+	<string>Terms of Use</string>
+	<key>live_activity_bottom %@</key>
+	<string>Bottom %@</string>
+	<key>live_activity_compact_leading</key>
+	<string>L</string>
+	<key>live_activity_compact_trailing %@</key>
+	<string>T %@</string>
+	<key>live_activity_hello %@</key>
+	<string>Hello %@</string>
+	<key>live_activity_leading</key>
+	<string>Leading</string>
+	<key>live_activity_trailing</key>
+	<string>Trailing</string>
+	<key>max_duration_format %@</key>
+	<string>Max %@</string>
+	<key>menu.actions</key>
+	<string>More actions</string>
+	<key>menu.delete_event</key>
+	<string>Delete event</string>
+	<key>menu.delete_forever</key>
+	<string>Delete forever</string>
+	<key>menu.delete_habit</key>
+	<string>Delete habit</string>
+	<key>menu.delete_only_today</key>
+	<string>Delete only today</string>
+	<key>menu.reset_progress</key>
+	<string>Reset today's progress</string>
+	<key>min_percent_habits</key>
+	<string>Minimum habit completion for a streak day</string>
+	<key>mood.action.add</key>
+	<string>Add mood</string>
+	<key>mood.action.edit</key>
+	<string>Edit</string>
+	<key>mood.add_note</key>
+	<string>Add a note</string>
+	<key>mood.amazing</key>
+	<string>Amazing</string>
+	<key>mood.amazing.1</key>
+	<string>You're at full capacity today.</string>
+	<key>mood.amazing.10</key>
+	<string>Rare day. Let it land.</string>
+	<key>mood.amazing.2</key>
+	<string>Everything feels clear for a reason.</string>
+	<key>mood.amazing.3</key>
+	<string>This is your natural state — remember it.</string>
+	<key>mood.amazing.4</key>
+	<string>You didn't just show up. You arrived.</string>
+	<key>mood.amazing.5</key>
+	<string>People who feel this way show up every day.</string>
+	<key>mood.amazing.6</key>
+	<string>Future you will thank today you.</string>
+	<key>mood.amazing.7</key>
+	<string>This is what disciplined people feel.</string>
+	<key>mood.amazing.8</key>
+	<string>Everything is working.</string>
+	<key>mood.amazing.9</key>
+	<string>Soak it in — you created this.</string>
+	<key>mood.amazing.celebration.1</key>
+	<string>You're at full capacity today.</string>
+	<key>mood.amazing.celebration.2</key>
+	<string>Everything feels clear for a reason.</string>
+	<key>mood.amazing.celebration.3</key>
+	<string>This is your natural state — remember it.</string>
+	<key>mood.amazing.celebration.4</key>
+	<string>You didn't just show up. You arrived.</string>
+	<key>mood.amazing.identity.1</key>
+	<string>People who feel this way show up every day.</string>
+	<key>mood.amazing.identity.2</key>
+	<string>You built this version of yourself.</string>
+	<key>mood.amazing.identity.3</key>
+	<string>This is what disciplined people feel.</string>
+	<key>mood.amazing.identity.4</key>
+	<string>Future you will thank today you.</string>
+	<key>mood.amazing.time.evening.1</key>
+	<string>Rare day. Let it land.</string>
+	<key>mood.amazing.time.evening.2</key>
+	<string>Carry this forward.</string>
+	<key>mood.amazing.time.morning.1</key>
+	<string>Rare energy — use it well.</string>
+	<key>mood.amazing.time.morning.2</key>
+	<string>Carry this forward.</string>
+	<key>mood.amazing.time.neutral.1</key>
+	<string>Everything is working.</string>
+	<key>mood.amazing.time.neutral.2</key>
+	<string>Soak it in — you created this.</string>
+	<key>mood.empty.prompt</key>
+	<string>Set your feeling for the day</string>
+	<key>mood.good</key>
+	<string>Good</string>
+	<key>mood.good.1</key>
+	<string>You've found your rhythm.</string>
+	<key>mood.good.10</key>
+	<string>You built this version of yourself.</string>
+	<key>mood.good.2</key>
+	<string>Your effort is visible now.</string>
+	<key>mood.good.3</key>
+	<string>Good days don't happen by accident.</string>
+	<key>mood.good.4</key>
+	<string>You earned this.</string>
+	<key>mood.good.5</key>
+	<string>This is who you're becoming.</string>
+	<key>mood.good.6</key>
+	<string>Ride it — this is working.</string>
+	<key>mood.good.7</key>
+	<string>You're in your element.</string>
+	<key>mood.good.8</key>
+	<string>Consistent people feel like this.</string>
+	<key>mood.good.9</key>
+	<string>Keep this as your reference point.</string>
+	<key>mood.good.affirmation.1</key>
+	<string>You've found your rhythm.</string>
+	<key>mood.good.affirmation.2</key>
+	<string>This kind of day is worth holding onto.</string>
+	<key>mood.good.affirmation.3</key>
+	<string>Your effort is visible now.</string>
+	<key>mood.good.affirmation.4</key>
+	<string>You earned this.</string>
+	<key>mood.good.identity.1</key>
+	<string>Consistent people feel like this.</string>
+	<key>mood.good.identity.2</key>
+	<string>This is who you're becoming.</string>
+	<key>mood.good.identity.3</key>
+	<string>Good days don't happen by accident.</string>
+	<key>mood.good.identity.4</key>
+	<string>You built this version of yourself.</string>
+	<key>mood.good.time.evening.1</key>
+	<string>Carry this into tomorrow.</string>
+	<key>mood.good.time.evening.2</key>
+	<string>Good day. Let it close well.</string>
+	<key>mood.good.time.morning.1</key>
+	<string>Strong start — make the most of it.</string>
+	<key>mood.good.time.morning.2</key>
+	<string>Morning momentum is yours today.</string>
+	<key>mood.good.time.neutral.1</key>
+	<string>You're in your element.</string>
+	<key>mood.good.time.neutral.2</key>
+	<string>Ride it — this is working.</string>
+	<key>mood.level.high</key>
+	<string>High</string>
+	<key>mood.level.low</key>
+	<string>Low</string>
+	<key>mood.low</key>
+	<string>Low</string>
+	<key>mood.low.1</key>
+	<string>Low energy doesn't mean low value.</string>
+	<key>mood.low.10</key>
+	<string>Rest, then continue.</string>
+	<key>mood.low.2</key>
+	<string>You're allowed to be quieter today.</string>
+	<key>mood.low.3</key>
+	<string>Slow days are still days.</string>
+	<key>mood.low.4</key>
+	<string>One small thing is all it takes.</string>
+	<key>mood.low.5</key>
+	<string>Show up in whatever way you can.</string>
+	<key>mood.low.6</key>
+	<string>Check in with yourself — what do you need?</string>
+	<key>mood.low.7</key>
+	<string>Not every day needs to be full.</string>
+	<key>mood.low.8</key>
+	<string>It's a low day, not a low life.</string>
+	<key>mood.low.9</key>
+	<string>You've handled this before.</string>
+	<key>mood.low.gentle.1</key>
+	<string>One small thing is all it takes.</string>
+	<key>mood.low.gentle.2</key>
+	<string>Show up in whatever way you can.</string>
+	<key>mood.low.gentle.3</key>
+	<string>Even a little counts.</string>
+	<key>mood.low.gentle.4</key>
+	<string>Check in with yourself — what do you need?</string>
+	<key>mood.low.recovery.1</key>
+	<string>You've come back from days like this before.</string>
+	<key>mood.low.recovery.2</key>
+	<string>Low is not your direction — just your current position.</string>
+	<key>mood.low.recovery.3</key>
+	<string>It's a low day, not a low life.</string>
+	<key>mood.low.validation.1</key>
+	<string>Low energy doesn't mean low value.</string>
+	<key>mood.low.validation.2</key>
+	<string>You're allowed to be quieter today.</string>
+	<key>mood.low.validation.3</key>
+	<string>Not every day needs to be full.</string>
+	<key>mood.low.validation.4</key>
+	<string>Slow days are still days.</string>
+	<key>mood.okay</key>
+	<string>Okay</string>
+	<key>mood.okay.1</key>
+	<string>Steady is underrated.</string>
+	<key>mood.okay.10</key>
+	<string>The compound effect is working.</string>
+	<key>mood.okay.2</key>
+	<string>This is what consistency looks like.</string>
+	<key>mood.okay.3</key>
+	<string>Okay days are the foundation of everything.</string>
+	<key>mood.okay.4</key>
+	<string>Keep the rhythm going.</string>
+	<key>mood.okay.5</key>
+	<string>Consistency beats intensity every time.</string>
+	<key>mood.okay.6</key>
+	<string>You're doing the invisible work.</string>
+	<key>mood.okay.7</key>
+	<string>One more day stacks up.</string>
+	<key>mood.okay.8</key>
+	<string>You're building something.</string>
+	<key>mood.okay.9</key>
+	<string>Calm and consistent wins.</string>
+	<key>mood.okay.improving.1</key>
+	<string>You've been building toward this.</string>
+	<key>mood.okay.improving.2</key>
+	<string>Things are moving in the right direction.</string>
+	<key>mood.okay.improving.3</key>
+	<string>The trend is yours to keep.</string>
+	<key>mood.okay.momentum.1</key>
+	<string>One more day stacks up.</string>
+	<key>mood.okay.momentum.2</key>
+	<string>Keep the rhythm going.</string>
+	<key>mood.okay.momentum.3</key>
+	<string>Consistency beats intensity every time.</string>
+	<key>mood.okay.momentum.4</key>
+	<string>You're building something — it just takes time.</string>
+	<key>mood.okay.steady.1</key>
+	<string>Steady is underrated.</string>
+	<key>mood.okay.steady.2</key>
+	<string>You're doing the invisible work.</string>
+	<key>mood.okay.steady.3</key>
+	<string>This is what consistency looks like.</string>
+	<key>mood.okay.steady.4</key>
+	<string>Okay days are the foundation of everything.</string>
+	<key>mood.prompt.day</key>
+	<string>How was your day?</string>
+	<key>mood.rough</key>
+	<string>Rough</string>
+	<key>mood.rough.1</key>
+	<string>Today feels heavy. That's enough information.</string>
+	<key>mood.rough.10</key>
+	<string>This is temporary.</string>
+	<key>mood.rough.2</key>
+	<string>You don't need to fix it today.</string>
+	<key>mood.rough.3</key>
+	<string>Rest is doing something.</string>
+	<key>mood.rough.4</key>
+	<string>It's okay to just get through this one.</string>
+	<key>mood.rough.5</key>
+	<string>One task today is enough.</string>
+	<key>mood.rough.6</key>
+	<string>Take it one hour at a time.</string>
+	<key>mood.rough.7</key>
+	<string>Your feelings are valid.</string>
+	<key>mood.rough.8</key>
+	<string>Be gentle with yourself.</string>
+	<key>mood.rough.9</key>
+	<string>You've come back from days like this before.</string>
+	<key>mood.rough.grounding.1</key>
+	<string>One task today is enough.</string>
+	<key>mood.rough.grounding.2</key>
+	<string>Start wherever you can.</string>
+	<key>mood.rough.grounding.3</key>
+	<string>Take it one hour at a time.</string>
+	<key>mood.rough.grounding.4</key>
+	<string>Small and slow is still forward.</string>
+	<key>mood.rough.streak_safe.1</key>
+	<string>Your streak will still be there when you're ready.</string>
+	<key>mood.rough.streak_safe.2</key>
+	<string>Missing a day doesn't erase everything you've built.</string>
+	<key>mood.rough.streak_safe.3</key>
+	<string>One rough day doesn't define the pattern.</string>
+	<key>mood.rough.validation.1</key>
+	<string>Today feels heavy. That's enough information.</string>
+	<key>mood.rough.validation.2</key>
+	<string>You don't need to fix it today.</string>
+	<key>mood.rough.validation.3</key>
+	<string>It's okay to just get through this one.</string>
+	<key>mood.rough.validation.4</key>
+	<string>Rest is doing something.</string>
+	<key>mood.title</key>
+	<string>Mood</string>
+	<key>mood_tracker.title</key>
+	<string>Mood Tracker</string>
+	<key>morning_briefing</key>
+	<string>Morning Briefing</string>
+	<key>morning_briefing_desc</key>
+	<string>Daily plan reminder at wake time</string>
+	<key>move_event_all_days</key>
+	<string>All Days</string>
+	<key>move_event_title</key>
+	<string>Move event</string>
+	<key>move_event_today_only</key>
+	<string>Only Today</string>
+	<key>must_be_after_morning_start</key>
+	<string>Must be after Morning Start</string>
+	<key>must_be_before_night_reset</key>
+	<string>Must be before Night Reset</string>
+	<key>new_item_title</key>
+	<string>New Item</string>
+	<key>night_reset</key>
+	<string>Night Reset</string>
+	<key>notes_add_placeholder</key>
+	<string>Add notes...</string>
+	<key>notes_tap_to_add</key>
+	<string>Tap to add notes…</string>
+	<key>notes_title</key>
+	<string>Notes</string>
+	<key>notif_active_status</key>
+	<string>Reminders are active</string>
+	<key>notif_all_title</key>
+	<string>All Notifications</string>
+	<key>notif_day_start_soon</key>
+	<string>Your day starts in 5 minutes</string>
+	<key>notif_disabled_subtitle</key>
+	<string>Tap to open Settings and enable them.</string>
+	<key>notif_disabled_title</key>
+	<string>Notifications Disabled</string>
+	<key>notif_empty_subtitle</key>
+	<string>Add events and habits to manage their notifications here.</string>
+	<key>notif_empty_title</key>
+	<string>No events or habits yet</string>
+	<key>notif_evening_review</key>
+	<string>How did your day go? Review your progress.</string>
+	<key>notif_evening_title</key>
+	<string>Evening check-in 🌙</string>
+	<key>notif_event_body %@ %lld</key>
+	<string>%@ starts in %lld minutes</string>
+	<key>notif_event_section</key>
+	<string>Event Reminders</string>
+	<key>notif_event_time_label %d %@</key>
+	<string>Reminder %d min before · %@</string>
+	<key>notif_event_time_label %lld %@</key>
+	<string>Remind %lld min before at %@</string>
+	<key>notif_event_title</key>
+	<string>Upcoming Event</string>
+	<key>notif_habit_body %@</key>
+	<string>%@ — time to start!</string>
+	<key>notif_habit_section</key>
+	<string>Habit Reminders</string>
+	<key>notif_habit_time_desc</key>
+	<string>Remind exactly when the habit starts</string>
+	<key>notif_habit_time_label %@</key>
+	<string>Reminder at %@</string>
+	<key>notif_habit_time_title</key>
+	<string>Notify at habit time</string>
+	<key>notif_habit_title</key>
+	<string>Habit Reminder</string>
+	<key>notif_morning_plan</key>
+	<string>Here's your plan for today</string>
+	<key>notif_morning_title</key>
+	<string>Good morning ☀️</string>
+	<key>notif_paused_status</key>
+	<string>All reminders are paused</string>
+	<key>notif_permission_message</key>
+	<string>Notifications are currently disabled. Go to Settings → Line to enable them.</string>
+	<key>notif_permission_title</key>
+	<string>Enable Notifications</string>
+	<key>notif_remind_before</key>
+	<string>Remind me before</string>
+	<key>notif_screen_title</key>
+	<string>Notifications</string>
+	<key>notif_section_events</key>
+	<string>Events</string>
+	<key>notif_section_habits</key>
+	<string>Habits</string>
+	<key>notif_winddown_body</key>
+	<string>Time to wrap up your day</string>
+	<key>notif_winddown_title</key>
+	<string>Wind down 🌙</string>
+	<key>ok</key>
+	<string>OK</string>
+	<key>onboarding.feature.colors.subtitle</key>
+	<string>Make your timeline uniquely yours</string>
+	<key>onboarding.feature.colors.title</key>
+	<string>Custom Colors</string>
+	<key>onboarding.feature.habit.subtitle</key>
+	<string>Build consistency day by day</string>
+	<key>onboarding.feature.habit.title</key>
+	<string>Habit Tracking</string>
+	<key>onboarding.feature.icons.subtitle</key>
+	<string>Pick the perfect icon for every event</string>
+	<key>onboarding.feature.icons.title</key>
+	<string>200+ Icons</string>
+	<key>onboarding.feature.mood.subtitle</key>
+	<string>Log how you feel, every day</string>
+	<key>onboarding.feature.mood.title</key>
+	<string>Mood Journal</string>
+	<key>onboarding.feature.stats.subtitle</key>
+	<string>See how far you've come</string>
+	<key>onboarding.feature.stats.title</key>
+	<string>Progress Stats</string>
+	<key>onboarding.feature.timeline.subtitle</key>
+	<string>Drag, drop and shape your day</string>
+	<key>onboarding.feature.timeline.title</key>
+	<string>Visual Timeline</string>
+	<key>onboarding.focus.subtitle</key>
+	<string>Know exactly what you're doing right now — and how much time you have left.</string>
+	<key>onboarding.focus.title</key>
+	<string>Stay in the moment</string>
+	<key>onboarding.paywall.subtitle</key>
+	<string>Start free, upgrade anytime.</string>
+	<key>onboarding.paywall.title</key>
+	<string>One last thing</string>
+	<key>onboarding.paywall.unlock</key>
+	<string>Build the life you planned.</string>
+	<key>onboarding.sleep.subtitle</key>
+	<string>We'll end your daily timeline around this time.</string>
+	<key>onboarding.sleep.title</key>
+	<string>When do you go to sleep?</string>
+	<key>onboarding.timeline.bullet.drag</key>
+	<string>Drag events to reschedule instantly</string>
+	<key>onboarding.timeline.bullet.repeat</key>
+	<string>Recurring events built right in</string>
+	<key>onboarding.timeline.bullet.track</key>
+	<string>Tap to mark habits and tasks done</string>
+	<key>onboarding.timeline.subtitle</key>
+	<string>Every hour laid out visually. Drag to reschedule, tap to complete.</string>
+	<key>onboarding.timeline.title</key>
+	<string>See your whole day</string>
+	<key>onboarding.wakeup.subtitle</key>
+	<string>Your day will start from this time on the timeline.</string>
+	<key>onboarding.wakeup.title</key>
+	<string>When do you usually wake up?</string>
+	<key>onboarding.welcome_subtitle</key>
+	<string>Your entire day, beautifully organized.</string>
+	<key>onboarding.welcome_title</key>
+	<string>Meet Line</string>
+	<key>open_settings</key>
+	<string>Open Settings</string>
+	<key>per_tap</key>
+	<string>Per tap</string>
+	<key>pick_at_least_one_day</key>
+	<string>📅 Pick at least one day</string>
+	<key>placeholder.add_notes</key>
+	<string>Add notes...</string>
+	<key>placeholder.tap_to_add_notes</key>
+	<string>Tap to add notes…</string>
+	<key>prediction.on_track</key>
+	<string>On track for ~%d%% this month</string>
+	<key>prediction.projected</key>
+	<string>Projected ~%d%% this month</string>
+	<key>prefs_accent_color</key>
+	<string>Accent Color</string>
+	<key>prefs_morning_start</key>
+	<string>Morning Start</string>
+	<key>prefs_night_reset</key>
+	<string>Night Reset</string>
+	<key>prefs_title</key>
+	<string>Preferences</string>
+	<key>prefs_week_start</key>
+	<string>Week starts on</string>
+	<key>premium.feature.backup.subtitle</key>
+	<string>Never lose your data</string>
+	<key>premium.feature.backup.title</key>
+	<string>Backup &amp; Export</string>
+	<key>premium.feature.customization.subtitle</key>
+	<string>Colors, density, snap step</string>
+	<key>premium.feature.customization.title</key>
+	<string>Full Customization</string>
+	<key>premium.feature.events</key>
+	<string>∞ events</string>
+	<key>premium.feature.habits</key>
+	<string>∞ habits</string>
+	<key>premium.feature.icons</key>
+	<string>∞ icons</string>
+	<key>premium.feature.notifications.subtitle</key>
+	<string>Briefing, review &amp; more</string>
+	<key>premium.feature.notifications.title</key>
+	<string>Smart Notifications</string>
+	<key>premium.feature.stats</key>
+	<string>90d stats</string>
+	<key>premium.feature.unlimited.subtitle</key>
+	<string>No caps on what you plan</string>
+	<key>premium.feature.unlimited.title</key>
+	<string>Unlimited Events &amp; Habits</string>
+	<key>premium.free.limit.events</key>
+	<string>50 events</string>
+	<key>premium.free.limit.habits</key>
+	<string>50 habits</string>
+	<key>premium.free.limit.icons</key>
+	<string>5 each category</string>
+	<key>premium.free.limit.stats</key>
+	<string>7d stats</string>
+	<key>premium.free.title</key>
+	<string>Free</string>
+	<key>premium.later</key>
+	<string>Maybe later</string>
+	<key>premium.purchase_description</key>
+	<string>Line Premium is a one-time purchase of $4.99 USD.</string>
+	<key>premium.purchase_details</key>
+	<string>Payment charged to your Apple ID. No subscription, no recurring charges. Restore on any device with the same Apple ID.</string>
+	<key>premium.restore</key>
+	<string>Restore Purchase</string>
+	<key>premium.restoring</key>
+	<string>Restoring...</string>
+	<key>premium.title</key>
+	<string>Premium</string>
+	<key>premium.unlock_price</key>
+	<string>Get Premium — $4.99</string>
+	<key>premium.unlocked</key>
+	<string>Premium unlocked!</string>
+	<key>premium_feature</key>
+	<string>Premium feature</string>
+	<key>premium_limit_cta</key>
+	<string>Upgrade for unlimited</string>
+	<key>premium_limit_events %lld</key>
+	<string>Free plan limited to %lld events</string>
+	<key>premium_limit_habits %lld</key>
+	<string>Free plan limited to %lld habits</string>
+	<key>premium_owned_message</key>
+	<string>You already have Premium — enjoy all features!</string>
+	<key>premium_payment_note</key>
+	<string>Payment will be charged to your Apple ID. No subscription or recurring charges. You can restore your purchase on any device signed in with the same Apple ID.</string>
+	<key>premium_price</key>
+	<string>One-time purchase · $4.99</string>
+	<key>premium_price_note</key>
+	<string>Line Premium is a one-time purchase of $4.99 USD.</string>
+	<key>premium_restore_button</key>
+	<string>Restore Purchase</string>
+	<key>premium_restoring</key>
+	<string>Restoring…</string>
+	<key>premium_subtitle</key>
+	<string>Unlock your full potential. No limits. No compromises.</string>
+	<key>premium_title</key>
+	<string>Line Premium</string>
+	<key>premium_unlock_button</key>
+	<string>Get Premium — $4.99</string>
+	<key>presets</key>
+	<string>Presets</string>
+	<key>privacy_policy</key>
+	<string>Privacy Policy</string>
+	<key>purchase.error.ineligible</key>
+	<string>You're not eligible for this offer.</string>
+	<key>purchase.error.network</key>
+	<string>Network error. Please check your connection and try again.</string>
+	<key>purchase.error.not_available</key>
+	<string>This product isn't available in your region.</string>
+	<key>purchase.error.pending</key>
+	<string>Purchase is pending approval.</string>
+	<key>purchase.error.product_not_found</key>
+	<string>Product not found.</string>
+	<key>purchase.error.verification_failed</key>
+	<string>Purchase could not be verified.</string>
+	<key>range.month</key>
+	<string>This month</string>
+	<key>range.today</key>
+	<string>Today</string>
+	<key>range.week</key>
+	<string>This week</string>
+	<key>recent_section</key>
+	<string>Recent</string>
+	<key>recurrence_daily</key>
+	<string>Daily</string>
+	<key>recurrence_habit</key>
+	<string>Habit</string>
+	<key>recurrence_month</key>
+	<string>1 month</string>
+	<key>recurrence_once</key>
+	<string>1 day</string>
+	<key>recurrence_range %@–%@</key>
+	<string>Recurrence range %1$@–%2$@</string>
+	<key>recurrence_scope_daily</key>
+	<string>This event repeats every day.</string>
+	<key>recurrence_scope_range %@ %@</key>
+	<string>This repeats from %@ to %@.</string>
+	<key>recurrence_scope_specific %@</key>
+	<string>This event repeats on %@.</string>
+	<key>recurrence_scope_weekdays</key>
+	<string>This event repeats Mon–Fri.</string>
+	<key>recurrence_short_once</key>
+	<string>Once</string>
+	<key>recurrence_short_range</key>
+	<string>Range</string>
+	<key>recurrence_text_daily</key>
+	<string>Every day</string>
+	<key>recurrence_text_range %@ %@</key>
+	<string>%@ – %@</string>
+	<key>recurrence_text_weekdays</key>
+	<string>Mon – Fri</string>
+	<key>recurrence_week</key>
+	<string>1 week</string>
+	<key>recurrence_weekdays</key>
+	<string>Weekdays</string>
+	<key>recurring_change_scope_message</key>
+	<string>Apply this change to all days or only today?</string>
+	<key>repeat.every</key>
+	<string>Every %@</string>
+	<key>repeat.none</key>
+	<string>Does not repeat</string>
+	<key>repeat.specific_week</key>
+	<string>Specific Week</string>
+	<key>repeat.title</key>
+	<string>Repeat</string>
+	<key>repeat.weekly</key>
+	<string>Weekly</string>
+	<key>reset_all_data</key>
+	<string>Reset All Data</string>
+	<key>reset_data_message</key>
+	<string>This will permanently delete all events, habits, and completion history. This action cannot be undone.</string>
+	<key>reset_data_title</key>
+	<string>Reset All Data</string>
+	<key>reset_everything</key>
+	<string>Reset Everything</string>
+	<key>restore_backup</key>
+	<string>Restore Backup</string>
+	<key>restore_backup_desc</key>
+	<string>Import from a .json backup file</string>
+	<key>restore_failed_message</key>
+	<string>Could not read the backup file. Make sure it's a valid Line backup.</string>
+	<key>restore_failed_title</key>
+	<string>Restore Failed</string>
+	<key>restore_success_message</key>
+	<string>Your data has been restored. The app will refresh automatically.</string>
+	<key>restore_success_title</key>
+	<string>Restore Successful</string>
+	<key>row_backup</key>
+	<string>Backup &amp; Export</string>
+	<key>row_backup_free</key>
+	<string>No</string>
+	<key>row_backup_premium</key>
+	<string>Yes</string>
+	<key>row_colors</key>
+	<string>Accent colors</string>
+	<key>row_colors_free</key>
+	<string>3</string>
+	<key>row_colors_premium</key>
+	<string>Unlimited</string>
+	<key>row_events</key>
+	<string>Events</string>
+	<key>row_events_free</key>
+	<string>50</string>
+	<key>row_events_premium</key>
+	<string>∞</string>
+	<key>row_habits</key>
+	<string>Habits</string>
+	<key>row_habits_free</key>
+	<string>50</string>
+	<key>row_habits_premium</key>
+	<string>∞</string>
+	<key>row_icons</key>
+	<string>Icons per category</string>
+	<key>row_icons_free</key>
+	<string>5</string>
+	<key>row_icons_premium</key>
+	<string>∞</string>
+	<key>row_notifications</key>
+	<string>Notifications</string>
+	<key>row_notifications_free</key>
+	<string>Basic</string>
+	<key>row_notifications_premium</key>
+	<string>Full</string>
+	<key>row_stats</key>
+	<string>Stats history</string>
+	<key>row_stats_free</key>
+	<string>7 days</string>
+	<key>row_stats_premium</key>
+	<string>90 days</string>
+	<key>save</key>
+	<string>Lưu</string>
+	<key>section.details</key>
+	<string>Details</string>
+	<key>section.last_7_days</key>
+	<string>Last 7 days</string>
+	<key>section.notes</key>
+	<string>Notes</string>
+	<key>select_month_title</key>
+	<string>Select Month</string>
+	<key>settings_account_title</key>
+	<string>Account</string>
+	<key>settings_active</key>
+	<string>ACTIVE</string>
+	<key>settings_appearance</key>
+	<string>Appearance</string>
+	<key>settings_contact_us</key>
+	<string>Contact Us</string>
+	<key>settings_disclaimer</key>
+	<string>Line provides general wellness and productivity information for personal planning purposes. It is not intended as medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional for medical concerns.</string>
+	<key>settings_faq</key>
+	<string>FAQ</string>
+	<key>settings_legal_title</key>
+	<string>Legal</string>
+	<key>settings_manage_title</key>
+	<string>Manage</string>
+	<key>settings_notifications</key>
+	<string>Notifications</string>
+	<key>settings_preferences</key>
+	<string>Preferences</string>
+	<key>settings_premium_cta</key>
+	<string>Unlock all features, no subscription</string>
+	<key>settings_premium_thanks</key>
+	<string>Thank you for your support ♥</string>
+	<key>settings_premium_title</key>
+	<string>Line Premium</string>
+	<key>settings_privacy_policy</key>
+	<string>Privacy Policy</string>
+	<key>settings_productivity</key>
+	<string>Productivity</string>
+	<key>settings_rate_app</key>
+	<string>Rate app</string>
+	<key>settings_restore_purchase</key>
+	<string>Restore Purchase</string>
+	<key>settings_schedule</key>
+	<string>Schedule</string>
+	<key>settings_share_app</key>
+	<string>Share app</string>
+	<key>settings_source_who</key>
+	<string>Source: World Health Organization</string>
+	<key>settings_stats_data</key>
+	<string>Stats &amp; Data</string>
+	<key>settings_subscription</key>
+	<string>Subscription</string>
+	<key>settings_support_title</key>
+	<string>Support</string>
+	<key>settings_terms</key>
+	<string>Terms of Use</string>
+	<key>settings_title</key>
+	<string>Settings</string>
+	<key>settings_upgrade_title</key>
+	<string>Upgrade to Premium</string>
+	<key>soon</key>
+	<string>Soon</string>
+	<key>start_timer_button</key>
+	<string>Start Timer</string>
+	<key>start_timer_intent_title</key>
+	<string>Start a timer</string>
+	<key>stat.best_streak</key>
+	<string>Best</string>
+	<key>stat.completion_30d</key>
+	<string>30-day</string>
+	<key>stat.days_short</key>
+	<string>days</string>
+	<key>stat.last_30_days_format %lld</key>
+	<string>%lld of last 30 days</string>
+	<key>stat_duration</key>
+	<string>Duration</string>
+	<key>stat_start</key>
+	<string>Start</string>
+	<key>stat_type</key>
+	<string>Type</string>
+	<key>stats.at_risk</key>
+	<string>at risk</string>
+	<key>stats.best_streak</key>
+	<string>· best %d</string>
+	<key>stats.lifetime</key>
+	<string>View Lifetime Stats</string>
+	<key>stats.progress</key>
+	<string>Your Progress</string>
+	<key>stats.streak</key>
+	<string>Streak</string>
+	<key>stats_accumulated</key>
+	<string>Accumulated</string>
+	<key>stats_empty_subtitle</key>
+	<string>Start completing events and habits to see your lifetime stats here.</string>
+	<key>stats_empty_title</key>
+	<string>No completed activities yet</string>
+	<key>stats_event_history</key>
+	<string>Event History</string>
+	<key>stats_events_done</key>
+	<string>Events done</string>
+	<key>stats_habit_history</key>
+	<string>Habit History</string>
+	<key>stats_habits_done</key>
+	<string>Habits done</string>
+	<key>stats_lifetime_title</key>
+	<string>Lifetime Stats</string>
+	<key>status_completed</key>
+	<string>Completed</string>
+	<key>status_not_completed</key>
+	<string>Not yet completed</string>
+	<key>streak.day_count</key>
+	<string>%d days</string>
+	<key>streak_threshold</key>
+	<string>Streak Threshold</string>
+	<key>system_event_change_title</key>
+	<string>Change System Event</string>
+	<key>tap_to_complete_format</key>
+	<string>%d tap(s) to complete</string>
+	<key>target</key>
+	<string>Target</string>
+	<key>target_error_invalid</key>
+	<string>Target must be greater than 0</string>
+	<key>terms_of_use</key>
+	<string>Terms of Use</string>
+	<key>time.active_window</key>
+	<string>active window</string>
+	<key>time.afternoon</key>
+	<string>Afternoon</string>
+	<key>time.all_day</key>
+	<string>All Day</string>
+	<key>time.date</key>
+	<string>Date</string>
+	<key>time.evening</key>
+	<string>Evening</string>
+	<key>time.midnight</key>
+	<string>12 AM</string>
+	<key>time.morning</key>
+	<string>Morning</string>
+	<key>time.nine_pm</key>
+	<string>9 PM</string>
+	<key>time.no_time_left</key>
+	<string>No time left</string>
+	<key>time.noon</key>
+	<string>12 PM</string>
+	<key>time.remaining.full</key>
+	<string>%dh %dm left</string>
+	<key>time.remaining.hours</key>
+	<string>%dh left</string>
+	<key>time.remaining.minutes</key>
+	<string>%dm left</string>
+	<key>time.six_am</key>
+	<string>6 AM</string>
+	<key>time.six_pm</key>
+	<string>6 PM</string>
+	<key>time.start</key>
+	<string>Start time</string>
+	<key>time.today</key>
+	<string>Today</string>
+	<key>time.wake_sleep</key>
+	<string>Wake → Sleep</string>
+	<key>time_error_after_sleep</key>
+	<string>🌙 After Night Reset</string>
+	<key>time_error_before_wake</key>
+	<string>🌅 Before Morning Start</string>
+	<key>time_error_overlap</key>
+	<string>⚡ Overlaps with an existing event</string>
+	<key>time_error_passed</key>
+	<string>⏰ This time has already passed</string>
+	<key>time_of_day</key>
+	<string>Time of day</string>
+	<key>time_range %@ %@</key>
+	<string>%@ – %@</string>
+	<key>timeline.live</key>
+	<string>Live</string>
+	<key>timeline.now_running</key>
+	<string>NOW RUNNING</string>
+	<key>timeline.time_left_example</key>
+	<string>38 min left</string>
+	<key>timeline.up_next</key>
+	<string>UP NEXT</string>
+	<key>timeline_density</key>
+	<string>Timeline Density</string>
+	<key>timeline_density_comfortable</key>
+	<string>Comfortable</string>
+	<key>timeline_density_compact</key>
+	<string>Compact</string>
+	<key>timeline_density_normal</key>
+	<string>Normal</string>
+	<key>timer_config_title</key>
+	<string>Timer Configuration</string>
+	<key>timer_name_param</key>
+	<string>Timer Name</string>
+	<key>timer_off</key>
+	<string>Off</string>
+	<key>timer_on</key>
+	<string>On</string>
+	<key>timer_running_param</key>
+	<string>Timer is running</string>
+	<key>times</key>
+	<string>times</string>
+	<key>today</key>
+	<string>Today</string>
+	<key>type.event</key>
+	<string>Event</string>
+	<key>type.habit</key>
+	<string>Habit</string>
+	<key>undo_action</key>
+	<string>Undo</string>
+	<key>undo_dismiss_a11y</key>
+	<string>Dismiss</string>
+	<key>undo_toast_deleted %@</key>
+	<string>Deleted “%@”</string>
+	<key>undo_toast_generic</key>
+	<string>Item deleted</string>
+	<key>unit_%@</key>
+	<string>Goal %@</string>
+	<key>unit_custom</key>
+	<string>Custom</string>
+	<key>unit_custom_placeholder</key>
+	<string>Your own unit (e.g. cups, reps, hours)</string>
+	<key>unit_error_empty</key>
+	<string>Please enter a unit</string>
+	<key>unit_km</key>
+	<string>km</string>
+	<key>unit_l</key>
+	<string>L</string>
+	<key>unit_min</key>
+	<string>min</string>
+	<key>unit_ml</key>
+	<string>ml</string>
+	<key>unit_pages</key>
+	<string>pages</string>
+	<key>unit_steps</key>
+	<string>steps</string>
+	<key>unit_times</key>
+	<string>times</string>
+	<key>warning.duration.exceeds_sleep</key>
+	<string>🌙 Duration runs past Night Reset — will be trimmed</string>
+	<key>warning.duration.no_time_left</key>
+	<string>🚫 No time left before Night Reset</string>
+	<key>warning.duration.too_short</key>
+	<string>⚡ Minimum duration is 5 minutes</string>
+	<key>warning.time.before_wake</key>
+	<string>🌅 Start time is before Morning Start</string>
+	<key>warning.time.overlap</key>
+	<string>⚡ Another event is already scheduled here</string>
+	<key>warning.time.past</key>
+	<string>⏰ This time has already passed</string>
+	<key>warning.time.past_sleep</key>
+	<string>🌙 Start time is past Night Reset</string>
+	<key>warning_enter_title</key>
+	<string>✏️ Please enter a title</string>
+	<key>week_in_format %lld</key>
+	<string>In %d weeks</string>
+	<key>week_next</key>
+	<string>Next week</string>
+	<key>week_this</key>
+	<string>This week</string>
+	<key>weekday_fri</key>
+	<string>FRI</string>
+	<key>weekday_mon</key>
+	<string>Mon</string>
+	<key>weekday_sat</key>
+	<string>Sat</string>
+	<key>weekday_sun</key>
+	<string>Sun</string>
+	<key>weekday_thu</key>
+	<string>THU</string>
+	<key>weekday_tue</key>
+	<string>Tue</string>
+	<key>weekday_wed</key>
+	<string>Wed</string>
+	<key>widget_all_clear</key>
+	<string>All clear</string>
+	<key>widget_event_icon_desc</key>
+	<string>Current or next event icon with progress.</string>
+	<key>widget_event_icon_title</key>
+	<string>Event Icon</string>
+	<key>widget_event_remaining</key>
+	<string>%@ · %dm left</string>
+	<key>widget_free_day</key>
+	<string>Free day</string>
+	<key>widget_full_day_desc</key>
+	<string>All your events and habits for today.</string>
+	<key>widget_full_day_title</key>
+	<string>Full Day</string>
+	<key>widget_minutes_left</key>
+	<string>%dm left</string>
+	<key>widget_more_count</key>
+	<string>+%d more</string>
+	<key>widget_more_events_count</key>
+	<string>+%d more events</string>
+	<key>widget_next</key>
+	<string>Next</string>
+	<key>widget_next_event_desc</key>
+	<string>See your next upcoming event.</string>
+	<key>widget_next_event_desc_short</key>
+	<string>Quick glance at your next event.</string>
+	<key>widget_next_event_title</key>
+	<string>Next Event</string>
+	<key>widget_no_events</key>
+	<string>No events</string>
+	<key>widget_no_more_events_today</key>
+	<string>No more events today</string>
+	<key>widget_now</key>
+	<string>NOW</string>
+	<key>widget_timer_description</key>
+	<string>An example control that runs a timer.</string>
+	<key>widget_timer_title</key>
+	<string>Timer</string>
+	<key>widget_today</key>
+	<string>TODAY</string>
+	<key>widget_today_schedule_desc</key>
+	<string>Upcoming events with habit tracking.</string>
+	<key>widget_today_schedule_title</key>
+	<string>Today's Schedule</string>
+	<key>widget_today_timeline_desc</key>
+	<string>A visual overview of your day.</string>
+	<key>widget_today_timeline_title</key>
+	<string>Today's Timeline</string>
+	<key>© 2026 All rights reserved</key>
+	<string>© 2026 All rights reserved</string>
+	<key>·</key>
+	<string>·</string>
+	<key>· %@</key>
+	<string>· %@</string>
+	<key>• %@</key>
+	<string>• %@</string>
+</dict>
+</plist>

@@ -1,0 +1,344 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Onboarding/OnboardingPremiumPage.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "a11y_label_skip_onboarding",
+        "location": {
+          "startingColumn": 64,
+          "startingLine": 59
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.paywall.title",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 123
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.paywall.unlock",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 128
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.paywall.subtitle",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 132
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.unlimited.title",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 146
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.unlimited.subtitle",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 147
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.customization.title",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 152
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.customization.subtitle",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 153
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.notifications.title",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 158
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.notifications.subtitle",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 159
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.backup.title",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 164
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.backup.subtitle",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 165
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.free.title",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 213
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.free.limit.events",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 221
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.free.limit.habits",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 222
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.free.limit.icons",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 223
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.free.limit.stats",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 224
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.title",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 242
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.events",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 250
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.habits",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 251
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.icons",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 252
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.stats",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 253
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.unlock_price",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 300
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.later",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 325
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.unlocked",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 336
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.restoring",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 358
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.restore",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 359
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.purchase_description",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 372
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.purchase_details",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 377
+        }
+      },
+      {
+        "comment": "",
+        "key": "  ·  ",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 398
+        }
+      },
+      {
+        "comment": "",
+        "key": "  ·  ",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 413
+        }
+      },
+      {
+        "comment": "",
+        "key": "legal.privacy_policy",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 392
+        }
+      },
+      {
+        "comment": "",
+        "key": "legal.terms_of_use",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 407
+        }
+      },
+      {
+        "comment": "",
+        "key": "EULA",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 422
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.unlimited.title",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 146
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.unlimited.subtitle",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 147
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.customization.title",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 152
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.customization.subtitle",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 153
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.notifications.title",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 158
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.notifications.subtitle",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 159
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.backup.title",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 164
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium.feature.backup.subtitle",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 165
+        }
+      }
+    ]
+  },
+  "version": 1
+}

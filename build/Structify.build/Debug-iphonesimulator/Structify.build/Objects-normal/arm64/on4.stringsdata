@@ -1,0 +1,56 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Onboarding/on4.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "onboarding.wakeup.title",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 49
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.wakeup.subtitle",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 53
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.wakeup.title",
+        "location": {
+          "startingColumn": 60,
+          "startingLine": 212
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.midnight",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 226
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.six_am",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 229
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.noon",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 233
+        }
+      }
+    ]
+  },
+  "version": 1
+}

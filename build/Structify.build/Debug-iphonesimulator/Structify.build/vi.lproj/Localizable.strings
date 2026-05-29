@@ -1,0 +1,1914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>  ·  </key>
+	<string>  ·  </string>
+	<key>#</key>
+	<string>#</string>
+	<key>%@ %@</key>
+	<string>%1$@ %2$@</string>
+	<key>%lld</key>
+	<string>%lld</string>
+	<key>%lld min</key>
+	<string>%lld min</string>
+	<key>%lld%%</key>
+	<string>%lld%%</string>
+	<key>%lldh</key>
+	<string>%lldh</string>
+	<key>%lldh%@</key>
+	<string>%1$lldg%2$@</string>
+	<key>%lldm</key>
+	<string>%lldp</string>
+	<key>%lldp</key>
+	<string>%lldp</string>
+	<key>+%lld</key>
+	<string>+%lld</string>
+	<key>+%lld %@</key>
+	<string>+%1$lld %2$@</string>
+	<key>08:00</key>
+	<string>08:00</string>
+	<key>09:30</key>
+	<string>09:30</string>
+	<key>62%</key>
+	<string>62%</string>
+	<key>:</key>
+	<string>:</string>
+	<key>EULA</key>
+	<string>EULA</string>
+	<key>FAQ</key>
+	<string>FAQ</string>
+	<key>Made with ♥ by Structify</key>
+	<string>Made with ♥ by Line</string>
+	<key>Manhcuong531@gmail.com</key>
+	<string>Manhcuong531@gmail.com</string>
+	<key>Plan your day with intention</key>
+	<string>Plan your day with intention</string>
+	<key>Structify</key>
+	<string>Line</string>
+	<key>Structify • v1.0</key>
+	<string>Line • v1.0</string>
+	<key>a11y_hint_add_item</key>
+	<string>Mở bảng để thêm sự kiện hoặc thói quen mới.</string>
+	<key>a11y_hint_collapse_answer</key>
+	<string>Thu gọn câu trả lời.</string>
+	<key>a11y_hint_expand_answer</key>
+	<string>Mở rộng câu trả lời.</string>
+	<key>a11y_hint_open_email</key>
+	<string>Mở ứng dụng email để liên hệ hỗ trợ.</string>
+	<key>a11y_hint_open_lifetime_stats</key>
+	<string>Mở thống kê toàn thời gian.</string>
+	<key>a11y_hint_open_month_picker</key>
+	<string>Mở bộ chọn tháng và năm.</string>
+	<key>a11y_hint_open_notification_settings</key>
+	<string>Mở cài đặt thông báo của iOS.</string>
+	<key>a11y_hint_open_paywall</key>
+	<string>Mở các tùy chọn nâng cấp Premium.</string>
+	<key>a11y_hint_open_premium_status</key>
+	<string>Mở chi tiết gói Premium của bạn.</string>
+	<key>a11y_hint_select_day</key>
+	<string>Chọn ngày này.</string>
+	<key>a11y_hint_select_today</key>
+	<string>Hôm nay. Chọn ngày này.</string>
+	<key>a11y_hint_toggle_habit</key>
+	<string>Đánh dấu hoàn thành thói quen cho hôm nay.</string>
+	<key>a11y_label_add_item</key>
+	<string>Thêm mục</string>
+	<key>a11y_label_clear_search</key>
+	<string>Xóa tìm kiếm</string>
+	<key>a11y_label_close</key>
+	<string>Đóng</string>
+	<key>a11y_label_color_swatch</key>
+	<string>Màu sắc</string>
+	<key>a11y_label_skip_onboarding</key>
+	<string>Bỏ qua hướng dẫn</string>
+	<key>a11y_label_toggle_sky_theme</key>
+	<string>Bật/tắt giao diện bầu trời</string>
+	<key>a11y_value_completed</key>
+	<string>Đã hoàn thành</string>
+	<key>a11y_value_not_completed</key>
+	<string>Chưa hoàn thành</string>
+	<key>a11y_value_off</key>
+	<string>Tắt</string>
+	<key>a11y_value_on</key>
+	<string>Bật</string>
+	<key>action.delete_item_format</key>
+	<string>Xoá </string>
+	<key>action.done</key>
+	<string>Xong</string>
+	<key>action_add_event</key>
+	<string>Thêm sự kiện</string>
+	<key>action_add_habit</key>
+	<string>Thêm thói quen</string>
+	<key>add</key>
+	<string>Thêm</string>
+	<key>add_event</key>
+	<string>Thêm sự kiện</string>
+	<key>all_day</key>
+	<string>Tất cả các ngày</string>
+	<key>anytime</key>
+	<string>Bất kỳ lúc nào</string>
+	<key>apply_all_days</key>
+	<string>Tất cả các ngày</string>
+	<key>apply_changes_title</key>
+	<string>Áp dụng thay đổi cho</string>
+	<key>apply_only_today</key>
+	<string>Chỉ hôm nay</string>
+	<key>auto_suggest_slot</key>
+	<string>Gợi ý khoảng trống</string>
+	<key>auto_suggest_slot_desc</key>
+	<string>Tìm khoảng trống tốt nhất khi tạo sự kiện</string>
+	<key>backup_data</key>
+	<string>Sao lưu dữ liệu</string>
+	<key>backup_data_desc</key>
+	<string>Xuất bản sao lưu đầy đủ sang Files hoặc AirDrop</string>
+	<key>badge.accumulative</key>
+	<string>Tích luỹ</string>
+	<key>badge.event</key>
+	<string>Sự kiện</string>
+	<key>badge.habit</key>
+	<string>Thói quen</string>
+	<key>cancel</key>
+	<string>Huỷ</string>
+	<key>change_duration_title</key>
+	<string>Change duration</string>
+	<key>choose_color</key>
+	<string>Chọn màu</string>
+	<key>choose_icon_title</key>
+	<string>Chọn biểu tượng</string>
+	<key>common.continue</key>
+	<string>Tiếp tục</string>
+	<key>common.done</key>
+	<string>Xong</string>
+	<key>common.duration_example</key>
+	<string>1g 30p</string>
+	<key>common.recent</key>
+	<string>Gần đây</string>
+	<key>common.submit</key>
+	<string>Gửi</string>
+	<key>common_cancel</key>
+	<string>Huỷ</string>
+	<key>common_dash</key>
+	<string>–</string>
+	<key>common_done</key>
+	<string>Xong</string>
+	<key>compare_feature</key>
+	<string>Nhưng gì bạn nhận được</string>
+	<key>compare_free</key>
+	<string>Miễn phí</string>
+	<key>compare_premium</key>
+	<string>Premium</string>
+	<key>completed_events_fade</key>
+	<string>Sự kiện hoàn thành sẽ mờ trên timeline</string>
+	<key>continue</key>
+	<string>Tiếp tục</string>
+	<key>create_event</key>
+	<string>Tạo sự kiện</string>
+	<key>create_habit</key>
+	<string>Tạo thói quen</string>
+	<key>danger_zone</key>
+	<string>Vùng nguy hiểm</string>
+	<key>dash_placeholder</key>
+	<string>–</string>
+	<key>date_and_repeat</key>
+	<string>Ngày và lặp lại</string>
+	<key>date_error_create_past</key>
+	<string>📅 Không thể tạo thói quen trong quá khứ</string>
+	<key>date_error_past_habit</key>
+	<string>📅 Không thể tạo thói quen trong quá khứ</string>
+	<key>date_every_day</key>
+	<string>Mỗi ngày</string>
+	<key>date_today</key>
+	<string>Hôm nay</string>
+	<key>date_weekdays</key>
+	<string>Thứ 2–6</string>
+	<key>default_duration</key>
+	<string>Thời lượng mặc định</string>
+	<key>delete</key>
+	<string>Xoá</string>
+	<key>delete_all_scheduled</key>
+	<string>Xoá tất cả các ngày</string>
+	<key>delete_event_confirm</key>
+	<string>Xóa</string>
+	<key>delete_event_message</key>
+	<string>Hành động này không thể hoàn tác.</string>
+	<key>delete_event_title</key>
+	<string>Xóa sự kiện</string>
+	<key>delete_message %@</key>
+	<string>“%@” sẽ bị xoá khỏi lịch của bạn.</string>
+	<key>delete_only_today</key>
+	<string>Chỉ hôm nay</string>
+	<key>delete_scope_message %@</key>
+	<string>%@ Bạn muốn xoá hôm nay hay tất cả các ngày đã lên lịch?</string>
+	<key>delete_title_event</key>
+	<string>Xóa sự kiện</string>
+	<key>delete_title_habit</key>
+	<string>Xóa thói quen</string>
+	<key>demo.event.coffee_break</key>
+	<string>Nghỉ cà phê</string>
+	<key>demo.event.coffee_break_next</key>
+	<string>Nghỉ cà phê · 09:30</string>
+	<key>demo.event.deep_work</key>
+	<string>Làm việc tập trung</string>
+	<key>demo.event.lunch</key>
+	<string>Ăn trưa</string>
+	<key>demo.event.morning_start</key>
+	<string>Bắt đầu buổi sáng</string>
+	<key>demo.event.wind_down</key>
+	<string>Thư giãn buổi tối</string>
+	<key>demo.event.workout</key>
+	<string>Tập luyện</string>
+	<key>done</key>
+	<string>Xong</string>
+	<key>drag_snap</key>
+	<string>Bước kéo</string>
+	<key>duration</key>
+	<string>Thời lượng</string>
+	<key>duration_h %lld</key>
+	<string>%d giờ</string>
+	<key>duration_h_m %lld %lld</key>
+	<string>%d giờ %d phút</string>
+	<key>duration_m %lld</key>
+	<string>%d phút</string>
+	<key>edit</key>
+	<string>Chỉnh sửa</string>
+	<key>empty_add_event</key>
+	<string>Thêm sự kiện</string>
+	<key>empty_add_habit</key>
+	<string>Thêm thói quen</string>
+	<key>empty_timeline_subtitle</key>
+	<string>Thêm sự kiện hoặc thói quen để bắt đầu lên kế hoạch cho ngày của bạn.</string>
+	<key>empty_timeline_title</key>
+	<string>Ngày của bạn còn rộng mở</string>
+	<key>enter_title_to_continue</key>
+	<string>✏️ Nhập tiêu đề để tiếp tục</string>
+	<key>error_enter_title</key>
+	<string>Vui lòng nhập tên</string>
+	<key>evening_review</key>
+	<string>Tổng kết buổi tối</string>
+	<key>evening_review_desc</key>
+	<string>Nhắc kiểm tra hoàn thành trong ngày</string>
+	<key>event.add</key>
+	<string>Start time</string>
+	<key>event.create</key>
+	<string>Tạo sự kiện</string>
+	<key>event.name.placeholder</key>
+	<string>Tên sự kiện</string>
+	<key>event_category_all</key>
+	<string>Tất cả</string>
+	<key>event_category_health</key>
+	<string>Sức khoẻ</string>
+	<key>event_category_learning</key>
+	<string>Học tập</string>
+	<key>event_category_lifestyle</key>
+	<string>Đời sống</string>
+	<key>event_category_personal</key>
+	<string>Cá nhân</string>
+	<key>event_category_work</key>
+	<string>Công việc</string>
+	<key>event_morning_start</key>
+	<string>Bắt đầu buổi sáng</string>
+	<key>event_name_placeholder</key>
+	<string>Tên sự kiện</string>
+	<key>event_night_reset</key>
+	<string>Kết thúc ngày</string>
+	<key>event_repeat_daily</key>
+	<string>Sự kiện này lặp lại mỗi ngày.</string>
+	<key>event_repeat_range %@ %@</key>
+	<string>Lặp lại %1$@ %2$@</string>
+	<key>event_repeat_specific %@</key>
+	<string>Lặp vào %@.</string>
+	<key>event_repeat_weekdays</key>
+	<string>Sự kiện này lặp lại từ Thứ 2 đến Thứ 6.</string>
+	<key>event_tpl_appointment</key>
+	<string>Lịch hẹn</string>
+	<key>event_tpl_break</key>
+	<string>Nghỉ ngơi</string>
+	<key>event_tpl_call</key>
+	<string>Gọi</string>
+	<key>event_tpl_class</key>
+	<string>Lớp học</string>
+	<key>event_tpl_coffee</key>
+	<string>Cà phê</string>
+	<key>event_tpl_commute</key>
+	<string>Đi làm</string>
+	<key>event_tpl_course</key>
+	<string>Khoá học</string>
+	<key>event_tpl_date</key>
+	<string>Hẹn hò</string>
+	<key>event_tpl_dinner</key>
+	<string>Ăn tối</string>
+	<key>event_tpl_doctor</key>
+	<string>Khám bác sĩ</string>
+	<key>event_tpl_errands</key>
+	<string>Việc vặt</string>
+	<key>event_tpl_family</key>
+	<string>Thời gian với gia đình</string>
+	<key>event_tpl_focus_block</key>
+	<string>Tập trung sâu</string>
+	<key>event_tpl_gym</key>
+	<string>Tập gym</string>
+	<key>event_tpl_interview</key>
+	<string>Phỏng vấn</string>
+	<key>event_tpl_lunch</key>
+	<string>Ăn trưa</string>
+	<key>event_tpl_meeting</key>
+	<string>Họp</string>
+	<key>event_tpl_presentation</key>
+	<string>Thuyết trình</string>
+	<key>event_tpl_reading</key>
+	<string>Đọc sách</string>
+	<key>event_tpl_review</key>
+	<string>Đánh giá</string>
+	<key>event_tpl_shopping</key>
+	<string>Mua sắm</string>
+	<key>event_tpl_sleep</key>
+	<string>Ngủ</string>
+	<key>event_tpl_standup</key>
+	<string>Standup</string>
+	<key>event_tpl_study</key>
+	<string>Học bài</string>
+	<key>event_tpl_therapy</key>
+	<string>Trị liệu</string>
+	<key>event_tpl_travel</key>
+	<string>Đi xa</string>
+	<key>event_tpl_workout</key>
+	<string>Tập luyện</string>
+	<key>event_tpl_yoga</key>
+	<string>Yoga</string>
+	<key>event_type_event</key>
+	<string>Sự kiện</string>
+	<key>event_type_habit</key>
+	<string>Thói quen</string>
+	<key>every_minutes %lld</key>
+	<string>Mỗi %lld phút</string>
+	<key>export_data_csv</key>
+	<string>Xuất dữ liệu (CSV)</string>
+	<key>faq_backup_how_answer</key>
+	<string>Vào Cài đặt → Tùy chọn → Thống kê &amp; Dữ liệu → Xuất bản sao lưu. Thao tác này tạo file JSON mà bạn có thể lưu vào Tệp, iCloud Drive hoặc chia sẻ. Để khôi phục, chọn Khôi phục bản sao lưu và chọn file của bạn.</string>
+	<key>faq_backup_how_question</key>
+	<string>Làm sao để sao lưu dữ liệu?</string>
+	<key>faq_contact_support</key>
+	<string>Liên hệ hỗ trợ</string>
+	<key>faq_create_event_answer</key>
+	<string>Nhấn nút + ở góc dưới bên phải màn hình chính. Bạn có thể tạo Event có thời gian (giờ bắt đầu và thời lượng) hoặc Habit (thói quen lặp lại hằng ngày). Nhập tiêu đề, chọn icon và màu, sau đó nhấn Create.</string>
+	<key>faq_create_event_question</key>
+	<string>Làm thế nào để tạo sự kiện đầu tiên?</string>
+	<key>faq_customization_accent_color_a</key>
+	<string>Vào Settings → Preferences → Appearance → Accent Color. Bạn có thể chọn từ bảng màu có sẵn hoặc dùng color picker để đặt màu tùy chỉnh. Màu accent sẽ áp dụng cho đường timeline, các nút và điểm nhấn trong toàn bộ ứng dụng.</string>
+	<key>faq_customization_accent_color_q</key>
+	<string>Làm sao để thay đổi màu accent của ứng dụng?</string>
+	<key>faq_customization_density_a</key>
+	<string>Timeline Density điều chỉnh khoảng cách dọc giữa các sự kiện. Chế độ Compact hiển thị nhiều sự kiện hơn trên màn hình, còn Comfortable tạo khoảng cách rộng rãi hơn. Bạn có thể thay đổi trong Settings → Preferences → Appearance.</string>
+	<key>faq_customization_density_q</key>
+	<string>Timeline Density là gì?</string>
+	<key>faq_customization_event_icon_a</key>
+	<string>Nhấn vào một sự kiện để mở màn hình chi tiết. Nhấn vào icon ở phía trên để mở Icon &amp; Color picker. Bạn có thể tìm bất kỳ SF Symbol nào và chọn từ hàng trăm icon, sau đó chọn màu tùy chỉnh.</string>
+	<key>faq_customization_event_icon_q</key>
+	<string>Làm sao để thay đổi icon hoặc màu của sự kiện?</string>
+	<key>faq_customization_hide_completed_a</key>
+	<string>Có. Vào Settings → Preferences → Productivity và bật Hide Completed Events. Các sự kiện đã hoàn thành sẽ được ẩn khỏi timeline cho đến khi bạn tắt tùy chọn này.</string>
+	<key>faq_customization_hide_completed_q</key>
+	<string>Tôi có thể ẩn các sự kiện đã hoàn thành không?</string>
+	<key>faq_customization_title</key>
+	<string>Tùy chỉnh</string>
+	<key>faq_data_backup_title</key>
+	<string>Dữ liệu &amp; Sao lưu</string>
+	<key>faq_data_where_answer</key>
+	<string>Tất cả dữ liệu của bạn được lưu trực tiếp trên thiết bị. Line không có máy chủ — các sự kiện, thói quen và nhật ký của bạn sẽ không rời khỏi iPhone trừ khi bạn chủ động xuất dữ liệu.</string>
+	<key>faq_data_where_question</key>
+	<string>Dữ liệu của tôi được lưu ở đâu?</string>
+	<key>faq_delete_app_answer</key>
+	<string>Toàn bộ dữ liệu cục bộ sẽ bị xoá vĩnh viễn. Chúng tôi khuyến nghị bạn sao lưu trước khi gỡ ứng dụng. Nếu bạn bật iCloud Backup, một phần dữ liệu có thể được lưu trong bản sao lưu thiết bị.</string>
+	<key>faq_delete_app_question</key>
+	<string>Điều gì xảy ra nếu tôi xoá ứng dụng?</string>
+	<key>faq_event_vs_habit_answer</key>
+	<string>Event là các khung thời gian cho hoạt động cụ thể như họp, tập luyện hoặc học tập. Chúng có giờ bắt đầu và có thể có thời lượng. Habit là các hoạt động lặp lại nhằm xây dựng sự nhất quán, hiển thị vòng hoàn thành và theo dõi chuỗi streak theo thời gian.</string>
+	<key>faq_event_vs_habit_question</key>
+	<string>Sự khác nhau giữa Event và Habit là gì?</string>
+	<key>faq_export_csv_answer</key>
+	<string>Có — vào Cài đặt → Tùy chọn → Thống kê &amp; Dữ liệu → Xuất CSV. Tính năng này xuất 90 ngày gần nhất gồm sự kiện và thói quen kèm trạng thái hoàn thành thành file CSV, có thể mở bằng Numbers, Excel hoặc Google Sheets.</string>
+	<key>faq_export_csv_question</key>
+	<string>Tôi có thể xuất dữ liệu ra bảng tính không? </string>
+	<key>faq_filter_all</key>
+	<string>Tất cả</string>
+	<key>faq_habits_accumulative_a</key>
+	<string>Thói quen tích lũy có mục tiêu dạng số — ví dụ uống 2.000 ml nước hoặc đi 10.000 bước. Mỗi lần nhấn sẽ cộng thêm một lượng tăng (ví dụ +250 ml). Vòng tiến độ sẽ dần đầy cho đến khi đạt mục tiêu.</string>
+	<key>faq_habits_accumulative_q</key>
+	<string>Thói quen tích lũy là gì?</string>
+	<key>faq_habits_mark_done_a</key>
+	<string>Nhấn vào nút hình tròn ở bên phải của hàng thói quen. Với thói quen nhị phân, mỗi lần nhấn sẽ chuyển giữa hoàn thành và chưa hoàn thành. Với thói quen tích lũy, mỗi lần nhấn sẽ cộng thêm một lượng tăng đã đặt cho đến khi đạt mục tiêu.</string>
+	<key>faq_habits_mark_done_q</key>
+	<string>Làm sao để đánh dấu thói quen đã hoàn thành?</string>
+	<key>faq_habits_repeat_options_a</key>
+	<string>Bạn có thể đặt thói quen lặp lại mỗi ngày, chỉ vào ngày trong tuần, chọn các ngày cụ thể trong tuần, trong một khoảng thời gian cố định (1 tuần hoặc 1 tháng), hoặc chỉ một lần vào một ngày duy nhất.</string>
+	<key>faq_habits_repeat_options_q</key>
+	<string>Có những tùy chọn lặp lại nào cho thói quen?</string>
+	<key>faq_habits_streak_a</key>
+	<string>Có — mở tab Stats (biểu tượng biểu đồ ở thanh tab) để xem streak hiện tại, streak tốt nhất và lịch hoàn thành 30 ngày cho từng thói quen. Bạn có thể điều chỉnh ngưỡng streak trong Settings → Preferences.</string>
+	<key>faq_habits_streak_q</key>
+	<string>Tôi có thể theo dõi streak của thói quen không?</string>
+	<key>faq_habits_title</key>
+	<string>Thói quen</string>
+	<key>faq_no_results</key>
+	<string>Không tìm thấy %@”</string>
+	<key>faq_notifications_evening_review_a</key>
+	<string>Evening Review gửi thông báo vào buổi tối để nhắc bạn nhìn lại ngày hôm nay và chuẩn bị cho ngày mai. Bạn có thể đặt thời gian trong Settings → Preferences → Notifications → Evening Review. Đây là tính năng Premium.</string>
+	<key>faq_notifications_evening_review_q</key>
+	<string>Evening Review là gì?</string>
+	<key>faq_notifications_event_setup_a</key>
+	<string>Vào Settings → Notifications và bật công tắc chính. Bạn có thể đặt thời gian nhắc trước (bao nhiêu phút trước khi sự kiện bắt đầu) và bật hoặc tắt thông báo cho từng loại sự kiện.</string>
+	<key>faq_notifications_event_setup_q</key>
+	<string>Làm sao để thiết lập thông báo cho sự kiện?</string>
+	<key>faq_notifications_morning_briefing_a</key>
+	<string>Morning Briefing gửi thông báo mỗi sáng với bản tóm tắt lịch trình trong ngày của bạn. Bạn có thể đặt thời gian trong Settings → Preferences → Notifications → Morning Briefing. Đây là tính năng Premium.</string>
+	<key>faq_notifications_morning_briefing_q</key>
+	<string>Morning Briefing là gì?</string>
+	<key>faq_notifications_not_receiving_a</key>
+	<string>Hãy đảm bảo thông báo được bật trong cả Line (Settings → Notifications) và trong iOS Settings → Line → Notifications. Ngoài ra hãy kiểm tra xem các chế độ Focus có đang chặn thông báo của ứng dụng không.</string>
+	<key>faq_notifications_not_receiving_q</key>
+	<string>Tại sao tôi không nhận được thông báo?</string>
+	<key>faq_notifications_title</key>
+	<string>Thông báo</string>
+	<key>faq_premium_refund_answer</key>
+	<string>Việc hoàn tiền được xử lý bởi Apple. Truy cập reportaproblem.apple.com, đăng nhập bằng Apple ID, tìm giao dịch Line và gửi yêu cầu hoàn tiền. Apple thường xử lý trong vài ngày.</string>
+	<key>faq_premium_refund_question</key>
+	<string>Tôi có thể hoàn tiền không?</string>
+	<key>faq_premium_restore_answer</key>
+	<string>Vào Cài đặt → Tài khoản → Khôi phục giao dịch, hoặc mở màn hình Premium và nhấn Khôi phục giao dịch ở cuối. Chỉ cần đăng nhập cùng Apple ID, giao dịch sẽ được khôi phục ngay lập tức.</string>
+	<key>faq_premium_restore_question</key>
+	<string>Làm sao để khôi phục Premium trên thiết bị mới?</string>
+	<key>faq_premium_subscription_answer</key>
+	<string>Không — Line Premium là gói mua một lần với giá $4.99 USD. Bạn chỉ trả một lần và sử dụng vĩnh viễn. Không có phí hàng tháng, không gia hạn, không phát sinh chi phí.</string>
+	<key>faq_premium_subscription_question</key>
+	<string>Premium có phải trả phí hàng tháng không?</string>
+	<key>faq_premium_title</key>
+	<string>Premium</string>
+	<key>faq_premium_what_answer</key>
+	<string>Line Premium mở khóa: không giới hạn sự kiện và thói quen (bản miễn phí giới hạn 50 mỗi loại), tất cả màu giao diện, toàn bộ icon, đầy đủ tính năng thông báo (Morning Briefing &amp; Evening Review), sao lưu &amp; xuất dữ liệu, và lịch sử thống kê 90 ngày.</string>
+	<key>faq_premium_what_question</key>
+	<string>Premium có những gì?</string>
+	<key>faq_search_placeholder</key>
+	<string>Tìm câu hỏi...</string>
+	<key>faq_still_questions</key>
+	<string>Vẫn còn câu hỏi?</string>
+	<key>faq_structify_answer</key>
+	<string>Line là ứng dụng timeline và theo dõi thói quen giúp bạn hình dung toàn bộ ngày của mình từ lúc thức dậy đến khi đi ngủ. Bạn có thể tạo sự kiện có thời gian, xây dựng thói quen lặp lại và xem mọi thứ trên một timeline cuộn duy nhất để luôn biết bước tiếp theo là gì.</string>
+	<key>faq_structify_question</key>
+	<string>Line là gì?</string>
+	<key>faq_timeline_gap_a</key>
+	<string>Khi có thời gian trống giữa hai sự kiện, Line sẽ hiển thị một thông báo nhẹ như \"Một giờ yên tĩnh — có thể tận dụng\". Nhấn vào đó để nhanh chóng tạo sự kiện mới trong khoảng trống này với thời gian bắt đầu được điền sẵn.</string>
+	<key>faq_timeline_gap_q</key>
+	<string>Thông báo khoảng trống giữa các sự kiện nghĩa là gì?</string>
+	<key>faq_timeline_morning_night_a</key>
+	<string>Đây là các sự kiện hệ thống xác định giới hạn của một ngày. Morning Start là thời gian bạn thức dậy và Night Reset là thời gian bạn đi ngủ. Tất cả sự kiện khác sẽ nằm trong khoảng này. Bạn có thể chỉnh hai thời gian này trong Settings → Preferences → Schedule.</string>
+	<key>faq_timeline_morning_night_q</key>
+	<string>Morning Start và Night Reset là gì?</string>
+	<key>faq_timeline_move_event_a</key>
+	<string>Nhấn giữ một sự kiện cho đến khi nó nổi lên (bạn sẽ cảm nhận rung nhẹ). Sau đó kéo lên hoặc xuống đến khung giờ mới và thả ra. Với sự kiện lặp lại, bạn sẽ được hỏi chỉ di chuyển hôm nay hay tất cả các ngày.</string>
+	<key>faq_timeline_move_event_q</key>
+	<string>Làm sao để di chuyển sự kiện trên timeline?</string>
+	<key>faq_timeline_resize_event_a</key>
+	<string>Nhấn giữ sự kiện để vào chế độ chỉnh sửa, sau đó kéo phần cuối thời gian của sự kiện (ở đáy khối sự kiện) lên hoặc xuống để thay đổi thời lượng. Thời lượng sẽ cập nhật theo thời gian thực khi bạn kéo.</string>
+	<key>faq_timeline_resize_event_q</key>
+	<string>Làm sao để thay đổi thời lượng sự kiện?</string>
+	<key>faq_timeline_title</key>
+	<string>Timeline</string>
+	<key>faq_timeline_view_days_a</key>
+	<string>Sử dụng thanh tuần ở phía trên màn hình để vuốt qua các ngày. Bạn cũng có thể nhấn vào tiêu đề ngày để nhảy đến bất kỳ ngày nào. Những ngày trong quá khứ sẽ hiển thị mờ hơn để cho biết chúng chỉ có thể xem.</string>
+	<key>faq_timeline_view_days_q</key>
+	<string>Làm sao để xem các ngày khác?</string>
+	<key>faq_try_search</key>
+	<string>Hãy thử từ khóa khác</string>
+	<key>feature.live_progress</key>
+	<string>Sự kiện đang diễn ra hiển thị thanh tiến độ</string>
+	<key>feature.lock_past_events</key>
+	<string>Sự kiện đã qua sẽ bị khóa — tránh chỉnh sửa nhầm</string>
+	<key>feature.smart_notifications</key>
+	<string>Thông báo thông minh đúng thời điểm</string>
+	<key>feature_backup_desc</key>
+	<string>Sao lưu JSON, xuất CSV và khôi phục dữ liệu bất cứ lúc nào.</string>
+	<key>feature_backup_title</key>
+	<string>Sao lưu &amp; xuất dữ liệu</string>
+	<key>feature_customization_desc</key>
+	<string>Mở khóa tất cả màu accent, mật độ timeline và điều chỉnh drag-snap.</string>
+	<key>feature_customization_title</key>
+	<string>Tùy chỉnh toàn diện</string>
+	<key>feature_icons_desc</key>
+	<string>Sử dụng toàn bộ icon trong mọi danh mục để cá nhân hóa timeline.</string>
+	<key>feature_icons_title</key>
+	<string>Kho icon đầy đủ</string>
+	<key>feature_notifications_desc</key>
+	<string>Nhận tóm tắt buổi sáng, tổng kết buổi tối và nhắc nhở đúng lúc.</string>
+	<key>feature_notifications_title</key>
+	<string>Thông báo thông minh</string>
+	<key>feature_stats_desc</key>
+	<string>Theo dõi streak, xem lịch sử 90 ngày và hiểu rõ xu hướng hiệu suất.</string>
+	<key>feature_stats_title</key>
+	<string>Thống kê nâng cao</string>
+	<key>feature_unlimited_desc</key>
+	<string>Tạo bao nhiêu sự kiện và thói quen cũng được. Không còn giới hạn 50 mục.</string>
+	<key>feature_unlimited_title</key>
+	<string>Sự kiện &amp; thói quen không giới hạn</string>
+	<key>fix_issues_to_continue</key>
+	<string>Hãy sửa các lỗi trên để tiếp tục</string>
+	<key>gap_1h</key>
+	<string>Một giờ yên tĩnh — đáng để tận dụng</string>
+	<key>gap_2h</key>
+	<string>Hai giờ không bị ràng buộc</string>
+	<key>gap_3h</key>
+	<string>Ba giờ — không còn lý do để trì hoãn</string>
+	<key>gap_chunk</key>
+	<string>Một khoảng thời gian đáng kể</string>
+	<key>gap_full_day</key>
+	<string>Cả ngày là của bạn</string>
+	<key>gap_half_day</key>
+	<string>Gần nửa ngày vẫn còn trống</string>
+	<key>gap_half_workday</key>
+	<string>Nửa ngày làm việc chưa được dùng đến</string>
+	<key>gap_long_block</key>
+	<string>Khoảng trống 120 phút</string>
+	<key>gap_long_free</key>
+	<string>Một khoảng trống rộng rãi</string>
+	<key>gap_morning</key>
+	<string>Gần trọn một buổi sáng</string>
+	<key>getting_started</key>
+	<string>Bắt đầu sử dụng</string>
+	<key>greeting.afternoon</key>
+	<string>Chào buổi chiều 🌤</string>
+	<key>greeting.evening</key>
+	<string>Chào buổi tối 🌆</string>
+	<key>greeting.late</key>
+	<string>Bạn vẫn đang làm việc muộn 🌙</string>
+	<key>greeting.morning</key>
+	<string>Chào buổi sáng ☀️</string>
+	<key>habit.add</key>
+	<string>Thêm thói quen</string>
+	<key>habit_apply_all_days</key>
+	<string>Tất cả ngày</string>
+	<key>habit_apply_changes_title</key>
+	<string>Áp dụng thay đổi cho</string>
+	<key>habit_apply_only_today</key>
+	<string>Chỉ hôm nay</string>
+	<key>habit_category_all</key>
+	<string>Tất cả</string>
+	<key>habit_category_creative</key>
+	<string>Sáng tạo</string>
+	<key>habit_category_health</key>
+	<string>Sức khỏe</string>
+	<key>habit_category_learning</key>
+	<string>Học tập</string>
+	<key>habit_category_lifestyle</key>
+	<string>Đời sống</string>
+	<key>habit_category_mindfulness</key>
+	<string>Tinh thần</string>
+	<key>habit_category_productivity</key>
+	<string>Năng suất</string>
+	<key>habit_category_social</key>
+	<string>Quan hệ</string>
+	<key>habit_daily_goal</key>
+	<string>Mục tiêu mỗi ngày</string>
+	<key>habit_date_range %@ %@</key>
+	<string> %1$@ %2$@</string>
+	<key>habit_delete</key>
+	<string>Xoá thói quen</string>
+	<key>habit_delete_forever</key>
+	<string>Xoá vĩnh viễn</string>
+	<key>habit_delete_message %@</key>
+	<string>"%@" và toàn bộ lịch sử sẽ bị xoá vĩnh viễn. Không thể hoàn tác.</string>
+	<key>habit_delete_title</key>
+	<string>Xoá thói quen</string>
+	<key>habit_error_increment_exceeds_target</key>
+	<string>Mỗi lần không được lớn hơn mục tiêu</string>
+	<key>habit_error_increment_gt_zero</key>
+	<string>Mỗi lần phải lớn hơn 0</string>
+	<key>habit_error_target_gt_zero</key>
+	<string>Mục tiêu phải lớn hơn 0</string>
+	<key>habit_every_day</key>
+	<string>Mỗi ngày</string>
+	<key>habit_future_checkin_blocked</key>
+	<string>Không thể check-in cho ngày trong tương lai</string>
+	<key>habit_goal %@ %@</key>
+	<string>Mục tiêu: %1$@ %2$@</string>
+	<key>habit_mark_done</key>
+	<string>Đánh dấu hoàn thành </string>
+	<key>habit_mark_not_done</key>
+	<string>Bỏ đánh dấu hoàn thành</string>
+	<key>habit_name_placeholder</key>
+	<string>Tên thói quen</string>
+	<key>habit_per_tap</key>
+	<string>Mỗi lần nhấn</string>
+	<key>habit_preview_label</key>
+	<string>Xem trước</string>
+	<key>habit_preview_placeholder_title</key>
+	<string>Thói quen của bạn</string>
+	<key>habit_reminders</key>
+	<string>Nhắc thói quen</string>
+	<key>habit_reminders_desc</key>
+	<string>Thông báo theo thời gian đã đặt của từng thói quen</string>
+	<key>habit_repeat_daily</key>
+	<string>Mỗi ngày</string>
+	<key>habit_repeat_everyday</key>
+	<string>Mỗi ngày</string>
+	<key>habit_repeat_month</key>
+	<string>1 Tháng</string>
+	<key>habit_repeat_one_day</key>
+	<string>1 ngày</string>
+	<key>habit_repeat_range %@ %@</key>
+	<string>Lặp lại từ %@ đến %@.</string>
+	<key>habit_repeat_specific %@</key>
+	<string>Lặp lại vào %@</string>
+	<key>habit_repeat_week</key>
+	<string>1 Tuần</string>
+	<key>habit_repeat_weekdays</key>
+	<string>Ngày trong tuần</string>
+	<key>habit_reset_action</key>
+	<string>Đặt lại</string>
+	<key>habit_reset_message</key>
+	<string>Điều này sẽ xoá tiến độ của bạn trong hôm nay.</string>
+	<key>habit_reset_title</key>
+	<string>Đặt lại tiến độ hôm nay?</string>
+	<key>habit_reset_today</key>
+	<string>Đặt lại hôm nay</string>
+	<key>habit_save_target</key>
+	<string>Lưu mục tiêu</string>
+	<key>habit_section_checkin</key>
+	<string>Check-in</string>
+	<key>habit_section_details</key>
+	<string>Chi tiết</string>
+	<key>habit_section_edit_target</key>
+	<string>Mục tiêu</string>
+	<key>habit_section_progress</key>
+	<string>Tiến độ</string>
+	<key>habit_stat_schedule</key>
+	<string>Lịch</string>
+	<key>habit_stat_streak</key>
+	<string>Chuỗi</string>
+	<key>habit_stat_today</key>
+	<string>Hôm nay</string>
+	<key>habit_status_completed</key>
+	<string>Hoàn thành</string>
+	<key>habit_status_not_done</key>
+	<string>Chưa hoàn thành</string>
+	<key>habit_status_upcoming</key>
+	<string>Sắp tới</string>
+	<key>habit_taps_to_complete</key>
+	<string>lần</string>
+	<key>habit_target_label</key>
+	<string>Mục tiêu</string>
+	<key>habit_target_value %@ %@</key>
+	<string> %1$@ %2$@</string>
+	<key>habit_time</key>
+	<string>Thời gian</string>
+	<key>habit_title</key>
+	<string>Thói quen</string>
+	<key>habit_tpl_affirmations</key>
+	<string>Khẳng định bản thân</string>
+	<key>habit_tpl_breathwork</key>
+	<string>Hít thở sâu</string>
+	<key>habit_tpl_budget</key>
+	<string>Kiểm tra chi tiêu</string>
+	<key>habit_tpl_call_family</key>
+	<string>Gọi gia đình</string>
+	<key>habit_tpl_compliment</key>
+	<string>Khen ai đó</string>
+	<key>habit_tpl_cook_home</key>
+	<string>Nấu ở nhà</string>
+	<key>habit_tpl_cook_new</key>
+	<string>Nấu món mới</string>
+	<key>habit_tpl_course</key>
+	<string>Học khóa online</string>
+	<key>habit_tpl_date_night</key>
+	<string>Hẹn hò</string>
+	<key>habit_tpl_deep_work</key>
+	<string>Làm việc sâu</string>
+	<key>habit_tpl_detox</key>
+	<string>Tránh xa máy</string>
+	<key>habit_tpl_draw</key>
+	<string>Vẽ</string>
+	<key>habit_tpl_exercise</key>
+	<string>Tập thể dục</string>
+	<key>habit_tpl_focus_session</key>
+	<string>Buổi tập trung</string>
+	<key>habit_tpl_fruit</key>
+	<string>Ăn trái cây</string>
+	<key>habit_tpl_gratitude</key>
+	<string>Lòng biết ơn</string>
+	<key>habit_tpl_groceries</key>
+	<string>Đi chợ</string>
+	<key>habit_tpl_healthy_meal</key>
+	<string>Ăn lành mạnh</string>
+	<key>habit_tpl_inbox_zero</key>
+	<string>Dọn email</string>
+	<key>habit_tpl_journal</key>
+	<string>Nhật ký</string>
+	<key>habit_tpl_language</key>
+	<string>Ngoại ngữ</string>
+	<key>habit_tpl_laundry</key>
+	<string>Giặt đồ</string>
+	<key>habit_tpl_make_bed</key>
+	<string>Dọn giường</string>
+	<key>habit_tpl_meditate</key>
+	<string>Thiền</string>
+	<key>habit_tpl_music</key>
+	<string>Nhạc</string>
+	<key>habit_tpl_nature</key>
+	<string>Dạo thiên nhiên</string>
+	<key>habit_tpl_no_social</key>
+	<string>Không MXH</string>
+	<key>habit_tpl_no_sugar</key>
+	<string>Không đường</string>
+	<key>habit_tpl_notes</key>
+	<string>Ghi chú</string>
+	<key>habit_tpl_pet_walk</key>
+	<string>Dắt thú cưng</string>
+	<key>habit_tpl_photo</key>
+	<string>Chụp ảnh</string>
+	<key>habit_tpl_plan_day</key>
+	<string>Lên kế hoạch</string>
+	<key>habit_tpl_podcast</key>
+	<string>Nghe podcast</string>
+	<key>habit_tpl_practice</key>
+	<string>Luyện kỹ năng</string>
+	<key>habit_tpl_quality_time</key>
+	<string>Thời gian bên nhau</string>
+	<key>habit_tpl_read</key>
+	<string>Đọc sách</string>
+	<key>habit_tpl_review_week</key>
+	<string>Tổng kết tuần</string>
+	<key>habit_tpl_save_money</key>
+	<string>Tiết kiệm</string>
+	<key>habit_tpl_skincare</key>
+	<string>Chăm sóc da</string>
+	<key>habit_tpl_sleep</key>
+	<string>Ngủ sớm</string>
+	<key>habit_tpl_stretch</key>
+	<string>Giãn cơ</string>
+	<key>habit_tpl_text_friend</key>
+	<string>Nhắn bạn</string>
+	<key>habit_tpl_tidy</key>
+	<string>Dọn phòng</string>
+	<key>habit_tpl_vitamins</key>
+	<string>Vitamin</string>
+	<key>habit_tpl_walk</key>
+	<string>Đi bộ</string>
+	<key>habit_tpl_water</key>
+	<string>Uống nước</string>
+	<key>habit_tpl_water_plants</key>
+	<string>Tưới cây</string>
+	<key>habit_tpl_write</key>
+	<string>Viết</string>
+	<key>habit_tpl_yoga</key>
+	<string>Yoga</string>
+	<key>habit_type</key>
+	<string>Loại thói quen</string>
+	<key>habit_type_accumulative</key>
+	<string>Tích luỹ</string>
+	<key>habit_type_accumulative_desc</key>
+	<string>Đếm tới mục tiêu — vd. uống 2L nước</string>
+	<key>habit_type_binary</key>
+	<string>Ấn hoàn thành</string>
+	<key>habit_type_binary_desc</key>
+	<string>Tick xong là được — vd. thiền, nhật ký</string>
+	<key>habit_type_label</key>
+	<string>Loại</string>
+	<key>habit_weekdays</key>
+	<string>Thứ 2 – Thứ 6</string>
+	<key>hide_completed_events</key>
+	<string>Ẩn sự kiện đã hoàn thành</string>
+	<key>hint_enter_title</key>
+	<string>✏️ Nhập tên để tiếp tục</string>
+	<key>hint_fix_target</key>
+	<string>Hãy sửa lỗi mục tiêu ở trên</string>
+	<key>hint_fix_time</key>
+	<string>Hãy sửa lỗi thời gian ở trên</string>
+	<key>icon.change</key>
+	<string>Thay icon</string>
+	<key>icon_category_creative</key>
+	<string>Sáng tạo</string>
+	<key>icon_category_finance</key>
+	<string>Tài chính</string>
+	<key>icon_category_health_fitness</key>
+	<string>Sức khỏe &amp; Thể chất</string>
+	<key>icon_category_life</key>
+	<string>Cuộc sống</string>
+	<key>icon_category_mindset_goals</key>
+	<string>Tư duy &amp; Mục tiêu</string>
+	<key>icon_category_study</key>
+	<string>Học tập</string>
+	<key>icon_category_tech</key>
+	<string>Công nghệ</string>
+	<key>icon_category_travel</key>
+	<string>Du lịch</string>
+	<key>icon_category_work</key>
+	<string>Công việc</string>
+	<key>increment_error_exceed</key>
+	<string>Giá trị mỗi lần không được lớn hơn mục tiêu</string>
+	<key>increment_error_invalid</key>
+	<string>Mỗi lần tăng phải lớn hơn 0</string>
+	<key>insight.best_time</key>
+	<string>Bạn hiệu quả nhất vào khoảng %@</string>
+	<key>insight.keep_pace</key>
+	<string>Hãy giữ nhịp hiện tại</string>
+	<key>insight_best_streak_subtitle</key>
+	<string>Đây chính là kỷ luật thực sự trông như thế nào.</string>
+	<key>insight_best_streak_title</key>
+	<string>Chuỗi tốt nhất của bạn — %d ngày 🏆</string>
+	<key>insight_consistency_subtitle</key>
+	<string>Sự nhất quán là chiến lược duy nhất tạo ra tăng trưởng dài hạn.</string>
+	<key>insight_consistency_title</key>
+	<string>Bạn duy trì được %d%% trong tháng này</string>
+	<key>insight_identity_subtitle_1</key>
+	<string>Bạn đang trở thành người không bỏ cuộc.</string>
+	<key>insight_identity_subtitle_2</key>
+	<string>Người kỷ luật làm đúng điều này mỗi ngày.</string>
+	<key>insight_identity_subtitle_3</key>
+	<string>Những bước nhỏ tạo nên điều lớn.</string>
+	<key>insight_identity_title_1</key>
+	<string>Bạn đã xuất hiện %d ngày liên tiếp</string>
+	<key>insight_identity_title_2</key>
+	<string>%d ngày không bỏ cuộc</string>
+	<key>insight_identity_title_3</key>
+	<string>Ngày %d. Bạn vẫn ở đây.</string>
+	<key>insight_improvement_normal_subtitle</key>
+	<string>Tăng %d%% so với tuần trước.</string>
+	<key>insight_improvement_normal_title</key>
+	<string>Bạn đang đi đúng hướng</string>
+	<key>insight_improvement_strong_subtitle</key>
+	<string>Nhịp độ của bạn đang tự tạo đà tiến lên .</string>
+	<key>insight_improvement_strong_title</key>
+	<string>Tăng %d%% tuần này 📈</string>
+	<key>insight_mood_productivity_subtitle</key>
+	<string>Tâm trạng tốt, hiệu suất cao — hãy tận dụng.</string>
+	<key>insight_mood_productivity_title</key>
+	<string>Bạn làm việc rất tốt trong những ngày như thế này 😊</string>
+	<key>insight_mood_support_subtitle_1</key>
+	<string>Hãy nhẹ nhàng với bản thân hôm nay.</string>
+	<key>insight_mood_support_subtitle_3</key>
+	<string>Những bước nhỏ vẫn có giá trị.</string>
+	<key>insight_mood_support_title_1</key>
+	<string>Những ngày khó khăn là một phần của hành trình</string>
+	<key>insight_mood_support_title_2</key>
+	<string>Bạn không cần phải luôn ở trạng thái tốt nhất</string>
+	<key>insight_mood_support_title_3</key>
+	<string>Đi chậm lại hôm nay cũng không sao</string>
+	<key>insight_productive_good_mood</key>
+	<string>Bạn làm việc hiệu quả hơn khi tâm trạng tốt 😊</string>
+	<key>insight_recovery_subtitle_1</key>
+	<string>Mọi sự trở lại đều bắt đầu từ một ngày.</string>
+	<key>insight_recovery_subtitle_2</key>
+	<string>Điều quan trọng là bước tiếp theo bạn làm.</string>
+	<key>insight_recovery_subtitle_3</key>
+	<string>Chỉ cần từng ngày một là đủ.</string>
+	<key>insight_recovery_title_1</key>
+	<string>Việc bắt đầu lại là một phần của quá trình</string>
+	<key>insight_recovery_title_2</key>
+	<string>Những tuần trầm lắng là bình thường</string>
+	<key>insight_recovery_title_3</key>
+	<string>Bạn vẫn đang trong hành trình</string>
+	<key>insight_resilient_tough_days</key>
+	<string>Bạn vẫn cố gắng ngay cả khi ngày không tốt 💪</string>
+	<key>insight_streak_risk_subtitle</key>
+	<string>Chỉ cần một thói quen là đủ để giữ chuỗi.</string>
+	<key>insight_streak_risk_title</key>
+	<string>Chuỗi %d ngày đang có nguy cơ ⚠️</string>
+	<key>insight_time_afternoon_title</key>
+	<string>Buổi chiều thường là lúc hiệu suất cao nhất</string>
+	<key>insight_time_default_title</key>
+	<string>Mỗi ngày là một khởi đầu mới</string>
+	<key>insight_time_evening_good_subtitle</key>
+	<string>Bạn có thể kết thúc nó thật tốt.</string>
+	<key>insight_time_evening_good_title</key>
+	<string>Một ngày rất ổn ✓</string>
+	<key>insight_time_evening_winddown_title</key>
+	<string>Hãy kết thúc ngày một cách có chủ đích</string>
+	<key>insight_time_midday_subtitle_ahead</key>
+	<string>Bạn đang đi trước tiến độ.</string>
+	<key>insight_time_midday_subtitle_build</key>
+	<string>Vẫn còn thời gian để tạo đà.</string>
+	<key>insight_time_midday_title</key>
+	<string>Kiểm tra giữa ngày</string>
+	<key>insight_time_morning_early_subtitle_ahead</key>
+	<string>Bạn đang đi trước rồi.</string>
+	<key>insight_time_morning_early_subtitle_focus</key>
+	<string>Tận dụng sự yên tĩnh trước khi ngày bắt đầu.</string>
+	<key>insight_time_morning_early_title</key>
+	<string>Năng lượng buổi sáng là lợi thế của bạn</string>
+	<key>insight_time_morning_open_title</key>
+	<string>Buổi sáng vẫn còn nhiều cơ hội</string>
+	<key>insight_time_morning_strong_title</key>
+	<string>Khởi đầu buổi sáng rất tốt</string>
+	<key>intent_config_desc</key>
+	<string>Đây là widget ví dụ.</string>
+	<key>intent_config_title</key>
+	<string>Cấu hình</string>
+	<key>intent_favorite_emoji</key>
+	<string>Emoji yêu thích</string>
+	<key>intent_template_id</key>
+	<string>ID mẫu</string>
+	<key>intent_toggle_habit_title</key>
+	<string>Đánh dấu Habit</string>
+	<key>keyboard.done</key>
+	<string>Xong</string>
+	<key>kind_event</key>
+	<string>Sự kiện</string>
+	<key>kind_habit</key>
+	<string>Thói quen</string>
+	<key>label.date</key>
+	<string>Ngày</string>
+	<key>label.next_occurrence</key>
+	<string>Lần tới</string>
+	<key>label.repeats</key>
+	<string>Lặp lại</string>
+	<key>label.starts_from</key>
+	<string>Bắt đầu từ</string>
+	<key>label.time</key>
+	<string>Thời gian</string>
+	<key>label_favorite_emoji</key>
+	<string>Emoji yêu thích:</string>
+	<key>label_time</key>
+	<string>Thời gian:</string>
+	<key>legal.privacy_policy</key>
+	<string>Chính sách quyền riêng tư</string>
+	<key>legal.terms_of_use</key>
+	<string>Điều khoản sử dụng</string>
+	<key>live_activity_bottom %@</key>
+	<string>Dưới %@</string>
+	<key>live_activity_compact_leading</key>
+	<string>T</string>
+	<key>live_activity_compact_trailing %@</key>
+	<string>P %@</string>
+	<key>live_activity_hello %@</key>
+	<string>Xin chào %@</string>
+	<key>live_activity_leading</key>
+	<string>Trái</string>
+	<key>live_activity_trailing</key>
+	<string>Phải</string>
+	<key>max_duration_format %@</key>
+	<string>Tối đa %@</string>
+	<key>menu.actions</key>
+	<string>Tuỳ chọn khác</string>
+	<key>menu.delete_event</key>
+	<string>Xoá sự kiện</string>
+	<key>menu.delete_forever</key>
+	<string>Xoá toàn bộ</string>
+	<key>menu.delete_habit</key>
+	<string>Xoá thói quen</string>
+	<key>menu.delete_only_today</key>
+	<string>Chỉ xoá hôm nay</string>
+	<key>menu.reset_progress</key>
+	<string>Đặt lại tiến độ hôm nay</string>
+	<key>min_percent_habits</key>
+	<string>Tỷ lệ % thói quen tối thiểu hoàn thành để tính steak</string>
+	<key>mood.action.add</key>
+	<string>Thêm tâm trạng</string>
+	<key>mood.action.edit</key>
+	<string>Chỉnh sửa</string>
+	<key>mood.add_note</key>
+	<string>Thêm ghi chú</string>
+	<key>mood.amazing</key>
+	<string>Tuyệt vời</string>
+	<key>mood.amazing.1</key>
+	<string>Hôm nay bạn đang ở trạng thái tốt nhất.</string>
+	<key>mood.amazing.10</key>
+	<string>Một ngày hiếm. Hãy cảm nhận nó.</string>
+	<key>mood.amazing.2</key>
+	<string>Mọi thứ rõ ràng là có lý do.</string>
+	<key>mood.amazing.3</key>
+	<string>Đây là trạng thái tự nhiên của bạn — hãy nhớ nó.</string>
+	<key>mood.amazing.4</key>
+	<string>Bạn không chỉ xuất hiện. Bạn thật sự toả sáng.</string>
+	<key>mood.amazing.5</key>
+	<string>Những người đạt trạng thái này đều xuất hiện mỗi ngày.</string>
+	<key>mood.amazing.6</key>
+	<string>Phiên bản tương lai của bạn sẽ biết ơn hôm nay.</string>
+	<key>mood.amazing.7</key>
+	<string>Đây là cảm giác của người kỷ luật.</string>
+	<key>mood.amazing.8</key>
+	<string>Mọi thứ đang vận hành hoàn hảo.</string>
+	<key>mood.amazing.9</key>
+	<string>Hãy tận hưởng — bạn đã tạo ra điều này.</string>
+	<key>mood.amazing.celebration.1</key>
+	<string>Hôm nay bạn đang ở trạng thái tốt nhất.</string>
+	<key>mood.amazing.celebration.2</key>
+	<string>Mọi thứ rõ ràng vì một lý do.</string>
+	<key>mood.amazing.celebration.3</key>
+	<string>Đây là trạng thái tự nhiên của bạn — hãy ghi nhớ.</string>
+	<key>mood.amazing.celebration.4</key>
+	<string>Bạn không chỉ xuất hiện — bạn thực sự toả sáng.</string>
+	<key>mood.amazing.identity.1</key>
+	<string>Những người như vậy xuất hiện mỗi ngày.</string>
+	<key>mood.amazing.identity.2</key>
+	<string>Bạn đã xây dựng phiên bản này của mình.</string>
+	<key>mood.amazing.identity.3</key>
+	<string>Đây là cảm giác của sự kỷ luật.</string>
+	<key>mood.amazing.identity.4</key>
+	<string>Bạn của tương lai sẽ cảm ơn bạn hôm nay.</string>
+	<key>mood.amazing.time.evening.1</key>
+	<string>Một ngày hiếm — hãy để nó lắng lại.</string>
+	<key>mood.amazing.time.evening.2</key>
+	<string>Mang điều này đi tiếp.</string>
+	<key>mood.amazing.time.morning.1</key>
+	<string>Một ngày hiếm — hãy để nó lắng lại.</string>
+	<key>mood.amazing.time.morning.2</key>
+	<string>Nguồn năng lượng hiếm — hãy tận dụng.</string>
+	<key>mood.amazing.time.neutral.1</key>
+	<string>Mọi thứ đang vận hành hoàn hảo.</string>
+	<key>mood.amazing.time.neutral.2</key>
+	<string>Hãy tận hưởng — bạn đã tạo ra điều này.</string>
+	<key>mood.empty.prompt</key>
+	<string>Chọn cảm xúc của bạn hôm nay</string>
+	<key>mood.good</key>
+	<string>Tốt</string>
+	<key>mood.good.1</key>
+	<string>Bạn đã tìm được nhịp của mình.</string>
+	<key>mood.good.10</key>
+	<string>Bạn đã xây dựng nên phiên bản này của mình.</string>
+	<key>mood.good.2</key>
+	<string>Nỗ lực của bạn đang dần rõ ràng.</string>
+	<key>mood.good.3</key>
+	<string>Những ngày tốt không tự nhiên mà có.</string>
+	<key>mood.good.4</key>
+	<string>Bạn xứng đáng với điều này.</string>
+	<key>mood.good.5</key>
+	<string>Đây chính là con người bạn đang trở thành.</string>
+	<key>mood.good.6</key>
+	<string>Cứ tiếp tục — mọi thứ đang vận hành tốt.</string>
+	<key>mood.good.7</key>
+	<string>Bạn đang ở đúng trạng thái của mình.</string>
+	<key>mood.good.8</key>
+	<string>Người sống kỷ luật sẽ cảm thấy như thế này.</string>
+	<key>mood.good.9</key>
+	<string>Hãy ghi nhớ trạng thái này.</string>
+	<key>mood.good.affirmation.1</key>
+	<string>Bạn đã tìm được nhịp của mình.</string>
+	<key>mood.good.affirmation.2</key>
+	<string>Một ngày như thế này đáng để trân trọng.</string>
+	<key>mood.good.affirmation.3</key>
+	<string>Nỗ lực của bạn giờ đã rõ ràng.</string>
+	<key>mood.good.affirmation.4</key>
+	<string>Bạn xứng đáng với điều này.</string>
+	<key>mood.good.identity.1</key>
+	<string>Những người kiên trì cảm thấy như thế này.</string>
+	<key>mood.good.identity.2</key>
+	<string>Đây là con người bạn đang trở thành.</string>
+	<key>mood.good.identity.3</key>
+	<string>Những ngày tốt không đến ngẫu nhiên.</string>
+	<key>mood.good.identity.4</key>
+	<string>Bạn đã xây dựng phiên bản này của mình.</string>
+	<key>mood.good.time.evening.1</key>
+	<string>Hãy mang điều này sang ngày mai.</string>
+	<key>mood.good.time.evening.2</key>
+	<string>Một ngày tốt — hãy khép lại thật trọn vẹn.</string>
+	<key>mood.good.time.morning.1</key>
+	<string>Khởi đầu mạnh mẽ — tận dụng nó.</string>
+	<key>mood.good.time.morning.2</key>
+	<string>Năng lượng buổi sáng là của bạn hôm nay.</string>
+	<key>mood.good.time.neutral.1</key>
+	<string>Bạn đang ở trạng thái tốt nhất.</string>
+	<key>mood.good.time.neutral.2</key>
+	<string>Cứ tiếp tục — mọi thứ đang hoạt động.</string>
+	<key>mood.level.high</key>
+	<string>Cao</string>
+	<key>mood.level.low</key>
+	<string>Thấp</string>
+	<key>mood.low</key>
+	<string>Không tốt</string>
+	<key>mood.low.1</key>
+	<string>Năng lượng thấp không có nghĩa là bạn kém giá trị.</string>
+	<key>mood.low.10</key>
+	<string>Nghỉ ngơi, rồi tiếp tục.</string>
+	<key>mood.low.2</key>
+	<string>Hôm nay bạn có thể sống chậm và yên lặng hơn.</string>
+	<key>mood.low.3</key>
+	<string>Ngày chậm vẫn là một ngày.</string>
+	<key>mood.low.4</key>
+	<string>Chỉ cần một việc nhỏ là đủ.</string>
+	<key>mood.low.5</key>
+	<string>Hãy xuất hiện theo cách bạn có thể.</string>
+	<key>mood.low.6</key>
+	<string>Hãy tự hỏi: bạn đang cần điều gì?</string>
+	<key>mood.low.7</key>
+	<string>Không phải ngày nào cũng cần phải bận rộn.</string>
+	<key>mood.low.8</key>
+	<string>Đây chỉ là một ngày xuống năng lượng, không phải một cuộc đời tệ.</string>
+	<key>mood.low.9</key>
+	<string>Bạn đã từng vượt qua cảm giác này rồi.</string>
+	<key>mood.low.gentle.1</key>
+	<string>Chỉ cần một việc nhỏ là đủ.</string>
+	<key>mood.low.gentle.2</key>
+	<string>Hãy xuất hiện theo cách bạn có thể.</string>
+	<key>mood.low.gentle.3</key>
+	<string>Hãy xuất hiện theo cách bạn có thể.</string>
+	<key>mood.low.gentle.4</key>
+	<string>Một chút cũng có ý nghĩa.</string>
+	<key>mood.low.recovery.1</key>
+	<string>Bạn đã vượt qua những ngày như thế này trước đây rồi.</string>
+	<key>mood.low.recovery.2</key>
+	<string>Đây không phải hướng đi của bạn — chỉ là trạng thái hiện tại.</string>
+	<key>mood.low.recovery.3</key>
+	<string>Đây là một ngày tệ, không phải một cuộc đời không tốt.</string>
+	<key>mood.low.validation.1</key>
+	<string>Năng lượng thấp không có nghĩa là bạn kém giá trị.</string>
+	<key>mood.low.validation.2</key>
+	<string>Bạn có quyền sống chậm lại hôm nay.</string>
+	<key>mood.low.validation.3</key>
+	<string>Không phải ngày nào cũng cần trọn vẹn.</string>
+	<key>mood.low.validation.4</key>
+	<string>"Những ngày chậm vẫn là những ngày đáng giá.</string>
+	<key>mood.okay</key>
+	<string>Ổn</string>
+	<key>mood.okay.1</key>
+	<string>Sự ổn định thường bị đánh giá thấp.</string>
+	<key>mood.okay.10</key>
+	<string>Hiệu ứng tích lũy đang phát huy.</string>
+	<key>mood.okay.2</key>
+	<string>Đây chính là hình dạng của sự nhất quán.</string>
+	<key>mood.okay.3</key>
+	<string>Những ngày bình thường là nền tảng của mọi thứ.</string>
+	<key>mood.okay.4</key>
+	<string>Hãy giữ nhịp này.</string>
+	<key>mood.okay.5</key>
+	<string>Nhất quán luôn thắng cường độ.</string>
+	<key>mood.okay.6</key>
+	<string>Bạn đang làm những điều không ai thấy nhưng rất quan trọng.</string>
+	<key>mood.okay.7</key>
+	<string>Thêm một ngày nữa được tích lũy.</string>
+	<key>mood.okay.8</key>
+	<string>Bạn đang xây dựng điều gì đó.</string>
+	<key>mood.okay.9</key>
+	<string>Bình tĩnh và đều đặn sẽ chiến thắng.</string>
+	<key>mood.okay.improving.1</key>
+	<string>Bạn đã dần xây dựng đến điểm này.</string>
+	<key>mood.okay.improving.2</key>
+	<string>Mọi thứ đang đi đúng hướng.</string>
+	<key>mood.okay.improving.3</key>
+	<string>Xu hướng này là của bạn — hãy giữ lấy.</string>
+	<key>mood.okay.momentum.1</key>
+	<string>Thêm một ngày nữa được tích lũy.</string>
+	<key>mood.okay.momentum.2</key>
+	<string>Hãy giữ nhịp điệu này.</string>
+	<key>mood.okay.momentum.3</key>
+	<string>Sự nhất quán luôn thắng cường độ.</string>
+	<key>mood.okay.momentum.4</key>
+	<string>Bạn đang xây dựng điều gì đó — chỉ cần thời gian.</string>
+	<key>mood.okay.steady.1</key>
+	<string>Sự ổn định thường bị đánh giá thấp.</string>
+	<key>mood.okay.steady.2</key>
+	<string>Bạn đang làm những nỗ lực thầm lặng.</string>
+	<key>mood.okay.steady.3</key>
+	<string>Đây chính là sự nhất quán.</string>
+	<key>mood.okay.steady.4</key>
+	<string>Những ngày bình thường là nền tảng của mọi thứ.</string>
+	<key>mood.prompt.day</key>
+	<string>Hôm nay của bạn thế nào?</string>
+	<key>mood.rough</key>
+	<string>Tệ</string>
+	<key>mood.rough.1</key>
+	<string>Hôm nay có vẻ nặng nề. Như vậy là đủ để hiểu rồi.</string>
+	<key>mood.rough.10</key>
+	<string>Cảm giác này chỉ là tạm thời.</string>
+	<key>mood.rough.2</key>
+	<string>Bạn không cần phải sửa chữa mọi thứ hôm nay.</string>
+	<key>mood.rough.3</key>
+	<string>Nghỉ ngơi cũng là một cách tiến lên.</string>
+	<key>mood.rough.4</key>
+	<string>Chỉ cần vượt qua hôm nay thôi cũng đã đủ.</string>
+	<key>mood.rough.5</key>
+	<string>Hôm nay hoàn thành một việc là đủ rồi.</string>
+	<key>mood.rough.6</key>
+	<string>Cứ đi từng giờ một.</string>
+	<key>mood.rough.7</key>
+	<string>Cảm xúc của bạn là hoàn toàn hợp lý.</string>
+	<key>mood.rough.8</key>
+	<string>Hãy nhẹ nhàng với chính mình.</string>
+	<key>mood.rough.9</key>
+	<string>Bạn đã từng vượt qua những ngày như thế này rồi.</string>
+	<key>mood.rough.grounding.1</key>
+	<string>Chỉ cần một việc hôm nay là đủ.</string>
+	<key>mood.rough.grounding.2</key>
+	<string>Hãy bắt đầu từ bất cứ đâu bạn có thể.</string>
+	<key>mood.rough.grounding.3</key>
+	<string>Cứ đi từng giờ một.</string>
+	<key>mood.rough.grounding.4</key>
+	<string>Chậm mà chắc vẫn là tiến lên.</string>
+	<key>mood.rough.streak_safe.1</key>
+	<string>Chuỗi của bạn vẫn sẽ ở đó khi bạn sẵn sàng.</string>
+	<key>mood.rough.streak_safe.2</key>
+	<string>Bỏ lỡ một ngày không xoá đi những gì bạn đã xây dựng.</string>
+	<key>mood.rough.streak_safe.3</key>
+	<string>Một ngày tệ không định nghĩa cả hành trình.</string>
+	<key>mood.rough.validation.1</key>
+	<string>Hôm nay có vẻ nặng nề. Như vậy là đủ rồi.</string>
+	<key>mood.rough.validation.2</key>
+	<string>Bạn không cần phải sửa chữa mọi thứ hôm nay.</string>
+	<key>mood.rough.validation.3</key>
+	<string>Chỉ cần vượt qua hôm nay là được.</string>
+	<key>mood.rough.validation.4</key>
+	<string>Nghỉ ngơi cũng là một hành động.</string>
+	<key>mood.title</key>
+	<string>Tâm trạng</string>
+	<key>mood_tracker.title</key>
+	<string>Theo dõi tâm trạng</string>
+	<key>morning_briefing</key>
+	<string>Nhắc nhở buổi sáng</string>
+	<key>morning_briefing_desc</key>
+	<string>Nhắc kế hoạch ngày khi thức dậy</string>
+	<key>move_event_all_days</key>
+	<string>Tất cả các ngày</string>
+	<key>move_event_title</key>
+	<string>Di chuyển sự kiện</string>
+	<key>move_event_today_only</key>
+	<string>Chỉ hôm nay</string>
+	<key>must_be_after_morning_start</key>
+	<string>Phải sau Morning Start</string>
+	<key>must_be_before_night_reset</key>
+	<string>Phải trước Night Reset</string>
+	<key>new_item_title</key>
+	<string>Mục mới</string>
+	<key>night_reset</key>
+	<string>Reset ban đêm</string>
+	<key>notes_add_placeholder</key>
+	<string>Thêm ghi chú...</string>
+	<key>notes_tap_to_add</key>
+	<string>Chạm để thêm ghi chú…</string>
+	<key>notes_title</key>
+	<string>Ghi chú</string>
+	<key>notif_active_status</key>
+	<string>Nhắc nhở đang hoạt động</string>
+	<key>notif_all_title</key>
+	<string>Tất cả thông báo</string>
+	<key>notif_day_start_soon</key>
+	<string>Ngày của bạn sẽ bắt đầu sau 5 phút</string>
+	<key>notif_disabled_subtitle</key>
+	<string>Chạm để mở Cài đặt và bật thông báo.</string>
+	<key>notif_disabled_title</key>
+	<string>Thông báo đã tắt</string>
+	<key>notif_empty_subtitle</key>
+	<string>Thêm sự kiện và thói quen để quản lý thông báo tại đây.</string>
+	<key>notif_empty_title</key>
+	<string>Chưa có sự kiện hoặc thói quen</string>
+	<key>notif_evening_review</key>
+	<string>Ngày hôm nay của bạn thế nào? Hãy xem lại tiến độ nhé.</string>
+	<key>notif_evening_title</key>
+	<string>Tổng kết buổi tối 🌙</string>
+	<key>notif_event_body %@ %lld</key>
+	<string>%@ sẽ bắt đầu sau %lld phút</string>
+	<key>notif_event_section</key>
+	<string>Nhắc sự kiện</string>
+	<key>notif_event_time_label %d %@</key>
+	<string>Nhắc trước %d phút · %@</string>
+	<key>notif_event_time_label %lld %@</key>
+	<string>Nhắc nhở %lld phút trước %@</string>
+	<key>notif_event_title</key>
+	<string>Sự kiện sắp diễn ra</string>
+	<key>notif_habit_body %@</key>
+	<string>notif_event_body %@ %d</string>
+	<key>notif_habit_section</key>
+	<string>Nhắc thói quen</string>
+	<key>notif_habit_time_desc</key>
+	<string>Thông báo đúng lúc thói quen bắt đầu</string>
+	<key>notif_habit_time_label %@</key>
+	<string>Nhắc lúc %@</string>
+	<key>notif_habit_time_title</key>
+	<string>Nhắc đúng giờ thói quen</string>
+	<key>notif_habit_title</key>
+	<string>Nhắc thói quen</string>
+	<key>notif_morning_plan</key>
+	<string>Đây là kế hoạch của bạn hôm nay</string>
+	<key>notif_morning_title</key>
+	<string>Chào buổi sáng ☀️</string>
+	<key>notif_paused_status</key>
+	<string>Tất cả nhắc nhở đang tạm dừng</string>
+	<key>notif_permission_message</key>
+	<string>Thông báo hiện đang tắt. Hãy vào Cài đặt → Line để bật lại.</string>
+	<key>notif_permission_title</key>
+	<string>Bật thông báo</string>
+	<key>notif_remind_before</key>
+	<string>Nhắc trước</string>
+	<key>notif_screen_title</key>
+	<string>Thông báo</string>
+	<key>notif_section_events</key>
+	<string>Sự kiện</string>
+	<key>notif_section_habits</key>
+	<string>Thói quen</string>
+	<key>notif_winddown_body</key>
+	<string>Đã đến lúc khép lại một ngày</string>
+	<key>notif_winddown_title</key>
+	<string>Thư giãn cuối ngày 🌙</string>
+	<key>ok</key>
+	<string>OK</string>
+	<key>onboarding.feature.colors.subtitle</key>
+	<string>Biến timeline thành phong cách của bạn</string>
+	<key>onboarding.feature.colors.title</key>
+	<string>Màu Sắc Tùy Chỉnh</string>
+	<key>onboarding.feature.habit.subtitle</key>
+	<string>Xây dựng sự đều đặn mỗi ngày</string>
+	<key>onboarding.feature.habit.title</key>
+	<string>Theo Dõi Thói Quen</string>
+	<key>onboarding.feature.icons.subtitle</key>
+	<string>Chọn icon phù hợp cho mọi sự kiện</string>
+	<key>onboarding.feature.icons.title</key>
+	<string>Hơn 200 Icon</string>
+	<key>onboarding.feature.mood.subtitle</key>
+	<string>Ghi lại cảm xúc mỗi ngày</string>
+	<key>onboarding.feature.mood.title</key>
+	<string>Nhật Ký Tâm Trạng</string>
+	<key>onboarding.feature.stats.subtitle</key>
+	<string>Nhìn thấy bạn đã tiến xa thế nào</string>
+	<key>onboarding.feature.stats.title</key>
+	<string>Thống Kê Tiến Độ</string>
+	<key>onboarding.feature.timeline.subtitle</key>
+	<string>Kéo thả và sắp xếp ngày của bạn</string>
+	<key>onboarding.feature.timeline.title</key>
+	<string>Timeline Trực Quan</string>
+	<key>onboarding.focus.subtitle</key>
+	<string>Line chỉ hiển thị điều quan trọng nhất lúc này — sự kiện bạn đang làm và thời gian còn lại.</string>
+	<key>onboarding.focus.title</key>
+	<string>Một việc. Một khoảnh khắc.</string>
+	<key>onboarding.paywall.subtitle</key>
+	<string>Bắt đầu miễn phí, nâng cấp bất cứ lúc nào.</string>
+	<key>onboarding.paywall.title</key>
+	<string>Một bước cuối</string>
+	<key>onboarding.paywall.unlock</key>
+	<string>Xây dựng cuộc sống theo cách bạn muốn.</string>
+	<key>onboarding.sleep.subtitle</key>
+	<string>Timeline mỗi ngày sẽ kết thúc khoảng thời điểm này.</string>
+	<key>onboarding.sleep.title</key>
+	<string>Bạn thường đi ngủ lúc mấy giờ?</string>
+	<key>onboarding.timeline.bullet.drag</key>
+	<string>Di chuyển sự kiện để điều chỉnh giờ nhanh chóng.</string>
+	<key>onboarding.timeline.subtitle</key>
+	<string>Mọi sự kiện và thói quen đều nằm trên timeline. Kéo để đổi lịch, chạm để theo dõi.</string>
+	<key>onboarding.timeline.title</key>
+	<string>Ngày của bạn, dưới dạng timeline</string>
+	<key>onboarding.wakeup.subtitle</key>
+	<string>Timeline của bạn sẽ bắt đầu từ thời điểm này.</string>
+	<key>onboarding.wakeup.title</key>
+	<string>Bạn thường thức dậy lúc mấy giờ?</string>
+	<key>onboarding.welcome_subtitle</key>
+	<string>Lên kế hoạch ngày của bạn một cách trực quan. Xây dựng thói quen bền vững. Nhìn thấy cuộc sống của bạn dần hình thành.</string>
+	<key>onboarding.welcome_title</key>
+	<string>Chào mừng đến Line</string>
+	<key>open_settings</key>
+	<string>Mở Cài đặt</string>
+	<key>per_tap</key>
+	<string>Mỗi lần</string>
+	<key>pick_at_least_one_day</key>
+	<string>📅 Chọn ít nhất một ngày</string>
+	<key>placeholder.add_notes</key>
+	<string>Thêm ghi chú...</string>
+	<key>placeholder.tap_to_add_notes</key>
+	<string>Nhấn để thêm ghi chú…</string>
+	<key>prediction.on_track</key>
+	<string>Đang đúng tiến độ ~%d%% trong tháng này</string>
+	<key>prediction.projected</key>
+	<string>Dự kiến ~%d%% trong tháng này</string>
+	<key>prefs_accent_color</key>
+	<string>Màu nhấn</string>
+	<key>prefs_morning_start</key>
+	<string>Bắt đầu buổi sáng</string>
+	<key>prefs_night_reset</key>
+	<string>Kết thúc ngày</string>
+	<key>prefs_title</key>
+	<string>Tùy chọn</string>
+	<key>prefs_week_start</key>
+	<string>Tuần bắt đầu từ</string>
+	<key>premium.feature.backup.subtitle</key>
+	<string>Không bao giờ mất dữ liệu của bạn</string>
+	<key>premium.feature.backup.title</key>
+	<string>Sao lưu &amp; Xuất dữ liệu</string>
+	<key>premium.feature.customization.subtitle</key>
+	<string>Màu sắc, mật độ timeline, bước snap</string>
+	<key>premium.feature.customization.title</key>
+	<string>Tùy chỉnh toàn diện</string>
+	<key>premium.feature.events</key>
+	<string>∞ sự kiện</string>
+	<key>premium.feature.habits</key>
+	<string>∞ thói quen</string>
+	<key>premium.feature.icons</key>
+	<string>∞ biểu tượng</string>
+	<key>premium.feature.notifications.subtitle</key>
+	<string>Nhắc nhở, tổng kết ngày và hơn thế</string>
+	<key>premium.feature.notifications.title</key>
+	<string>Thông báo thông minh</string>
+	<key>premium.feature.stats</key>
+	<string>Thống kê 90 ngày</string>
+	<key>premium.feature.unlimited.subtitle</key>
+	<string>Không giới hạn những gì bạn lên kế hoạch</string>
+	<key>premium.feature.unlimited.title</key>
+	<string>Sự kiện &amp; Thói quen không giới hạn</string>
+	<key>premium.free.limit.events</key>
+	<string>50 sự kiện</string>
+	<key>premium.free.limit.habits</key>
+	<string>50 thói quen</string>
+	<key>premium.free.limit.icons</key>
+	<string>5 biểu tượng mỗi nhóm</string>
+	<key>premium.free.limit.stats</key>
+	<string>Thống kê 7 ngày</string>
+	<key>premium.free.title</key>
+	<string>Miễn phí</string>
+	<key>premium.later</key>
+	<string>Maybe later</string>
+	<key>premium.purchase_description</key>
+	<string>Line Premium là gói mua một lần với giá $4.99 USD.</string>
+	<key>premium.purchase_details</key>
+	<string>Thanh toán được tính vào Apple ID của bạn. Không đăng ký, không phí định kỳ. Có thể khôi phục trên mọi thiết bị dùng cùng Apple ID.</string>
+	<key>premium.restore</key>
+	<string>Khôi phục mua hàng</string>
+	<key>premium.restoring</key>
+	<string>Đang khôi phục...</string>
+	<key>premium.title</key>
+	<string>Premium</string>
+	<key>premium.unlock_price</key>
+	<string>Mở khóa Premium — $4.99</string>
+	<key>premium.unlocked</key>
+	<string>Premium đã được mở khóa!</string>
+	<key>premium_feature</key>
+	<string>Tính năng Premium</string>
+	<key>premium_limit_cta</key>
+	<string>Nâng cấp để dùng không giới hạn</string>
+	<key>premium_limit_events %lld</key>
+	<string>Gói miễn phí giới hạn %lld sự kiện</string>
+	<key>premium_limit_habits %lld</key>
+	<string>Gói miễn phí giới hạn %lld thói quen</string>
+	<key>premium_owned_message</key>
+	<string>Bạn đã có Premium — tận hưởng toàn bộ tính năng!</string>
+	<key>premium_payment_note</key>
+	<string>Thanh toán sẽ được tính vào Apple ID của bạn. Không phải gói đăng ký và không có phí định kỳ. Bạn có thể khôi phục giao dịch trên bất kỳ thiết bị nào đăng nhập cùng Apple ID.</string>
+	<key>premium_price</key>
+	<string>Mua một lần · $4.99</string>
+	<key>premium_price_note</key>
+	<string>Line Premium là gói mua một lần với giá $4.99 USD.</string>
+	<key>premium_restore_button</key>
+	<string>Khôi phục mua hàng</string>
+	<key>premium_restoring</key>
+	<string>Đang khôi phục…</string>
+	<key>premium_subtitle</key>
+	<string>Mở khóa toàn bộ tiềm năng của bạn. Không giới hạn. Không thỏa hiệp.</string>
+	<key>premium_title</key>
+	<string>Line Premium</string>
+	<key>premium_unlock_button</key>
+	<string>Mở khóa Premium — $4.99</string>
+	<key>presets</key>
+	<string>Màu có sẵn</string>
+	<key>privacy_policy</key>
+	<string>Chính sách quyền riêng tư</string>
+	<key>purchase.error.ineligible</key>
+	<string>Bạn không đủ điều kiện cho ưu đãi này.</string>
+	<key>purchase.error.network</key>
+	<string>Lỗi kết nối. Vui lòng kiểm tra mạng và thử lại.</string>
+	<key>purchase.error.not_available</key>
+	<string>Sản phẩm không khả dụng tại khu vực của bạn.</string>
+	<key>purchase.error.pending</key>
+	<string>Giao dịch đang chờ phê duyệt.</string>
+	<key>purchase.error.product_not_found</key>
+	<string>Không tìm thấy sản phẩm.</string>
+	<key>purchase.error.verification_failed</key>
+	<string>Không thể xác minh giao dịch.</string>
+	<key>range.month</key>
+	<string>Tháng này</string>
+	<key>range.today</key>
+	<string>Hôm nay</string>
+	<key>range.week</key>
+	<string>Tuần này</string>
+	<key>recent_section</key>
+	<string>Gần đây</string>
+	<key>recurrence_daily</key>
+	<string>Hàng ngày</string>
+	<key>recurrence_habit</key>
+	<string>Thói quen</string>
+	<key>recurrence_month</key>
+	<string>1 tháng</string>
+	<key>recurrence_once</key>
+	<string>1 ngày</string>
+	<key>recurrence_range %@–%@</key>
+	<string>Khoảng thời gian lặp%1$@–%2$@</string>
+	<key>recurrence_scope_daily</key>
+	<string>Sự kiện này lặp lại mỗi ngày.</string>
+	<key>recurrence_scope_range %@ %@</key>
+	<string>Lặp lại từ %@ đến %@.</string>
+	<key>recurrence_scope_specific %@</key>
+	<string>Sự kiện này lặp lại vào %@.</string>
+	<key>recurrence_scope_weekdays</key>
+	<string>Sự kiện này lặp lại từ Thứ 2 đến Thứ 6.</string>
+	<key>recurrence_short_once</key>
+	<string>Một lần</string>
+	<key>recurrence_short_range</key>
+	<string>Khoảng</string>
+	<key>recurrence_text_daily</key>
+	<string>Mỗi ngày</string>
+	<key>recurrence_text_range %@ %@</key>
+	<string>%@ – %@</string>
+	<key>recurrence_text_weekdays</key>
+	<string>Thứ 2 – Thứ 6</string>
+	<key>recurrence_week</key>
+	<string>1 tuần</string>
+	<key>recurrence_weekdays</key>
+	<string>Ngày trong tuần</string>
+	<key>recurring_change_scope_message</key>
+	<string>Áp dụng thay đổi này cho tất cả các ngày hay chỉ hôm nay?</string>
+	<key>repeat.every</key>
+	<string>Mỗi %@</string>
+	<key>repeat.none</key>
+	<string>Không lặp</string>
+	<key>repeat.specific_week</key>
+	<string>Tuần cụ thể</string>
+	<key>repeat.title</key>
+	<string>Lặp lại</string>
+	<key>repeat.weekly</key>
+	<string>Hàng tuần</string>
+	<key>reset_all_data</key>
+	<string>Đặt lại toàn bộ dữ liệu</string>
+	<key>reset_data_message</key>
+	<string>Hành động này sẽ xóa vĩnh viễn tất cả sự kiện, thói quen và lịch sử hoàn thành. Không thể hoàn tác.</string>
+	<key>reset_data_title</key>
+	<string>Đặt lại toàn bộ dữ liệu</string>
+	<key>reset_everything</key>
+	<string>Xóa toàn bộ dữ liệu</string>
+	<key>restore_backup</key>
+	<string>Khôi phục sao lưu</string>
+	<key>restore_backup_desc</key>
+	<string>Nhập từ file sao lưu .json</string>
+	<key>restore_failed_message</key>
+	<string>Không thể đọc file sao lưu. Hãy đảm bảo đây là file backup hợp lệ của Line.</string>
+	<key>restore_failed_title</key>
+	<string>Khôi phục thất bại</string>
+	<key>restore_success_message</key>
+	<string>Dữ liệu của bạn đã được khôi phục. Ứng dụng sẽ tự động làm mới.</string>
+	<key>restore_success_title</key>
+	<string>Khôi phục thành công</string>
+	<key>row_backup</key>
+	<string>Sao lưu &amp; xuất dữ liệu</string>
+	<key>row_backup_free</key>
+	<string>Không</string>
+	<key>row_backup_premium</key>
+	<string>Có</string>
+	<key>row_colors</key>
+	<string>Màu accent</string>
+	<key>row_colors_free</key>
+	<string>3</string>
+	<key>row_colors_premium</key>
+	<string>Không giới hạn</string>
+	<key>row_events</key>
+	<string>Sự kiện</string>
+	<key>row_events_free</key>
+	<string>50</string>
+	<key>row_events_premium</key>
+	<string>∞</string>
+	<key>row_habits</key>
+	<string>Thói quen</string>
+	<key>row_habits_free</key>
+	<string>50</string>
+	<key>row_habits_premium</key>
+	<string>∞</string>
+	<key>row_icons</key>
+	<string>Icon mỗi danh mục</string>
+	<key>row_icons_free</key>
+	<string>5</string>
+	<key>row_icons_premium</key>
+	<string>∞</string>
+	<key>row_notifications</key>
+	<string>Thông báo</string>
+	<key>row_notifications_free</key>
+	<string>Cơ bản</string>
+	<key>row_notifications_premium</key>
+	<string>Đầy đủ</string>
+	<key>row_stats</key>
+	<string>Lịch sử thống kê</string>
+	<key>row_stats_free</key>
+	<string>7 ngày</string>
+	<key>row_stats_premium</key>
+	<string>90 ngày</string>
+	<key>save</key>
+	<string>Lưu</string>
+	<key>section.details</key>
+	<string>Chi tiết</string>
+	<key>section.last_7_days</key>
+	<string>7 ngày gần đây</string>
+	<key>section.notes</key>
+	<string>Ghi chú</string>
+	<key>select_month_title</key>
+	<string>Chọn tháng</string>
+	<key>settings_account_title</key>
+	<string>Tài khoản</string>
+	<key>settings_active</key>
+	<string>ĐANG HOẠT ĐỘNG</string>
+	<key>settings_appearance</key>
+	<string>Giao diện</string>
+	<key>settings_contact_us</key>
+	<string>Liên hệ hỗ trợ</string>
+	<key>settings_disclaimer</key>
+	<string>Line cung cấp thông tin về sức khỏe và năng suất nhằm phục vụ mục đích lập kế hoạch cá nhân. Nội dung không nhằm thay thế lời khuyên, chẩn đoán hoặc điều trị y khoa. Hãy luôn tham khảo ý kiến chuyên gia y tế khi cần.</string>
+	<key>settings_faq</key>
+	<string>FAQ</string>
+	<key>settings_legal_title</key>
+	<string>Pháp lý</string>
+	<key>settings_manage_title</key>
+	<string>Quản lý</string>
+	<key>settings_notifications</key>
+	<string>Thông báo</string>
+	<key>settings_preferences</key>
+	<string>Tuỳ chỉnh</string>
+	<key>settings_premium_cta</key>
+	<string>Mở khóa toàn bộ tính năng, không cần đăng ký hàng năm.</string>
+	<key>settings_premium_thanks</key>
+	<string>Cảm ơn bạn đã ủng hộ ♥</string>
+	<key>settings_premium_title</key>
+	<string>Line Premium</string>
+	<key>settings_privacy_policy</key>
+	<string>Chính sách quyền riêng tư</string>
+	<key>settings_productivity</key>
+	<string>Năng suất</string>
+	<key>settings_rate_app</key>
+	<string>Đánh giá ứng dụng</string>
+	<key>settings_restore_purchase</key>
+	<string>Khôi phục giao dịch</string>
+	<key>settings_schedule</key>
+	<string>Lịch trình</string>
+	<key>settings_share_app</key>
+	<string>Chia sẻ ứng dụng</string>
+	<key>settings_source_who</key>
+	<string>Nguồn: Tổ chức Y tế Thế giới</string>
+	<key>settings_stats_data</key>
+	<string>Thống kê &amp; dữ liệu</string>
+	<key>settings_subscription</key>
+	<string>Gói đăng kí</string>
+	<key>settings_support_title</key>
+	<string>Hỗ trợ</string>
+	<key>settings_terms</key>
+	<string>Điều khoản sử dụng</string>
+	<key>settings_title</key>
+	<string>Cài đặt</string>
+	<key>settings_upgrade_title</key>
+	<string>Nâng cấp Premium</string>
+	<key>soon</key>
+	<string>Sắp tới</string>
+	<key>start_timer_button</key>
+	<string>Bắt đầu</string>
+	<key>start_timer_intent_title</key>
+	<string>Bắt đầu bộ đếm giờ</string>
+	<key>stat.best_streak</key>
+	<string>Cao nhất</string>
+	<key>stat.completion_30d</key>
+	<string>30 ngày</string>
+	<key>stat.days_short</key>
+	<string>ngày</string>
+	<key>stat.last_30_days_format %lld</key>
+	<string>%lld trên 30 ngày qua</string>
+	<key>stat_duration</key>
+	<string>Thời lượng</string>
+	<key>stat_start</key>
+	<string>Bắt đầu</string>
+	<key>stat_type</key>
+	<string>Loại</string>
+	<key>stats.at_risk</key>
+	<string>có nguy cơ mất</string>
+	<key>stats.best_streak</key>
+	<string>· tốt nhất %d</string>
+	<key>stats.lifetime</key>
+	<string>Xem thống kê tổng thể</string>
+	<key>stats.progress</key>
+	<string>Tiến trình của bạn</string>
+	<key>stats.streak</key>
+	<string>Chuỗi ngày</string>
+	<key>stats_accumulated</key>
+	<string>Tích lũy</string>
+	<key>stats_empty_subtitle</key>
+	<string>Hãy hoàn thành sự kiện và thói quen để xem thống kê tổng thể tại đây.</string>
+	<key>stats_empty_title</key>
+	<string>Chưa có hoạt động nào được hoàn thành</string>
+	<key>stats_event_history</key>
+	<string>Lịch sử sự kiện</string>
+	<key>stats_events_done</key>
+	<string>Sự kiện đã hoàn thành</string>
+	<key>stats_habit_history</key>
+	<string>Lịch sử thói quen</string>
+	<key>stats_habits_done</key>
+	<string>Thói quen đã hoàn thành</string>
+	<key>stats_lifetime_title</key>
+	<string>Thống kê trọn đời</string>
+	<key>status_completed</key>
+	<string>Đã hoàn thành</string>
+	<key>status_not_completed</key>
+	<string>Chưa hoàn thành</string>
+	<key>streak.day_count</key>
+	<string>%d ngày</string>
+	<key>streak_threshold</key>
+	<string>Ngưỡng Streak</string>
+	<key>system_event_change_title</key>
+	<string>Thay đổi sự kiện hệ thống</string>
+	<key>tap_to_complete_format</key>
+	<string>%d lần để hoàn thành</string>
+	<key>target</key>
+	<string>Mục tiêu</string>
+	<key>target_error_invalid</key>
+	<string>Mục tiêu phải lớn hơn 0</string>
+	<key>terms_of_use</key>
+	<string>Điều khoản sử dụng</string>
+	<key>time.active_window</key>
+	<string>khung giờ hoạt động</string>
+	<key>time.afternoon</key>
+	<string>Buổi chiều</string>
+	<key>time.all_day</key>
+	<string>Cả ngày</string>
+	<key>time.date</key>
+	<string>Ngày</string>
+	<key>time.evening</key>
+	<string>Buổi tối</string>
+	<key>time.midnight</key>
+	<string>12 giờ đêm</string>
+	<key>time.morning</key>
+	<string>Buổi sáng</string>
+	<key>time.nine_pm</key>
+	<string>9 giờ tối</string>
+	<key>time.no_time_left</key>
+	<string>Không còn thời gian</string>
+	<key>time.noon</key>
+	<string>12 giờ trưa</string>
+	<key>time.remaining.full</key>
+	<string>Còn %d giờ %d phút</string>
+	<key>time.remaining.hours</key>
+	<string>Còn %d giờ</string>
+	<key>time.remaining.minutes</key>
+	<string>Còn %d phút</string>
+	<key>time.six_am</key>
+	<string>6 giờ sáng</string>
+	<key>time.six_pm</key>
+	<string>6 giờ tối</string>
+	<key>time.start</key>
+	<string>Thời gian bắt đầu</string>
+	<key>time.today</key>
+	<string>Hôm nay</string>
+	<key>time.wake_sleep</key>
+	<string>Thức → Ngủ</string>
+	<key>time_error_after_sleep</key>
+	<string>🌙 Sau giờ kết thúc ngày</string>
+	<key>time_error_before_wake</key>
+	<string>🌅 Trước giờ bắt đầu ngày</string>
+	<key>time_error_overlap</key>
+	<string>⚡ Bị trùng với sự kiện khác</string>
+	<key>time_error_passed</key>
+	<string>⏰ Thời gian này đã trôi qua</string>
+	<key>time_of_day</key>
+	<string>Thời gian trong ngày</string>
+	<key>time_range %@ %@</key>
+	<string>%@ – %@</string>
+	<key>timeline.live</key>
+	<string>Trực tiếp</string>
+	<key>timeline.now_running</key>
+	<string>ĐANG DIỄN RA</string>
+	<key>timeline.time_left_example</key>
+	<string>Còn 38 phút</string>
+	<key>timeline.up_next</key>
+	<string>TIẾP THEO</string>
+	<key>timeline_density</key>
+	<string>Mật độ Timeline</string>
+	<key>timeline_density_comfortable</key>
+	<string>Thoải mái</string>
+	<key>timeline_density_compact</key>
+	<string>Gọn</string>
+	<key>timeline_density_normal</key>
+	<string>Tiêu chuẩn</string>
+	<key>timer_config_title</key>
+	<string>Cấu hình bộ đếm giờ</string>
+	<key>timer_name_param</key>
+	<string>Tên bộ đếm giờ</string>
+	<key>timer_off</key>
+	<string>Tắt</string>
+	<key>timer_on</key>
+	<string>Đang chạy</string>
+	<key>timer_running_param</key>
+	<string>Trạng thái bộ đếm</string>
+	<key>times</key>
+	<string>lần</string>
+	<key>today</key>
+	<string>Hôm nay</string>
+	<key>type.event</key>
+	<string>Sự kiện</string>
+	<key>type.habit</key>
+	<string>Thói quen</string>
+	<key>undo_action</key>
+	<string>Hoàn tác</string>
+	<key>undo_dismiss_a11y</key>
+	<string>Đóng</string>
+	<key>undo_toast_deleted %@</key>
+	<string>Đã xoá “%@”</string>
+	<key>undo_toast_generic</key>
+	<string>Đã xoá mục</string>
+	<key>unit_%@</key>
+	<string>Mục tiêu %@</string>
+	<key>unit_custom</key>
+	<string>Tuỳ chỉnh</string>
+	<key>unit_custom_placeholder</key>
+	<string>Đơn vị của bạn (vd: cốc, hiệp, giờ)</string>
+	<key>unit_error_empty</key>
+	<string>Vui lòng nhập đơn vị</string>
+	<key>unit_km</key>
+	<string>km</string>
+	<key>unit_l</key>
+	<string>lít</string>
+	<key>unit_min</key>
+	<string>phút</string>
+	<key>unit_ml</key>
+	<string>ml</string>
+	<key>unit_pages</key>
+	<string>trang</string>
+	<key>unit_steps</key>
+	<string>bước</string>
+	<key>unit_times</key>
+	<string>lần</string>
+	<key>warning.duration.exceeds_sleep</key>
+	<string>🌙 Thời lượng vượt quá giờ ngủ — sẽ được cắt bớt</string>
+	<key>warning.duration.no_time_left</key>
+	<string>🚫 Không còn thời gian trước giờ ngủ</string>
+	<key>warning.duration.too_short</key>
+	<string>⚡ Thời lượng tối thiểu là 5 phút</string>
+	<key>warning.time.before_wake</key>
+	<string>🌅 Thời gian bắt đầu trước giờ thức dậy</string>
+	<key>warning.time.overlap</key>
+	<string>⚡ Đã có sự kiện khác trong thời gian này</string>
+	<key>warning.time.past</key>
+	<string>⏰ Thời gian này đã qua</string>
+	<key>warning.time.past_sleep</key>
+	<string>🌙 Thời gian bắt đầu vượt quá giờ ngủ</string>
+	<key>warning_enter_title</key>
+	<string>✏️ Vui lòng nhập tiêu đề</string>
+	<key>week_in_format %lld</key>
+	<string>Trong %d tuần</string>
+	<key>week_next</key>
+	<string>Tuần sau</string>
+	<key>week_this</key>
+	<string>Tuần này</string>
+	<key>weekday_fri</key>
+	<string>T6</string>
+	<key>weekday_mon</key>
+	<string>T2</string>
+	<key>weekday_sat</key>
+	<string>T7</string>
+	<key>weekday_sun</key>
+	<string>CN</string>
+	<key>weekday_thu</key>
+	<string>T5</string>
+	<key>weekday_tue</key>
+	<string>T3</string>
+	<key>weekday_wed</key>
+	<string>T4</string>
+	<key>widget_all_clear</key>
+	<string>Trống lịch</string>
+	<key>widget_event_icon_desc</key>
+	<string>Icon sự kiện hiện tại hoặc tiếp theo kèm tiến trình.</string>
+	<key>widget_event_icon_title</key>
+	<string>Biểu tượng sự kiện</string>
+	<key>widget_event_remaining</key>
+	<string>%@ · còn %d phút</string>
+	<key>widget_free_day</key>
+	<string>Ngày trống</string>
+	<key>widget_full_day_desc</key>
+	<string>Tất cả sự kiện và thói quen hôm nay.</string>
+	<key>widget_full_day_title</key>
+	<string>Cả ngày</string>
+	<key>widget_minutes_left</key>
+	<string>Còn %d phút</string>
+	<key>widget_more_count</key>
+	<string>+%d nữa</string>
+	<key>widget_more_events_count</key>
+	<string>+%d sự kiện nữa</string>
+	<key>widget_next</key>
+	<string>TIẾP THEO</string>
+	<key>widget_next_event_desc</key>
+	<string>Xem sự kiện sắp tới của bạn.</string>
+	<key>widget_next_event_desc_short</key>
+	<string>Xem nhanh sự kiện sắp tới.</string>
+	<key>widget_next_event_title</key>
+	<string>Sự kiện tiếp theo</string>
+	<key>widget_no_events</key>
+	<string>Không có sự kiện</string>
+	<key>widget_no_more_events_today</key>
+	<string>Không còn sự kiện hôm nay</string>
+	<key>widget_now</key>
+	<string>HIỆN TẠI</string>
+	<key>widget_timer_description</key>
+	<string>Một điều khiển để chạy bộ đếm giờ.</string>
+	<key>widget_timer_title</key>
+	<string>Bộ đếm giờ</string>
+	<key>widget_today</key>
+	<string>HÔM NAY</string>
+	<key>widget_today_schedule_desc</key>
+	<string>Các sự kiện sắp tới và theo dõi thói quen.</string>
+	<key>widget_today_schedule_title</key>
+	<string>Lịch hôm nay</string>
+	<key>widget_today_timeline_desc</key>
+	<string>Tổng quan trực quan trong ngày.</string>
+	<key>widget_today_timeline_title</key>
+	<string>Lịch hôm nay</string>
+	<key>© 2026 All rights reserved</key>
+	<string>© 2026 All rights reserved</string>
+	<key>·</key>
+	<string>·</string>
+	<key>· %@</key>
+	<string>· %@</string>
+	<key>• %@</key>
+	<string>• %@</string>
+</dict>
+</plist>

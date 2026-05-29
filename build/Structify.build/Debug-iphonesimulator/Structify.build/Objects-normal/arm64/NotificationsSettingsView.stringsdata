@@ -1,0 +1,240 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Setting/Notification/NotificationsSettingsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "notif_screen_title",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 118
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_permission_title",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 124
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_section_events",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_section_habits",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 98
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_hint_open_notification_settings",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 178
+        }
+      },
+      {
+        "comment": "",
+        "key": "open_settings",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 125
+        }
+      },
+      {
+        "comment": "",
+        "key": "cancel",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 130
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_permission_message",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 133
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_disabled_title",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 151
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_disabled_subtitle",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 154
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_all_title",
+        "location": {
+          "startingColumn": 64,
+          "startingLine": 212
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 209
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_all_title",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 197
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_active_status",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 200
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_paused_status",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 201
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_event_section",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 231
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_remind_before",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 244
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 248
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld min",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 250
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_habit_section",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 277
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_habit_time_title",
+        "location": {
+          "startingColumn": 68,
+          "startingLine": 300
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 297
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_habit_time_title",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 290
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_habit_time_desc",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 292
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 351
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_event_time_label %lld %@",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 411
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_habit_time_label %@",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 415
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_empty_title",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 380
+        }
+      },
+      {
+        "comment": "",
+        "key": "notif_empty_subtitle",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 383
+        }
+      }
+    ]
+  },
+  "version": 1
+}

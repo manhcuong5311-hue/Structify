@@ -1,0 +1,408 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/CreateEventDetailSheet.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "event.add",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 11
+        }
+      },
+      {
+        "comment": "",
+        "key": "repeat.none",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 73
+        }
+      },
+      {
+        "comment": "",
+        "key": "repeat.weekly",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 74
+        }
+      },
+      {
+        "comment": "",
+        "key": "repeat.specific_week",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 75
+        }
+      },
+      {
+        "comment": "",
+        "key": "warning.time.past",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 105
+        }
+      },
+      {
+        "comment": "",
+        "key": "warning.time.overlap",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 106
+        }
+      },
+      {
+        "comment": "",
+        "key": "warning.time.past_sleep",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 107
+        }
+      },
+      {
+        "comment": "",
+        "key": "warning.time.before_wake",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 108
+        }
+      },
+      {
+        "comment": "",
+        "key": "warning.duration.exceeds_sleep",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 117
+        }
+      },
+      {
+        "comment": "",
+        "key": "warning.duration.too_short",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 118
+        }
+      },
+      {
+        "comment": "",
+        "key": "warning.duration.no_time_left",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 119
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit.add",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 304
+        }
+      },
+      {
+        "comment": "",
+        "key": "event.name.placeholder",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 365
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon.change",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 351
+        }
+      },
+      {
+        "comment": "",
+        "key": "keyboard.done",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 404
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.all_day",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 1259
+        }
+      },
+      {
+        "comment": "",
+        "key": "event_category_all",
+        "location": {
+          "startingColumn": 70,
+          "startingLine": 483
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 674
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.date",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 665
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.start",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 707
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.all_day",
+        "location": {
+          "startingColumn": 59,
+          "startingLine": 708
+        }
+      },
+      {
+        "comment": "",
+        "key": ":",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 744
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 731
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 749
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.no_time_left",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 1269
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.remaining.full",
+        "location": {
+          "startingColumn": 69,
+          "startingLine": 1271
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.remaining.hours",
+        "location": {
+          "startingColumn": 70,
+          "startingLine": 1272
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.remaining.minutes",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 1273
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.all_day",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 800
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 842
+        }
+      },
+      {
+        "comment": "",
+        "key": "repeat.title",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 836
+        }
+      },
+      {
+        "comment": "",
+        "key": "week_this",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 1324
+        }
+      },
+      {
+        "comment": "",
+        "key": "week_next",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 1325
+        }
+      },
+      {
+        "comment": "",
+        "key": "week_in_format %lld",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 1326
+        }
+      },
+      {
+        "comment": "",
+        "key": "max_duration_format %@",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 944
+        }
+      },
+      {
+        "comment": "",
+        "key": "duration",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 935
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.all_day",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 1003
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 974
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 980
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lldh",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 975
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lldm",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 982
+        }
+      },
+      {
+        "comment": "",
+        "key": "enter_title_to_continue",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 1030
+        }
+      },
+      {
+        "comment": "",
+        "key": "pick_at_least_one_day",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 1034
+        }
+      },
+      {
+        "comment": "",
+        "key": "fix_issues_to_continue",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 1037
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium_limit_events %lld",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 1055
+        }
+      },
+      {
+        "comment": "",
+        "key": "create_event",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 1070
+        }
+      },
+      {
+        "comment": "",
+        "key": "warning_enter_title",
+        "location": {
+          "startingColumn": 62,
+          "startingLine": 1085
+        }
+      },
+      {
+        "comment": "",
+        "key": "repeat.none",
+        "location": {
+          "startingColumn": 59,
+          "startingLine": 1285
+        }
+      },
+      {
+        "comment": "",
+        "key": "repeat.every",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 1288
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 1360
+        }
+      }
+    ]
+  },
+  "version": 1
+}

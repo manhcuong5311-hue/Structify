@@ -1,0 +1,64 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab1/AddHabitLogic/HabitTemplates.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "habit_category_health",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 31
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_category_mindfulness",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 32
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_category_productivity",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 33
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_category_learning",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 34
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_category_creative",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 35
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_category_social",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 36
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_category_lifestyle",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 37
+        }
+      }
+    ]
+  },
+  "version": 1
+}

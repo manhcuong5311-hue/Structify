@@ -1,0 +1,66 @@
+[
+  {
+    "typeName": "StructifyWidgetExtension.ConfigurationAppIntent",
+    "mangledTypeName": "24StructifyWidgetExtension22ConfigurationAppIntentV",
+    "kind": "struct",
+    "file": "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/AppIntent.swift",
+    "line": 11,
+    "conformances": [
+      "AppIntents.WidgetConfigurationIntent",
+      "AppIntents.AppIntent",
+      "AppIntents.PersistentlyIdentifiable",
+      "AppIntents._SupportsAppDependencies",
+      "Swift.Sendable",
+      "Swift.SendableMetatype"
+    ],
+    "allConformances": [
+      {
+        "protocolName": "AppIntents.WidgetConfigurationIntent",
+        "conformanceDefiningModule": "StructifyWidgetExtension"
+      },
+      {
+        "protocolName": "AppIntents.AppIntent",
+        "conformanceDefiningModule": "StructifyWidgetExtension"
+      },
+      {
+        "protocolName": "AppIntents.PersistentlyIdentifiable",
+        "conformanceDefiningModule": "StructifyWidgetExtension"
+      },
+      {
+        "protocolName": "AppIntents._SupportsAppDependencies",
+        "conformanceDefiningModule": "StructifyWidgetExtension"
+      },
+      {
+        "protocolName": "Swift.Sendable",
+        "conformanceDefiningModule": "StructifyWidgetExtension"
+      },
+      {
+        "protocolName": "Swift.SendableMetatype",
+        "conformanceDefiningModule": "StructifyWidgetExtension"
+      }
+    ],
+    "associatedTypeAliases": [],
+    "properties": [
+      {
+        "label": "smiley",
+        "type": "StructifyWidgetExtension.ConfigurationAppIntent",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "true",
+        "file": "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/StructifyWidget.swift",
+        "line": 71,
+        "valueKind": "Runtime"
+      },
+      {
+        "label": "starEyes",
+        "type": "StructifyWidgetExtension.ConfigurationAppIntent",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "true",
+        "file": "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/StructifyWidget.swift",
+        "line": 77,
+        "valueKind": "Runtime"
+      }
+    ]
+  }
+]

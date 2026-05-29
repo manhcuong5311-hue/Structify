@@ -1,0 +1,37 @@
+{
+  "/Users/sammanhcuong/Desktop/Structify/Global.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/Global.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/Global.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/Global.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/Global.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/Global.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab2/TimeAnalytics.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/TimeAnalytics.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/TimeAnalytics.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/TimeAnalytics.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/TimeAnalytics.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/TimeAnalytics.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineViewUI.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/TimelineViewUI.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/TimelineViewUI.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/TimelineViewUI.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/TimelineViewUI.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/TimelineViewUI.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/GeneratedAssetSymbols.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/DerivedSources/GeneratedStringSymbols_Localizable.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.swiftdeps"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AppSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/AppSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/AppSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/AppSheet.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/AppSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/AppSheet.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/CreateItemSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/CreateItemSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/CreateItemSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/CreateItemSheet.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/CreateItemSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/CreateItemSheet.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/HEader/IconPicker.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/IconPicker.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/IconPicker.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/IconPicker.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/IconPicker.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/IconPicker.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/HEader/MonthYearPickerView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/MonthYearPickerView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/MonthYearPickerView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/MonthYearPickerView.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/MonthYearPickerView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/MonthYearPickerView.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab2/StatsView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/StatsView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/StatsView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/StatsView.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/StatsView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/StatsView.swiftdeps"
+  }
+}

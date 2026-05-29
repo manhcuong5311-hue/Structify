@@ -1,0 +1,104 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Onboarding/on2.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "demo.event.morning_start",
+        "location": {
+          "startingColumn": 102,
+          "startingLine": 10
+        }
+      },
+      {
+        "comment": "",
+        "key": "demo.event.deep_work",
+        "location": {
+          "startingColumn": 103,
+          "startingLine": 11
+        }
+      },
+      {
+        "comment": "",
+        "key": "demo.event.coffee_break",
+        "location": {
+          "startingColumn": 103,
+          "startingLine": 12
+        }
+      },
+      {
+        "comment": "",
+        "key": "demo.event.lunch",
+        "location": {
+          "startingColumn": 103,
+          "startingLine": 13
+        }
+      },
+      {
+        "comment": "",
+        "key": "demo.event.workout",
+        "location": {
+          "startingColumn": 103,
+          "startingLine": 14
+        }
+      },
+      {
+        "comment": "",
+        "key": "demo.event.wind_down",
+        "location": {
+          "startingColumn": 103,
+          "startingLine": 15
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.timeline.bullet.drag",
+        "location": {
+          "startingColumn": 83,
+          "startingLine": 54
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.timeline.bullet.track",
+        "location": {
+          "startingColumn": 86,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.timeline.bullet.repeat",
+        "location": {
+          "startingColumn": 83,
+          "startingLine": 56
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.timeline.title",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 109
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.timeline.subtitle",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 117
+        }
+      },
+      {
+        "comment": "",
+        "key": "common.duration_example",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 207
+        }
+      }
+    ]
+  },
+  "version": 1
+}

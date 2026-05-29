@@ -1,0 +1,56 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab1/HEader/Header.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "a11y_hint_open_month_picker",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 112
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_hint_select_today",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 312
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_hint_select_day",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 313
+        }
+      },
+      {
+        "comment": "",
+        "key": "Morning",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 388
+        }
+      },
+      {
+        "comment": "",
+        "key": "Noon",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 389
+        }
+      },
+      {
+        "comment": "",
+        "key": "Night",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 390
+        }
+      }
+    ]
+  },
+  "version": 1
+}

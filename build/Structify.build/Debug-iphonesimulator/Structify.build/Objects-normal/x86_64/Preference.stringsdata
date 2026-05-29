@@ -1,0 +1,544 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Setting/Preference/Preference.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "timeline_density_compact",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 64
+        }
+      },
+      {
+        "comment": "",
+        "key": "timeline_density_normal",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 66
+        }
+      },
+      {
+        "comment": "",
+        "key": "timeline_density_comfortable",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 68
+        }
+      },
+      {
+        "comment": "",
+        "key": "prefs_title",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 250
+        }
+      },
+      {
+        "comment": "",
+        "key": "reset_data_title",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 294
+        }
+      },
+      {
+        "comment": "",
+        "key": "restore_success_title",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 343
+        }
+      },
+      {
+        "comment": "",
+        "key": "restore_failed_title",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 350
+        }
+      },
+      {
+        "comment": "",
+        "key": "settings_schedule",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 194
+        }
+      },
+      {
+        "comment": "",
+        "key": "settings_appearance",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 203
+        }
+      },
+      {
+        "comment": "",
+        "key": "settings_productivity",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 212
+        }
+      },
+      {
+        "comment": "",
+        "key": "settings_notifications",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 221
+        }
+      },
+      {
+        "comment": "",
+        "key": "settings_stats_data",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 230
+        }
+      },
+      {
+        "comment": "",
+        "key": "Line • v1.0",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 241
+        }
+      },
+      {
+        "comment": "",
+        "key": "done",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 254
+        }
+      },
+      {
+        "comment": "",
+        "key": "prefs_morning_start",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 266
+        }
+      },
+      {
+        "comment": "",
+        "key": "prefs_night_reset",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 281
+        }
+      },
+      {
+        "comment": "",
+        "key": "reset_everything",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 296
+        }
+      },
+      {
+        "comment": "",
+        "key": "cancel",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 301
+        }
+      },
+      {
+        "comment": "",
+        "key": "reset_data_message",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 304
+        }
+      },
+      {
+        "comment": "",
+        "key": "ok",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 344
+        }
+      },
+      {
+        "comment": "",
+        "key": "restore_success_message",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 346
+        }
+      },
+      {
+        "comment": "",
+        "key": "ok",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 351
+        }
+      },
+      {
+        "comment": "",
+        "key": "restore_failed_message",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 353
+        }
+      },
+      {
+        "comment": "",
+        "key": "prefs_morning_start",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 407
+        }
+      },
+      {
+        "comment": "",
+        "key": "prefs_night_reset",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 423
+        }
+      },
+      {
+        "comment": "",
+        "key": "prefs_week_start",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 439
+        }
+      },
+      {
+        "comment": "",
+        "key": "weekday_sun",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 449
+        }
+      },
+      {
+        "comment": "",
+        "key": "weekday_mon",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 450
+        }
+      },
+      {
+        "comment": "",
+        "key": "weekday_tue",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 451
+        }
+      },
+      {
+        "comment": "",
+        "key": "weekday_wed",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 452
+        }
+      },
+      {
+        "comment": "",
+        "key": "weekday_thu",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 453
+        }
+      },
+      {
+        "comment": "",
+        "key": "weekday_fri",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 454
+        }
+      },
+      {
+        "comment": "",
+        "key": "weekday_sat",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 455
+        }
+      },
+      {
+        "comment": "",
+        "key": "hide_completed_events",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 615
+        }
+      },
+      {
+        "comment": "",
+        "key": "completed_events_fade",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 616
+        }
+      },
+      {
+        "comment": "",
+        "key": "prefs_accent_color",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 488
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 492
+        }
+      },
+      {
+        "comment": "",
+        "key": "timeline_density",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 544
+        }
+      },
+      {
+        "comment": "",
+        "key": "auto_suggest_slot",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 711
+        }
+      },
+      {
+        "comment": "",
+        "key": "auto_suggest_slot_desc",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 712
+        }
+      },
+      {
+        "comment": "",
+        "key": "default_duration",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 630
+        }
+      },
+      {
+        "comment": "",
+        "key": "drag_snap",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 672
+        }
+      },
+      {
+        "comment": "",
+        "key": "every_minutes %lld",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 676
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lldm",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 690
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_reminders",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 860
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_reminders_desc",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 861
+        }
+      },
+      {
+        "comment": "",
+        "key": "morning_briefing",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 728
+        }
+      },
+      {
+        "comment": "",
+        "key": "morning_briefing_desc",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 730
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium_feature",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 731
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 765
+        }
+      },
+      {
+        "comment": "",
+        "key": "evening_review",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 796
+        }
+      },
+      {
+        "comment": "",
+        "key": "evening_review_desc",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 798
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium_feature",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 799
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 832
+        }
+      },
+      {
+        "comment": "",
+        "key": "streak_threshold",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 886
+        }
+      },
+      {
+        "comment": "",
+        "key": "min_percent_habits",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 889
+        }
+      },
+      {
+        "comment": "",
+        "key": "export_data_csv",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 941
+        }
+      },
+      {
+        "comment": "",
+        "key": "backup_data",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 970
+        }
+      },
+      {
+        "comment": "",
+        "key": "backup_data_desc",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 973
+        }
+      },
+      {
+        "comment": "",
+        "key": "restore_backup",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 1000
+        }
+      },
+      {
+        "comment": "",
+        "key": "restore_backup_desc",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 1003
+        }
+      },
+      {
+        "comment": "",
+        "key": "danger_zone",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 1033
+        }
+      },
+      {
+        "comment": "",
+        "key": "reset_all_data",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 1045
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_value_on",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 1116
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_value_off",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 1117
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 20,
+          "startingLine": 1111
+        }
+      },
+      {
+        "comment": "",
+        "key": "soon",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 1139
+        }
+      }
+    ]
+  },
+  "version": 1
+}

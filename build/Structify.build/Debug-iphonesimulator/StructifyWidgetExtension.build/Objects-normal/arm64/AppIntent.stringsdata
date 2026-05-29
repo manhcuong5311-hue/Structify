@@ -1,0 +1,48 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/AppIntent.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "intent_config_title",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 12
+        }
+      },
+      {
+        "comment": "",
+        "key": "intent_config_desc",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 13
+        }
+      },
+      {
+        "comment": "",
+        "key": "intent_favorite_emoji",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 17
+        }
+      },
+      {
+        "comment": "",
+        "key": "intent_toggle_habit_title",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 26
+        }
+      },
+      {
+        "comment": "",
+        "key": "intent_template_id",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 28
+        }
+      }
+    ]
+  },
+  "version": 1
+}

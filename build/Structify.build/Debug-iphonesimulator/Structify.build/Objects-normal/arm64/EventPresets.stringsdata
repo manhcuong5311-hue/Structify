@@ -1,0 +1,48 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/EventPresets.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "event_category_work",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 26
+        }
+      },
+      {
+        "comment": "",
+        "key": "event_category_personal",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 27
+        }
+      },
+      {
+        "comment": "",
+        "key": "event_category_health",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 28
+        }
+      },
+      {
+        "comment": "",
+        "key": "event_category_learning",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 29
+        }
+      },
+      {
+        "comment": "",
+        "key": "event_category_lifestyle",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 30
+        }
+      }
+    ]
+  },
+  "version": 1
+}

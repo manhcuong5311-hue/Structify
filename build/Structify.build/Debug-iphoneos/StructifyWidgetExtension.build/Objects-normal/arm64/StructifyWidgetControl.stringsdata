@@ -1,0 +1,88 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/StructifyWidgetControl.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "widget_timer_title",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 31
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_timer_description",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 32
+        }
+      },
+      {
+        "comment": "",
+        "key": "start_timer_button",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 21
+        }
+      },
+      {
+        "comment": "",
+        "key": "timer_on",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 26
+        }
+      },
+      {
+        "comment": "",
+        "key": "timer_off",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 26
+        }
+      },
+      {
+        "comment": "",
+        "key": "timer_config_title",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "timer_name_param",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 57
+        }
+      },
+      {
+        "comment": "",
+        "key": "start_timer_intent_title",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 62
+        }
+      },
+      {
+        "comment": "",
+        "key": "timer_name_param",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 64
+        }
+      },
+      {
+        "comment": "",
+        "key": "timer_running_param",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 67
+        }
+      }
+    ]
+  },
+  "version": 1
+}

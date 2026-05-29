@@ -1,0 +1,88 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Onboarding/on1.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "onboarding.feature.timeline.title",
+        "location": {
+          "startingColumn": 57,
+          "startingLine": 17
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.feature.habit.title",
+        "location": {
+          "startingColumn": 57,
+          "startingLine": 18
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.feature.stats.title",
+        "location": {
+          "startingColumn": 57,
+          "startingLine": 19
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.feature.mood.title",
+        "location": {
+          "startingColumn": 57,
+          "startingLine": 20
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.feature.icons.title",
+        "location": {
+          "startingColumn": 57,
+          "startingLine": 21
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.feature.colors.title",
+        "location": {
+          "startingColumn": 57,
+          "startingLine": 22
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.welcome_title",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 51
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.welcome_subtitle",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 57
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.welcome_title",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 96
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.welcome_subtitle",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 103
+        }
+      }
+    ]
+  },
+  "version": 1
+}

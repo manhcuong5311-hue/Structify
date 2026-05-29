@@ -1,0 +1,1040 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab2/MoodLogic.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "mood.rough",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 56
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 57
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 58
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 59
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood_tracker.title",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 170
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.level.low",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 210
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.level.high",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 214
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.add_note",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 244
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.prompt.day",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 254
+        }
+      },
+      {
+        "comment": "",
+        "key": "common.submit",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 279
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 375
+        }
+      },
+      {
+        "comment": "",
+        "key": "common.recent",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 392
+        }
+      },
+      {
+        "comment": "",
+        "key": "common.done",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 440
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.empty.prompt",
+        "location": {
+          "startingColumn": 70,
+          "startingLine": 511
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.validation.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 607
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.validation.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 608
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.validation.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 609
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.validation.4",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 610
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.grounding.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 614
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.grounding.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 615
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.grounding.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 616
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.grounding.4",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 617
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.streak_safe.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 621
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.streak_safe.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 622
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.streak_safe.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 623
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.validation.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 633
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.validation.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 634
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.validation.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 635
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.validation.4",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 636
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.gentle.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 640
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.gentle.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 641
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.gentle.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 642
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.gentle.4",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 643
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.recovery.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 647
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.recovery.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 648
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.recovery.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 649
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.steady.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 659
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.steady.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 660
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.steady.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 661
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.steady.4",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 662
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.momentum.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 666
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.momentum.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 667
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.momentum.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 668
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.momentum.4",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 669
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.improving.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 673
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.improving.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 674
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.improving.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 675
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.affirmation.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 685
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.affirmation.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 686
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.affirmation.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 687
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.affirmation.4",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 688
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.identity.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 692
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.identity.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 693
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.identity.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 694
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.identity.4",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 695
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.time.morning.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 699
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.time.morning.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 700
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.time.evening.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 703
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.time.evening.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 704
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.time.neutral.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 707
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.time.neutral.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 708
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.celebration.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 718
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.celebration.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 719
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.celebration.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 720
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.celebration.4",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 721
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.identity.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 725
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.identity.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 726
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.identity.3",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 727
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.identity.4",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 728
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.time.morning.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 732
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.time.morning.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 733
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.time.evening.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 736
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.time.evening.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 737
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.time.neutral.1",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 740
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.time.neutral.2",
+        "location": {
+          "startingColumn": 17,
+          "startingLine": 741
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.title",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 520
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.action.add",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 533
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.action.edit",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 534
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.1",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 758
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.2",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 759
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.3",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 760
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.4",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 761
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.5",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 762
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.6",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 763
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.7",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 764
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.8",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 765
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.9",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 766
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.rough.10",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 767
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.1",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 771
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.2",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 772
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.3",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 773
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.4",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 774
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.5",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 775
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.6",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 776
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.7",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 777
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.8",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 778
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.9",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 779
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.low.10",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 780
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.1",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 785
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.2",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 786
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.3",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 787
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.4",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 788
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.5",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 789
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.6",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 790
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.7",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 791
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.8",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 792
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.9",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 793
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.okay.10",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 794
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.1",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 799
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.2",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 800
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.3",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 801
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.4",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 802
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.5",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 803
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.6",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 804
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.7",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 805
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.8",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 806
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.9",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 807
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.good.10",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 808
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.1",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 813
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.2",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 814
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.3",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 815
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.4",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 816
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.5",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 817
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.6",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 818
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.7",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 819
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.8",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 820
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.9",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 821
+        }
+      },
+      {
+        "comment": "",
+        "key": "mood.amazing.10",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 822
+        }
+      }
+    ]
+  },
+  "version": 1
+}

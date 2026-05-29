@@ -1,0 +1,144 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Onboarding/on3.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "feature.lock_past_events",
+        "location": {
+          "startingColumn": 83,
+          "startingLine": 57
+        }
+      },
+      {
+        "comment": "",
+        "key": "feature.live_progress",
+        "location": {
+          "startingColumn": 84,
+          "startingLine": 58
+        }
+      },
+      {
+        "comment": "",
+        "key": "feature.smart_notifications",
+        "location": {
+          "startingColumn": 83,
+          "startingLine": 59
+        }
+      },
+      {
+        "comment": "",
+        "key": "feature.lock_past_events",
+        "location": {
+          "startingColumn": 79,
+          "startingLine": 105
+        }
+      },
+      {
+        "comment": "",
+        "key": "feature.live_progress",
+        "location": {
+          "startingColumn": 80,
+          "startingLine": 106
+        }
+      },
+      {
+        "comment": "",
+        "key": "feature.smart_notifications",
+        "location": {
+          "startingColumn": 79,
+          "startingLine": 107
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.focus.title",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 125
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.focus.subtitle",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 133
+        }
+      },
+      {
+        "comment": "",
+        "key": "timeline.now_running",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 150
+        }
+      },
+      {
+        "comment": "",
+        "key": "timeline.live",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 166
+        }
+      },
+      {
+        "comment": "",
+        "key": "demo.event.deep_work",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 192
+        }
+      },
+      {
+        "comment": "",
+        "key": "timeline.time_left_example",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 195
+        }
+      },
+      {
+        "comment": "",
+        "key": "08:00",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 217
+        }
+      },
+      {
+        "comment": "",
+        "key": "62%",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 222
+        }
+      },
+      {
+        "comment": "",
+        "key": "09:30",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 226
+        }
+      },
+      {
+        "comment": "",
+        "key": "timeline.up_next",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 261
+        }
+      },
+      {
+        "comment": "",
+        "key": "demo.event.coffee_break_next",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 268
+        }
+      }
+    ]
+  },
+  "version": 1
+}

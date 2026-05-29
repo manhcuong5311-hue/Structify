@@ -1,0 +1,56 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Onboarding/on5.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "onboarding.sleep.title",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 52
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.sleep.subtitle",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "onboarding.sleep.title",
+        "location": {
+          "startingColumn": 60,
+          "startingLine": 213
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.six_pm",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 227
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.nine_pm",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 231
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.midnight",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 235
+        }
+      }
+    ]
+  },
+  "version": 1
+}

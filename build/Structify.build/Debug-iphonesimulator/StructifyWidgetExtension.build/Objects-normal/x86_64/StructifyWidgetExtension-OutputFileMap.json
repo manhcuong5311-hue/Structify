@@ -1,0 +1,79 @@
+{
+  "" : {
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetExtension-primary.dia",
+    "emit-module-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetExtension-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetExtension-primary-emit-module.dia",
+    "pch" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetExtension-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetExtension-primary.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/AppIntent.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/AppIntent.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/AppIntent.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/AppIntent.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/AppIntent.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/AppIntent.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/AppIntent.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/AppIntent.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/AppIntent~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/StructifyWidget.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidget.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidget.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidget.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidget.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidget.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidget.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidget.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidget~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/StructifyWidgetBundle.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetBundle.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetBundle.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetBundle.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetBundle.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetBundle.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetBundle.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetBundle.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetBundle~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/StructifyWidgetControl.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetControl.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetControl.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetControl.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetControl.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetControl.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetControl.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetControl.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetControl~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/StructifyWidgetLiveActivity.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetLiveActivity.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetLiveActivity.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetLiveActivity.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetLiveActivity.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetLiveActivity.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetLiveActivity.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetLiveActivity.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/StructifyWidgetLiveActivity~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/DerivedSources/GeneratedStringSymbols_Localizable.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/StructifyWidgetExtension.build/Objects-normal/x86_64/GeneratedStringSymbols_Localizable~partial.swiftmodule"
+  }
+}

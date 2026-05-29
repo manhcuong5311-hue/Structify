@@ -1,0 +1,504 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/EventDetailSheet.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "recurrence_scope_daily",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 56
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_scope_weekdays",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 57
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_scope_specific %@",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 61
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_scope_range %@ %@",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 66
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_text_daily",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 73
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_text_weekdays",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 74
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_text_range %@ %@",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 85
+        }
+      },
+      {
+        "comment": "",
+        "key": "dash_placeholder",
+        "location": {
+          "startingColumn": 64,
+          "startingLine": 71
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_text_daily",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 94
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_text_weekdays",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 95
+        }
+      },
+      {
+        "comment": "",
+        "key": "stat.days_short",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 101
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_short_once",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 102
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurrence_short_range",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 103
+        }
+      },
+      {
+        "comment": "",
+        "key": "dash_placeholder",
+        "location": {
+          "startingColumn": 64,
+          "startingLine": 92
+        }
+      },
+      {
+        "comment": "",
+        "key": "duration_h_m %lld %lld",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 124
+        }
+      },
+      {
+        "comment": "",
+        "key": "duration_h %lld",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 125
+        }
+      },
+      {
+        "comment": "",
+        "key": "duration_m %lld",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 126
+        }
+      },
+      {
+        "comment": "",
+        "key": "all_day",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 120
+        }
+      },
+      {
+        "comment": "",
+        "key": "all_day",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 136
+        }
+      },
+      {
+        "comment": "",
+        "key": "time_range %@ %@",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 138
+        }
+      },
+      {
+        "comment": "",
+        "key": "apply_changes_title",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 265
+        }
+      },
+      {
+        "comment": "",
+        "key": "delete_title_habit",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 236
+        }
+      },
+      {
+        "comment": "",
+        "key": "delete_title_event",
+        "location": {
+          "startingColumn": 63,
+          "startingLine": 236
+        }
+      },
+      {
+        "comment": "",
+        "key": "kind_habit",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 205
+        }
+      },
+      {
+        "comment": "",
+        "key": "kind_event",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 206
+        }
+      },
+      {
+        "comment": "",
+        "key": "done",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 214
+        }
+      },
+      {
+        "comment": "",
+        "key": "delete",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 239
+        }
+      },
+      {
+        "comment": "",
+        "key": "cancel",
+        "location": {
+          "startingColumn": 24,
+          "startingLine": 243
+        }
+      },
+      {
+        "comment": "",
+        "key": "delete_message %@",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 245
+        }
+      },
+      {
+        "comment": "",
+        "key": "delete_only_today",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 253
+        }
+      },
+      {
+        "comment": "",
+        "key": "delete_all_scheduled",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 257
+        }
+      },
+      {
+        "comment": "",
+        "key": "cancel",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 261
+        }
+      },
+      {
+        "comment": "",
+        "key": "delete_scope_message %@",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 263
+        }
+      },
+      {
+        "comment": "",
+        "key": "apply_all_days",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 266
+        }
+      },
+      {
+        "comment": "",
+        "key": "apply_only_today",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 278
+        }
+      },
+      {
+        "comment": "",
+        "key": "cancel",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 291
+        }
+      },
+      {
+        "comment": "",
+        "key": "menu.delete_only_today",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 332
+        }
+      },
+      {
+        "comment": "",
+        "key": "menu.delete_forever",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 338
+        }
+      },
+      {
+        "comment": "",
+        "key": "menu.delete_habit",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 346
+        }
+      },
+      {
+        "comment": "",
+        "key": "menu.delete_event",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 347
+        }
+      },
+      {
+        "comment": "",
+        "key": "menu.actions",
+        "location": {
+          "startingColumn": 60,
+          "startingLine": 356
+        }
+      },
+      {
+        "comment": "",
+        "key": "event_name_placeholder",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 390
+        }
+      },
+      {
+        "comment": "",
+        "key": "status_completed",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 437
+        }
+      },
+      {
+        "comment": "",
+        "key": "status_not_completed",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 438
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.all_day",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 458
+        }
+      },
+      {
+        "comment": "",
+        "key": "stat_start",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 459
+        }
+      },
+      {
+        "comment": "",
+        "key": "stat_duration",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 466
+        }
+      },
+      {
+        "comment": "",
+        "key": "label.repeats",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 473
+        }
+      },
+      {
+        "comment": "",
+        "key": "section.details",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 508
+        }
+      },
+      {
+        "comment": "",
+        "key": "label.date",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 514
+        }
+      },
+      {
+        "comment": "",
+        "key": "label.time",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 523
+        }
+      },
+      {
+        "comment": "",
+        "key": "label.next_occurrence",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 534
+        }
+      },
+      {
+        "comment": "",
+        "key": "label.starts_from",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 544
+        }
+      },
+      {
+        "comment": "",
+        "key": "label.repeats",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 554
+        }
+      },
+      {
+        "comment": "",
+        "key": "section.notes",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 619
+        }
+      },
+      {
+        "comment": "",
+        "key": "placeholder.add_notes",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 633
+        }
+      },
+      {
+        "comment": "",
+        "key": "action.done",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 651
+        }
+      },
+      {
+        "comment": "",
+        "key": "placeholder.tap_to_add_notes",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 667
+        }
+      },
+      {
+        "comment": "",
+        "key": "kind_habit",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 708
+        }
+      },
+      {
+        "comment": "",
+        "key": "kind_event",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 709
+        }
+      },
+      {
+        "comment": "",
+        "key": "type.habit",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 729
+        }
+      },
+      {
+        "comment": "",
+        "key": "type.event",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 730
+        }
+      }
+    ]
+  },
+  "version": 1
+}

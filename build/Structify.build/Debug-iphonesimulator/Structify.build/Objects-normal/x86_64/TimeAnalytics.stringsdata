@@ -1,0 +1,32 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab2/TimeAnalytics.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "time.morning",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 15
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.afternoon",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 17
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.evening",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 19
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1087,7 +1087,7 @@ extension CreateEventDetailSheet {
         }
         if repeatRule == .weekly && selectedWeekdays.isEmpty  { return }
         guard endMinutes > startMinutes                        else { return }
-        if isToday && startMinutes < currentMinutes            { return }
+        if !isAllDay && isToday && startMinutes < currentMinutes { return }
         if isFormBlocked                                        { return }
 
         var dur = endMinutes - startMinutes
@@ -1098,13 +1098,15 @@ extension CreateEventDetailSheet {
         if repeatRule == .specificWeek {
             guard !selectedWeekDates.isEmpty else { return }
             for weekDate in selectedWeekDates.sorted() {
-                guard !store.hasOverlap(minutes: startMinutes, duration: dur, date: weekDate, includeHabits: true) else { continue }
+                if !isAllDay && store.hasOverlap(minutes: startMinutes, duration: dur, date: weekDate, includeHabits: true) { continue }
                 onCreate(cleanTitle, icon, startMinutes, dur, color.toHex(), .once(weekDate))
             }
             dismiss(); return
         }
 
-        guard !store.hasOverlap(minutes: startMinutes, duration: dur, date: date, includeHabits: true) else { return }
+        if !isAllDay {
+            guard !store.hasOverlap(minutes: startMinutes, duration: dur, date: date, includeHabits: true) else { return }
+        }
         onCreate(cleanTitle, icon, startMinutes, dur, color.toHex(), buildRecurrence())
         dismiss()
     }

@@ -1,0 +1,40 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/ColorToolkit.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "choose_color",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 263
+        }
+      },
+      {
+        "comment": "",
+        "key": "#",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 270
+        }
+      },
+      {
+        "comment": "",
+        "key": "presets",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 366
+        }
+      },
+      {
+        "comment": "",
+        "key": "edit",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 377
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,32 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab2/PredictionEngine.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "prediction.on_track",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": "prediction.projected",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 53
+        }
+      },
+      {
+        "comment": "",
+        "key": "prediction.on_track",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 60
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,128 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab1/HEader/IconPicker.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "choose_icon_title",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "cancel",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 59
+        }
+      },
+      {
+        "comment": "",
+        "key": "done",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 66
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_label_color_swatch",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 222
+        }
+      },
+      {
+        "comment": "",
+        "key": "recent_section",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 237
+        }
+      },
+      {
+        "comment": "",
+        "key": "+%lld",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 292
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon_category_work",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 391
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon_category_study",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 418
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon_category_health_fitness",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 445
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon_category_life",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 472
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon_category_creative",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 499
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon_category_tech",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 522
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon_category_travel",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 549
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon_category_mindset_goals",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 572
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon_category_finance",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 595
+        }
+      }
+    ]
+  },
+  "version": 1
+}

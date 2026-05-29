@@ -1,0 +1,569 @@
+{
+  "" : {
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Structify-primary.dia",
+    "emit-module-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Structify-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Structify-primary-emit-module.dia",
+    "pch" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Structify-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Structify-primary.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/ColorToolkit.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ColorToolkit.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ColorToolkit.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ColorToolkit.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ColorToolkit.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ColorToolkit.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ColorToolkit.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ColorToolkit.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ColorToolkit~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Global.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Global.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Global.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Global.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Global.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Global.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Global.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Global.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Global~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/OnboardingPremiumPage.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingPremiumPage.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingPremiumPage.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingPremiumPage.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingPremiumPage.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingPremiumPage.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingPremiumPage.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingPremiumPage.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingPremiumPage~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/OnboardingView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingView.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingView.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingView.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingView.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/OnboardingView~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/on1.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on1.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on1.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on1.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on1.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on1.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on1.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on1.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on1~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/on2.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on2.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on2.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on2.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on2.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on2.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on2.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on2.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on2~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/on3.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on3.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on3.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on3.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on3.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on3.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on3.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on3.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on3~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/on4.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on4.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on4.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on4.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on4.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on4.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on4.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on4.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on4~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/on5.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on5.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on5.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on5.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on5.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on5.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on5.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on5.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/on5~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Premium/PremiumStore.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumStore.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumStore.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumStore.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumStore.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumStore.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumStore.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumStore.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumStore~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Premium/PremiumView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumView.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumView.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumView.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumView.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PremiumView~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/ReviewManager.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ReviewManager.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ReviewManager.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ReviewManager.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ReviewManager.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ReviewManager.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ReviewManager.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ReviewManager.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ReviewManager~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Setting/FAQ.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/FAQ.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/FAQ.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/FAQ.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/FAQ.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/FAQ.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/FAQ.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/FAQ.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/FAQ~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Setting/Notification/NotificationManager.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationManager.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationManager.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationManager.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationManager.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationManager.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationManager.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationManager.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationManager~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Setting/Notification/NotificationsSettingsView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationsSettingsView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationsSettingsView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationsSettingsView.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationsSettingsView.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationsSettingsView.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationsSettingsView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationsSettingsView.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/NotificationsSettingsView~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Setting/Preference/Preference.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Preference.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Preference.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Preference.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Preference.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Preference.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Preference.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Preference.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Preference~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Setting/Preference/TimeEditSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeEditSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeEditSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeEditSheet.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeEditSheet.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeEditSheet.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeEditSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeEditSheet.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeEditSheet~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Setting/Setting.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Setting.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Setting.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Setting.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Setting.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Setting.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Setting.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Setting.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Setting~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Structify/ContentView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Structify/ScheduleView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ScheduleView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ScheduleView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ScheduleView.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ScheduleView.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ScheduleView.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ScheduleView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ScheduleView.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/ScheduleView~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Structify/StructifyApp.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StructifyApp.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StructifyApp.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StructifyApp.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StructifyApp.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StructifyApp.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StructifyApp.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StructifyApp.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StructifyApp~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/AddItemButton.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AddItemButton.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AddItemButton.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AddItemButton.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AddItemButton.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AddItemButton.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AddItemButton.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AddItemButton.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AddItemButton~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/AlldayeventRow.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AlldayeventRow.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AlldayeventRow.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AlldayeventRow.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AlldayeventRow.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AlldayeventRow.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AlldayeventRow.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AlldayeventRow.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AlldayeventRow~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/CreateEventDetailSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateEventDetailSheet~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/EventDetailSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventDetailSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventDetailSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventDetailSheet.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventDetailSheet.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventDetailSheet.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventDetailSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventDetailSheet.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventDetailSheet~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/EventPresets.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventPresets.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventPresets.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventPresets.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventPresets.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventPresets.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventPresets.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventPresets.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventPresets~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/KeywordIconMap.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/KeywordIconMap.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/KeywordIconMap.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/KeywordIconMap.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/KeywordIconMap.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/KeywordIconMap.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/KeywordIconMap.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/KeywordIconMap.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/KeywordIconMap~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddHabitLogic/CreateHabitDetailSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateHabitDetailSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateHabitDetailSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateHabitDetailSheet.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateHabitDetailSheet.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateHabitDetailSheet.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateHabitDetailSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateHabitDetailSheet.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateHabitDetailSheet~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddHabitLogic/HabitDetailSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitDetailSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitDetailSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitDetailSheet.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitDetailSheet.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitDetailSheet.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitDetailSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitDetailSheet.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitDetailSheet~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddHabitLogic/HabitTemplates.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitTemplates.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitTemplates.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitTemplates.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitTemplates.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitTemplates.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitTemplates.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitTemplates.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/HabitTemplates~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AppSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AppSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AppSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AppSheet.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AppSheet.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AppSheet.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AppSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AppSheet.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/AppSheet~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/CreateItemSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateItemSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateItemSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateItemSheet.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateItemSheet.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateItemSheet.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateItemSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateItemSheet.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/CreateItemSheet~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/HEader/Header.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Header.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Header.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Header.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Header.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Header.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Header.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Header.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/Header~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/HEader/IconPicker.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/IconPicker.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/IconPicker.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/IconPicker.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/IconPicker.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/IconPicker.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/IconPicker.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/IconPicker.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/IconPicker~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/HEader/MonthYearPickerView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MonthYearPickerView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MonthYearPickerView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MonthYearPickerView.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MonthYearPickerView.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MonthYearPickerView.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MonthYearPickerView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MonthYearPickerView.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MonthYearPickerView~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab2/InsightEngine.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/InsightEngine.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/InsightEngine.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/InsightEngine.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/InsightEngine.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/InsightEngine.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/InsightEngine.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/InsightEngine.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/InsightEngine~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab2/LifetimeDetailView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LifetimeDetailView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LifetimeDetailView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LifetimeDetailView.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LifetimeDetailView.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LifetimeDetailView.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LifetimeDetailView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LifetimeDetailView.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LifetimeDetailView~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab2/MoodAnalytics.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodAnalytics.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodAnalytics.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodAnalytics.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodAnalytics.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodAnalytics.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodAnalytics.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodAnalytics.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodAnalytics~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab2/MoodLogic.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodLogic.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodLogic.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodLogic.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodLogic.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodLogic.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodLogic.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodLogic.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/MoodLogic~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab2/PredictionEngine.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PredictionEngine.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PredictionEngine.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PredictionEngine.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PredictionEngine.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PredictionEngine.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PredictionEngine.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PredictionEngine.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/PredictionEngine~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab2/StatsEngine.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsEngine.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsEngine.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsEngine.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsEngine.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsEngine.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsEngine.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsEngine.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsEngine~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab2/StatsView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsView.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsView.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsView.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsView.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/StatsView~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab2/TimeAnalytics.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeAnalytics.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeAnalytics.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeAnalytics.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeAnalytics.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeAnalytics.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeAnalytics.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeAnalytics.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimeAnalytics~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/DraggableEventRow.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/DraggableEventRow.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/DraggableEventRow.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/DraggableEventRow.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/DraggableEventRow.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/DraggableEventRow.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/DraggableEventRow.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/DraggableEventRow.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/DraggableEventRow~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/EventIconView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventIconView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventIconView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventIconView.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventIconView.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventIconView.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventIconView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventIconView.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/EventIconView~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/LayoutEnGine.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/LayoutEnGine~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineEngine.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEngine~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineEventRow.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineEventRow~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineSmallViews.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineSmallViews~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineStore.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineStore~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineTicker.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineTicker~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/UXModifiers.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/UXModifiers.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/UXModifiers.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/UXModifiers.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/UXModifiers.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/UXModifiers.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/UXModifiers.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/UXModifiers.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/UXModifiers~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineLine.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineLine.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineLine.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineLine.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineLine.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineLine.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineLine.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineLine.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineLine~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/TimelineViewUI.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineViewUI.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineViewUI.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineViewUI.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineViewUI.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineViewUI.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineViewUI.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineViewUI.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/TimelineViewUI~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/DerivedSources/GeneratedStringSymbols_Localizable.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.dia",
+    "index-unit-output-path" : "/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.o",
+    "llvm-bc" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.bc",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable.swiftdeps",
+    "swiftmodule" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphoneos/Structify.build/Objects-normal/arm64/GeneratedStringSymbols_Localizable~partial.swiftmodule"
+  }
+}

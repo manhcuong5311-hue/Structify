@@ -1,0 +1,37 @@
+{
+  "/Users/sammanhcuong/Desktop/Structify/Structify/StructifyApp.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/StructifyApp.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/StructifyApp.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/StructifyApp.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/StructifyApp.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/StructifyApp.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/AlldayeventRow.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/AlldayeventRow.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/AlldayeventRow.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/AlldayeventRow.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/AlldayeventRow.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/AlldayeventRow.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/CreateEventDetailSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/CreateEventDetailSheet.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/EventDetailSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/EventDetailSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/EventDetailSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/EventDetailSheet.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/EventDetailSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/EventDetailSheet.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/EventPresets.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/EventPresets.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/EventPresets.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/EventPresets.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/EventPresets.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/EventPresets.swiftdeps"
+  }
+}

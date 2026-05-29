@@ -1,0 +1,208 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab2/StatsView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "a11y_hint_open_lifetime_stats",
+        "location": {
+          "startingColumn": 67,
+          "startingLine": 200
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats.lifetime",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 172
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_label_toggle_sky_theme",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 256
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_value_on",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 258
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_value_off",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 259
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats.progress",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 229
+        }
+      },
+      {
+        "comment": "",
+        "key": "greeting.late",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 267
+        }
+      },
+      {
+        "comment": "",
+        "key": "greeting.morning",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 269
+        }
+      },
+      {
+        "comment": "",
+        "key": "greeting.afternoon",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 271
+        }
+      },
+      {
+        "comment": "",
+        "key": "greeting.evening",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 273
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld%%",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 305
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.today",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 310
+        }
+      },
+      {
+        "comment": "",
+        "key": "range.today",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 320
+        }
+      },
+      {
+        "comment": "",
+        "key": "range.week",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 328
+        }
+      },
+      {
+        "comment": "",
+        "key": "range.month",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 336
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld%%",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 355
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 406
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats.streak",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 393
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats.at_risk",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 398
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats.best_streak",
+        "location": {
+          "startingColumn": 59,
+          "startingLine": 423
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lldh%@",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 452
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.active_window",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 455
+        }
+      },
+      {
+        "comment": "",
+        "key": "time.wake_sleep",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 446
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight.best_time",
+        "location": {
+          "startingColumn": 63,
+          "startingLine": 487
+        }
+      },
+      {
+        "comment": "",
+        "key": "insight.keep_pace",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 494
+        }
+      }
+    ]
+  },
+  "version": 1
+}

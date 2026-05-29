@@ -1,0 +1,288 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/StructifyWidget/StructifyWidget.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "label_time",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 50
+        }
+      },
+      {
+        "comment": "",
+        "key": "label_favorite_emoji",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 53
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_next",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 454
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_now",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 448
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_value_completed",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 505
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_value_not_completed",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 506
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_hint_toggle_habit",
+        "location": {
+          "startingColumn": 71,
+          "startingLine": 507
+        }
+      },
+      {
+        "comment": "",
+        "key": "· %@",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 558
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_all_clear",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 572
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_no_more_events_today",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 575
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_today",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 682
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_no_events",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 689
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_now",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 750
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_free_day",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 819
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld%%",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 865
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_now",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 961
+        }
+      },
+      {
+        "comment": "",
+        "key": "·",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 917
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lldh%@",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 930
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lldm",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 931
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_next_event_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 995
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_next_event_desc",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 996
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_today_timeline_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 1009
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_today_timeline_desc",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 1010
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_full_day_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 1023
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_full_day_desc",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 1024
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_all_clear",
+        "location": {
+          "startingColumn": 19,
+          "startingLine": 1061
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ %@",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 1055
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_no_more_events_today",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 1144
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lldm",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 1181
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_next_event_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 1212
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_next_event_desc_short",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 1213
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_event_icon_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 1225
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_event_icon_desc",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 1226
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_today_schedule_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 1238
+        }
+      },
+      {
+        "comment": "",
+        "key": "widget_today_schedule_desc",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 1239
+        }
+      }
+    ]
+  },
+  "version": 1
+}

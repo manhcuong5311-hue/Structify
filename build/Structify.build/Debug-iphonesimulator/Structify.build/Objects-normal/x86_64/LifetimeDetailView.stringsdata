@@ -1,0 +1,128 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab2/LifetimeDetailView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "stats_lifetime_title",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 186
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats_habit_history",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 136
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats_event_history",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 151
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats_events_done",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 117
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats_habits_done",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 123
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats_accumulated",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 129
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats_empty_title",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 169
+        }
+      },
+      {
+        "comment": "",
+        "key": "stats_empty_subtitle",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 172
+        }
+      },
+      {
+        "comment": "",
+        "key": "common_done",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 190
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 205
+        }
+      },
+      {
+        "comment": "",
+        "key": "badge.accumulative",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 248
+        }
+      },
+      {
+        "comment": "",
+        "key": "badge.habit",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 251
+        }
+      },
+      {
+        "comment": "",
+        "key": "badge.event",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 253
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 312
+        }
+      },
+      {
+        "comment": "",
+        "key": "times",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 315
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,248 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/TimelineViewUI.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "event_repeat_daily",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 100
+        }
+      },
+      {
+        "comment": "",
+        "key": "event_repeat_weekdays",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 103
+        }
+      },
+      {
+        "comment": "",
+        "key": "event_repeat_specific %@",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 109
+        }
+      },
+      {
+        "comment": "",
+        "key": "event_repeat_range %@ %@",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 119
+        }
+      },
+      {
+        "comment": "",
+        "key": "gap_1h",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 223
+        }
+      },
+      {
+        "comment": "",
+        "key": "gap_2h",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 225
+        }
+      },
+      {
+        "comment": "",
+        "key": "gap_3h",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 227
+        }
+      },
+      {
+        "comment": "",
+        "key": "gap_chunk",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 229
+        }
+      },
+      {
+        "comment": "",
+        "key": "gap_half_workday",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 231
+        }
+      },
+      {
+        "comment": "",
+        "key": "gap_morning",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 233
+        }
+      },
+      {
+        "comment": "",
+        "key": "gap_long_block",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 235
+        }
+      },
+      {
+        "comment": "",
+        "key": "gap_half_day",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 237
+        }
+      },
+      {
+        "comment": "",
+        "key": "gap_long_free",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 239
+        }
+      },
+      {
+        "comment": "",
+        "key": "gap_full_day",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 241
+        }
+      },
+      {
+        "comment": "",
+        "key": "move_event_title",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 695
+        }
+      },
+      {
+        "comment": "",
+        "key": "system_event_change_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 727
+        }
+      },
+      {
+        "comment": "",
+        "key": "change_duration_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 771
+        }
+      },
+      {
+        "comment": "",
+        "key": "delete_event_title",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 674
+        }
+      },
+      {
+        "comment": "",
+        "key": "delete_event_message",
+        "location": {
+          "startingColumn": 57,
+          "startingLine": 675
+        }
+      },
+      {
+        "comment": "",
+        "key": "delete_event_confirm",
+        "location": {
+          "startingColumn": 76,
+          "startingLine": 676
+        }
+      },
+      {
+        "comment": "",
+        "key": "move_event_all_days",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 697
+        }
+      },
+      {
+        "comment": "",
+        "key": "move_event_today_only",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 704
+        }
+      },
+      {
+        "comment": "",
+        "key": "cancel",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 708
+        }
+      },
+      {
+        "comment": "",
+        "key": "move_event_all_days",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 730
+        }
+      },
+      {
+        "comment": "",
+        "key": "apply_only_today",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 745
+        }
+      },
+      {
+        "comment": "",
+        "key": "cancel",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 755
+        }
+      },
+      {
+        "comment": "",
+        "key": "recurring_change_scope_message",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 768
+        }
+      },
+      {
+        "comment": "",
+        "key": "apply_all_days",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 774
+        }
+      },
+      {
+        "comment": "",
+        "key": "apply_only_today",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 781
+        }
+      },
+      {
+        "comment": "",
+        "key": "cancel",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 785
+        }
+      }
+    ]
+  },
+  "version": 1
+}

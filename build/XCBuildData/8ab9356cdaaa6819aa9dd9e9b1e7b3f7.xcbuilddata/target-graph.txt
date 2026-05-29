@@ -1,0 +1,4 @@
+Target dependency graph (2 targets)
+Target 'Structify' in project 'Structify'
+➜ Explicit dependency on target 'StructifyWidgetExtension' in project 'Structify'
+Target 'StructifyWidgetExtension' in project 'Structify' (no dependencies)

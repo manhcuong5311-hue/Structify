@@ -1,0 +1,24 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Structify/ContentView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "action_add_habit",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 143
+        }
+      },
+      {
+        "comment": "",
+        "key": "action_add_event",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 153
+        }
+      }
+    ]
+  },
+  "version": 1
+}

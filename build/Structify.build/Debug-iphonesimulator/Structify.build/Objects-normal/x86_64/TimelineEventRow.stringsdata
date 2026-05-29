@@ -1,0 +1,24 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineEventRow.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "recurrence_daily",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 21
+        }
+      },
+      {
+        "comment": "",
+        "key": "• %@",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 278
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -2,8 +2,6 @@
 //  HabitDetailSheet.swift
 //  Structify
 //
-//  Created by Sam Manh Cuong on 15/3/26.
-//
 
 import SwiftUI
 import Combine
@@ -36,17 +34,12 @@ struct HabitDetailSheet: View {
     @State private var isEditingTarget = false
     @State private var targetWarning: String? = nil
 
-    /// Set of raw values of built-in TargetUnit cases (excluding `.custom`),
-    /// used to decide whether a persisted `unit` string is a built-in or a
-    /// user-typed custom unit.
     static let builtInUnitRawValues: Set<String> = {
         Set(CreateHabitDetailSheet.TargetUnit.allCases
             .filter { $0 != .custom }
             .map(\.rawValue))
     }()
 
-    /// Display label for the unit anywhere outside the chip picker — falls back
-    /// to the localized "Custom" label when the user has cleared the text.
     var editEffectiveUnitLabel: String {
         if editUnit == CreateHabitDetailSheet.TargetUnit.custom.rawValue {
             let trimmed = editCustomUnitText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -55,8 +48,6 @@ struct HabitDetailSheet: View {
         return CreateHabitDetailSheet.TargetUnit(rawValue: editUnit)?.localized ?? editUnit
     }
 
-    /// Value persisted back to the habit — raw enum value for built-ins, the
-    /// user-typed text for `.custom`.
     var editUnitForPersistence: String {
         if editUnit == CreateHabitDetailSheet.TargetUnit.custom.rawValue {
             return editCustomUnitText.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -90,30 +81,23 @@ struct HabitDetailSheet: View {
 
     var recurrenceScopeMessage: String {
         guard let t = template else { return "" }
-
         switch t.recurrence {
         case .daily:
             return String(localized: "habit_repeat_daily")
-
         case .weekdays:
             return String(localized: "habit_repeat_weekdays")
-
         case .specific(let days):
             let s = Calendar.current.shortWeekdaySymbols
             let dayList = days.sorted().map { s[$0-1] }.joined(separator: ", ")
-
             return String.localizedStringWithFormat(
                 NSLocalizedString("habit_repeat_specific %@", comment: ""),
                 dayList
             )
-
         case .once:
             return ""
-
         case .dateRange(let start, let end):
             let f = DateFormatter()
             f.dateFormat = "d MMM"
-
             return String.localizedStringWithFormat(
                 NSLocalizedString("habit_repeat_range %@ %@", comment: ""),
                 f.string(from: start),
@@ -124,29 +108,19 @@ struct HabitDetailSheet: View {
 
     var recurrenceText: String {
         guard let t = template else { return String(localized: "common_dash") }
-
         switch t.recurrence {
-        case .daily:
-            return String(localized: "habit_every_day")
-
-        case .weekdays:
-            return String(localized: "habit_weekdays")
-
+        case .daily:    return String(localized: "habit_every_day")
+        case .weekdays: return String(localized: "habit_weekdays")
         case .specific(let days):
             let s = Calendar.current.shortWeekdaySymbols
-            return days.sorted()
-                .map { s[$0 - 1] }
-                .joined(separator: ", ")
-
+            return days.sorted().map { s[$0 - 1] }.joined(separator: ", ")
         case .once(let d):
             let f = DateFormatter()
             f.setLocalizedDateFormatFromTemplate("d MMM yyyy")
             return f.string(from: d)
-
         case .dateRange(let start, let end):
             let f = DateFormatter()
             f.setLocalizedDateFormatFromTemplate("d MMM")
-
             return String.localizedStringWithFormat(
                 NSLocalizedString("habit_date_range %@ %@", comment: ""),
                 f.string(from: start),
@@ -155,17 +129,9 @@ struct HabitDetailSheet: View {
         }
     }
 
-    var habitType: HabitType {
-        template?.habitType ?? .binary
-    }
-
-    var targetValue: Double {
-        template?.targetValue ?? 1
-    }
-
-    var incrementValue: Double {
-        template?.increment ?? 1
-    }
+    var habitType: HabitType { template?.habitType ?? .binary }
+    var targetValue: Double { template?.targetValue ?? 1 }
+    var incrementValue: Double { template?.increment ?? 1 }
 
     var currentProgress: Double {
         store.accumulationValue(templateID: event.id, date: calendar.selectedDate)
@@ -194,8 +160,8 @@ struct HabitDetailSheet: View {
         return selected > today
     }
 
+    /// Consecutive completed days ending at the selected date.
     var streakCount: Int {
-        // Đếm ngày liên tiếp hoàn thành
         var streak = 0
         let cal = Calendar.current
         var checkDate = calendar.selectedDate
@@ -209,6 +175,109 @@ struct HabitDetailSheet: View {
         return streak
     }
 
+    /// Longest consecutive-completion run ever recorded for this habit.
+    /// Scans the completion logs in date order; uses `isCompleted` so the
+    /// accumulative case (value >= target) is judged the same way it is
+    /// shown in the UI.
+    var bestStreak: Int {
+        let cal = Calendar.current
+        let dayKeys = Set(
+            store.completionLogs
+                .filter { $0.templateID == event.id }
+                .map(\.dateKey)
+        )
+        guard !dayKeys.isEmpty else { return 0 }
+
+        // Convert to dates and sort
+        let dates: [Date] = dayKeys.compactMap { k in
+            var c = DateComponents()
+            c.year = k / 10000
+            c.month = (k / 100) % 100
+            c.day = k % 100
+            return cal.date(from: c)
+        }.sorted()
+
+        var best = 0, current = 0
+        var prev: Date?
+        for date in dates {
+            guard store.isCompleted(templateID: event.id, date: date) else {
+                current = 0
+                prev = nil
+                continue
+            }
+            if let p = prev,
+               let nextOfPrev = cal.date(byAdding: .day, value: 1, to: p),
+               cal.isDate(nextOfPrev, inSameDayAs: date) {
+                current += 1
+            } else {
+                current = 1
+            }
+            if current > best { best = current }
+            prev = date
+        }
+        return best
+    }
+
+    /// Count of completed days in the last 30 days (inclusive of today).
+    var completionCount30d: Int {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        var count = 0
+        for offset in 0..<30 {
+            guard let date = cal.date(byAdding: .day, value: -offset, to: today) else { continue }
+            if store.isCompleted(templateID: event.id, date: date) { count += 1 }
+        }
+        return count
+    }
+
+    /// Day-by-day status for the last 7 days (oldest first → today last).
+    var last7DaysData: [(date: Date, fraction: CGFloat, completed: Bool)] {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        var out: [(date: Date, fraction: CGFloat, completed: Bool)] = []
+        for offset in stride(from: 6, through: 0, by: -1) {
+            guard let date = cal.date(byAdding: .day, value: -offset, to: today) else { continue }
+            let completed = store.isCompleted(templateID: event.id, date: date)
+            let frac: CGFloat
+            if habitType == .accumulative, targetValue > 0 {
+                let v = store.accumulationValue(templateID: event.id, date: date)
+                frac = min(CGFloat(v / targetValue), 1)
+            } else {
+                frac = completed ? 1 : 0
+            }
+            out.append((date, frac, completed))
+        }
+        return out
+    }
+
+    var nextOccurrenceText: String? {
+        guard let t = template else { return nil }
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        let selectedDay = cal.startOfDay(for: calendar.selectedDate)
+        let base = max(today, selectedDay)
+        guard var probe = cal.date(byAdding: .day, value: 1, to: base) else { return nil }
+        for _ in 0..<366 {
+            if t.matches(date: probe) {
+                let f = DateFormatter()
+                f.setLocalizedDateFormatFromTemplate("EEE d MMM")
+                return f.string(from: probe)
+            }
+            guard let next = cal.date(byAdding: .day, value: 1, to: probe) else { return nil }
+            probe = next
+        }
+        return nil
+    }
+
+    var startsFromText: String? {
+        guard let s = template?.startDate else { return nil }
+        let cal = Calendar.current
+        if cal.startOfDay(for: s) <= cal.startOfDay(for: Date()) { return nil }
+        let f = DateFormatter()
+        f.setLocalizedDateFormatFromTemplate("d MMM yyyy")
+        return f.string(from: s)
+    }
+
     var surface: Color {
         scheme == .dark ? Color(.secondarySystemBackground) : .white
     }
@@ -216,8 +285,7 @@ struct HabitDetailSheet: View {
     var pageBg: Color {
         scheme == .dark ? Color(.systemBackground) : Color(red: 0.96, green: 0.96, blue: 0.97)
     }
-    
-    // Thêm vào MARK: - Helpers trong HabitDetailSheet:
+
     func formatValue(_ value: Double) -> String {
         if value.truncatingRemainder(dividingBy: 1) == 0 {
             return "\(Int(value))"
@@ -225,10 +293,6 @@ struct HabitDetailSheet: View {
             return String(format: "%.1f", value)
         }
     }
-    
-    
-    
-    
 
     // MARK: - Body
 
@@ -241,12 +305,11 @@ struct HabitDetailSheet: View {
                     VStack(spacing: 20) {
                         heroSection.padding(.top, 12)
                         quickStatsRow
-                        if habitType == .accumulative { progressSection }
+                        progressOrWeekSection
                         checkInSection
                         infoSection
                         if habitType == .accumulative { targetEditSection }
                         notesSection
-                        dangerSection
                     }
                     .padding(.bottom, 60)
                 }
@@ -258,10 +321,9 @@ struct HabitDetailSheet: View {
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.secondary)
                 }
+                ToolbarItem(placement: .topBarTrailing) { actionsMenu }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "common_done")) {
-                        handleDone()
-                    }
+                    Button(String(localized: "common_done")) { handleDone() }
                         .fontWeight(.semibold)
                         .foregroundStyle(editColor)
                 }
@@ -272,10 +334,6 @@ struct HabitDetailSheet: View {
                 editColor       = event.color
                 notesText       = template?.notes ?? ""
                 editTargetValue = template?.targetValue ?? 1
-                // Persisted unit can be a built-in raw value (e.g. "times")
-                // or a user-typed custom string (e.g. "cups"). Split into the
-                // chip selection (`editUnit`) and the custom text so the edit UI
-                // can round-trip both without dropping the value.
                 let storedUnit = template?.unit ?? "times"
                 if Self.builtInUnitRawValues.contains(storedUnit) {
                     editUnit = storedUnit
@@ -284,7 +342,7 @@ struct HabitDetailSheet: View {
                     editUnit = CreateHabitDetailSheet.TargetUnit.custom.rawValue
                     editCustomUnitText = storedUnit
                 }
-                editIncrement   = template?.increment ?? 1   // 👈 thêm
+                editIncrement   = template?.increment ?? 1
                 editMinutes     = event.minutes
             }
             .sheet(isPresented: $showIconPicker) {
@@ -292,7 +350,6 @@ struct HabitDetailSheet: View {
                     .presentationCornerRadius(28)
                     .adaptiveSheet()
             }
-            // MARK: Scope alert (edit recurring)
             .alert(
                 String(localized: "habit_apply_changes_title"),
                 isPresented: $showScopeAlert
@@ -300,16 +357,13 @@ struct HabitDetailSheet: View {
                 Button(String(localized: "habit_apply_all_days")) {
                     saveEdits(scope: .allDays)
                 }
-
                 Button(String(localized: "habit_apply_only_today")) {
                     saveEdits(scope: .onlyToday)
                 }
-
                 Button(String(localized: "common_cancel"), role: .cancel) {}
             } message: {
                 Text(recurrenceScopeMessage)
             }
-            // MARK: Delete alert
             .alert(
                 String(localized: "habit_delete_title"),
                 isPresented: $showDeleteAlert
@@ -319,7 +373,6 @@ struct HabitDetailSheet: View {
                     onDelete()
                     dismiss()
                 }
-
                 Button(String(localized: "common_cancel"), role: .cancel) {}
             } message: {
                 Text(
@@ -329,7 +382,6 @@ struct HabitDetailSheet: View {
                     )
                 )
             }
-            // MARK: Reset progress alert
             .alert(
                 String(localized: "habit_reset_title"),
                 isPresented: $showResetAlert
@@ -342,7 +394,6 @@ struct HabitDetailSheet: View {
                     )
                     store.objectWillChange.send()
                 }
-
                 Button(String(localized: "common_cancel"), role: .cancel) {}
             } message: {
                 Text(String(localized: "habit_reset_message"))
@@ -385,8 +436,40 @@ struct HabitDetailSheet: View {
         dismiss()
     }
 
+    // MARK: - Actions menu
+
+    @ViewBuilder
+    var actionsMenu: some View {
+        Menu {
+            if habitType == .accumulative && currentProgress > 0 && !isFutureDate {
+                Button {
+                    showResetAlert = true
+                } label: {
+                    Label(
+                        String(localized: "menu.reset_progress"),
+                        systemImage: "arrow.counterclockwise"
+                    )
+                }
+                Divider()
+            }
+            Button(role: .destructive) {
+                showDeleteAlert = true
+            } label: {
+                Label(
+                    String(localized: "menu.delete_habit"),
+                    systemImage: "trash"
+                )
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(editColor)
+                .accessibilityLabel(Text(String(localized: "menu.actions")))
+        }
+    }
+
     // MARK: - Hero
-    
+
     var statusText: String {
         if isFutureDate {
             return String(localized: "habit_status_upcoming")
@@ -418,7 +501,7 @@ struct HabitDetailSheet: View {
                             .font(.system(size: 30, weight: .medium))
                             .foregroundStyle(editColor)
 
-                        // Repeat badge
+                        // Single small repeat badge — signals "habit"
                         ZStack {
                             Circle().fill(Color(.systemBackground)).frame(width: 24, height: 24)
                             Image(systemName: "repeat")
@@ -426,15 +509,6 @@ struct HabitDetailSheet: View {
                                 .foregroundStyle(editColor)
                         }
                         .offset(x: 26, y: 26)
-
-                        // Edit badge
-                        ZStack {
-                            Circle().fill(Color(.systemBackground)).frame(width: 20, height: 20)
-                            Image(systemName: "pencil")
-                                .font(.system(size: 9, weight: .bold))
-                                .foregroundStyle(.secondary)
-                        }
-                        .offset(x: -24, y: 28)
                     }
                 }
                 .buttonStyle(.plain)
@@ -457,20 +531,14 @@ struct HabitDetailSheet: View {
                                 titleFocused = true
                             }
                         } label: {
-                            HStack(spacing: 6) {
-                                Text(editTitle)
-                                    .font(.system(size: 22, weight: .bold, design: .rounded))
-                                    .multilineTextAlignment(.center)
-                                Image(systemName: "pencil")
-                                    .font(.system(size: 12, weight: .medium))
-                                    .foregroundStyle(.tertiary)
-                            }
-                            .padding(.horizontal, 24)
+                            Text(editTitle)
+                                .font(.system(size: 22, weight: .bold, design: .rounded))
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 24)
                         }
                         .buttonStyle(.plain)
                     }
 
-                    // Completion badge
                     HStack(spacing: 5) {
                         Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle.dotted")
                             .font(.system(size: 13, weight: .semibold))
@@ -482,7 +550,7 @@ struct HabitDetailSheet: View {
                     .background(
                         Capsule().fill(
                             isFutureDate ? Color.primary.opacity(0.06) :
-                            isCompleted ? Color.green.opacity(0.1) : Color.primary.opacity(0.06)
+                                isCompleted ? Color.green.opacity(0.1) : Color.primary.opacity(0.06)
                         )
                     )
                     .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isCompleted)
@@ -500,7 +568,7 @@ struct HabitDetailSheet: View {
     var quickStatsRow: some View {
         HStack(spacing: 12) {
             statChip(
-                value: "\(streakCount)🔥",
+                value: "\(streakCount)",
                 label: String(localized: "habit_stat_streak"),
                 icon: "flame.fill"
             )
@@ -511,12 +579,18 @@ struct HabitDetailSheet: View {
                     label: String(localized: "habit_stat_today"),
                     icon: "chart.bar.fill"
                 )
+            } else {
+                statChip(
+                    value: "\(Int(round(Double(completionCount30d) / 30.0 * 100)))%",
+                    label: String(localized: "stat.completion_30d"),
+                    icon: "percent"
+                )
             }
 
             statChip(
-                value: recurrenceText,
-                label: String(localized: "habit_stat_schedule"),
-                icon: "repeat"
+                value: "\(bestStreak)",
+                label: String(localized: "stat.best_streak"),
+                icon: "crown.fill"
             )
         }
         .padding(.horizontal, 20)
@@ -528,8 +602,9 @@ struct HabitDetailSheet: View {
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(editColor)
             Text(value)
-                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .font(.system(size: 14, weight: .bold, design: .rounded))
                 .foregroundStyle(.primary)
+                .monospacedDigit()
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             Text(label)
@@ -545,13 +620,23 @@ struct HabitDetailSheet: View {
         )
     }
 
-    // MARK: - Progress Section (accumulative only)
+    // MARK: - Progress / Week overview
 
-    var progressSection: some View {
+    @ViewBuilder
+    var progressOrWeekSection: some View {
+        if habitType == .accumulative {
+            accumulativeProgressSection
+        } else {
+            weekOverviewSection
+        }
+    }
+
+    var accumulativeProgressSection: some View {
         VStack(spacing: 0) {
             sectionHeader(String(localized: "habit_section_progress"))
-            VStack(spacing: 14) {
-                // Progress bar
+
+            VStack(spacing: 16) {
+                // Big progress bar + numeric
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         Capsule().fill(Color.primary.opacity(0.08)).frame(height: 10)
@@ -568,9 +653,7 @@ struct HabitDetailSheet: View {
                     Text("\(formatValue(currentProgress)) \(template?.unit ?? "")")
                         .font(.system(size: 15, weight: .bold, design: .rounded))
                         .foregroundStyle(editColor)
-
                     Spacer()
-
                     Text(
                         String.localizedStringWithFormat(
                             NSLocalizedString("habit_goal %@ %@", comment: ""),
@@ -578,25 +661,18 @@ struct HabitDetailSheet: View {
                             String(localized: "unit_\(template?.unit ?? "times")")
                         )
                     )
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 }
                 .padding(.horizontal, 16)
 
-                if currentProgress > 0 && !isFutureDate {
-                    Button {
-                        showResetAlert = true
-                    } label: {
-                        Label(
-                            String(localized: "habit_reset_today"),
-                            systemImage: "arrow.counterclockwise"
-                        )
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.horizontal, 16)
-                }
+                Divider().padding(.horizontal, 16)
+
+                // 7-day mini bars
+                weekBarsRow
+
+                // 30-day completion rate
+                thirtyDayFooter
             }
             .padding(.vertical, 16)
             .background(
@@ -608,8 +684,85 @@ struct HabitDetailSheet: View {
         }
     }
 
+    var weekOverviewSection: some View {
+        VStack(spacing: 0) {
+            sectionHeader(String(localized: "section.last_7_days"))
+
+            VStack(spacing: 14) {
+                weekBarsRow
+                thirtyDayFooter
+            }
+            .padding(.vertical, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(surface)
+                    .shadow(color: .black.opacity(scheme == .dark ? 0 : 0.03), radius: 8, y: 2)
+            )
+            .padding(.horizontal, 20)
+        }
+    }
+
+    /// 7-day mini bar row. Bar height encodes progress fraction (0–1).
+    /// Empty days render as a low pill so the row never collapses.
+    var weekBarsRow: some View {
+        HStack(spacing: 8) {
+            ForEach(Array(last7DaysData.enumerated()), id: \.offset) { _, day in
+                VStack(spacing: 6) {
+                    Spacer(minLength: 0)
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(
+                            day.completed
+                                ? AnyShapeStyle(LinearGradient(
+                                    colors: [editColor, editColor.opacity(0.7)],
+                                    startPoint: .top, endPoint: .bottom
+                                ))
+                                : AnyShapeStyle(Color.primary.opacity(0.10))
+                        )
+                        .frame(
+                            height: max(6, day.fraction * 40)
+                        )
+                        .animation(.spring(response: 0.4, dampingFraction: 0.85), value: day.fraction)
+                    Text(shortWeekday(day.date))
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity)
+            }
+        }
+        .frame(height: 64, alignment: .bottom)
+        .padding(.horizontal, 16)
+    }
+
+    var thirtyDayFooter: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "calendar")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(.secondary)
+            Text(
+                String.localizedStringWithFormat(
+                    NSLocalizedString("stat.last_30_days_format %lld", comment: ""),
+                    completionCount30d
+                )
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            Spacer()
+            Text("\(Int(round(Double(completionCount30d) / 30.0 * 100)))%")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(editColor)
+                .monospacedDigit()
+        }
+        .padding(.horizontal, 16)
+    }
+
+    private func shortWeekday(_ date: Date) -> String {
+        let f = DateFormatter()
+        f.setLocalizedDateFormatFromTemplate("EEEEE") // single letter
+        return f.string(from: date)
+    }
+
     // MARK: - Check-in Section
-    
+
     var markButtonText: String {
         isCompleted
         ? String(localized: "habit_mark_not_done")
@@ -626,11 +779,10 @@ struct HabitDetailSheet: View {
                         String(localized: "habit_future_checkin_blocked"),
                         systemImage: "clock.badge.xmark"
                     )
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.vertical, 12)
-
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 12)
                 } else if habitType == .binary {
                     Button {
                         store.toggleCompletion(templateID: event.id, date: calendar.selectedDate)
@@ -652,9 +804,7 @@ struct HabitDetailSheet: View {
                         )
                     }
                     .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isCompleted)
-
                 } else {
-                    // Accumulative: stepper + quick add
                     HStack(spacing: 12) {
                         Button {
                             if currentProgress > 0 {
@@ -712,16 +862,14 @@ struct HabitDetailSheet: View {
     }
 
     // MARK: - Info Section
-    
+
     var habitTypeText: String {
         switch habitType {
-        case .accumulative:
-            return String(localized: "habit_type_accumulative")
-        case .binary:
-            return String(localized: "habit_type_binary")
+        case .accumulative: return String(localized: "habit_type_accumulative")
+        case .binary:       return String(localized: "habit_type_binary")
         }
     }
-    
+
     var targetDisplay: String {
         String.localizedStringWithFormat(
             NSLocalizedString("habit_target_value %@ %@", comment: ""),
@@ -729,8 +877,6 @@ struct HabitDetailSheet: View {
             String(localized: "unit_\(template?.unit ?? "times")")
         )
     }
-    
-    
 
     var infoSection: some View {
         VStack(spacing: 0) {
@@ -743,7 +889,10 @@ struct HabitDetailSheet: View {
                     label: String(localized: "habit_stat_schedule"),
                     value: recurrenceText
                 )
+
                 rowDivider
+
+                // Inline time editor — Apple-style row with trailing DatePicker
                 HStack(spacing: 12) {
                     ZStack {
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
@@ -762,15 +911,15 @@ struct HabitDetailSheet: View {
                             get: {
                                 let cal = Calendar.current
                                 var comps = cal.dateComponents([.year, .month, .day], from: Date())
-                                comps.hour   = editMinutes / 60      // ← dùng @State
+                                comps.hour   = editMinutes / 60
                                 comps.minute = editMinutes % 60
                                 return cal.date(from: comps) ?? Date()
                             },
                             set: { newDate in
                                 guard !isFutureDate && !isPastDate else { return }
                                 let mins = Calendar.current.component(.hour, from: newDate) * 60
-                                             + Calendar.current.component(.minute, from: newDate)
-                                editMinutes = mins                   // ← update local state ngay lập tức
+                                + Calendar.current.component(.minute, from: newDate)
+                                editMinutes = mins
                                 store.updateEventTimeFromToday(templateID: event.id, minutes: mins)
                             }
                         ),
@@ -782,23 +931,41 @@ struct HabitDetailSheet: View {
                 .padding(.horizontal, 14).padding(.vertical, 12)
 
                 rowDivider
-                
+
                 infoRow(
                     icon: habitType == .accumulative ? "chart.bar.fill" : "checkmark.circle.fill",
                     iconBg: habitType == .accumulative ? .purple : .green,
                     label: String(localized: "habit_type_label"),
                     value: habitTypeText
                 )
-                
+
                 if habitType == .accumulative {
-                    
                     rowDivider
-                    
                     infoRow(
                         icon: "target",
                         iconBg: .red,
                         label: String(localized: "habit_target_label"),
                         value: targetDisplay
+                    )
+                }
+
+                if isRecurring, let next = nextOccurrenceText {
+                    rowDivider
+                    infoRow(
+                        icon: "calendar.badge.clock",
+                        iconBg: .indigo,
+                        label: String(localized: "label.next_occurrence"),
+                        value: next
+                    )
+                }
+
+                if let starts = startsFromText {
+                    rowDivider
+                    infoRow(
+                        icon: "flag.fill",
+                        iconBg: .orange,
+                        label: String(localized: "label.starts_from"),
+                        value: starts
                     )
                 }
             }
@@ -815,11 +982,9 @@ struct HabitDetailSheet: View {
 
     var targetEditSection: some View {
         VStack(spacing: 0) {
-            
             sectionHeader(String(localized: "habit_section_edit_target"))
-            
+
             VStack(spacing: 16) {
-                // Target stepper
                 HStack(spacing: 12) {
                     Text(String(localized: "habit_daily_goal"))
                         .font(.body)
@@ -856,8 +1021,6 @@ struct HabitDetailSheet: View {
                     }
                     .background(RoundedRectangle(cornerRadius: 10).fill(Color.primary.opacity(0.06)))
 
-                    // Unit picker — full enum incl. `.custom`. Tagging by raw value
-                    // keeps `editUnit` round-trippable with the persisted string.
                     Picker("", selection: $editUnit) {
                         ForEach(CreateHabitDetailSheet.TargetUnit.allCases, id: \.rawValue) { u in
                             Text(u.localized).tag(u.rawValue)
@@ -874,8 +1037,6 @@ struct HabitDetailSheet: View {
                 }
                 .padding(.horizontal, 16)
 
-                // Inline custom unit input — appears only when the Custom option
-                // is selected. Mirrors the create-flow chip + clear control.
                 if editUnit == CreateHabitDetailSheet.TargetUnit.custom.rawValue {
                     HStack(spacing: 10) {
                         Image(systemName: "pencil.circle.fill")
@@ -927,18 +1088,15 @@ struct HabitDetailSheet: View {
                     .padding(.horizontal, 16)
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }
-                
+
                 Divider().padding(.horizontal, 16)
 
                 VStack(alignment: .leading, spacing: 12) {
-                    // Header row
                     HStack {
                         Text(String(localized: "habit_per_tap"))
                             .font(.body)
                             .foregroundStyle(.primary)
-                        
                         Spacer()
-                        
                         let taps = editTargetValue > 0 ? Int(ceil(editTargetValue / max(editIncrement, 0.01))) : 0
                         Text(
                             String.localizedStringWithFormat(
@@ -946,12 +1104,10 @@ struct HabitDetailSheet: View {
                                 taps
                             )
                         )
-                        
-                            .font(.caption).foregroundStyle(.secondary)
+                        .font(.caption).foregroundStyle(.secondary)
                     }
                     .padding(.horizontal, 16)
 
-                    // Preset chips
                     HStack(spacing: 8) {
                         ForEach([1.0, 5.0, 10.0], id: \.self) { preset in
                             Button {
@@ -977,7 +1133,6 @@ struct HabitDetailSheet: View {
                     }
                     .padding(.horizontal, 16)
 
-                    // Custom input row
                     HStack(spacing: 12) {
                         HStack(spacing: 0) {
                             Button {
@@ -1018,7 +1173,7 @@ struct HabitDetailSheet: View {
                     }
                     .padding(.horizontal, 16)
                 }
-                // Save target button
+
                 Button {
                     guard targetWarning == nil else { return }
                     saveTargetEdits()
@@ -1050,17 +1205,13 @@ struct HabitDetailSheet: View {
     func validateTarget() {
         if editTargetValue <= 0 {
             targetWarning = String(localized: "habit_error_target_gt_zero")
-
         } else if editIncrement <= 0 {
             targetWarning = String(localized: "habit_error_increment_gt_zero")
-
         } else if editIncrement > editTargetValue {
             targetWarning = String(localized: "habit_error_increment_exceeds_target")
-
         } else if editUnit == CreateHabitDetailSheet.TargetUnit.custom.rawValue &&
-                  editCustomUnitText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    editCustomUnitText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             targetWarning = String(localized: "unit_error_empty")
-
         } else {
             targetWarning = nil
         }
@@ -1070,7 +1221,7 @@ struct HabitDetailSheet: View {
         guard let idx = store.templates.firstIndex(where: { $0.id == event.id }) else { return }
         store.templates[idx].targetValue = editTargetValue
         store.templates[idx].unit        = editUnitForPersistence
-        store.templates[idx].increment   = editIncrement   // 👈 thêm
+        store.templates[idx].increment   = editIncrement
         store.invalidateCache()
         store.save()
         store.objectWillChange.send()
@@ -1126,7 +1277,6 @@ struct HabitDetailSheet: View {
                         HStack {
                             if notesText.isEmpty {
                                 Text(String(localized: "notes_tap_to_add"))
-                                    
                                     .font(.body).foregroundStyle(.tertiary)
                             } else {
                                 Text(notesText).font(.body).foregroundStyle(.primary).multilineTextAlignment(.leading)
@@ -1148,53 +1298,6 @@ struct HabitDetailSheet: View {
             .animation(.spring(response: 0.35, dampingFraction: 0.8), value: isEditingNotes)
             .padding(.horizontal, 20)
         }
-    }
-
-    // MARK: - Danger Section
-
-    var dangerSection: some View {
-        VStack(spacing: 12) {
-            // Reset all history
-            Button(role: .destructive) {
-                showResetAlert = true
-            } label: {
-                HStack(spacing: 8) {
-                    Image(systemName: "arrow.counterclockwise").font(.system(size: 14, weight: .semibold))
-                    Text(String(localized: "habit_reset_today"))
-                        .font(.body.weight(.semibold))
-                }
-                .foregroundStyle(.orange)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 14)
-                .background(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .fill(Color.orange.opacity(0.07))
-                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.orange.opacity(0.12), lineWidth: 1))
-                )
-            }
-            .opacity(habitType == .accumulative && currentProgress > 0 && !isFutureDate ? 1 : 0)
-
-            // Delete
-            Button(role: .destructive) {
-                showDeleteAlert = true
-            } label: {
-                HStack(spacing: 8) {
-                    Image(systemName: "trash").font(.system(size: 14, weight: .semibold))
-                    Text(String(localized: "habit_delete"))
-                        .font(.body.weight(.semibold))
-                }
-                .foregroundStyle(.red)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 14)
-                .background(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .fill(Color.red.opacity(0.07))
-                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.red.opacity(0.12), lineWidth: 1))
-                )
-            }
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 4)
     }
 
     // MARK: - Helpers

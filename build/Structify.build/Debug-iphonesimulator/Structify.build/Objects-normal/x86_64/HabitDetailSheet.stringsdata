@@ -1,0 +1,552 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab1/AddHabitLogic/HabitDetailSheet.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "unit_custom",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 46
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_repeat_daily",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 86
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_repeat_weekdays",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 88
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_every_day",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 112
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_weekdays",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 113
+        }
+      },
+      {
+        "comment": "",
+        "key": "common_dash",
+        "location": {
+          "startingColumn": 64,
+          "startingLine": 110
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_apply_changes_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 354
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_delete_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 368
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_reset_title",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 386
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_title",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 320
+        }
+      },
+      {
+        "comment": "",
+        "key": "common_done",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 326
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_apply_all_days",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 357
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_apply_only_today",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 360
+        }
+      },
+      {
+        "comment": "",
+        "key": "common_cancel",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 363
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_delete_forever",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 371
+        }
+      },
+      {
+        "comment": "",
+        "key": "common_cancel",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 376
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_reset_action",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 389
+        }
+      },
+      {
+        "comment": "",
+        "key": "common_cancel",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 397
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_reset_message",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 399
+        }
+      },
+      {
+        "comment": "",
+        "key": "menu.reset_progress",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 449
+        }
+      },
+      {
+        "comment": "",
+        "key": "menu.delete_habit",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 459
+        }
+      },
+      {
+        "comment": "",
+        "key": "menu.actions",
+        "location": {
+          "startingColumn": 60,
+          "startingLine": 467
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_status_upcoming",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 475
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_status_completed",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 477
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_status_not_done",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 479
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_name_placeholder",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 518
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_stat_streak",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 572
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_stat_today",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 579
+        }
+      },
+      {
+        "comment": "",
+        "key": "stat.completion_30d",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 585
+        }
+      },
+      {
+        "comment": "",
+        "key": "stat.best_streak",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 592
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_section_progress",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 636
+        }
+      },
+      {
+        "comment": "",
+        "key": "%@ %@",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 653
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_%@",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 661
+        }
+      },
+      {
+        "comment": "",
+        "key": "section.last_7_days",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 689
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld%%",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 750
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_mark_not_done",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 768
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_mark_done",
+        "location": {
+          "startingColumn": 29,
+          "startingLine": 769
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_section_checkin",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 774
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_future_checkin_blocked",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 779
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_type_accumulative",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 868
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_type_binary",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 869
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_%@",
+        "location": {
+          "startingColumn": 31,
+          "startingLine": 877
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_section_details",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 883
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_stat_schedule",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 889
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_type_label",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 938
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_target_label",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 947
+        }
+      },
+      {
+        "comment": "",
+        "key": "label.next_occurrence",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 957
+        }
+      },
+      {
+        "comment": "",
+        "key": "label.starts_from",
+        "location": {
+          "startingColumn": 50,
+          "startingLine": 967
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_time",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 904
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 25,
+          "startingLine": 909
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_section_edit_target",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 985
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_daily_goal",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 989
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 28,
+          "startingLine": 1024
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 1006
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_error_target_gt_zero",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 1207
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_error_increment_gt_zero",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 1209
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_error_increment_exceeds_target",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 1211
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_error_empty",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 1214
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_custom_placeholder",
+        "location": {
+          "startingColumn": 47,
+          "startingLine": 1046
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_per_tap",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 1096
+        }
+      },
+      {
+        "comment": "",
+        "key": "+%lld",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 1119
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_per_tap",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 1168
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 1150
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_save_target",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 1181
+        }
+      },
+      {
+        "comment": "",
+        "key": "notes_title",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 1235
+        }
+      },
+      {
+        "comment": "",
+        "key": "notes_add_placeholder",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 1248
+        }
+      },
+      {
+        "comment": "",
+        "key": "done",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 1264
+        }
+      },
+      {
+        "comment": "",
+        "key": "notes_tap_to_add",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 1279
+        }
+      }
+    ]
+  },
+  "version": 1
+}

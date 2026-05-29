@@ -1,0 +1,44 @@
+{
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/on1.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on1.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on1.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on1.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on1.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on1.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/on2.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on2.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on2.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on2.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on2.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on2.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/on3.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on3.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on3.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on3.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on3.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on3.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Onboarding/on4.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on4.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on4.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on4.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on4.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/on4.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Setting/Notification/NotificationManager.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/NotificationManager.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/NotificationManager.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/NotificationManager.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/NotificationManager.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/NotificationManager.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Setting/Notification/NotificationsSettingsView.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/NotificationsSettingsView.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/NotificationsSettingsView.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/NotificationsSettingsView.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/NotificationsSettingsView.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/arm64/NotificationsSettingsView.swiftdeps"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab1/HEader/MonthYearPickerView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "select_month_title",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 120
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 52
+        }
+      },
+      {
+        "comment": "",
+        "key": "done",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 124
+        }
+      },
+      {
+        "comment": "",
+        "key": "today",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 132
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,64 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Premium/PremiumStore.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "purchase.error.product_not_found",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 69
+        }
+      },
+      {
+        "comment": "",
+        "key": "purchase.error.verification_failed",
+        "location": {
+          "startingColumn": 58,
+          "startingLine": 82
+        }
+      },
+      {
+        "comment": "",
+        "key": "purchase.error.pending",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "purchase.error.network",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 121
+        }
+      },
+      {
+        "comment": "",
+        "key": "purchase.error.not_available",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 123
+        }
+      },
+      {
+        "comment": "",
+        "key": "purchase.error.not_available",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 133
+        }
+      },
+      {
+        "comment": "",
+        "key": "purchase.error.ineligible",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 135
+        }
+      }
+    ]
+  },
+  "version": 1
+}

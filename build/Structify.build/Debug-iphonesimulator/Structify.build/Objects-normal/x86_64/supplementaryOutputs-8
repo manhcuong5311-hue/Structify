@@ -1,0 +1,37 @@
+{
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/KeywordIconMap.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/KeywordIconMap.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/KeywordIconMap.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/KeywordIconMap.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/KeywordIconMap.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/KeywordIconMap.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddHabitLogic/CreateHabitDetailSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/CreateHabitDetailSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/CreateHabitDetailSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/CreateHabitDetailSheet.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/CreateHabitDetailSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/CreateHabitDetailSheet.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddHabitLogic/HabitDetailSheet.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/HabitDetailSheet.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/HabitDetailSheet.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/HabitDetailSheet.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/HabitDetailSheet.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/HabitDetailSheet.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/AddHabitLogic/HabitTemplates.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/HabitTemplates.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/HabitTemplates.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/HabitTemplates.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/HabitTemplates.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/HabitTemplates.swiftdeps"
+  },
+  "/Users/sammanhcuong/Desktop/Structify/Tab1/HEader/Header.swift" : {
+    "const-values" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/Header.swiftconstvalues",
+    "dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/Header.d",
+    "diagnostics" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/Header.dia",
+    "object" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/Header.o",
+    "swift-dependencies" : "/Users/sammanhcuong/Desktop/Structify/build/Structify.build/Debug-iphonesimulator/Structify.build/Objects-normal/x86_64/Header.swiftdeps"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Onboarding/OnboardingView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "common.continue",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 67
+        }
+      }
+    ]
+  },
+  "version": 1
+}

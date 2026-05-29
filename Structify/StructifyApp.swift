@@ -5,8 +5,10 @@ struct StructifyApp: App {
     
     @StateObject private var calendar = CalendarState()
     @StateObject private var timeline = TimelineStore()
-    
+
     @AppStorage("hasSeenOnboarding") var hasSeenOnboarding = false
+
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -16,6 +18,13 @@ struct StructifyApp: App {
                 .onAppear {
                     NotificationManager.shared.requestPermission()
                 }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            // Persist any debounced edits before the app leaves the foreground,
+            // so nothing is lost if the system suspends or kills us.
+            if phase != .active {
+                timeline.flushPendingSave()
+            }
         }
     }
 }

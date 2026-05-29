@@ -1,0 +1,80 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/TimelineEngine/TimelineSmallViews.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "premium_limit_cta",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 161
+        }
+      },
+      {
+        "comment": "",
+        "key": "empty_timeline_title",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 225
+        }
+      },
+      {
+        "comment": "",
+        "key": "empty_timeline_subtitle",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 230
+        }
+      },
+      {
+        "comment": "",
+        "key": "empty_add_event",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 246
+        }
+      },
+      {
+        "comment": "",
+        "key": "empty_add_habit",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 263
+        }
+      },
+      {
+        "comment": "",
+        "key": "undo_toast_generic",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 314
+        }
+      },
+      {
+        "comment": "",
+        "key": "undo_toast_deleted %@",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 315
+        }
+      },
+      {
+        "comment": "",
+        "key": "undo_dismiss_a11y",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 346
+        }
+      },
+      {
+        "comment": "",
+        "key": "undo_action",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 328
+        }
+      }
+    ]
+  },
+  "version": 1
+}

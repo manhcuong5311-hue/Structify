@@ -1,0 +1,504 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab1/AddHabitLogic/CreateHabitDetailSheet.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "habit_repeat_one_day",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 16
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_repeat_week",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 17
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_repeat_month",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 18
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_repeat_weekdays",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 19
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_repeat_everyday",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 20
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_type_binary",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 32
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_type_accumulative",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 33
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_times",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 115
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_km",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 116
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_ml",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 117
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_l",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 118
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_min",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 119
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_pages",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 120
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_steps",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 121
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_custom",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 122
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_custom",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 133
+        }
+      },
+      {
+        "comment": "",
+        "key": "date_today",
+        "location": {
+          "startingColumn": 64,
+          "startingLine": 1311
+        }
+      },
+      {
+        "comment": "",
+        "key": "date_every_day",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 1313
+        }
+      },
+      {
+        "comment": "",
+        "key": "date_weekdays",
+        "location": {
+          "startingColumn": 38,
+          "startingLine": 1315
+        }
+      },
+      {
+        "comment": "",
+        "key": "time_error_passed",
+        "location": {
+          "startingColumn": 85,
+          "startingLine": 193
+        }
+      },
+      {
+        "comment": "",
+        "key": "time_error_before_wake",
+        "location": {
+          "startingColumn": 85,
+          "startingLine": 194
+        }
+      },
+      {
+        "comment": "",
+        "key": "time_error_after_sleep",
+        "location": {
+          "startingColumn": 85,
+          "startingLine": 195
+        }
+      },
+      {
+        "comment": "",
+        "key": "time_error_overlap",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 197
+        }
+      },
+      {
+        "comment": "",
+        "key": "target_error_invalid",
+        "location": {
+          "startingColumn": 72,
+          "startingLine": 204
+        }
+      },
+      {
+        "comment": "",
+        "key": "increment_error_invalid",
+        "location": {
+          "startingColumn": 72,
+          "startingLine": 205
+        }
+      },
+      {
+        "comment": "",
+        "key": "increment_error_exceed",
+        "location": {
+          "startingColumn": 81,
+          "startingLine": 206
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_error_empty",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 209
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_category_all",
+        "location": {
+          "startingColumn": 64,
+          "startingLine": 276
+        }
+      },
+      {
+        "comment": "",
+        "key": "add_event",
+        "location": {
+          "startingColumn": 40,
+          "startingLine": 471
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_name_placeholder",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 524
+        }
+      },
+      {
+        "comment": "",
+        "key": "icon.change",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 513
+        }
+      },
+      {
+        "comment": "",
+        "key": "keyboard.done",
+        "location": {
+          "startingColumn": 54,
+          "startingLine": 552
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 580
+        }
+      },
+      {
+        "comment": "",
+        "key": "date_error_past_habit",
+        "location": {
+          "startingColumn": 46,
+          "startingLine": 639
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_preview_placeholder_title",
+        "location": {
+          "startingColumn": 33,
+          "startingLine": 671
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_preview_label",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 677
+        }
+      },
+      {
+        "comment": "",
+        "key": "anytime",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 685
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_type_binary",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 712
+        }
+      },
+      {
+        "comment": "",
+        "key": "date_and_repeat",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 764
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 768
+        }
+      },
+      {
+        "comment": "",
+        "key": "time_of_day",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 817
+        }
+      },
+      {
+        "comment": "",
+        "key": "anytime",
+        "location": {
+          "startingColumn": 60,
+          "startingLine": 818
+        }
+      },
+      {
+        "comment": "",
+        "key": "anytime",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 830
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 849
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_type",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 870
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_type_binary_desc",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 879
+        }
+      },
+      {
+        "comment": "",
+        "key": "habit_type_accumulative_desc",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 884
+        }
+      },
+      {
+        "comment": "",
+        "key": "target",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 945
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld %@",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 946
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 42,
+          "startingLine": 972
+        }
+      },
+      {
+        "comment": "",
+        "key": "unit_custom_placeholder",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 1030
+        }
+      },
+      {
+        "comment": "",
+        "key": "per_tap",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 1083
+        }
+      },
+      {
+        "comment": "",
+        "key": "+%lld %@",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 1084
+        }
+      },
+      {
+        "comment": "",
+        "key": "+%lld",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 1113
+        }
+      },
+      {
+        "comment": "",
+        "key": "premium_limit_habits %lld",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 1175
+        }
+      },
+      {
+        "comment": "",
+        "key": "hint_enter_title",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 1158
+        }
+      },
+      {
+        "comment": "",
+        "key": "hint_fix_time",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 1160
+        }
+      },
+      {
+        "comment": "",
+        "key": "hint_fix_target",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 1162
+        }
+      },
+      {
+        "comment": "",
+        "key": "date_error_create_past",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 1164
+        }
+      },
+      {
+        "comment": "",
+        "key": "error_enter_title",
+        "location": {
+          "startingColumn": 74,
+          "startingLine": 1187
+        }
+      },
+      {
+        "comment": "",
+        "key": "create_habit",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 1203
+        }
+      },
+      {
+        "comment": "",
+        "key": "",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 1255
+        }
+      }
+    ]
+  },
+  "version": 1
+}

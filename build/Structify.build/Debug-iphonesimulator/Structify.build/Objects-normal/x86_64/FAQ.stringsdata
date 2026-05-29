@@ -1,0 +1,617 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Setting/FAQ.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "getting_started",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 30
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_structify_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 35
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_structify_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 36
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_create_event_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 41
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_create_event_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 42
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_event_vs_habit_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 47
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_event_vs_habit_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 48
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_title",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 55
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_move_event_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 60
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_move_event_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 61
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_resize_event_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 66
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_resize_event_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 67
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_morning_night_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 72
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_morning_night_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 73
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_gap_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 78
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_gap_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 79
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_view_days_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 84
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_timeline_view_days_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 85
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_habits_title",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 96
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_habits_mark_done_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 101
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_habits_mark_done_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 102
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_habits_accumulative_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 107
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_habits_accumulative_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 108
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_habits_repeat_options_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 113
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_habits_repeat_options_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 114
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_habits_streak_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 119
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_habits_streak_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 120
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_customization_title",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 130
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_customization_accent_color_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 135
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_customization_accent_color_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 136
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_customization_density_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 141
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_customization_density_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 142
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_customization_event_icon_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 147
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_customization_event_icon_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 148
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_customization_hide_completed_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 153
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_customization_hide_completed_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 154
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_notifications_title",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 165
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_notifications_event_setup_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 170
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_notifications_event_setup_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 171
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_notifications_morning_briefing_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 176
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_notifications_morning_briefing_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 177
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_notifications_evening_review_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 182
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_notifications_evening_review_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 183
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_notifications_not_receiving_q",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 188
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_notifications_not_receiving_a",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 189
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_data_backup_title",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 200
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_data_where_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 205
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_data_where_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 206
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_backup_how_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 211
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_backup_how_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 212
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_export_csv_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 217
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_export_csv_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 218
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_delete_app_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 223
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_delete_app_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 224
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_premium_title",
+        "location": {
+          "startingColumn": 34,
+          "startingLine": 235
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_premium_what_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 240
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_premium_what_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 241
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_premium_subscription_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 246
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_premium_subscription_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 247
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_premium_restore_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 252
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_premium_restore_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 253
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_premium_refund_question",
+        "location": {
+          "startingColumn": 45,
+          "startingLine": 258
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_premium_refund_answer",
+        "location": {
+          "startingColumn": 43,
+          "startingLine": 259
+        }
+      },
+      {
+        "comment": "",
+        "key": "FAQ",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 348
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_search_placeholder",
+        "location": {
+          "startingColumn": 41,
+          "startingLine": 362
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_label_clear_search",
+        "location": {
+          "startingColumn": 60,
+          "startingLine": 377
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_filter_all",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 403
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_no_results",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 510
+        },
+        "value": "No results for \"%@\""
+      },
+      {
+        "comment": "",
+        "key": "faq_try_search",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 515
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_still_questions",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 526
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_contact_support",
+        "location": {
+          "startingColumn": 56,
+          "startingLine": 575
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_hint_open_email",
+        "location": {
+          "startingColumn": 55,
+          "startingLine": 576
+        }
+      },
+      {
+        "comment": "",
+        "key": "faq_contact_support",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 548
+        }
+      },
+      {
+        "comment": "",
+        "key": "Manhcuong531@gmail.com",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 551
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_hint_collapse_answer",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 627
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_hint_expand_answer",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 628
+        }
+      }
+    ]
+  },
+  "version": 1
+}

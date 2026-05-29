@@ -1,0 +1,32 @@
+{
+  "source": "/Users/sammanhcuong/Desktop/Structify/Tab1/AddEventLogic/AddItemButton.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "a11y_label_add_item",
+        "location": {
+          "startingColumn": 52,
+          "startingLine": 33
+        }
+      },
+      {
+        "comment": "",
+        "key": "a11y_hint_add_item",
+        "location": {
+          "startingColumn": 51,
+          "startingLine": 34
+        }
+      },
+      {
+        "comment": "",
+        "key": "add",
+        "location": {
+          "startingColumn": 39,
+          "startingLine": 23
+        }
+      }
+    ]
+  },
+  "version": 1
+}

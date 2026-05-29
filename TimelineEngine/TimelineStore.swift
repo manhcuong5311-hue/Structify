@@ -246,7 +246,7 @@ class TimelineStore: ObservableObject {
             }
             rebuildIndex()
             invalidateCache()
-            save()
+            saveNow()
             // Re-schedule the day's notification if we can locate the template.
             if let t = templates.first(where: { $0.id == templateID }) {
                 NotificationManager.shared.schedule(
@@ -266,7 +266,7 @@ class TimelineStore: ObservableObject {
             rebuildCompletionIndex()
             invalidateCache()
             objectWillChange.send()
-            save()
+            saveNow()
         }
         clearPendingUndo()
     }
@@ -370,8 +370,45 @@ class TimelineStore: ObservableObject {
     }
     
     // MARK: Save
-    
+
+    private var saveWorkItem: DispatchWorkItem?
+    private var widgetReloadWorkItem: DispatchWorkItem?
+
+    /// Debounced save. Coalesces rapid mutations (live drag, "+" accumulation,
+    /// completion toggles) into one disk write + one widget reload. Safe for
+    /// data because `flushPendingSave()` runs when the app backgrounds, and
+    /// critical paths (create/delete/undo) call `saveNow()` directly.
     func save() {
+        saveWorkItem?.cancel()
+        let item = DispatchWorkItem { [weak self] in
+            self?.persist()
+            self?.scheduleWidgetReload()
+        }
+        saveWorkItem = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: item)
+    }
+
+    /// Immediate, non-debounced save for high-stakes mutations where losing the
+    /// write would be user-visible (create, delete, undo, restore, import).
+    func saveNow() {
+        saveWorkItem?.cancel()
+        saveWorkItem = nil
+        persist()
+        scheduleWidgetReload()
+    }
+
+    /// Flush any pending debounced save right now. Call when the app is about to
+    /// background/terminate so nothing in the 0.4s window is lost.
+    func flushPendingSave() {
+        if saveWorkItem != nil {
+            saveWorkItem?.cancel()
+            saveWorkItem = nil
+            persist()
+        }
+        flushWidgetReload()
+    }
+
+    private func persist() {
         let encoder = JSONEncoder()
         if let templateData = try? encoder.encode(templates) {
             sharedDefaults.set(templateData, forKey: "templates")
@@ -382,6 +419,20 @@ class TimelineStore: ObservableObject {
         if let data = try? encoder.encode(completionLogs) {
             sharedDefaults.set(data, forKey: "completionLogs")
         }
+    }
+
+    /// Widget timeline reloads are system rate-limited, so we debounce them out
+    /// of the per-mutation hot path rather than firing on every save.
+    private func scheduleWidgetReload() {
+        widgetReloadWorkItem?.cancel()
+        let item = DispatchWorkItem { WidgetCenter.shared.reloadAllTimelines() }
+        widgetReloadWorkItem = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: item)
+    }
+
+    private func flushWidgetReload() {
+        widgetReloadWorkItem?.cancel()
+        widgetReloadWorkItem = nil
         WidgetCenter.shared.reloadAllTimelines()
     }
     
@@ -429,27 +480,42 @@ class TimelineStore: ObservableObject {
             }
 
             if needsClamp {
-                
+
                 if templates[i].duration == 1440 { continue }
-                // Clamp start sau wake
-                if templates[i].minutes < wakeMinutes {
-                    templates[i].minutes = wakeMinutes + 5
+
+                // Compute the clamped values first WITHOUT mutating, so we can lock the
+                // past (snapshot OLD values, still held in the template) before applying.
+                var newMinutes  = templates[i].minutes
+                var newDuration = templates[i].duration
+
+                if newMinutes < wakeMinutes {
+                    newMinutes = wakeMinutes + 5
                 }
 
-                // Clamp start trước sleep
-                let dur = templates[i].duration ?? 0
-                if templates[i].minutes + dur > sleepMinutes {
-                    // Đẩy start lùi để fit
+                let dur = newDuration ?? 0
+                if newMinutes + dur > sleepMinutes {
                     let newStart = sleepMinutes - dur
                     if newStart >= wakeMinutes {
-                        templates[i].minutes = newStart
+                        newMinutes = newStart
                     } else {
-                        // Không fit → đặt sau wake, trim duration
-                        templates[i].minutes = wakeMinutes + 5
-                        if let _ = templates[i].duration {
-                            templates[i].duration = max(5, sleepMinutes - (wakeMinutes + 5))
+                        newMinutes = wakeMinutes + 5
+                        if newDuration != nil {
+                            newDuration = max(5, sleepMinutes - (wakeMinutes + 5))
                         }
                     }
+                }
+
+                let minutesChanged  = newMinutes  != templates[i].minutes
+                let durationChanged = newDuration != templates[i].duration
+
+                if minutesChanged || durationChanged {
+                    var fields: Set<SnapshotField> = []
+                    if minutesChanged  { fields.insert(.minutes) }
+                    if durationChanged { fields.insert(.duration) }
+                    // Snapshot reads the template's current (old) values, so call before mutating.
+                    snapshotPastInstances(templateID: templates[i].id, fields: fields)
+                    templates[i].minutes  = newMinutes
+                    templates[i].duration = newDuration
                 }
             }
         }
@@ -585,6 +651,102 @@ class TimelineStore: ObservableObject {
 
         save()
     }
+
+    // MARK: - Past lock
+
+    /// Fields a snapshot can capture. Used by `snapshotPastInstances` to freeze
+    /// the current template values into per-day overrides for past dates before
+    /// the template's canonical values are mutated.
+    enum SnapshotField {
+        case minutes, duration, title, icon, colorHex
+    }
+
+    /// Earliest date the user has actually interacted with this template
+    /// (a completion log or a per-day override). Used to bound the past-lock
+    /// snapshot for legacy templates that predate the always-set `startDate`.
+    private func earliestActivityKey(templateID: UUID) -> Int? {
+        var minKey: Int?
+        for log in completionLogs where log.templateID == templateID {
+            if minKey == nil || log.dateKey < minKey! { minKey = log.dateKey }
+        }
+        for ov in overrides where ov.templateID == templateID {
+            if minKey == nil || ov.dateKey < minKey! { minKey = ov.dateKey }
+        }
+        return minKey
+    }
+
+    private func dateFromKey(_ k: Int) -> Date? {
+        var c = DateComponents()
+        c.year  = k / 10000
+        c.month = (k / 100) % 100
+        c.day   = k % 100
+        return Calendar.current.date(from: c)
+    }
+
+    /// Walks backwards through past dates where this template matched and writes
+    /// the current template values into per-day overrides. Call this BEFORE you
+    /// mutate `templates[idx]` so past days keep their historical appearance.
+    ///
+    /// Lower bound:
+    /// - `startDate` if present (every template created going forward has one).
+    /// - Otherwise (legacy templates) the earliest date the user actually used,
+    ///   capped at 365 days. If the user never touched it, we skip entirely —
+    ///   there's no historical appearance to preserve, so no overrides are made.
+    private func snapshotPastInstances(templateID: UUID, fields: Set<SnapshotField>) {
+        guard !fields.isEmpty else { return }
+        guard let template = templates.first(where: { $0.id == templateID }) else { return }
+        guard !template.isSystemEvent else { return }
+
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        let hardCap = cal.date(byAdding: .day, value: -365, to: today) ?? today
+
+        let lowerBound: Date = {
+            if let start = template.startDate {
+                return max(cal.startOfDay(for: start), hardCap)
+            }
+            guard let earliestKey = earliestActivityKey(templateID: templateID),
+                  let earliestDate = dateFromKey(earliestKey) else {
+                return today  // no history → nothing to lock
+            }
+            return max(cal.startOfDay(for: earliestDate), hardCap)
+        }()
+
+        guard lowerBound < today else { return }
+
+        var cursor = cal.date(byAdding: .day, value: -1, to: today) ?? today
+        while cursor >= lowerBound {
+            if template.matches(date: cursor) {
+                let dKey = key(for: cursor)
+
+                if let i = overrides.firstIndex(where: { $0.templateID == templateID && $0.dateKey == dKey }) {
+                    // Existing override. Don't touch "deleted" markers; fill nil fields only
+                    // so we never clobber a user's deliberate per-day customization.
+                    if let m = overrides[i].minutes, m < 0 {
+                        // Day was deleted — leave it deleted.
+                    } else {
+                        if fields.contains(.minutes)  && overrides[i].minutes  == nil { overrides[i].minutes  = template.minutes  }
+                        if fields.contains(.duration) && overrides[i].duration == nil { overrides[i].duration = template.duration }
+                        if fields.contains(.title)    && overrides[i].title    == nil { overrides[i].title    = template.title    }
+                        if fields.contains(.icon)     && overrides[i].icon     == nil { overrides[i].icon     = template.icon     }
+                        if fields.contains(.colorHex) && overrides[i].colorHex == nil { overrides[i].colorHex = template.colorHex }
+                    }
+                } else {
+                    overrides.append(EventOverride(
+                        templateID: templateID,
+                        dateKey: dKey,
+                        minutes:  fields.contains(.minutes)  ? template.minutes  : nil,
+                        duration: fields.contains(.duration) ? template.duration : nil,
+                        title:    fields.contains(.title)    ? template.title    : nil,
+                        icon:     fields.contains(.icon)     ? template.icon     : nil,
+                        colorHex: fields.contains(.colorHex) ? template.colorHex : nil
+                    ))
+                }
+            }
+            guard let prev = cal.date(byAdding: .day, value: -1, to: cursor) else { break }
+            cursor = prev
+        }
+    }
     
     func addEvent(
         title: String,
@@ -628,11 +790,18 @@ class TimelineStore: ObservableObject {
             new.startDate = Calendar.current.startOfDay(for: Date())
         }
 
+        // Always stamp a creation boundary so the past-lock snapshot only ever
+        // walks back to the day this template was created (never fabricates
+        // overrides for days before it existed).
+        if new.startDate == nil {
+            new.startDate = Calendar.current.startOfDay(for: Date())
+        }
+
         templates.append(new)
 
         invalidateCache()
         objectWillChange.send()
-        save()
+        saveNow()
 
         NotificationManager.shared.scheduleRecurring(template: new)
     }
@@ -937,9 +1106,11 @@ class TimelineStore: ObservableObject {
     
     func updateEvent(templateID: UUID, title: String, icon: String, colorHex: String) {
         guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
+        snapshotPastInstances(templateID: templateID, fields: [.title, .icon, .colorHex])
         templates[idx].title = title
         templates[idx].icon = icon
         templates[idx].colorHex = colorHex
+        rebuildIndex()
         invalidateCache()
         save()
         objectWillChange.send()
@@ -977,13 +1148,19 @@ class TimelineStore: ObservableObject {
     }
     
     
-    // Update template time cho "All Days"
+    // Update template time cho "All Days" (today + future)
     func updateEventTime(templateID: UUID, minutes: Int) {
         guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
+        let todayKey = key(for: Calendar.current.startOfDay(for: Date()))
+
+        // Lock past: snapshot current template.minutes into per-day overrides so
+        // historical days keep their old time when we mutate the template below.
+        snapshotPastInstances(templateID: templateID, fields: [.minutes])
+
         templates[idx].minutes = minutes
-        // Xóa override minutes cho tất cả ngày (giữ lại duration/appearance overrides)
+        // Wipe minute overrides for today+ so the new template value applies forward.
         for i in overrides.indices {
-            if overrides[i].templateID == templateID {
+            if overrides[i].templateID == templateID && overrides[i].dateKey >= todayKey {
                 overrides[i].minutes = nil
             }
         }
@@ -991,20 +1168,24 @@ class TimelineStore: ObservableObject {
         invalidateCache()
         objectWillChange.send()
         save()
-        
+
         if let template = templates.first(where: { $0.id == templateID }) {
               NotificationManager.shared.scheduleRecurring(template: template)
           }
     }
 
-    // Update template duration cho "All Days"
+    // Update template duration cho "All Days" (today + future)
     func updateEventDuration(templateID: UUID, duration: Int) {
         guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
         guard let clamped = clampDuration(duration, start: templates[idx].minutes) else { return }
+        let todayKey = key(for: Calendar.current.startOfDay(for: Date()))
+
+        snapshotPastInstances(templateID: templateID, fields: [.duration])
+
         templates[idx].duration = clamped
-        // Xóa override duration cho tất cả ngày
+        // Wipe duration overrides for today+ so the new value applies forward.
         for i in overrides.indices {
-            if overrides[i].templateID == templateID {
+            if overrides[i].templateID == templateID && overrides[i].dateKey >= todayKey {
                 overrides[i].duration = nil
             }
         }
@@ -1100,12 +1281,17 @@ class TimelineStore: ObservableObject {
         if case .daily = recurrence {
             new.startDate = Calendar.current.startOfDay(for: Date())
         }
-        
+
+        // Same creation-boundary stamp as addEvent — see note there.
+        if new.startDate == nil {
+            new.startDate = Calendar.current.startOfDay(for: Date())
+        }
+
         templates.append(new)
         invalidateCache()
         objectWillChange.send()
-        save()
-        
+        saveNow()
+
         NotificationManager.shared.scheduleRecurring(template: new)
     }
 
@@ -1252,7 +1438,7 @@ class TimelineStore: ObservableObject {
 
         rebuildIndex()
         invalidateCache()
-        save()
+        saveNow()
 
         setPendingUndo(PendingUndo(
             kind: .singleDayDelete(templateID: templateID, dateKey: k, date: date),
@@ -1276,7 +1462,7 @@ class TimelineStore: ObservableObject {
         rebuildCompletionIndex()
         invalidateCache()
         objectWillChange.send()
-        save()
+        saveNow()
 
         if let template = snapshotTemplate {
             setPendingUndo(PendingUndo(
@@ -1290,6 +1476,9 @@ class TimelineStore: ObservableObject {
     func updateEventTimeFromToday(templateID: UUID, minutes: Int) {
         guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
         let todayKey = key(for: Calendar.current.startOfDay(for: Date()))
+
+        // Lock past before mutating the template's canonical minutes.
+        snapshotPastInstances(templateID: templateID, fields: [.minutes])
 
         for i in overrides.indices {
             if overrides[i].templateID == templateID && overrides[i].dateKey >= todayKey {
@@ -1311,6 +1500,8 @@ class TimelineStore: ObservableObject {
         guard let idx = templates.firstIndex(where: { $0.id == templateID }) else { return }
         guard let clamped = clampDuration(duration, start: templates[idx].minutes) else { return }
         let todayKey = key(for: Calendar.current.startOfDay(for: Date()))
+
+        snapshotPastInstances(templateID: templateID, fields: [.duration])
 
         for i in overrides.indices {
             if overrides[i].templateID == templateID && overrides[i].dateKey >= todayKey {
